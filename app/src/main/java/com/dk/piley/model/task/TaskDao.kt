@@ -12,5 +12,5 @@ interface TaskDao {
     abstract suspend fun insertTask(task: Task): Long
 
     @Delete
-    abstract suspend fun deleteTask(task: Task): Long
+    abstract suspend fun deleteTask(task: Task): Void
 }

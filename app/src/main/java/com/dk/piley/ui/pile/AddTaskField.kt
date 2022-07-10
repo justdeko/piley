@@ -1,0 +1,55 @@
+package com.dk.piley.ui.pile
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.dk.piley.ui.theme.PileyTheme
+
+@Composable
+fun AddTaskField(
+    modifier: Modifier = Modifier,
+    value: TextFieldValue,
+    onChange: (TextFieldValue) -> Unit,
+    onDone: KeyboardActionScope.() -> Unit
+) {
+    TextField(
+        colors = TextFieldDefaults.textFieldColors(
+            disabledTextColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        value = value,
+        onValueChange = onChange,
+        placeholder = { Text("Add your task here") },
+        shape = RoundedCornerShape(16.dp),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = onDone),
+    )
+}
+
+@Preview
+@Composable
+fun AddTaskFieldPreview() {
+    PileyTheme(useDarkTheme = true) {
+        val text = TextFieldValue("hi there")
+        AddTaskField(value = text, onChange = {}, onDone = {})
+    }
+}

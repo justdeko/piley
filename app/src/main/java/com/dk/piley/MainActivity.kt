@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -66,8 +67,14 @@ fun Home(
                 val currentDestination = navBackStackEntry?.destination
                 navItems.forEach { screen ->
                     NavigationBarItem(
-                        icon = { Icon(screen.icon, contentDescription = null) },
-                        label = { Text(stringResource(screen.resourceId)) },
+                        icon = {
+                            Icon(
+                                screen.icon,
+                                tint = MaterialTheme.colorScheme.secondary,
+                                contentDescription = null,
+                            )
+                        },
+                        label = { Text(stringResource(screen.resourceId), color = MaterialTheme.colorScheme.onBackground) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             navController.navigate(screen.route) {

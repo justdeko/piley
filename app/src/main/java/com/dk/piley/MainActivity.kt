@@ -1,6 +1,7 @@
 package com.dk.piley
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -19,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +37,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.navItems
 import com.dk.piley.ui.pile.AddTaskField
+import com.dk.piley.ui.pile.Pile
 import com.dk.piley.ui.pile.PileTask
 import com.dk.piley.ui.pile.PileViewModel
 import com.dk.piley.ui.theme.PileyTheme
@@ -74,7 +77,12 @@ fun Home(
                                 contentDescription = null,
                             )
                         },
-                        label = { Text(stringResource(screen.resourceId), color = MaterialTheme.colorScheme.onBackground) },
+                        label = {
+                            Text(
+                                stringResource(screen.resourceId),
+                                color = MaterialTheme.colorScheme.onBackground
+                            )
+                        },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             navController.navigate(screen.route) {
@@ -114,6 +122,7 @@ fun PileScreen(
     viewModel: PileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
+    val context = LocalContext.current
     var query by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
             TextFieldValue("")
@@ -124,56 +133,29 @@ fun PileScreen(
         verticalArrangement = Arrangement.Bottom
     ) {
         Pile(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
             viewState.tasks
         ) { viewModel.delete(it) }
         AddTaskField(
             value = query,
             onChange = { v: TextFieldValue -> query = v },
-            onDone = { viewModel.add(query.text) }
+            onDone = {
+                if (query.text.isNotBlank()) {
+                    viewModel.add(query.text)
+                } else {
+                    Toast.makeText(context, "Task can't be empty", Toast.LENGTH_SHORT).show()
+                }
+            }
         )
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@Preview
 @Composable
-fun Pile(
-    modifier: Modifier = Modifier,
-    tasks: List<Task> = emptyList(),
-    onDismiss: (task: Task) -> Unit
-) {
-    LazyColumn(
-        modifier = modifier.padding(8.dp),
-        reverseLayout = true,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
-    ) {
-        items(tasks, key = { it.id }) { task ->
-            val dismissState = rememberDismissState()
-            if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                onDismiss(task)
-            }
-            PileTask(
-                Modifier
-                    .animateItemPlacement()
-                    .padding(vertical = 1.dp),
-                dismissState,
-                task
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
+fun HomePreview() {
     PileyTheme(useDarkTheme = true) {
-        val taskList =
-            listOf(
-                Task(title = "hey there"),
-                Task(title = "sup"),
-                Task(title = "another task"),
-                Task(title = "fourth task")
-            )
-        Pile(tasks = taskList, onDismiss = {})
+        Home()
     }
 }

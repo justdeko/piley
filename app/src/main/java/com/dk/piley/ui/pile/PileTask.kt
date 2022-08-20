@@ -10,10 +10,12 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -21,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.theme.md_theme_light_background
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -54,14 +57,14 @@ fun PileTask(modifier: Modifier, dismissState: DismissState, task: Task) {
             Box(
                 Modifier
                     .fillMaxSize()
-                    .background(color)
                     .padding(horizontal = 20.dp),
                 contentAlignment = alignment
             ) {
                 Icon(
                     icon,
                     contentDescription = "Localized description",
-                    modifier = Modifier.scale(scale)
+                    modifier = Modifier.scale(scale),
+                    tint = color
                 )
             }
         },

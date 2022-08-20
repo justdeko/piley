@@ -11,4 +11,5 @@ data class Task(
     val description: String = "",
     val createdAt: Long = 0,
     val modifiedAt: Long = 0,
+    var status: TaskStatus = TaskStatus.DEFAULT,
 )

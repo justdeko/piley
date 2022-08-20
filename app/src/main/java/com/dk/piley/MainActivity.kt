@@ -1,45 +1,27 @@
 package com.dk.piley
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.dk.piley.model.task.Task
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.navItems
-import com.dk.piley.ui.pile.AddTaskField
-import com.dk.piley.ui.pile.Pile
-import com.dk.piley.ui.pile.PileTask
-import com.dk.piley.ui.pile.PileViewModel
+import com.dk.piley.ui.pile.PileScreen
+import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.theme.PileyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -108,47 +90,6 @@ fun Home(
             composable(Screen.Pile.route) { PileScreen(navController) }
             composable(Screen.Profile.route) { ProfileScreen(navController) }
         }
-    }
-}
-
-@Composable
-fun ProfileScreen(navController: NavHostController = rememberNavController()) {
-    Text("Hi there, TODO")
-}
-
-@Composable
-fun PileScreen(
-    navController: NavHostController = rememberNavController(),
-    viewModel: PileViewModel = hiltViewModel()
-) {
-    val viewState by viewModel.state.collectAsState()
-    val context = LocalContext.current
-    var query by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(
-            TextFieldValue("")
-        )
-    }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Bottom
-    ) {
-        Pile(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            viewState.tasks
-        ) { viewModel.delete(it) }
-        AddTaskField(
-            value = query,
-            onChange = { v: TextFieldValue -> query = v },
-            onDone = {
-                if (query.text.isNotBlank()) {
-                    viewModel.add(query.text)
-                } else {
-                    Toast.makeText(context, "Task can't be empty", Toast.LENGTH_SHORT).show()
-                }
-            }
-        )
     }
 }
 

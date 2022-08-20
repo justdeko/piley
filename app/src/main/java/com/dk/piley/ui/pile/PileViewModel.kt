@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
+import com.dk.piley.model.task.TaskStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +25,7 @@ class PileViewModel @Inject constructor(
         viewModelScope.launch {
             val tasksFlow = repository.getTasks()
             combine(tasksFlow) { (tasks) ->
-                PileViewState(tasks)
+                PileViewState(tasks.filter { it.status == TaskStatus.DEFAULT })
             }.collect { _state.value = it }
         }
     }
@@ -41,9 +42,19 @@ class PileViewModel @Inject constructor(
         }
     }
 
+    fun done(task: Task) {
+        viewModelScope.launch {
+            repository.insertTask(task.apply {
+                status = TaskStatus.DONE
+            })
+        }
+    }
+
     fun delete(task: Task) {
         viewModelScope.launch {
-            repository.deleteTask(task)
+            repository.insertTask(task.apply {
+                status = TaskStatus.DELETED
+            })
         }
     }
 }

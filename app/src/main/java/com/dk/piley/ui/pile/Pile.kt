@@ -21,7 +21,8 @@ import com.dk.piley.ui.theme.PileyTheme
 fun Pile(
     modifier: Modifier = Modifier,
     tasks: List<Task> = emptyList(),
-    onDismiss: (task: Task) -> Unit
+    onDelete: (task: Task) -> Unit = {},
+    onDone: (task: Task) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier.padding(8.dp),
@@ -31,9 +32,9 @@ fun Pile(
         items(tasks, key = { it.id }) { task ->
             val dismissState = rememberDismissState()
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                onDismiss(task)
+                onDelete(task)
             } else if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
-                onDismiss(task)
+                onDone(task)
             }
             PileTask(
                 Modifier
@@ -57,6 +58,6 @@ fun DefaultPreview() {
                 Task(title = "another task", id = 2),
                 Task(title = "fourth task", id = 3),
             )
-        Pile(tasks = taskList, onDismiss = {})
+        Pile(tasks = taskList)
     }
 }

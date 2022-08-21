@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -12,38 +13,43 @@ import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
 fun TaskStats(modifier: Modifier = Modifier, doneCount: Int, deletedCount: Int, currentCount: Int) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier) {
         androidx.compose.material3.Text(
-            text = "Tasks",
-            modifier = modifier
-                .padding(all = 16.dp)
-                .align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground
+            text = "Statistics",
+            color = MaterialTheme.colorScheme.secondary,
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(start = 16.dp),
+            textAlign = TextAlign.Start
         )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+                .padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            androidx.compose.material3.Text(
-                text = doneCount.toString(),
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            androidx.compose.material3.Text(
-                text = currentCount.toString(),
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            androidx.compose.material3.Text(
-                text = deletedCount.toString(),
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
+            StatsColumn("Done", doneCount.toString())
+            StatsColumn("Current", currentCount.toString(), MaterialTheme.typography.headlineLarge)
+            StatsColumn("Deleted", deletedCount.toString())
         }
+    }
+}
+
+@Composable
+fun StatsColumn(
+    description: String,
+    content: String,
+    contentStyle: TextStyle = MaterialTheme.typography.headlineMedium,
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        androidx.compose.material3.Text(
+            text = description,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        androidx.compose.material3.Text(
+            text = content,
+            style = contentStyle,
+            color = MaterialTheme.colorScheme.onBackground
+        )
     }
 }
 

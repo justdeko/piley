@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +42,7 @@ private fun PileScreen(
     onAdd: (String) -> Unit = {},
 ) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     var query by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
             TextFieldValue("")
@@ -63,7 +65,9 @@ private fun PileScreen(
             onChange = { v: TextFieldValue -> query = v },
             onDone = {
                 if (query.text.isNotBlank()) {
+                    focusManager.clearFocus()
                     onAdd(query.text)
+                    query = TextFieldValue()
                 } else {
                     Toast.makeText(context, "Task can't be empty", Toast.LENGTH_SHORT).show()
                 }

@@ -18,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.model.task.Task
+import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -29,7 +30,8 @@ fun PileScreen(
     PileScreen(viewState = viewState,
         onDone = { viewModel.done(it) },
         onDelete = { viewModel.delete(it) },
-        onAdd = { viewModel.add(it) }
+        onAdd = { viewModel.add(it) },
+        onClick = { navController.navigate(Screen.Detail.route) }
     )
 }
 
@@ -40,6 +42,7 @@ private fun PileScreen(
     onDone: (Task) -> Unit = {},
     onDelete: (Task) -> Unit = {},
     onAdd: (String) -> Unit = {},
+    onClick: (Task) -> Unit = {},
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -58,7 +61,8 @@ private fun PileScreen(
                 .weight(1f),
             viewState.tasks,
             onDone = onDone,
-            onDelete = onDelete
+            onDelete = onDelete,
+            onTaskClick = onClick
         )
         AddTaskField(
             value = query,
@@ -66,7 +70,7 @@ private fun PileScreen(
             onDone = {
                 if (query.text.isNotBlank()) {
                     focusManager.clearFocus()
-                    onAdd(query.text)
+                    onAdd(query.text.trim())
                     query = TextFieldValue()
                 } else {
                     Toast.makeText(context, "Task can't be empty", Toast.LENGTH_SHORT).show()

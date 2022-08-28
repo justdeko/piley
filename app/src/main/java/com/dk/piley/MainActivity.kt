@@ -22,6 +22,7 @@ import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.navItems
 import com.dk.piley.ui.pile.PileScreen
 import com.dk.piley.ui.profile.ProfileScreen
+import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -89,6 +90,7 @@ fun Home(
         NavHost(navController, startDestination = Screen.Pile.route, Modifier.padding(padding)) {
             composable(Screen.Pile.route) { PileScreen(navController) }
             composable(Screen.Profile.route) { ProfileScreen(navController) }
+            composable(Screen.Detail.route) { TaskDetailScreen(navController) }
         }
     }
 }

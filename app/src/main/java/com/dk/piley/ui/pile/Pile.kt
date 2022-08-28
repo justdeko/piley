@@ -22,7 +22,8 @@ fun Pile(
     modifier: Modifier = Modifier,
     tasks: List<Task> = emptyList(),
     onDelete: (task: Task) -> Unit = {},
-    onDone: (task: Task) -> Unit = {}
+    onDone: (task: Task) -> Unit = {},
+    onTaskClick: (task: Task) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier.padding(8.dp),
@@ -41,7 +42,8 @@ fun Pile(
                     .animateItemPlacement()
                     .padding(vertical = 1.dp),
                 dismissState,
-                task
+                task,
+                onClick = onTaskClick
             )
         }
     }

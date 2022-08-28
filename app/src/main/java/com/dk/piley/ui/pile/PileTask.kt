@@ -2,20 +2,17 @@ package com.dk.piley.ui.pile
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
@@ -23,14 +20,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.theme.md_theme_light_background
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PileTask(modifier: Modifier, dismissState: DismissState, task: Task) {
+fun PileTask(
+    modifier: Modifier,
+    dismissState: DismissState,
+    task: Task,
+    onClick: (task: Task) -> Unit = {}
+) {
     SwipeToDismiss(
         state = dismissState,
-        modifier = modifier,
+        modifier = modifier.clickable { onClick(task) },
         directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
         dismissThresholds = { getThreshold(it) },
         background = {
@@ -79,7 +80,6 @@ fun PileTask(modifier: Modifier, dismissState: DismissState, task: Task) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
     androidx.compose.material3.Card(modifier = modifier.padding(horizontal = 8.dp)) {

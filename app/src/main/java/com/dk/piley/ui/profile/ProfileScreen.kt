@@ -17,11 +17,12 @@ import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
 fun ProfileScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
-    ProfileScreen(viewState = viewState)
+    ProfileScreen(modifier = modifier, viewState = viewState)
 }
 
 @Composable

@@ -50,7 +50,8 @@ fun Home(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     // hide navigation bar on detail screen
-    navigationBarShown.value = navBackStackEntry?.destination?.route?.startsWith(taskScreen.root) == false
+    navigationBarShown.value =
+        navBackStackEntry?.destination?.route?.startsWith(taskScreen.root) == false
 
     Scaffold(
         modifier = modifier,
@@ -62,9 +63,19 @@ fun Home(
             )
         }
     ) { padding ->
-        NavHost(navController, startDestination = Screen.Pile.route, Modifier.padding(padding)) {
-            composable(Screen.Pile.route) { PileScreen(navController) }
-            composable(Screen.Profile.route) { ProfileScreen(navController) }
+        NavHost(navController, startDestination = Screen.Pile.route) {
+            composable(Screen.Pile.route) {
+                PileScreen(
+                    Modifier.padding(padding),
+                    navController
+                )
+            }
+            composable(Screen.Profile.route) {
+                ProfileScreen(
+                    Modifier.padding(padding),
+                    navController
+                )
+            }
             composable(
                 taskScreen.route,
                 arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })

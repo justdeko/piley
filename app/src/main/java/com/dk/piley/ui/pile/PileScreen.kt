@@ -23,11 +23,14 @@ import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
 fun PileScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     viewModel: PileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
-    PileScreen(viewState = viewState,
+    PileScreen(
+        modifier = modifier,
+        viewState = viewState,
         onDone = { viewModel.done(it) },
         onDelete = { viewModel.delete(it) },
         onAdd = { viewModel.add(it) },

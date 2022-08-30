@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
+import com.dk.piley.model.task.TaskStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,14 @@ class TaskDetailViewModel @Inject constructor(
             tasksFlow.collect {
                 _state.value = TaskDetailViewState(it)
             }
+        }
+    }
+
+    fun deleteTask() {
+        viewModelScope.launch {
+            repository.insertTask(state.value.task.apply {
+                status = TaskStatus.DELETED
+            })
         }
     }
 

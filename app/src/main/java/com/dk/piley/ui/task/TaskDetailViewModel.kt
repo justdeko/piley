@@ -7,7 +7,6 @@ import com.dk.piley.model.task.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,12 +19,12 @@ class TaskDetailViewModel @Inject constructor(
     val state: StateFlow<TaskDetailViewState>
         get() = _state
 
-    init {
+    fun setTask(taskId: Long) {
         viewModelScope.launch {
-            val tasksFlow = repository.getTasks()
-            combine(tasksFlow) { (tasks) ->
-                TaskDetailViewState(tasks.first()) // TODO
-            }.collect { _state.value = it }
+            val tasksFlow = repository.getTaskById(taskId)
+            tasksFlow.collect {
+                _state.value = TaskDetailViewState(it)
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.model.task.Task
-import com.dk.piley.ui.nav.Screen
+import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -31,7 +31,7 @@ fun PileScreen(
         onDone = { viewModel.done(it) },
         onDelete = { viewModel.delete(it) },
         onAdd = { viewModel.add(it) },
-        onClick = { navController.navigate(Screen.Detail.route) }
+        onClick = { navController.navigate(taskScreen.root + "/" + it.id) }
     )
 }
 

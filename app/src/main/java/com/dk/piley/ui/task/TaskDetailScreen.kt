@@ -18,10 +18,14 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun TaskDetailScreen(
+    taskId: Long?,
     navController: NavHostController = rememberNavController(),
     viewModel: TaskDetailViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
+    if (taskId != null) {
+        viewModel.setTask(taskId)
+    }
     TaskDetailScreen(viewState = viewState)
 }
 

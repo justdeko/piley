@@ -4,22 +4,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.dk.piley.ui.nav.BottomNavigationBar
 import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.nav.navItems
+import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.pile.PileScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.task.TaskDetailScreen
@@ -44,53 +46,36 @@ fun Home(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
+    val navigationBarShown = rememberSaveable { (mutableStateOf(true)) }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    // hide navigation bar on detail screen
+    navigationBarShown.value = navBackStackEntry?.destination?.route?.startsWith(taskScreen.root) == false
+
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            NavigationBar {
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navBackStackEntry?.destination
-                navItems.forEach { screen ->
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                screen.icon,
-                                tint = MaterialTheme.colorScheme.secondary,
-                                contentDescription = null,
-                            )
-                        },
-                        label = {
-                            Text(
-                                stringResource(screen.resourceId),
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                        },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
-                                launchSingleTop = true
-                                // Restore state when reselecting a previously selected item
-                                restoreState = true
-                            }
-                        }
-                    )
-                }
-            }
+            BottomNavigationBar(
+                isVisible = navigationBarShown.value,
+                navController = navController
+            )
         }
     ) { padding ->
         NavHost(navController, startDestination = Screen.Pile.route, Modifier.padding(padding)) {
             composable(Screen.Pile.route) { PileScreen(navController) }
             composable(Screen.Profile.route) { ProfileScreen(navController) }
-            composable(Screen.Detail.route) { TaskDetailScreen(navController) }
+            composable(
+                taskScreen.route,
+                arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })
+            ) { navBackStackEntry ->
+                TaskDetailScreen(
+                    navBackStackEntry.arguments?.getLong(
+                        taskScreen.identifier
+                    ),
+                    navController
+                )
+            }
         }
     }
 }

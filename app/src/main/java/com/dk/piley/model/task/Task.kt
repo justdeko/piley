@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 @Entity
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val title: String = "",
+    var title: String = "",
     val pileId: Long = 0,
-    val description: String = "",
+    var description: String = "",
     val createdAt: Long = 0,
-    val modifiedAt: Long = 0,
+    var modifiedAt: Long = 0,
     var status: TaskStatus = TaskStatus.DEFAULT,
 )

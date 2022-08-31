@@ -79,13 +79,8 @@ fun Home(
             composable(
                 taskScreen.route,
                 arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })
-            ) { navBackStackEntry ->
-                TaskDetailScreen(
-                    navBackStackEntry.arguments?.getLong(
-                        taskScreen.identifier
-                    ),
-                    navController
-                )
+            ) {
+                TaskDetailScreen(navController)
             }
         }
     }

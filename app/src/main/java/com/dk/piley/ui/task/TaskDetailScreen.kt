@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,11 +46,6 @@ fun TaskDetailScreen(
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
 ) {
-    var query by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(
-            TextFieldValue(viewState.task.description)
-        )
-    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -76,10 +71,9 @@ fun TaskDetailScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
             EditDescriptionField(
-                value = query,
+                value = viewState.descriptionTextValue,
                 onChange = {
-                    query = it
-                    onEditDesc(it.text)
+                    onEditDesc(it)
                 }
             )
         }

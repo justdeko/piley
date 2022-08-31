@@ -10,6 +10,7 @@ import com.dk.piley.ui.nav.taskScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +28,7 @@ class TaskDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val id = savedStateHandle.get<Long>(taskScreen.identifier)
             id?.let { repository.getTaskById(it) }?.collect { task ->
-                _state.value = TaskDetailViewState(task)
+                _state.value = TaskDetailViewState(task, task.description)
             }
         }
     }
@@ -41,6 +42,9 @@ class TaskDetailViewModel @Inject constructor(
     }
 
     fun editDescription(desc: String) {
+        _state.update {
+            it.copy(descriptionTextValue = desc)
+        }
         viewModelScope.launch {
             repository.insertTask(state.value.task.apply {
                 description = desc
@@ -51,5 +55,6 @@ class TaskDetailViewModel @Inject constructor(
 }
 
 data class TaskDetailViewState(
-    val task: Task = Task()
+    val task: Task = Task(),
+    val descriptionTextValue: String = ""
 )

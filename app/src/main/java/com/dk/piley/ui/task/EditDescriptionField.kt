@@ -8,7 +8,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.ui.theme.PileyTheme
@@ -17,8 +16,8 @@ import com.dk.piley.ui.theme.PileyTheme
 @Composable
 fun EditDescriptionField(
     modifier: Modifier = Modifier,
-    value: TextFieldValue,
-    onChange: (TextFieldValue) -> Unit
+    value: String,
+    onChange: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = modifier
@@ -37,7 +36,7 @@ fun EditDescriptionField(
 @Composable
 fun EditDescriptionFieldPreview() {
     PileyTheme(useDarkTheme = true) {
-        val text = TextFieldValue("hi there\nsdf\nsdf\nsdfiu\ndf")
+        val text = "hi there\nsdf\nsdf\nsdfiu\ndf"
         EditDescriptionField(value = text, onChange = {})
     }
 }

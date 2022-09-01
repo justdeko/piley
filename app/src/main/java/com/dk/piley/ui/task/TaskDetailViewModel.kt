@@ -41,6 +41,14 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    fun completeTask() {
+        viewModelScope.launch {
+            repository.insertTask(state.value.task.apply {
+                status = TaskStatus.DONE
+            })
+        }
+    }
+
     fun editDescription(desc: String) {
         _state.update {
             it.copy(descriptionTextValue = desc)

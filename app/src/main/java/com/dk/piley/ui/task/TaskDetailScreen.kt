@@ -1,16 +1,24 @@
 package com.dk.piley.ui.task
 
 import android.content.res.Configuration
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.BottomDrawerValue
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.rememberBottomDrawerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun TaskDetailScreen(
@@ -32,11 +41,16 @@ fun TaskDetailScreen(
             navController.popBackStack()
             viewModel.deleteTask()
         },
+        onCompleteTask = {
+            navController.popBackStack()
+            viewModel.completeTask()
+        },
         onClose = { navController.popBackStack() },
         onEditDesc = { viewModel.editDescription(it) }
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TaskDetailScreen(
     modifier: Modifier = Modifier,
@@ -46,64 +60,89 @@ fun TaskDetailScreen(
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            IconButton(onClick = onClose) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    "close the task detail",
-                    modifier = Modifier.scale(
-                        1.5F
-                    ),
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-            }
-            Text(
-                text = viewState.task.title,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            EditDescriptionField(
-                value = viewState.descriptionTextValue,
-                onChange = {
-                    onEditDesc(it)
-                }
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .weight(1f, false)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+    val focusManager = LocalFocusManager.current
+    val scope = rememberCoroutineScope()
+    val drawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
+    AddReminderDrawer(content = {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp)
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                },
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
-                onClick = onCompleteTask,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    IconButton(onClick = onClose) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            "close the task detail",
+                            modifier = Modifier.scale(
+                                1.5F
+                            ),
+                            tint = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            "set a task reminder",
+                            modifier = Modifier.scale(
+                                1.5F
+                            ),
+                            tint = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                }
+                Text(
+                    text = viewState.task.title,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-            ) {
-                Text(text = "Complete")
+                EditDescriptionField(
+                    value = viewState.descriptionTextValue,
+                    onChange = {
+                        onEditDesc(it)
+                    }
+                )
             }
-            Button(
-                onClick = onDeleteTask,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                )
+
+            Row(
+                modifier = Modifier
+                    .weight(1f, false)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(text = "Delete")
+                Button(
+                    onClick = onCompleteTask,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                ) {
+                    Text(text = "Complete")
+                }
+                Button(
+                    onClick = onDeleteTask,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                ) {
+                    Text(text = "Delete")
+                }
             }
         }
-    }
+    }, modifier = Modifier, drawerState = drawerState)
 }
 
 @Preview(name = "Light Mode", showBackground = true)

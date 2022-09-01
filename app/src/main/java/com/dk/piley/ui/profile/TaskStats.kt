@@ -2,6 +2,7 @@ package com.dk.piley.ui.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +15,7 @@ import com.dk.piley.ui.theme.PileyTheme
 @Composable
 fun TaskStats(modifier: Modifier = Modifier, doneCount: Int, deletedCount: Int, currentCount: Int) {
     Column(modifier = modifier) {
-        androidx.compose.material3.Text(
+        Text(
             text = "Statistics",
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
@@ -41,11 +42,11 @@ fun StatsColumn(
     contentStyle: TextStyle = MaterialTheme.typography.headlineMedium,
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        androidx.compose.material3.Text(
+        Text(
             text = description,
             color = MaterialTheme.colorScheme.onBackground
         )
-        androidx.compose.material3.Text(
+        Text(
             text = content,
             style = contentStyle,
             color = MaterialTheme.colorScheme.onBackground

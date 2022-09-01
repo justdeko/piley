@@ -2,7 +2,7 @@ package com.dk.piley.ui.task
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,11 +24,11 @@ fun EditDescriptionField(
             .fillMaxWidth()
             .padding(16.dp),
         value = value,
-        shape = RoundedCornerShape(16.dp),
+        shape = CutCornerShape(16.dp),
         onValueChange = onChange,
         singleLine = false,
         maxLines = 4,
-        placeholder = { Text("Add a description") },
+        placeholder = { Text("Click here to add a description") },
     )
 }
 

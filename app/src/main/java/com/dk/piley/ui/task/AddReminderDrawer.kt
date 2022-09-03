@@ -11,15 +11,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.ui.common.showDatePicker
+import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -44,13 +44,13 @@ fun AddReminderDrawer(
 @Composable
 fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerState) {
     val context = LocalContext.current
+    var date by remember { mutableStateOf("") }
+    var time by remember { mutableStateOf("") }
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(32.dp)
     ) {
-        val date = remember { mutableStateOf("") }
-        val time = remember { mutableStateOf("") }
         Text(
             text = "Add reminder",
             color = MaterialTheme.colorScheme.secondary,
@@ -64,9 +64,9 @@ fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerS
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Pick a date: ${date.value}")
+            Text("Pick a date: $date")
             IconButton(onClick = {
-                /*TODO*/
+                context.showDatePicker { date = it.toString() }
             }) {
                 Icon(
                     imageVector = Icons.Default.Event,
@@ -82,9 +82,9 @@ fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerS
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Pick a time: ${time.value}")
+            Text("Pick a time: $time")
             IconButton(onClick = {
-                /*TODO*/
+                context.showTimePicker { time = it.toString() }
             }) {
                 Icon(
                     imageVector = Icons.Default.Schedule,

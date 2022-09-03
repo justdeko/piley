@@ -56,6 +56,7 @@ dependencies {
     // core
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation 'androidx.appcompat:appcompat:1.5.0'
     // room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -73,6 +74,8 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation 'androidx.activity:activity-compose:1.5.1'
+    // material design components
+    implementation 'com.google.android.material:material:1.6.1'
     // local time and date below API 26
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.0'
     // testing

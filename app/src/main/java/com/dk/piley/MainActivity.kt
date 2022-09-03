@@ -1,8 +1,8 @@
 package com.dk.piley
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,11 +25,18 @@ import com.dk.piley.ui.pile.PileScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.util.isDarkMode
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // set initial theme
+        if (this.isDarkMode()) {
+            setTheme(R.style.Theme_Piley_Dark)
+        } else {
+            setTheme(R.style.Theme_Piley_Light)
+        }
         super.onCreate(savedInstanceState)
         setContent {
             PileyTheme {

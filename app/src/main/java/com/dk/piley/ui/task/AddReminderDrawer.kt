@@ -21,20 +21,36 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.ui.common.showDatePicker
 import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.util.toDate
+import com.dk.piley.ui.util.toLocalDateTime
+import com.dk.piley.ui.util.utcZoneId
+import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
+import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddReminderDrawer(
     content: @Composable () -> Unit,
     modifier: Modifier,
-    drawerState: BottomDrawerState
+    drawerState: BottomDrawerState,
+    onAddReminder: (Date) -> Unit = {},
+    initialDate: Date? = null
 ) {
     BottomDrawer(
-        drawerContent = { AddReminderContent(modifier, drawerState) },
+        drawerContent = {
+            AddReminderContent(
+                modifier,
+                drawerState,
+                onAddReminder,
+                initialDate
+            )
+        },
         gesturesEnabled = !drawerState.isClosed,
         drawerState = drawerState,
         drawerBackgroundColor = MaterialTheme.colorScheme.surface,
-        drawerShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+        drawerShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
     ) {
         content()
     }
@@ -42,10 +58,19 @@ fun AddReminderDrawer(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerState) {
+fun AddReminderContent(
+    modifier: Modifier = Modifier,
+    drawerState: BottomDrawerState,
+    onAddReminder: (Date) -> Unit,
+    initialDate: Date? = null
+) {
     val context = LocalContext.current
-    var date by remember { mutableStateOf("") }
-    var time by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+    val initialDateTime = initialDate?.toLocalDateTime()
+    var dateText by remember { mutableStateOf("Pick a date") }
+    var timeText by remember { mutableStateOf("Pick a time") }
+    var localDate by remember { mutableStateOf(LocalDate.now(utcZoneId)) }
+    var localTime by remember { mutableStateOf(LocalTime.now(utcZoneId)) }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -64,9 +89,12 @@ fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerS
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Pick a date: $date")
+            Text(dateText)
             IconButton(onClick = {
-                context.showDatePicker { date = it.toString() }
+                context.showDatePicker(initialDateTime?.toLocalDate()) {
+                    dateText = it.toString()
+                    localDate = it
+                }
             }) {
                 Icon(
                     imageVector = Icons.Default.Event,
@@ -82,9 +110,12 @@ fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerS
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Pick a time: $time")
+            Text(timeText)
             IconButton(onClick = {
-                context.showTimePicker { time = it.toString() }
+                context.showTimePicker(initialDateTime?.toLocalTime()) {
+                    timeText = it.toString()
+                    localTime = it
+                }
             }) {
                 Icon(
                     imageVector = Icons.Default.Schedule,
@@ -97,7 +128,13 @@ fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerS
             modifier = Modifier
                 .padding(top = 16.dp)
                 .align(Alignment.CenterHorizontally),
-            onClick = { /*TODO*/ }
+            onClick = {
+                val dateTime = localTime.atDate(localDate)
+                onAddReminder(dateTime.toDate())
+                coroutineScope.launch {
+                    drawerState.close()
+                }
+            }
         ) {
             Text("Set Reminder")
         }

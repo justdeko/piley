@@ -7,10 +7,13 @@ package com.dk.piley.ui.common
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import com.dk.piley.ui.util.utcZoneId
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import org.threeten.bp.*
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
 
 private const val DATE_PICKER_TAG = "date_picker"
 private const val TIME_PICKER_TAG = "time_picker"
@@ -19,13 +22,12 @@ fun Context.showDatePicker(
     selection: LocalDate? = null,
     selectedDate: (LocalDate) -> Unit
 ) {
-    val zoneId = ZoneId.ofOffset("UTC", ZoneOffset.UTC)
     val picker = MaterialDatePicker
         .Builder
         .datePicker()
         .apply {
             if (selection != null) {
-                setSelection(selection.atStartOfDay(zoneId).toInstant().toEpochMilli())
+                setSelection(selection.atStartOfDay(utcZoneId).toInstant().toEpochMilli())
             }
         }
         .build()
@@ -39,7 +41,7 @@ fun Context.showDatePicker(
         selectedDate(
             Instant
                 .ofEpochMilli(it)
-                .atZone(zoneId)
+                .atZone(utcZoneId)
                 .toLocalDate()
         )
     }

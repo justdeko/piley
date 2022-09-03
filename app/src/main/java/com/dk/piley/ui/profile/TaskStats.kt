@@ -26,31 +26,38 @@ fun TaskStats(modifier: Modifier = Modifier, doneCount: Int, deletedCount: Int, 
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            StatsColumn("Done", doneCount.toString())
-            StatsColumn("Current", currentCount.toString(), MaterialTheme.typography.headlineLarge)
-            StatsColumn("Deleted", deletedCount.toString())
+            StatsColumn(description = "Done", content = doneCount.toString())
+            StatsColumn(
+                description = "Current",
+                content = currentCount.toString(),
+                contentStyle = MaterialTheme.typography.headlineLarge
+            )
+            StatsColumn(description = "Deleted", content = deletedCount.toString())
         }
     }
 }
 
 @Composable
-fun StatsColumn(
+fun RowScope.StatsColumn(
+    modifier: Modifier = Modifier,
     description: String,
     content: String,
     contentStyle: TextStyle = MaterialTheme.typography.headlineMedium,
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = description,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Text(
-            text = content,
-            style = contentStyle,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+    Box(modifier = modifier.weight(1f), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = description,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = content,
+                style = contentStyle,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
 }
 

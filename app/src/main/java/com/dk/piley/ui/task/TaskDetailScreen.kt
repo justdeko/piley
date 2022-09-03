@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun TaskDetailScreen(
@@ -45,6 +46,7 @@ fun TaskDetailScreen(
             navController.popBackStack()
             viewModel.completeTask()
         },
+        onAddReminder = { viewModel.addReminder(it) },
         onClose = { navController.popBackStack() },
         onEditDesc = { viewModel.editDescription(it) }
     )
@@ -59,6 +61,7 @@ fun TaskDetailScreen(
     onCompleteTask: () -> Unit = {},
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
+    onAddReminder: (Date) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
@@ -114,6 +117,13 @@ fun TaskDetailScreen(
                         onEditDesc(it)
                     }
                 )
+                Text(
+                    text = viewState.reminderDateTimeText ?: "No reminder set",
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 
             Row(
@@ -142,7 +152,7 @@ fun TaskDetailScreen(
                 }
             }
         }
-    }, modifier = Modifier, drawerState = drawerState)
+    }, modifier = Modifier, drawerState = drawerState, onAddReminder = onAddReminder, initialDate = viewState.task.reminder)
 }
 
 @Preview(name = "Light Mode", showBackground = true)

@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskDao
 
 @Database(entities = [Pile::class, Task::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class PileDatabase : RoomDatabase() {
     // DAOs
     abstract fun taskDao(): TaskDao

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,8 +36,8 @@ class PileViewModel @Inject constructor(
             repository.insertTask(
                 Task(
                     title = text,
-                    createdAt = System.currentTimeMillis(),
-                    modifiedAt = System.currentTimeMillis()
+                    createdAt = Date(System.currentTimeMillis()),
+                    modifiedAt = Date(System.currentTimeMillis())
                 )
             )
         }

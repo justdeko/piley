@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- dark colors TODO: remove when compose date picker exists-->
+    <color name="md_theme_dark_tertiary">#FFC7C2EA</color>
+    <color name="md_theme_dark_onPrimary">#FF003547</color>
+    <color name="md_theme_dark_surface">#FF191C1E</color>
+    <color name="md_theme_dark_secondary">#FFB4CAD6</color>
+    <!-- light colors TODO: remove when compose date picker exists-->
+    <color name="md_theme_light_tertiary">#FF5E5B7D</color>
+    <color name="md_theme_light_onPrimary">#FFFFFFFF</color>
+    <color name="md_theme_light_surface">#FFFBFCFE</color>
+    <color name="md_theme_light_secondary">#FF4D616C</color>
 </resources>

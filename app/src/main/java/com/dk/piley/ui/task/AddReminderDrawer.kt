@@ -1,18 +1,22 @@
 package com.dk.piley.ui.task
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomDrawer
 import androidx.compose.material.BottomDrawerState
 import androidx.compose.material.BottomDrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,59 +33,70 @@ fun AddReminderDrawer(
         drawerContent = { AddReminderContent(modifier, drawerState) },
         gesturesEnabled = !drawerState.isClosed,
         drawerState = drawerState,
-        drawerBackgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+        drawerBackgroundColor = MaterialTheme.colorScheme.surface,
         drawerShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
     ) {
         content()
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerState) {
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(32.dp)
     ) {
-        val options = listOf("Today", "Tomorrow", "Custom")
-        var expanded by remember { mutableStateOf(false) }
-        var selectedOptionText by remember { mutableStateOf(options[0]) }
+        val date = remember { mutableStateOf("") }
+        val time = remember { mutableStateOf("") }
         Text(
             text = "Add reminder",
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start
         )
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            TextField(
-                readOnly = true,
-                value = selectedOptionText,
-                onValueChange = {},
-                label = { Text("Date") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption) },
-                        onClick = {
-                            selectedOptionText = selectionOption
-                            expanded = false
-                        }
-                    )
-                }
+            Text("Pick a date: ${date.value}")
+            IconButton(onClick = {
+                /*TODO*/
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Event,
+                    "set the date for a reminder",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Pick a time: ${time.value}")
+            IconButton(onClick = {
+                /*TODO*/
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Schedule,
+                    "set the date for a reminder",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
             }
         }
         Button(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .align(Alignment.CenterHorizontally),
             onClick = { /*TODO*/ }
         ) {
             Text("Set Reminder")
@@ -90,15 +105,17 @@ fun AddReminderContent(modifier: Modifier = Modifier, drawerState: BottomDrawerS
 }
 
 @OptIn(ExperimentalMaterialApi::class)
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AddReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
-        val drawerState = BottomDrawerState(BottomDrawerValue.Open)
-        AddReminderDrawer(content = {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Text("some text here")
-            }
-        }, modifier = Modifier, drawerState = drawerState)
+        Surface {
+            val drawerState = BottomDrawerState(BottomDrawerValue.Open)
+            AddReminderDrawer(content = {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text("some text here")
+                }
+            }, modifier = Modifier, drawerState = drawerState)
+        }
     }
 }

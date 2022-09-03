@@ -21,13 +21,10 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.ui.common.showDatePicker
 import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.util.toDate
-import com.dk.piley.ui.util.toLocalDateTime
-import com.dk.piley.ui.util.utcZoneId
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
-import java.util.*
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -35,8 +32,8 @@ fun AddReminderDrawer(
     content: @Composable () -> Unit,
     modifier: Modifier,
     drawerState: BottomDrawerState,
-    onAddReminder: (Date) -> Unit = {},
-    initialDate: Date? = null
+    onAddReminder: (LocalDateTime) -> Unit = {},
+    initialDate: LocalDateTime? = null
 ) {
     BottomDrawer(
         drawerContent = {
@@ -61,16 +58,13 @@ fun AddReminderDrawer(
 fun AddReminderContent(
     modifier: Modifier = Modifier,
     drawerState: BottomDrawerState,
-    onAddReminder: (Date) -> Unit,
-    initialDate: Date? = null
+    onAddReminder: (LocalDateTime) -> Unit,
+    initialDateTime: LocalDateTime? = null
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val initialDateTime = initialDate?.toLocalDateTime()
-    var dateText by remember { mutableStateOf("Pick a date") }
-    var timeText by remember { mutableStateOf("Pick a time") }
-    var localDate by remember { mutableStateOf(LocalDate.now(utcZoneId)) }
-    var localTime by remember { mutableStateOf(LocalTime.now(utcZoneId)) }
+    var localDate: LocalDate? by remember { mutableStateOf(null) }
+    var localTime: LocalTime? by remember { mutableStateOf(null) }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -89,10 +83,12 @@ fun AddReminderContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(dateText)
+            Text(
+                localDate?.toString() ?: (initialDateTime?.toLocalDate()?.toString()
+                    ?: "Pick a time")
+            )
             IconButton(onClick = {
-                context.showDatePicker(initialDateTime?.toLocalDate()) {
-                    dateText = it.toString()
+                context.showDatePicker(localDate ?: initialDateTime?.toLocalDate()) {
                     localDate = it
                 }
             }) {
@@ -110,10 +106,12 @@ fun AddReminderContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(timeText)
+            Text(
+                localTime?.toString() ?: (initialDateTime?.toLocalTime()?.toString()
+                    ?: "Pick a time")
+            )
             IconButton(onClick = {
-                context.showTimePicker(initialDateTime?.toLocalTime()) {
-                    timeText = it.toString()
+                context.showTimePicker(localTime ?: initialDateTime?.toLocalTime()) {
                     localTime = it
                 }
             }) {
@@ -128,15 +126,25 @@ fun AddReminderContent(
             modifier = Modifier
                 .padding(top = 16.dp)
                 .align(Alignment.CenterHorizontally),
+            enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
             onClick = {
-                val dateTime = localTime.atDate(localDate)
-                onAddReminder(dateTime.toDate())
+                if (localTime != null && localDate != null) {
+                    localTime?.atDate(localDate)?.let {
+                        onAddReminder(it)
+                    }
+                } else if (initialDateTime != null) {
+                    // case of an existing reminder getting updated
+                    // where only one or no fields were touched
+                    val time = localTime ?: initialDateTime.toLocalTime()
+                    val date = localDate ?: initialDateTime.toLocalDate()
+                    onAddReminder(time.atDate(date))
+                }
                 coroutineScope.launch {
                     drawerState.close()
                 }
             }
         ) {
-            Text("Set Reminder")
+            Text(if (initialDateTime == null) "Set Reminder" else "Update Reminder")
         }
     }
 }

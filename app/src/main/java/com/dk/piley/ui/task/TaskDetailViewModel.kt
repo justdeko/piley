@@ -8,13 +8,12 @@ import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.util.dateTimeString
-import com.dk.piley.ui.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.*
+import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +33,7 @@ class TaskDetailViewModel @Inject constructor(
                 _state.value = TaskDetailViewState(
                     task,
                     task.description,
-                    task.reminder?.toLocalDateTime()?.dateTimeString()
+                    task.reminder?.dateTimeString()
                 )
             }
         }
@@ -56,13 +55,13 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
-    fun addReminder(date: Date) {
+    fun addReminder(localDateTime: LocalDateTime) {
         _state.update {
-            it.copy(reminderDateTimeText = date.toLocalDateTime()?.dateTimeString())
+            it.copy(reminderDateTimeText = localDateTime.dateTimeString())
         }
         viewModelScope.launch {
             repository.insertTask(state.value.task.apply {
-                reminder = date
+                reminder = localDateTime
             })
         }
     }

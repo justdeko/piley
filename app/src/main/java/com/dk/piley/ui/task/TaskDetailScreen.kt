@@ -28,7 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
 import kotlinx.coroutines.launch
-import java.util.*
+import org.threeten.bp.LocalDateTime
 
 @Composable
 fun TaskDetailScreen(
@@ -61,7 +61,7 @@ fun TaskDetailScreen(
     onCompleteTask: () -> Unit = {},
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
-    onAddReminder: (Date) -> Unit = {},
+    onAddReminder: (LocalDateTime) -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()

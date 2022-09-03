@@ -2,7 +2,7 @@ package com.dk.piley.model.task
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.*
+import org.threeten.bp.LocalDateTime
 
 @Entity
 data class Task(
@@ -10,8 +10,8 @@ data class Task(
     var title: String = "",
     val pileId: Long = 0,
     var description: String = "",
-    val createdAt: Date = Date(),
-    var modifiedAt: Date = Date(),
-    var reminder: Date? = null,
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    var modifiedAt: LocalDateTime = LocalDateTime.now(),
+    var reminder: LocalDateTime? = null,
     var status: TaskStatus = TaskStatus.DEFAULT,
 )

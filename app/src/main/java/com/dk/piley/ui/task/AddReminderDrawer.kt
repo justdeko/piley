@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.ui.common.showDatePicker
 import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.util.utcZoneId
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -29,11 +30,12 @@ import org.threeten.bp.LocalTime
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddReminderDrawer(
-    content: @Composable () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     drawerState: BottomDrawerState,
+    initialDate: LocalDateTime? = null,
     onAddReminder: (LocalDateTime) -> Unit = {},
-    initialDate: LocalDateTime? = null
+    onDeleteReminder: () -> Unit = {},
+    content: @Composable () -> Unit,
 ) {
     BottomDrawer(
         drawerContent = {
@@ -41,6 +43,7 @@ fun AddReminderDrawer(
                 modifier,
                 drawerState,
                 onAddReminder,
+                onDeleteReminder,
                 initialDate
             )
         },
@@ -59,6 +62,7 @@ fun AddReminderContent(
     modifier: Modifier = Modifier,
     drawerState: BottomDrawerState,
     onAddReminder: (LocalDateTime) -> Unit,
+    onDeleteReminder: () -> Unit = {},
     initialDateTime: LocalDateTime? = null
 ) {
     val context = LocalContext.current
@@ -122,30 +126,45 @@ fun AddReminderContent(
                 )
             }
         }
-        Button(
+        Row(
             modifier = Modifier
-                .padding(top = 16.dp)
-                .align(Alignment.CenterHorizontally),
-            enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
-            onClick = {
-                if (localTime != null && localDate != null) {
-                    localTime?.atDate(localDate)?.let {
-                        onAddReminder(it)
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(
+                enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
+                onClick = {
+                    if (localTime != null && localDate != null) {
+                        localTime?.atDate(localDate)?.let {
+                            onAddReminder(it)
+                        }
+                    } else if (initialDateTime != null) {
+                        // case of an existing reminder getting updated
+                        // where only one or no fields were touched
+                        val time = localTime ?: initialDateTime.toLocalTime()
+                        val date = localDate ?: initialDateTime.toLocalDate()
+                        onAddReminder(time.atDate(date))
                     }
-                } else if (initialDateTime != null) {
-                    // case of an existing reminder getting updated
-                    // where only one or no fields were touched
-                    val time = localTime ?: initialDateTime.toLocalTime()
-                    val date = localDate ?: initialDateTime.toLocalDate()
-                    onAddReminder(time.atDate(date))
+                    coroutineScope.launch {
+                        drawerState.close()
+                    }
                 }
-                coroutineScope.launch {
-                    drawerState.close()
+            ) {
+                Text(if (initialDateTime == null) "Set Reminder" else "Update")
+            }
+            if (initialDateTime != null) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ), onClick = onDeleteReminder
+                ) {
+                    Text("Delete")
                 }
             }
-        ) {
-            Text(if (initialDateTime == null) "Set Reminder" else "Update Reminder")
         }
+
     }
 }
 
@@ -157,6 +176,23 @@ fun AddReminderDrawerPreview() {
         Surface {
             val drawerState = BottomDrawerState(BottomDrawerValue.Open)
             AddReminderDrawer(content = {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text("some text here")
+                }
+            }, modifier = Modifier, drawerState = drawerState)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview(showBackground = true)
+@Composable
+fun EditReminderDrawerPreview() {
+    PileyTheme(useDarkTheme = true) {
+        Surface {
+            val initialDateTime = LocalDateTime.now(utcZoneId)
+            val drawerState = BottomDrawerState(BottomDrawerValue.Open)
+            AddReminderDrawer(initialDate = initialDateTime, content = {
                 Column(modifier = Modifier.fillMaxSize()) {
                     Text("some text here")
                 }

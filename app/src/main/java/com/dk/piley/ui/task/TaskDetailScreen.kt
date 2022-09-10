@@ -47,6 +47,7 @@ fun TaskDetailScreen(
             viewModel.completeTask()
         },
         onAddReminder = { viewModel.addReminder(it) },
+        onCancelReminder = { viewModel.cancelReminder() },
         onClose = { navController.popBackStack() },
         onEditDesc = { viewModel.editDescription(it) }
     )
@@ -62,11 +63,17 @@ fun TaskDetailScreen(
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
     onAddReminder: (LocalDateTime) -> Unit = {},
+    onCancelReminder: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
     val drawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
-    AddReminderDrawer(content = {
+    AddReminderDrawer(
+        drawerState = drawerState,
+        onAddReminder = onAddReminder,
+        onDeleteReminder = onCancelReminder,
+        initialDate = viewState.task.reminder
+    ) {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -117,13 +124,11 @@ fun TaskDetailScreen(
                         onEditDesc(it)
                     }
                 )
-                Text(
-                    text = viewState.reminderDateTimeText ?: "No reminder set",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onBackground
+                ReminderInfo(
+                    reminderDateTimeText = viewState.reminderDateTimeText,
+                    onAddReminder = { scope.launch { drawerState.open() } },
                 )
+
             }
 
             Row(
@@ -152,7 +157,7 @@ fun TaskDetailScreen(
                 }
             }
         }
-    }, modifier = Modifier, drawerState = drawerState, onAddReminder = onAddReminder, initialDate = viewState.task.reminder)
+    }
 }
 
 @Preview(name = "Light Mode", showBackground = true)

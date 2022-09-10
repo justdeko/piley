@@ -66,6 +66,17 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    fun cancelReminder() {
+        _state.update {
+            it.copy(reminderDateTimeText = null)
+        }
+        viewModelScope.launch {
+            repository.insertTask(state.value.task.apply {
+                reminder = null
+            })
+        }
+    }
+
     fun editDescription(desc: String) {
         _state.update {
             it.copy(descriptionTextValue = desc)

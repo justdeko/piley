@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.dk.piley.receiver.ReminderAlarmReceiver
+import com.dk.piley.ui.util.toTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.threeten.bp.LocalDateTime
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,35 +22,29 @@ class ReminderManager @Inject constructor(
         reminderDateTime: LocalDateTime, taskId: Long
     ) {
         Log.d("ReminderManager", "starting reminder")
-        val intent =
-            Intent(context.applicationContext, ReminderAlarmReceiver::class.java).let { intent ->
-                PendingIntent.getBroadcast(
-                    context.applicationContext,
-                    taskId.toInt(),
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
-            }
-
-        val calendar: Calendar = Calendar.getInstance(Locale.ENGLISH).apply {
-            set(Calendar.HOUR_OF_DAY, reminderDateTime.hour)
-            set(Calendar.MINUTE, reminderDateTime.minute)
-        }
-        if (Calendar.getInstance(Locale.ENGLISH)
-                .apply { add(Calendar.MINUTE, 1) }.timeInMillis - calendar.timeInMillis > 0
-        ) {
-            calendar.add(Calendar.DATE, 1)
+        val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
+            action = ReminderAlarmReceiver.ACTION_SHOW
+            putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)
+        }.let { intent ->
+            PendingIntent.getBroadcast(
+                context.applicationContext,
+                taskId.toInt(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
 
         alarmManager?.setAlarmClock(
-            AlarmManager.AlarmClockInfo(calendar.timeInMillis, intent), intent
+            AlarmManager.AlarmClockInfo(reminderDateTime.toTimestamp(), intent), intent
         )
     }
 
     fun cancelReminder(
         taskId: Long
     ) {
-        val intent = Intent(context, ReminderAlarmReceiver::class.java).let { intent ->
+        val intent = Intent(context, ReminderAlarmReceiver::class.java).apply {
+            action = ReminderAlarmReceiver.ACTION_SHOW
+        }.let { intent ->
             PendingIntent.getBroadcast(
                 context, taskId.toInt(), intent, 0
             )

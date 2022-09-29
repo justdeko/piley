@@ -1,12 +1,10 @@
 package com.dk.piley.reminder
 
+import android.util.Log
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.task.TaskStatus
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.*
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
@@ -33,6 +31,9 @@ class ReminderActionHandler @Inject constructor(
     }
 
     override suspend fun complete(taskId: Long): Flow<Task> {
+        // no task found
+        if (taskId.toInt() == -1) return emptyFlow()
+        Log.d("ReminderActionHandler", "Completing task with id $taskId")
         return taskDao.getTaskById(taskId).onEach {
             taskDao.insertTask(it.apply {
                 this.status = TaskStatus.DONE
@@ -43,6 +44,8 @@ class ReminderActionHandler @Inject constructor(
     }
 
     override fun delay(taskId: Long): Flow<Task> {
+        // no task found
+        if (taskId.toInt() == -1) return emptyFlow()
         return taskDao.getTaskById(taskId).onEach {
             reminderManager.startReminder(LocalDateTime.now().plusMinutes(30), it.id)
             notificationManager.dismiss(taskId)

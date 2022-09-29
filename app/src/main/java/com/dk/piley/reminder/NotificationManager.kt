@@ -84,7 +84,7 @@ class NotificationManager @Inject constructor(
         val receiverIntent = Intent(context, ReminderAlarmReceiver::class.java).apply {
             action =
                 if (isDoneAction) ReminderAlarmReceiver.ACTION_COMPLETE else ReminderAlarmReceiver.ACTION_DELAY
-            putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId.toString())
+            putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,

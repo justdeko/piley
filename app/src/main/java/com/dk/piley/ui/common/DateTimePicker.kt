@@ -13,6 +13,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 
 private const val DATE_PICKER_TAG = "date_picker"
@@ -61,7 +62,9 @@ fun Context.showTimePicker(
                 setHour(time.hour)
                 setMinute(time.minute)
             } else {
-                setHour(9)
+                val currentDateTime = LocalDateTime.now()
+                setHour(currentDateTime.hour)
+                setMinute(currentDateTime.minute)
             }
         }
         .build()

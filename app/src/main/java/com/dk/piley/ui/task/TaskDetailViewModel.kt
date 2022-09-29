@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.util.dateTimeString
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository,
+    private val reminderManager: ReminderManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _state = MutableStateFlow(TaskDetailViewState())
@@ -55,14 +57,15 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
-    fun addReminder(localDateTime: LocalDateTime) {
+    fun addReminder(reminderDateTime: LocalDateTime) {
         _state.update {
-            it.copy(reminderDateTimeText = localDateTime.dateTimeString())
+            it.copy(reminderDateTimeText = reminderDateTime.dateTimeString())
         }
         viewModelScope.launch {
             repository.insertTask(state.value.task.apply {
-                reminder = localDateTime
+                reminder = reminderDateTime
             })
+            reminderManager.startReminder(reminderDateTime, state.value.task.id)
         }
     }
 
@@ -74,6 +77,7 @@ class TaskDetailViewModel @Inject constructor(
             repository.insertTask(state.value.task.apply {
                 reminder = null
             })
+            reminderManager.cancelReminder(state.value.task.id)
         }
     }
 

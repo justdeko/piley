@@ -75,7 +75,7 @@ fun AddReminderContent(
             .padding(32.dp)
     ) {
         Text(
-            text = "Add reminder",
+            text = if (initialDateTime != null) "Edit reminder" else "Add reminder",
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start
@@ -158,7 +158,13 @@ fun AddReminderContent(
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    ), onClick = onDeleteReminder
+                    ), onClick = {
+                        // reset date and time pickers
+                        localDate = null
+                        localTime = null
+                        // delete reminder
+                        onDeleteReminder()
+                    }
                 ) {
                     Text("Delete")
                 }

@@ -35,11 +35,11 @@ class ReminderActionHandler @Inject constructor(
         if (taskId.toInt() == -1) return emptyFlow()
         Log.d("ReminderActionHandler", "Completing task with id $taskId")
         return taskDao.getTaskById(taskId).onEach {
+            reminderManager.cancelReminder(taskId)
+            notificationManager.dismiss(taskId)
             taskDao.insertTask(it.apply {
                 this.status = TaskStatus.DONE
             })
-            reminderManager.cancelReminder(taskId)
-            notificationManager.dismiss(taskId)
         }
     }
 

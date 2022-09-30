@@ -18,8 +18,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.dk.piley.ui.nav.BottomNavigationBar
 import com.dk.piley.ui.nav.Screen
+import com.dk.piley.ui.nav.TASK_DETAIL_DEEPLINK
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.pile.PileScreen
 import com.dk.piley.ui.profile.ProfileScreen
@@ -60,32 +62,30 @@ fun Home(
     navigationBarShown.value =
         navBackStackEntry?.destination?.route?.startsWith(taskScreen.root) == false
 
-    Scaffold(
-        modifier = modifier,
+    Scaffold(modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             BottomNavigationBar(
-                isVisible = navigationBarShown.value,
-                navController = navController
+                isVisible = navigationBarShown.value, navController = navController
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
+        snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         NavHost(navController, startDestination = Screen.Pile.route) {
             composable(Screen.Pile.route) {
                 PileScreen(
-                    Modifier.padding(padding),
-                    navController
+                    Modifier.padding(padding), navController
                 )
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(
-                    Modifier.padding(padding),
-                    navController
+                    Modifier.padding(padding), navController
                 )
             }
             composable(
                 taskScreen.route,
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "$TASK_DETAIL_DEEPLINK${taskScreen.route}"
+                }),
                 arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })
             ) {
                 TaskDetailScreen(navController)

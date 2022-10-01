@@ -20,8 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.dk.piley.ui.nav.BottomNavigationBar
+import com.dk.piley.ui.nav.DEEPLINK_ROOT
 import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.nav.TASK_DETAIL_DEEPLINK
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.pile.PileScreen
 import com.dk.piley.ui.profile.ProfileScreen
@@ -84,7 +84,7 @@ fun Home(
             composable(
                 taskScreen.route,
                 deepLinks = listOf(navDeepLink {
-                    uriPattern = "$TASK_DETAIL_DEEPLINK${taskScreen.route}"
+                    uriPattern = "$DEEPLINK_ROOT/${taskScreen.route}"
                 }),
                 arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })
             ) {

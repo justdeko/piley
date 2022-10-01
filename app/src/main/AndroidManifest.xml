@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.dk.piley">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name=".Piley"
@@ -30,8 +29,11 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="com.dk"
-                    android:scheme="piley" />
+                    android:host="piley.app"
+                    android:scheme="https" />
+                <data
+                    android:host="piley.app"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 

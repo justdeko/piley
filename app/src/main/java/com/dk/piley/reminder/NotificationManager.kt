@@ -13,7 +13,8 @@ import androidx.core.net.toUri
 import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.receiver.ReminderAlarmReceiver
-import com.dk.piley.ui.nav.TASK_DETAIL_DEEPLINK
+import com.dk.piley.ui.nav.DEEPLINK_ROOT
+import com.dk.piley.ui.nav.taskScreen
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -57,7 +58,7 @@ class NotificationManager @Inject constructor(
         val taskDetailIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
                 Intent(
-                    Intent.ACTION_VIEW, "$TASK_DETAIL_DEEPLINK/${task.id}".toUri()
+                    Intent.ACTION_VIEW, "$DEEPLINK_ROOT/${taskScreen.root}/${task.id}".toUri()
                 )
             )
             getPendingIntent(OPEN_TASK_CODE, flags)

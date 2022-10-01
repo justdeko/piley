@@ -22,4 +22,4 @@ val navItems = listOf(
 )
 
 val taskScreen = IdentifierScreen.Task
-const val TASK_DETAIL_DEEPLINK = "piley://com.dk/task"
+const val DEEPLINK_ROOT = "https://piley.app"

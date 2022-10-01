@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId "com.dk.piley"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -50,13 +50,14 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    namespace 'com.dk.piley'
 }
 
 dependencies {
     // core
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     // room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -68,12 +69,12 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     // compose
     implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:1.3.0-beta01"
-    implementation 'androidx.compose.material3:material3:1.0.0-beta01'
+    implementation "androidx.compose.material:material:1.3.0-beta03"
+    implementation 'androidx.compose.material3:material3:1.0.0-beta03'
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
-    implementation 'androidx.activity:activity-compose:1.5.1'
+    implementation 'androidx.activity:activity-compose:1.6.0'
     // material design components
     implementation 'com.google.android.material:material:1.6.1'
     // local time and date below API 26

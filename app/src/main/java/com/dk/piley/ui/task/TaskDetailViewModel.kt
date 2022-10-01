@@ -1,11 +1,13 @@
 package com.dk.piley.ui.task
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.util.dateTimeString
@@ -21,6 +23,7 @@ import javax.inject.Inject
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository,
     private val reminderManager: ReminderManager,
+    private val notificationManager: NotificationManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _state = MutableStateFlow(TaskDetailViewState())
@@ -33,9 +36,7 @@ class TaskDetailViewModel @Inject constructor(
             val id = savedStateHandle.get<Long>(taskScreen.identifier)
             id?.let { repository.getTaskById(it) }?.collect { task ->
                 _state.value = TaskDetailViewState(
-                    task,
-                    task.description,
-                    task.reminder?.dateTimeString()
+                    task, task.description, task.reminder?.dateTimeString()
                 )
             }
         }
@@ -46,6 +47,7 @@ class TaskDetailViewModel @Inject constructor(
             repository.insertTask(state.value.task.apply {
                 status = TaskStatus.DELETED
             })
+            dismissAlarmAndNotification()
         }
     }
 
@@ -54,10 +56,12 @@ class TaskDetailViewModel @Inject constructor(
             repository.insertTask(state.value.task.apply {
                 status = TaskStatus.DONE
             })
+            dismissAlarmAndNotification()
         }
     }
 
     fun addReminder(reminderDateTime: LocalDateTime) {
+        Log.d("TaskDetailViewModel", "adding reminder")
         _state.update {
             it.copy(reminderDateTimeText = reminderDateTime.dateTimeString())
         }
@@ -65,6 +69,7 @@ class TaskDetailViewModel @Inject constructor(
             repository.insertTask(state.value.task.apply {
                 reminder = reminderDateTime
             })
+            dismissAlarmAndNotification()
             reminderManager.startReminder(reminderDateTime, state.value.task.id)
         }
     }
@@ -77,8 +82,13 @@ class TaskDetailViewModel @Inject constructor(
             repository.insertTask(state.value.task.apply {
                 reminder = null
             })
-            reminderManager.cancelReminder(state.value.task.id)
+            dismissAlarmAndNotification()
         }
+    }
+
+    private fun dismissAlarmAndNotification() {
+        reminderManager.cancelReminder(state.value.task.id)
+        notificationManager.dismiss(state.value.task.id)
     }
 
     fun editDescription(desc: String) {

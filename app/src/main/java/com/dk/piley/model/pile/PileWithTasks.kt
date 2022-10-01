@@ -1,4 +1,4 @@
-package com.dk.piley.model
+package com.dk.piley.model.pile
 
 import androidx.room.Embedded
 import androidx.room.Relation

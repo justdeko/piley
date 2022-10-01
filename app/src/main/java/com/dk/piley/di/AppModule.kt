@@ -2,8 +2,12 @@ package com.dk.piley.di
 
 import android.content.Context
 import com.dk.piley.model.PileDatabase
+import com.dk.piley.model.pile.PileDao
+import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.task.TaskRepository
+import com.dk.piley.reminder.NotificationManager
+import com.dk.piley.reminder.ReminderManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,5 +31,16 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(taskDao: TaskDao) = TaskRepository(taskDao)
+    fun provideTaskRepository(
+        taskDao: TaskDao, reminderManager: ReminderManager, notificationManager: NotificationManager
+    ) = TaskRepository(taskDao, reminderManager, notificationManager)
+
+    // pile
+    @Singleton
+    @Provides
+    fun providePileDao(db: PileDatabase) = db.pileDao()
+
+    @Singleton
+    @Provides
+    fun providePileRepository(pileDao: PileDao) = PileRepository(pileDao)
 }

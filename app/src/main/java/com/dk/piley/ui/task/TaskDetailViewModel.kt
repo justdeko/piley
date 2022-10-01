@@ -47,7 +47,6 @@ class TaskDetailViewModel @Inject constructor(
             repository.insertTask(state.value.task.apply {
                 status = TaskStatus.DELETED
             })
-            dismissAlarmAndNotification()
         }
     }
 
@@ -56,7 +55,6 @@ class TaskDetailViewModel @Inject constructor(
             repository.insertTask(state.value.task.apply {
                 status = TaskStatus.DONE
             })
-            dismissAlarmAndNotification()
         }
     }
 

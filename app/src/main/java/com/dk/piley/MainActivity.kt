@@ -24,6 +24,7 @@ import com.dk.piley.ui.nav.DEEPLINK_ROOT
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.pile.PileScreen
+import com.dk.piley.ui.piles.PileOverviewScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
@@ -73,6 +74,11 @@ fun Home(
         NavHost(navController, startDestination = Screen.Pile.route) {
             composable(Screen.Pile.route) {
                 PileScreen(
+                    Modifier.padding(padding), navController
+                )
+            }
+            composable(Screen.Piles.route) {
+                PileOverviewScreen(
                     Modifier.padding(padding), navController
                 )
             }

@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.dk.piley.model.pile.Pile
+import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskDao
 
@@ -13,6 +15,7 @@ import com.dk.piley.model.task.TaskDao
 abstract class PileDatabase : RoomDatabase() {
     // DAOs
     abstract fun taskDao(): TaskDao
+    abstract fun pileDao(): PileDao
 
     companion object {
         // For Singleton instantiation

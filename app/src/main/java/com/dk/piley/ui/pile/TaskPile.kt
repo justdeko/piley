@@ -18,7 +18,7 @@ import com.dk.piley.ui.theme.PileyTheme
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun Pile(
+fun TaskPile(
     modifier: Modifier = Modifier,
     tasks: List<Task> = emptyList(),
     onDelete: (task: Task) -> Unit = {},
@@ -55,11 +55,11 @@ fun DefaultPreview() {
     PileyTheme(useDarkTheme = true) {
         val taskList =
             listOf(
-                Task(title = "hey there", id = 0),
-                Task(title = "sup", id = 1),
-                Task(title = "another task", id = 2),
-                Task(title = "fourth task", id = 3),
+                Task(title = "hey there", id = 1),
+                Task(title = "sup", id = 2),
+                Task(title = "another task", id = 3),
+                Task(title = "fourth task", id = 4),
             )
-        Pile(tasks = taskList)
+        TaskPile(tasks = taskList)
     }
 }

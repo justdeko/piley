@@ -58,7 +58,7 @@ private fun PileScreen(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ) {
-        Pile(
+        TaskPile(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
@@ -89,7 +89,7 @@ private fun PileScreen(
 fun ProfileScreenPreview() {
     PileyTheme {
         Surface {
-            val tasks = listOf(Task(id = 0, title = "Hi there"), Task(id = 1, title = "Sup"))
+            val tasks = listOf(Task(id = 1, title = "Hi there"), Task(id = 2, title = "Sup"))
             val state = PileViewState(tasks)
             PileScreen(viewState = state)
         }

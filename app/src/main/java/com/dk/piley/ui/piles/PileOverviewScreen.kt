@@ -1,6 +1,7 @@
 package com.dk.piley.ui.piles
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,7 @@ fun PileOverviewScreen(
     PileOverviewScreen(viewState = viewState, modifier = modifier)
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
@@ -42,10 +44,10 @@ fun PileOverviewScreen(
     ) {
         LazyVerticalGrid(
             modifier = Modifier.fillMaxWidth(),
-            columns = GridCells.Adaptive(minSize = 128.dp)
+            columns = GridCells.Adaptive(150.dp),
         ) {
             items(viewState.piles, key = { it.pile.pileId }) { pile ->
-                PileCard(pileWithTasks = pile)
+                PileCard(modifier = Modifier.animateItemPlacement(), pileWithTasks = pile)
             }
         }
     }
@@ -57,11 +59,11 @@ fun PileOverviewScreen(
 fun PileOverviewScreenPreview() {
     PileyTheme {
         Surface {
-            val tasks = listOf(Task(id = 0, title = "Hi there"), Task(id = 1, title = "Sup"))
-            val piles = listOf(Pile(name = "Default"), Pile(pileId = 1, name = "Custom1"))
+            val tasks = listOf(Task(id = 1, title = "Hi there"), Task(id = 2, title = "Sup"))
+            val piles = listOf(Pile(name = "Default"), Pile(pileId = 2, name = "Custom1"))
             val pilesWithTasks = listOf(
                 PileWithTasks(pile = piles[0], tasks = tasks),
-                PileWithTasks(pile = piles[1], tasks = tasks.map { it.copy(pileId = 1) })
+                PileWithTasks(pile = piles[1], tasks = tasks.map { it.copy(pileId = 2) })
             )
             val pilesViewState = PilesViewState(pilesWithTasks)
             PileOverviewScreen(viewState = pilesViewState)

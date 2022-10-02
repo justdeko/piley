@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">piley</string>
 
+    <!--Nav locations-->
     <string name="pile">Pile</string>
     <string name="piles">Piles</string>
     <string name="profile">Profile</string>
     <string name="task_details">Task Details</string>
 
-    <!-- notification channel-->
+    <string name="default_pile_name">Default</string>
+
+    <!--notification channel-->
     <string name="reminder_notification_channel_title">Reminder</string>
     <string name="reminder_notification_channel_description">Reminder</string>
 

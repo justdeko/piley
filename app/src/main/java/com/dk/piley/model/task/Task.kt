@@ -9,7 +9,7 @@ import org.threeten.bp.LocalDateTime
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     var title: String = "",
-    val pileId: Long = 0,
+    val pileId: Long = 1,
     var description: String = "",
     val createdAt: LocalDateTime = LocalDateTime.now(utcZoneId),
     var modifiedAt: LocalDateTime = LocalDateTime.now(utcZoneId),

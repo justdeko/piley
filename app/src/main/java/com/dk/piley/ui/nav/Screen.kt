@@ -5,13 +5,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ViewAgenda
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.dk.piley.R
 
-sealed class Screen(val route: String, @StringRes val resourceId: Int, val icon: ImageVector) {
-    object Pile : Screen("pile", R.string.pile, Icons.Filled.Home)
-    object Piles : Screen("piles", R.string.piles, Icons.Filled.ViewAgenda)
-    object Profile : Screen("profile", R.string.profile, Icons.Filled.Person)
+sealed class Screen(
+    val route: String, @StringRes val resourceId: Int, val icon: Pair<ImageVector, ImageVector>
+) {
+    object Pile : Screen(
+        "pile", R.string.pile, Pair(Icons.Outlined.Home, Icons.Filled.Home)
+    )
+
+    object Piles : Screen(
+        "piles", R.string.piles, Pair(Icons.Outlined.ViewAgenda, Icons.Filled.ViewAgenda)
+    )
+
+    object Profile : Screen(
+        "profile", R.string.profile, Pair(Icons.Outlined.Person, Icons.Filled.Person)
+    )
 }
 
 sealed class IdentifierScreen(val route: String, val identifier: String, val root: String) {

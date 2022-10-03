@@ -39,7 +39,7 @@ abstract class PileDatabase : RoomDatabase() {
                     CoroutineScope(Dispatchers.IO).launch {
                         getInstance(context).pileDao().insertPile(
                             Pile(
-                                pileId = 1, name = context.getString(R.string.default_pile_name)
+                                pileId = 1, name = context.getString(R.string.daily_pile_name)
                             )
                         )
                     }

@@ -4,14 +4,14 @@ import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,24 +30,49 @@ fun PileOverviewScreen(
     viewModel: PilesViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
-    PileOverviewScreen(viewState = viewState, modifier = modifier)
+    PileOverviewScreen(
+        modifier = modifier,
+        viewState = viewState,
+        onCreatePile = { viewModel.createPile("sup") }
+    )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
     viewState: PilesViewState,
+    onCreatePile: () -> Unit = {}
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
+    val gridState = rememberLazyGridState()
+    val expandedFab by remember {
+        derivedStateOf {
+            gridState.firstVisibleItemIndex == 0
+        }
+    }
+    Scaffold(
+        modifier = modifier,
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = onCreatePile,
+                expanded = expandedFab,
+                icon = { Icon(Icons.Filled.Add, "Add Pile Icon") },
+                text = { Text(text = "Add Pile") },
+            )
+        },
+        floatingActionButtonPosition = FabPosition.End,
     ) {
-        LazyVerticalGrid(
-            modifier = Modifier.fillMaxWidth(),
-            columns = GridCells.Adaptive(150.dp),
+        Column(
+            modifier = Modifier.fillMaxSize(),
         ) {
-            items(viewState.piles, key = { it.pile.pileId }) { pile ->
-                PileCard(modifier = Modifier.animateItemPlacement(), pileWithTasks = pile)
+            LazyVerticalGrid(
+                modifier = Modifier.fillMaxSize(),
+                state = gridState,
+                columns = GridCells.Adaptive(150.dp),
+            ) {
+                items(viewState.piles, key = { it.pile.pileId }) { pile ->
+                    PileCard(modifier = Modifier.animateItemPlacement(), pileWithTasks = pile)
+                }
             }
         }
     }
@@ -60,7 +85,7 @@ fun PileOverviewScreenPreview() {
     PileyTheme {
         Surface {
             val tasks = listOf(Task(id = 1, title = "Hi there"), Task(id = 2, title = "Sup"))
-            val piles = listOf(Pile(name = "Default"), Pile(pileId = 2, name = "Custom1"))
+            val piles = listOf(Pile(name = "Daily"), Pile(pileId = 2, name = "Custom1"))
             val pilesWithTasks = listOf(
                 PileWithTasks(pile = piles[0], tasks = tasks),
                 PileWithTasks(pile = piles[1], tasks = tasks.map { it.copy(pileId = 2) })

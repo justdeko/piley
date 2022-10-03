@@ -7,7 +7,7 @@
     <string name="profile">Profile</string>
     <string name="task_details">Task Details</string>
 
-    <string name="default_pile_name">Default</string>
+    <string name="daily_pile_name">Daily</string>
 
     <!--notification channel-->
     <string name="reminder_notification_channel_title">Reminder</string>

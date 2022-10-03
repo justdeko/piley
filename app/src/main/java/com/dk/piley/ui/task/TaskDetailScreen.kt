@@ -7,7 +7,6 @@ import androidx.compose.material.BottomDrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.rememberBottomDrawerState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -94,16 +93,6 @@ fun TaskDetailScreen(
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             "close the task detail",
-                            modifier = Modifier.scale(
-                                1.5F
-                            ),
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-                    IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                        Icon(
-                            imageVector = Icons.Default.Notifications,
-                            "set a task reminder",
                             modifier = Modifier.scale(
                                 1.5F
                             ),

@@ -1,10 +1,10 @@
 package com.dk.piley.ui.piles
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,9 +19,7 @@ import com.dk.piley.ui.theme.PileyTheme
 @Composable
 fun PileCard(modifier: Modifier = Modifier, pileWithTasks: PileWithTasks) {
     Card(
-        modifier = modifier
-            .padding(8.dp)
-            .aspectRatio(1f)
+        modifier = modifier.padding(8.dp)
     ) {
         Column(
             modifier = Modifier
@@ -34,12 +32,32 @@ fun PileCard(modifier: Modifier = Modifier, pileWithTasks: PileWithTasks) {
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Open tasks: ${pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }}")
-            Text(text = "Completed tasks: ${pileWithTasks.tasks.count { it.status == TaskStatus.DONE }}")
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.List,
+                    contentDescription = "open tasks",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
+                Text(text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }}")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.DoneAll,
+                    contentDescription = "completed tasks",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DONE }}")
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = { /*TODO*/ }, enabled = false
+                onClick = { /*TODO*/ },
+                enabled = false
             ) {
                 Text(text = "Set Current")
             }
@@ -56,7 +74,7 @@ fun PileCardPreview() {
             tasks = listOf(Task(title = "hey"), Task(title = "hey too"))
         )
         PileCard(
-            modifier = Modifier.width(300.dp), pileWithTasks = pileWithTasks
+            modifier = Modifier.width(200.dp), pileWithTasks = pileWithTasks
         )
     }
 }

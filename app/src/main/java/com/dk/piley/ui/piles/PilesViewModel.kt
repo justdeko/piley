@@ -2,6 +2,7 @@ package com.dk.piley.ui.piles
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.pile.PileWithTasks
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,12 @@ class PilesViewModel @Inject constructor(
             combine(pilesFlow) { (piles) ->
                 PilesViewState(piles)
             }.collect { _state.value = it }
+        }
+    }
+
+    fun createPile(name: String) {
+        viewModelScope.launch {
+            repository.insertPile(Pile(name = name))
         }
     }
 }

@@ -35,10 +35,12 @@ fun BottomNavigationBar(
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
                 navItems.forEach { screen ->
+                    val selected =
+                        currentDestination?.hierarchy?.any { it.route == screen.route } == true
                     NavigationBarItem(
                         icon = {
                             Icon(
-                                screen.icon,
+                                if (selected) screen.icon.second else screen.icon.first,
                                 tint = MaterialTheme.colorScheme.secondary,
                                 contentDescription = null,
                             )
@@ -49,7 +51,7 @@ fun BottomNavigationBar(
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                         },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        selected = selected,
                         onClick = {
                             navController.navigate(screen.route) {
                                 // Pop up to the start destination of the graph to

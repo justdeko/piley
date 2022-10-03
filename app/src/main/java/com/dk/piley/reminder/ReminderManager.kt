@@ -4,7 +4,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import android.os.Build
+import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.receiver.ReminderAlarmReceiver
 import com.dk.piley.ui.util.toTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -17,26 +18,29 @@ class ReminderManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+    private val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    } else {
+        PendingIntent.FLAG_UPDATE_CURRENT
+    }
 
     fun startReminder(
         reminderDateTime: LocalDateTime, taskId: Long
     ) {
-        Log.d("ReminderManager", "starting reminder")
         val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW
             putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)
         }.let { intent ->
             PendingIntent.getBroadcast(
-                context.applicationContext,
-                taskId.toInt(),
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                context.applicationContext, taskId.toInt(), intent, flags
             )
         }
 
-        alarmManager?.setAlarmClock(
-            AlarmManager.AlarmClockInfo(reminderDateTime.toTimestamp(), intent), intent
-        )
+        alarmManager?.let {
+            AlarmManagerCompat.setAndAllowWhileIdle(
+                it, AlarmManager.RTC_WAKEUP, reminderDateTime.toTimestamp(), intent
+            )
+        }
     }
 
     fun cancelReminder(

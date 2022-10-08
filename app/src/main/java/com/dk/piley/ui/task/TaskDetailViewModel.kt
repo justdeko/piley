@@ -44,17 +44,13 @@ class TaskDetailViewModel @Inject constructor(
 
     fun deleteTask() {
         viewModelScope.launch {
-            repository.insertTask(state.value.task.apply {
-                status = TaskStatus.DELETED
-            })
+            repository.insertTask(state.value.task.copy(status = TaskStatus.DELETED))
         }
     }
 
     fun completeTask() {
         viewModelScope.launch {
-            repository.insertTask(state.value.task.apply {
-                status = TaskStatus.DONE
-            })
+            repository.insertTask(state.value.task.copy(status = TaskStatus.DONE))
         }
     }
 
@@ -64,9 +60,7 @@ class TaskDetailViewModel @Inject constructor(
             it.copy(reminderDateTimeText = reminderDateTime.dateTimeString())
         }
         viewModelScope.launch {
-            repository.insertTask(state.value.task.apply {
-                reminder = reminderDateTime
-            })
+            repository.insertTask(state.value.task.copy(reminder = reminderDateTime))
             dismissAlarmAndNotification()
             reminderManager.startReminder(reminderDateTime, state.value.task.id)
         }
@@ -77,9 +71,7 @@ class TaskDetailViewModel @Inject constructor(
             it.copy(reminderDateTimeText = null)
         }
         viewModelScope.launch {
-            repository.insertTask(state.value.task.apply {
-                reminder = null
-            })
+            repository.insertTask(state.value.task.copy(reminder = null))
             dismissAlarmAndNotification()
         }
     }
@@ -94,9 +86,7 @@ class TaskDetailViewModel @Inject constructor(
             it.copy(descriptionTextValue = desc)
         }
         viewModelScope.launch {
-            repository.insertTask(state.value.task.apply {
-                description = desc
-            })
+            repository.insertTask(state.value.task.copy(description = desc))
         }
     }
 

@@ -35,9 +35,7 @@ class PileViewModel @Inject constructor(
         viewModelScope.launch {
             repository.insertTask(
                 Task(
-                    title = text,
-                    createdAt = LocalDateTime.now(),
-                    modifiedAt = LocalDateTime.now()
+                    title = text, createdAt = LocalDateTime.now(), modifiedAt = LocalDateTime.now()
                 )
             )
         }
@@ -45,17 +43,13 @@ class PileViewModel @Inject constructor(
 
     fun done(task: Task) {
         viewModelScope.launch {
-            repository.insertTask(task.apply {
-                status = TaskStatus.DONE
-            })
+            repository.insertTask(task.copy(status = TaskStatus.DONE))
         }
     }
 
     fun delete(task: Task) {
         viewModelScope.launch {
-            repository.insertTask(task.apply {
-                status = TaskStatus.DELETED
-            })
+            repository.insertTask(task.copy(status = TaskStatus.DELETED))
         }
     }
 }

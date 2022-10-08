@@ -2,12 +2,16 @@ package com.dk.piley.ui.piles
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.pile.Pile
@@ -17,23 +21,56 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
-fun PileCard(modifier: Modifier = Modifier, pileWithTasks: PileWithTasks) {
+fun PileCard(
+    modifier: Modifier = Modifier,
+    pileWithTasks: PileWithTasks,
+    selected: Boolean = false,
+    onSelectPile: (Long) -> Unit = {},
+    onDeletePile: () -> Unit = {},
+) {
     Card(
         modifier = modifier.padding(8.dp)
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                IconButton(onClick = onDeletePile) {
+                    Icon(
+                        Icons.Filled.Delete,
+                        tint = Color.Red,
+                        contentDescription = "delete the pile"
+                    )
+                }
+                IconToggleButton(
+                    checked = selected,
+                    onCheckedChange = { onSelectPile(pileWithTasks.pile.pileId) }
+                ) {
+                    if (selected) {
+                        Icon(Icons.Filled.Home, contentDescription = "pile selected as default")
+                    } else {
+                        Icon(
+                            Icons.Outlined.Home,
+                            contentDescription = "pile not selected as default"
+                        )
+                    }
+                }
+            }
             Text(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = pileWithTasks.pile.name,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
                     imageVector = Icons.Filled.List,
@@ -44,7 +81,10 @@ fun PileCard(modifier: Modifier = Modifier, pileWithTasks: PileWithTasks) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
                     imageVector = Icons.Filled.DoneAll,
@@ -53,14 +93,7 @@ fun PileCard(modifier: Modifier = Modifier, pileWithTasks: PileWithTasks) {
                 )
                 Text(text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DONE }}")
             }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = { /*TODO*/ },
-                enabled = false
-            ) {
-                Text(text = "Set Current")
-            }
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

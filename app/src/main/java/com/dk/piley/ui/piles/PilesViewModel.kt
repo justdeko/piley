@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,8 +36,21 @@ class PilesViewModel @Inject constructor(
             repository.insertPile(Pile(name = name))
         }
     }
+
+    fun deletePile(pile: Pile) {
+        viewModelScope.launch {
+            repository.deletePile(pile)
+        }
+    }
+
+    fun setSelectedPile(id: Long) {
+        _state.update {
+            it.copy(selectedPileId = id)
+        }
+    }
 }
 
 data class PilesViewState(
-    val piles: List<PileWithTasks> = emptyList()
+    val piles: List<PileWithTasks> = emptyList(),
+    val selectedPileId: Long = 1
 )

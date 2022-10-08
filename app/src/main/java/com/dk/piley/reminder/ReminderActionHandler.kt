@@ -34,9 +34,7 @@ class ReminderActionHandler @Inject constructor(
         return taskDao.getTaskById(taskId).take(1).onEach {
             reminderManager.cancelReminder(taskId)
             notificationManager.dismiss(taskId)
-            taskDao.insertTask(it.apply {
-                this.status = TaskStatus.DONE
-            })
+            taskDao.insertTask(it.copy(status = TaskStatus.DONE))
         }
     }
 

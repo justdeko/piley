@@ -6,6 +6,8 @@ import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.task.TaskRepository
+import com.dk.piley.model.user.UserDao
+import com.dk.piley.model.user.UserRepository
 import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import dagger.Module
@@ -43,4 +45,13 @@ object AppModule {
     @Singleton
     @Provides
     fun providePileRepository(pileDao: PileDao) = PileRepository(pileDao)
+
+    // user
+    @Singleton
+    @Provides
+    fun provideUserDao(db: PileDatabase) = db.userDao()
+
+    @Singleton
+    @Provides
+    fun provideUserRepository(userDao: UserDao) = UserRepository(userDao)
 }

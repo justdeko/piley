@@ -8,11 +8,11 @@ import org.threeten.bp.LocalDateTime
 @Entity
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    var title: String = "",
+    val title: String = "",
     val pileId: Long = 1,
-    var description: String = "",
+    val description: String = "",
     val createdAt: LocalDateTime = LocalDateTime.now(utcZoneId),
-    var modifiedAt: LocalDateTime = LocalDateTime.now(utcZoneId),
-    var reminder: LocalDateTime? = null,
-    var status: TaskStatus = TaskStatus.DEFAULT,
+    val modifiedAt: LocalDateTime = LocalDateTime.now(utcZoneId),
+    val reminder: LocalDateTime? = null,
+    val status: TaskStatus = TaskStatus.DEFAULT,
 )

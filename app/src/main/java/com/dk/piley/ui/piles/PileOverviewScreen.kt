@@ -33,7 +33,9 @@ fun PileOverviewScreen(
     PileOverviewScreen(
         modifier = modifier,
         viewState = viewState,
-        onCreatePile = { viewModel.createPile("sup") }
+        onCreatePile = { viewModel.createPile("sup") },
+        onDeletePile = { viewModel.deletePile(it) },
+        onSelectPile = { viewModel.setSelectedPile(it) },
     )
 }
 
@@ -42,7 +44,9 @@ fun PileOverviewScreen(
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
     viewState: PilesViewState,
-    onCreatePile: () -> Unit = {}
+    onCreatePile: () -> Unit = {},
+    onDeletePile: (Pile) -> Unit = {},
+    onSelectPile: (Long) -> Unit = {},
 ) {
     val gridState = rememberLazyGridState()
     val expandedFab by remember {
@@ -70,8 +74,14 @@ fun PileOverviewScreen(
                 state = gridState,
                 columns = GridCells.Adaptive(150.dp),
             ) {
-                items(viewState.piles, key = { it.pile.pileId }) { pile ->
-                    PileCard(modifier = Modifier.animateItemPlacement(), pileWithTasks = pile)
+                items(viewState.piles, key = { it.pile.pileId }) { pileWithTasks ->
+                    PileCard(
+                        modifier = Modifier.animateItemPlacement(),
+                        pileWithTasks = pileWithTasks,
+                        onSelectPile = onSelectPile,
+                        onDeletePile = { onDeletePile(pileWithTasks.pile) },
+                        selected = viewState.selectedPileId == pileWithTasks.pile.pileId
+                    )
                 }
             }
         }

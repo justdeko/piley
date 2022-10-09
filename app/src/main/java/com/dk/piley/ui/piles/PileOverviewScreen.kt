@@ -78,6 +78,7 @@ fun PileOverviewScreen(
                     PileCard(
                         modifier = Modifier.animateItemPlacement(),
                         pileWithTasks = pileWithTasks,
+                        canDelete = pileWithTasks.pile.pileId != 1L, // default pile cannot be deleted
                         onSelectPile = onSelectPile,
                         onDeletePile = { onDeletePile(pileWithTasks.pile) },
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId

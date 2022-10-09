@@ -25,6 +25,7 @@ fun PileCard(
     modifier: Modifier = Modifier,
     pileWithTasks: PileWithTasks,
     selected: Boolean = false,
+    canDelete: Boolean = true,
     onSelectPile: (Long) -> Unit = {},
     onDeletePile: () -> Unit = {},
 ) {
@@ -38,12 +39,16 @@ fun PileCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = onDeletePile) {
-                    Icon(
-                        Icons.Filled.Delete,
-                        tint = Color.Red,
-                        contentDescription = "delete the pile"
-                    )
+                if (canDelete) {
+                    IconButton(onClick = onDeletePile) {
+                        Icon(
+                            Icons.Filled.Delete,
+                            tint = Color.Red,
+                            contentDescription = "delete the pile"
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.size(16.dp))
                 }
                 IconToggleButton(
                     checked = selected,

@@ -30,7 +30,7 @@ private fun ProfileScreen(modifier: Modifier = Modifier, viewState: ProfileViewS
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        UserInfo(name = "Thomas")
+        UserInfo(name = viewState.userName)
         TaskStats(
             doneCount = viewState.doneTasks,
             deletedCount = viewState.deletedTasks,
@@ -45,7 +45,7 @@ private fun ProfileScreen(modifier: Modifier = Modifier, viewState: ProfileViewS
 fun ProfileScreenPreview() {
     PileyTheme {
         Surface {
-            val state = ProfileViewState(0, 2, 3)
+            val state = ProfileViewState("Thomas", 0, 2, 3)
             ProfileScreen(viewState = state)
         }
     }

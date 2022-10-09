@@ -1,21 +1,25 @@
 package com.dk.piley.ui.pile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class PileViewModel @Inject constructor(
-    private val repository: TaskRepository,
+    private val taskRepository: TaskRepository,
+    private val pileRepository: PileRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PileViewState())
 
@@ -24,16 +28,22 @@ class PileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val tasksFlow = repository.getTasks()
-            combine(tasksFlow) { (tasks) ->
-                PileViewState(tasks.filter { it.status == TaskStatus.DEFAULT })
-            }.collect { _state.value = it }
+            // TODO: remove hardcoded
+            userRepository.getUserById(1).collect {
+                it?.let { user ->
+                    pileRepository.getPileById(user.selectedPileId).collect { pile ->
+                        Log.d("this", "happened")
+                        _state.value =
+                            PileViewState(pile.tasks.filter { task -> task.status == TaskStatus.DEFAULT })
+                    }
+                }
+            }
         }
     }
 
     fun add(text: String) {
         viewModelScope.launch {
-            repository.insertTask(
+            taskRepository.insertTask(
                 Task(
                     title = text, createdAt = LocalDateTime.now(), modifiedAt = LocalDateTime.now()
                 )
@@ -43,13 +53,13 @@ class PileViewModel @Inject constructor(
 
     fun done(task: Task) {
         viewModelScope.launch {
-            repository.insertTask(task.copy(status = TaskStatus.DONE))
+            taskRepository.insertTask(task.copy(status = TaskStatus.DONE))
         }
     }
 
     fun delete(task: Task) {
         viewModelScope.launch {
-            repository.insertTask(task.copy(status = TaskStatus.DELETED))
+            taskRepository.insertTask(task.copy(status = TaskStatus.DELETED))
         }
     }
 }

@@ -40,10 +40,11 @@ abstract class PileDatabase : RoomDatabase() {
             val callback: Callback = object : Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     CoroutineScope(Dispatchers.IO).launch {
+                        getInstance(context).userDao().insertUser(
+                            User(name = "Thomas") // TODO remove hardcoded
+                        )
                         getInstance(context).pileDao().insertPile(
-                            Pile(
-                                pileId = 1, name = context.getString(R.string.daily_pile_name)
-                            )
+                            Pile(pileId = 1, name = context.getString(R.string.daily_pile_name))
                         )
                     }
                 }

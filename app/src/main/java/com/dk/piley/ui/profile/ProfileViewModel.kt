@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val repository: TaskRepository
+    private val taskRepository: TaskRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _state = MutableStateFlow(ProfileViewState())
 
@@ -22,15 +24,15 @@ class ProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val tasksFlow = repository.getTasks()
-            combine(tasksFlow) { (tasks) ->
+            val tasksFlow = taskRepository.getTasks()
+            // TODO: remove hardcoded
+            val userFlow = userRepository.getUserById(1)
+            userFlow.combine(tasksFlow) { user, tasks ->
                 val done = tasks.count { it.status == TaskStatus.DONE }
                 val deleted = tasks.count { it.status == TaskStatus.DELETED }
                 val current = tasks.count { it.status == TaskStatus.DEFAULT }
 
-                ProfileViewState(
-                    done, deleted, current
-                )
+                ProfileViewState(user?.name ?: "", done, deleted, current)
             }.collect { _state.value = it }
         }
     }
@@ -38,6 +40,7 @@ class ProfileViewModel @Inject constructor(
 
 
 data class ProfileViewState(
+    val userName: String = "",
     val doneTasks: Int = 0,
     val deletedTasks: Int = 0,
     val currentTasks: Int = 0,

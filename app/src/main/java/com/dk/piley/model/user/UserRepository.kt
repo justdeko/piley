@@ -6,7 +6,7 @@ import javax.inject.Inject
 class UserRepository @Inject constructor(private val userDao: UserDao) {
     fun getUsers(): Flow<List<User>> = userDao.getUsers()
 
-    fun getUserById(userId: Long): Flow<User> = userDao.getUserById(userId)
+    fun getUserById(userId: Long): Flow<User?> = userDao.getUserById(userId)
 
     suspend fun insertUser(user: User): Long = userDao.insertUser(user)
 

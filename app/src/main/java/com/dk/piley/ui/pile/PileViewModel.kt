@@ -1,6 +1,5 @@
 package com.dk.piley.ui.pile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.pile.PileRepository
@@ -9,12 +8,16 @@ import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PileViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
@@ -29,14 +32,15 @@ class PileViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             // TODO: remove hardcoded
-            userRepository.getUserById(1).collect {
-                it?.let { user ->
-                    pileRepository.getPileById(user.selectedPileId).collect { pile ->
-                        Log.d("this", "happened")
-                        _state.value =
-                            PileViewState(pile.tasks.filter { task -> task.status == TaskStatus.DEFAULT })
-                    }
+            userRepository.getUserById(1).flatMapLatest { user ->
+                pileRepository.getPileById(user.selectedPileId).map { pile ->
+                    PileViewState(
+                        user.selectedPileId,
+                        pile.tasks.filter { task -> task.status == TaskStatus.DEFAULT }
+                    )
                 }
+            }.collect {
+                _state.value = it
             }
         }
     }
@@ -45,7 +49,10 @@ class PileViewModel @Inject constructor(
         viewModelScope.launch {
             taskRepository.insertTask(
                 Task(
-                    title = text, createdAt = LocalDateTime.now(), modifiedAt = LocalDateTime.now()
+                    title = text,
+                    pileId = state.value.selectedPileId,
+                    createdAt = LocalDateTime.now(),
+                    modifiedAt = LocalDateTime.now()
                 )
             )
         }
@@ -65,5 +72,6 @@ class PileViewModel @Inject constructor(
 }
 
 data class PileViewState(
+    val selectedPileId: Long = 1,
     val tasks: List<Task> = emptyList()
 )

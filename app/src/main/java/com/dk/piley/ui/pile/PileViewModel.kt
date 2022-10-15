@@ -2,6 +2,7 @@ package com.dk.piley.ui.pile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
@@ -33,10 +34,10 @@ class PileViewModel @Inject constructor(
         viewModelScope.launch {
             // TODO: remove hardcoded
             userRepository.getUserById(1).flatMapLatest { user ->
-                pileRepository.getPileById(user.selectedPileId).map { pile ->
+                pileRepository.getPileById(user.selectedPileId).map { pileWithTasks ->
                     PileViewState(
-                        user.selectedPileId,
-                        pile.tasks.filter { task -> task.status == TaskStatus.DEFAULT }
+                        pileWithTasks.pile,
+                        pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT }
                     )
                 }
             }.collect {
@@ -50,7 +51,7 @@ class PileViewModel @Inject constructor(
             taskRepository.insertTask(
                 Task(
                     title = text,
-                    pileId = state.value.selectedPileId,
+                    pileId = state.value.pile.pileId,
                     createdAt = LocalDateTime.now(),
                     modifiedAt = LocalDateTime.now()
                 )
@@ -72,6 +73,6 @@ class PileViewModel @Inject constructor(
 }
 
 data class PileViewState(
-    val selectedPileId: Long = 1,
+    val pile: Pile = Pile(),
     val tasks: List<Task> = emptyList()
 )

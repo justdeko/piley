@@ -4,15 +4,20 @@ import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,7 +38,7 @@ fun PileOverviewScreen(
     PileOverviewScreen(
         modifier = modifier,
         viewState = viewState,
-        onCreatePile = { viewModel.createPile("sup") },
+        onCreatePile = { viewModel.createPile(it) },
         onDeletePile = { viewModel.deletePile(it) },
         onSelectPile = { viewModel.setSelectedPile(it) },
     )
@@ -44,11 +49,13 @@ fun PileOverviewScreen(
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
     viewState: PilesViewState,
-    onCreatePile: () -> Unit = {},
+    onCreatePile: (String) -> Unit = {},
     onDeletePile: (Pile) -> Unit = {},
     onSelectPile: (Long) -> Unit = {},
 ) {
     val gridState = rememberLazyGridState()
+    var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
+    var pileTitle by rememberSaveable { mutableStateOf("") }
     val expandedFab by remember {
         derivedStateOf {
             gridState.firstVisibleItemIndex == 0
@@ -58,7 +65,7 @@ fun PileOverviewScreen(
         modifier = modifier,
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = onCreatePile,
+                onClick = { createPileDialogOpen = true },
                 expanded = expandedFab,
                 icon = { Icon(Icons.Filled.Add, "Add Pile Icon") },
                 text = { Text(text = "Add Pile") },
@@ -85,6 +92,35 @@ fun PileOverviewScreen(
                     )
                 }
             }
+        }
+        if (createPileDialogOpen) {
+            AlertDialog(
+                title = { Text("Create a Pile") },
+                text = {
+                    OutlinedTextField(
+                        modifier = modifier.fillMaxWidth(),
+                        value = pileTitle,
+                        onValueChange = { pileTitle = it },
+                        placeholder = { Text("Pile Title") },
+                        shape = RoundedCornerShape(16.dp),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    )
+                },
+                onDismissRequest = { createPileDialogOpen = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        onCreatePile(pileTitle)
+                        createPileDialogOpen = false
+                        pileTitle = ""
+                    }) {
+                        Text("Create Pile")
+                    }
+                }, dismissButton = {
+                    TextButton(onClick = { createPileDialogOpen = false }) {
+                        Text("Cancel")
+                    }
+                })
         }
     }
 }

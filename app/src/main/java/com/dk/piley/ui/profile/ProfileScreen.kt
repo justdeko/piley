@@ -1,6 +1,5 @@
 package com.dk.piley.ui.profile
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -8,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.theme.PileyTheme
 
 
@@ -39,8 +38,7 @@ private fun ProfileScreen(modifier: Modifier = Modifier, viewState: ProfileViewS
     }
 }
 
-@Preview(name = "Light Mode", showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@PreviewMainScreen
 @Composable
 fun ProfileScreenPreview() {
     PileyTheme {

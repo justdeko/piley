@@ -1,6 +1,5 @@
 package com.dk.piley.ui.task
 
-import android.content.res.Configuration
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.BottomDrawerValue
@@ -19,11 +18,11 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
 import kotlinx.coroutines.launch
@@ -149,8 +148,7 @@ fun TaskDetailScreen(
     }
 }
 
-@Preview(name = "Light Mode", showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@PreviewMainScreen
 @Composable
 fun TaskDetailScreenPreview() {
     PileyTheme {

@@ -8,4 +8,8 @@ data class User(
     @PrimaryKey(autoGenerate = true) val userId: Long = 0,
     val name: String?,
     val selectedPileId: Long = 1,
+    // user preferences
+    val nightMode: NightMode = NightMode.SYSTEM,
+    val pileMode: PileMode = PileMode.FREE,
+    val defaultReminderDelay: Int = 15,
 )

@@ -4,9 +4,11 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.dk.piley.R
@@ -24,6 +26,10 @@ sealed class Screen(
 
     object Profile : Screen(
         "profile", R.string.profile, Pair(Icons.Outlined.Person, Icons.Filled.Person)
+    )
+
+    object Settings : Screen(
+        "settings", R.string.settings, Pair(Icons.Outlined.Settings, Icons.Filled.Settings)
     )
 }
 

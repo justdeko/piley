@@ -19,13 +19,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.dk.piley.ui.nav.BottomNavigationBar
-import com.dk.piley.ui.nav.DEEPLINK_ROOT
-import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.nav.taskScreen
+import com.dk.piley.ui.nav.*
 import com.dk.piley.ui.pile.PileScreen
 import com.dk.piley.ui.piles.PileOverviewScreen
 import com.dk.piley.ui.profile.ProfileScreen
+import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.util.isDarkMode
@@ -61,7 +59,7 @@ fun Home(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     // hide navigation bar on detail screen
     navigationBarShown.value =
-        navBackStackEntry?.destination?.route?.startsWith(taskScreen.root) == false
+        navItems.map { it.route }.contains(navBackStackEntry?.destination?.route)
 
     Scaffold(modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
@@ -86,6 +84,9 @@ fun Home(
                 ProfileScreen(
                     Modifier.padding(padding), navController
                 )
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen(navController = navController)
             }
             composable(
                 taskScreen.route,

@@ -9,11 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
+import com.dk.piley.model.user.User
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -23,20 +26,30 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.state.collectAsState()
-    SettingsScreen(modifier = modifier, viewState = viewState)
+    SettingsScreen(
+        modifier = modifier,
+        viewState = viewState,
+        onNightModeChange = { viewModel.updateNightMode(it) })
 }
 
 @Composable
-private fun SettingsScreen(modifier: Modifier = Modifier, viewState: SettingsViewState) {
+private fun SettingsScreen(
+    modifier: Modifier = Modifier,
+    viewState: SettingsViewState,
+    onNightModeChange: (NightMode) -> Unit = {}
+) {
+    val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     Column(modifier = modifier.fillMaxSize()) {
         SettingsSection(title = "Appearance", icon = Icons.Filled.FormatPaint) {
             DropdownSettingsItem(
                 title = "Night mode enabled",
                 description = "Set whether night mode is enabled.",
                 optionLabel = "Night Mode",
-                selectedValue = NightMode.SYSTEM.name,
-                values = NightMode.values().map { it.name },
-                onValueChange = {}
+                selectedValue = nightModeValues[viewState.user.nightMode.value],
+                values = nightModeValues,
+                onValueChange = {
+                    onNightModeChange(NightMode.fromValue(nightModeValues.indexOf(it)))
+                }
             )
         }
     }
@@ -47,7 +60,9 @@ private fun SettingsScreen(modifier: Modifier = Modifier, viewState: SettingsVie
 fun SettingsScreenPreview() {
     PileyTheme {
         Surface {
-            val state = SettingsViewState()
+            val state = SettingsViewState(
+                User(name = "Thomas")
+            )
             SettingsScreen(viewState = state)
         }
     }

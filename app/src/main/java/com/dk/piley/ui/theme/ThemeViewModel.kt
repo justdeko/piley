@@ -1,9 +1,8 @@
-package com.dk.piley.ui.settings
+package com.dk.piley
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.user.NightMode
-import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,12 +12,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val userRepository: UserRepository
+class ThemeViewModel @Inject constructor(
+    userRepository: UserRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow(SettingsViewState())
+    private val _state = MutableStateFlow(ThemeViewState())
 
-    val state: StateFlow<SettingsViewState>
+    val state: StateFlow<ThemeViewState>
         get() = _state
 
     init {
@@ -26,19 +25,12 @@ class SettingsViewModel @Inject constructor(
             // TODO: remove hardcoded
             val userFlow = userRepository.getUserById(1)
             combine(userFlow) { (user) ->
-                SettingsViewState(user)
+                ThemeViewState(user.nightMode)
             }.collect { _state.value = it }
-        }
-    }
-
-
-    fun updateNightMode(nightMode: NightMode) {
-        viewModelScope.launch {
-            userRepository.insertUser(state.value.user.copy(nightMode = nightMode))
         }
     }
 }
 
-data class SettingsViewState(
-    val user: User = User(name = ""),
+data class ThemeViewState(
+    val nightModeEnabled: NightMode = NightMode.SYSTEM
 )

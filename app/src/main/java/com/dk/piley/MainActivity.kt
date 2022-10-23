@@ -26,21 +26,17 @@ import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.util.isDarkMode
+import com.dk.piley.ui.theme.ThemeHostScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // set initial theme
-        if (this.isDarkMode()) {
-            setTheme(R.style.Theme_Piley_Dark)
-        } else {
-            setTheme(R.style.Theme_Piley_Light)
-        }
+        // set initial theme TODO: fix status bar color
+        setTheme(R.style.Theme_Piley_Dark)
         super.onCreate(savedInstanceState)
         setContent {
-            PileyTheme {
+            ThemeHostScreen {
                 Home()
             }
         }
@@ -61,7 +57,8 @@ fun Home(
     navigationBarShown.value =
         navItems.map { it.route }.contains(navBackStackEntry?.destination?.route)
 
-    Scaffold(modifier = modifier,
+    Scaffold(
+        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             BottomNavigationBar(

@@ -14,4 +14,11 @@
     <string name="reminder_notification_channel_title">Reminder</string>
     <string name="reminder_notification_channel_description">Reminder</string>
 
+    <!--preferences and enums-->
+    <string-array name="night_modes">
+        <item>System</item>
+        <item>Enabled</item>
+        <item>Disabled</item>
+    </string-array>
+
 </resources>

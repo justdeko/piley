@@ -32,7 +32,7 @@ class ProfileViewModel @Inject constructor(
                 val deleted = tasks.count { it.status == TaskStatus.DELETED }
                 val current = tasks.count { it.status == TaskStatus.DEFAULT }
 
-                ProfileViewState(user.name ?: "", done, deleted, current)
+                ProfileViewState(user.name, done, deleted, current)
             }.collect { _state.value = it }
         }
     }

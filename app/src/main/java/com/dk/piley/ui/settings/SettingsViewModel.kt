@@ -40,5 +40,5 @@ class SettingsViewModel @Inject constructor(
 }
 
 data class SettingsViewState(
-    val user: User = User(name = ""),
+    val user: User = User(),
 )

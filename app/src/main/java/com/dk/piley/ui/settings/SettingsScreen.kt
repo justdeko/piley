@@ -60,9 +60,7 @@ private fun SettingsScreen(
 fun SettingsScreenPreview() {
     PileyTheme {
         Surface {
-            val state = SettingsViewState(
-                User(name = "Thomas")
-            )
+            val state = SettingsViewState(User())
             SettingsScreen(viewState = state)
         }
     }

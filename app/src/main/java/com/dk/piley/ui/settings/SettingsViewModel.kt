@@ -37,6 +37,12 @@ class SettingsViewModel @Inject constructor(
             userRepository.insertUser(state.value.user.copy(nightMode = nightMode))
         }
     }
+
+    fun updateDynamicColorEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(dynamicColorOn = enabled))
+        }
+    }
 }
 
 data class SettingsViewState(

@@ -29,14 +29,17 @@ fun SettingsScreen(
     SettingsScreen(
         modifier = modifier,
         viewState = viewState,
-        onNightModeChange = { viewModel.updateNightMode(it) })
+        onNightModeChange = { viewModel.updateNightMode(it) },
+        onDynamicColorChange = { viewModel.updateDynamicColorEnabled(it) }
+    )
 }
 
 @Composable
 private fun SettingsScreen(
     modifier: Modifier = Modifier,
     viewState: SettingsViewState,
-    onNightModeChange: (NightMode) -> Unit = {}
+    onNightModeChange: (NightMode) -> Unit = {},
+    onDynamicColorChange: (Boolean) -> Unit = {},
 ) {
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     Column(modifier = modifier.fillMaxSize()) {
@@ -50,6 +53,12 @@ private fun SettingsScreen(
                 onValueChange = {
                     onNightModeChange(NightMode.fromValue(nightModeValues.indexOf(it)))
                 }
+            )
+            SwitchSettingsItem(
+                title = "Dynamic Color enabled",
+                description = "Set whether dynamic color is enabled.",
+                value = viewState.user.dynamicColorOn,
+                onValueChange = onDynamicColorChange
             )
         }
     }

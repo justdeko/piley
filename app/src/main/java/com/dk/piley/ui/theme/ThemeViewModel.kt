@@ -1,4 +1,4 @@
-package com.dk.piley
+package com.dk.piley.ui.theme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,12 +25,13 @@ class ThemeViewModel @Inject constructor(
             // TODO: remove hardcoded
             val userFlow = userRepository.getUserById(1)
             combine(userFlow) { (user) ->
-                ThemeViewState(user.nightMode)
+                ThemeViewState(user.nightMode, user.dynamicColorOn)
             }.collect { _state.value = it }
         }
     }
 }
 
 data class ThemeViewState(
-    val nightModeEnabled: NightMode = NightMode.SYSTEM
+    val nightModeEnabled: NightMode = NightMode.SYSTEM,
+    val dynamicColorEnabled: Boolean = true
 )

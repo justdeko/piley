@@ -5,7 +5,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.dk.piley.ThemeViewModel
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.ui.util.isDarkMode
 
@@ -18,7 +17,7 @@ fun ThemeHostScreen(viewModel: ThemeViewModel = hiltViewModel(), content: @Compo
         NightMode.ENABLED -> true
         NightMode.DISABLED -> false
     }
-    PileyTheme(nightModeEnabled) {
+    PileyTheme(nightModeEnabled, viewState.dynamicColorEnabled) {
         content()
     }
 }

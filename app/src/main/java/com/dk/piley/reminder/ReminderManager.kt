@@ -50,7 +50,7 @@ class ReminderManager @Inject constructor(
             action = ReminderAlarmReceiver.ACTION_SHOW
         }.let { intent ->
             PendingIntent.getBroadcast(
-                context, taskId.toInt(), intent, 0
+                context, taskId.toInt(), intent, flags
             )
         }
         alarmManager?.cancel(intent)

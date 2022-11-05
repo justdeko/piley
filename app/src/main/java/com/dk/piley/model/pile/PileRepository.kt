@@ -1,5 +1,6 @@
 package com.dk.piley.model.pile
 
+import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -16,5 +17,9 @@ class PileRepository @Inject constructor(
 
     suspend fun deletePile(pile: Pile): Void {
         return pileDao.deletePile(pile)
+    }
+
+    suspend fun resetPileModes(defaultPileMode: PileMode = PileMode.FREE): Int {
+        return pileDao.updateAllPileModes(defaultPileMode)
     }
 }

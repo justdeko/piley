@@ -1,5 +1,6 @@
 package com.dk.piley.ui.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -16,11 +17,13 @@ fun SettingsItem(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
+    onClick: (() -> Unit)? = null,
     contentEnd: (@Composable () -> Unit)? = null,
     contentBottom: (@Composable () -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
+            .clickable(enabled = onClick != null, onClick = onClick ?: {})
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
@@ -29,7 +32,7 @@ fun SettingsItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column(modifier = Modifier) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.secondary,
@@ -42,8 +45,10 @@ fun SettingsItem(
                 )
             }
             if (contentEnd != null) {
-                Spacer(modifier = Modifier.width(16.dp))
-                contentEnd()
+                Row(modifier = Modifier.widthIn(0.dp, 150.dp)) {
+                    Spacer(modifier = Modifier.width(16.dp))
+                    contentEnd()
+                }
             }
         }
         if (contentBottom != null) {
@@ -140,6 +145,17 @@ fun DropdownSettingsItemPreview() {
             selectedValue = selectedOption,
             values = options,
             onValueChange = { selectedOption = it }
+        )
+    }
+}
+
+@Preview
+@Composable
+fun TextSettingsItemPreview() {
+    PileyTheme(useDarkTheme = true) {
+        SettingsItem(
+            title = "This is a settings item without anything",
+            description = "And some description for it"
         )
     }
 }

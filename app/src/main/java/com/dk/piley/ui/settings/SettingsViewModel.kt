@@ -2,7 +2,9 @@ package com.dk.piley.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.NightMode
+import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val pileRepository: PileRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(SettingsViewState())
 
@@ -41,6 +44,18 @@ class SettingsViewModel @Inject constructor(
     fun updateDynamicColorEnabled(enabled: Boolean) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(dynamicColorOn = enabled))
+        }
+    }
+
+    fun updateDefaultPileMode(pileMode: PileMode) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(pileMode = pileMode))
+        }
+    }
+
+    fun onResetPileModes() {
+        viewModelScope.launch {
+            pileRepository.resetPileModes()
         }
     }
 }

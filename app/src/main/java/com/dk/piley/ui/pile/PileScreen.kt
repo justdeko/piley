@@ -72,6 +72,7 @@ private fun PileScreen(
                 .fillMaxWidth()
                 .weight(1f),
             viewState.tasks,
+            viewState.pile.pileMode,
             onDone = onDone,
             onDelete = onDelete,
             onTaskClick = onClick

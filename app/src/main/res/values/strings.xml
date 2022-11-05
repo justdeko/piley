@@ -20,5 +20,10 @@
         <item>Enabled</item>
         <item>Disabled</item>
     </string-array>
+    <string-array name="pile_modes">
+        <item>Free</item>
+        <item>FIFO</item>
+        <item>LIFO</item>
+    </string-array>
 
 </resources>

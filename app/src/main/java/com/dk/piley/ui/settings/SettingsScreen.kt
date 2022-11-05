@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatPaint
+import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
+import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.ui.theme.PileyTheme
 
@@ -30,7 +32,9 @@ fun SettingsScreen(
         modifier = modifier,
         viewState = viewState,
         onNightModeChange = { viewModel.updateNightMode(it) },
-        onDynamicColorChange = { viewModel.updateDynamicColorEnabled(it) }
+        onDynamicColorChange = { viewModel.updateDynamicColorEnabled(it) },
+        onPileModeChange = { viewModel.updateDefaultPileMode(it) },
+        onResetPileModes = { viewModel.onResetPileModes() }
     )
 }
 
@@ -40,8 +44,11 @@ private fun SettingsScreen(
     viewState: SettingsViewState,
     onNightModeChange: (NightMode) -> Unit = {},
     onDynamicColorChange: (Boolean) -> Unit = {},
+    onPileModeChange: (PileMode) -> Unit = {},
+    onResetPileModes: () -> Unit = {},
 ) {
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
+    val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     Column(modifier = modifier.fillMaxSize()) {
         SettingsSection(title = "Appearance", icon = Icons.Filled.FormatPaint) {
             DropdownSettingsItem(
@@ -59,6 +66,23 @@ private fun SettingsScreen(
                 description = "Set whether dynamic color is enabled.",
                 value = viewState.user.dynamicColorOn,
                 onValueChange = onDynamicColorChange
+            )
+        }
+        SettingsSection(title = "Piles", icon = Icons.Filled.ViewAgenda) {
+            DropdownSettingsItem(
+                title = "Default pile mode",
+                description = "Set the default task completion mode for piles.",
+                optionLabel = "Pile Mode",
+                selectedValue = pileModeValues[viewState.user.pileMode.value],
+                values = pileModeValues,
+                onValueChange = {
+                    onPileModeChange(PileMode.fromValue(pileModeValues.indexOf(it)))
+                }
+            )
+            SettingsItem(
+                title = "Reset all pile modes",
+                description = "Reset all pile modes to the default of \"Free\"",
+                onClick = onResetPileModes
             )
         }
     }

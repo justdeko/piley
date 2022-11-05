@@ -118,6 +118,39 @@ fun DropdownSettingsItem(
     })
 }
 
+@Composable
+fun SliderSettingsItem(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String,
+    value: Int,
+    range: Pair<Int, Int>,
+    steps: Int,
+    onValueChange: (Int) -> Unit
+) {
+    SettingsItem(modifier = modifier, title = title, description = description, contentBottom = {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Slider(
+                modifier = Modifier.weight(1f),
+                value = value.toFloat(),
+                steps = steps,
+                onValueChange = { onValueChange(it.toInt()) },
+                valueRange = range.first.toFloat()..range.second.toFloat()
+            )
+            Text(
+                modifier = Modifier.padding(start = 8.dp),
+                text = value.toString(),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+    })
+}
+
 @Preview
 @Composable
 fun SwitchSettingsItemPreview() {
@@ -156,6 +189,21 @@ fun TextSettingsItemPreview() {
         SettingsItem(
             title = "This is a settings item without anything",
             description = "And some description for it"
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SliderSettingsItemPreview() {
+    PileyTheme(useDarkTheme = true) {
+        SliderSettingsItem(
+            title = "This is a slider setting",
+            description = "With some description",
+            value = 15,
+            range = Pair(15, 45),
+            steps = 1,
+            onValueChange = {}
         )
     }
 }

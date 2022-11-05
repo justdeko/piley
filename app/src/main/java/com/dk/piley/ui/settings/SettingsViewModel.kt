@@ -64,6 +64,12 @@ class SettingsViewModel @Inject constructor(
             userRepository.insertUser(state.value.user.copy(autoHideKeyboard = hide))
         }
     }
+
+    fun updateReminderDelay(delay: Int) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(defaultReminderDelay = delay))
+        }
+    }
 }
 
 data class SettingsViewState(

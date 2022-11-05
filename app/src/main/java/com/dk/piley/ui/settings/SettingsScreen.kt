@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatPaint
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -35,7 +36,8 @@ fun SettingsScreen(
         onDynamicColorChange = { viewModel.updateDynamicColorEnabled(it) },
         onPileModeChange = { viewModel.updateDefaultPileMode(it) },
         onResetPileModes = { viewModel.onResetPileModes() },
-        onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) }
+        onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) },
+        onReminderDelayChange = { viewModel.updateReminderDelay(it) }
     )
 }
 
@@ -48,6 +50,7 @@ private fun SettingsScreen(
     onPileModeChange: (PileMode) -> Unit = {},
     onResetPileModes: () -> Unit = {},
     onAutoHideKeyboardChange: (Boolean) -> Unit = {},
+    onReminderDelayChange: (Int) -> Unit = {},
 ) {
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
@@ -91,6 +94,16 @@ private fun SettingsScreen(
                 description = "Automatically hide the keyboard after creating a new task.",
                 value = viewState.user.autoHideKeyboard,
                 onValueChange = onAutoHideKeyboardChange
+            )
+        }
+        SettingsSection(title = "Notifications", icon = Icons.Filled.Notifications) {
+            SliderSettingsItem(
+                title = "Reminder Delay Duration",
+                description = "Set the duration for the \"Delay\" button in your task reminders.",
+                value = viewState.user.defaultReminderDelay,
+                range = Pair(15, 60),
+                steps = 2,
+                onValueChange = onReminderDelayChange
             )
         }
     }

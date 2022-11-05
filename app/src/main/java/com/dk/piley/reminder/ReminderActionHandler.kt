@@ -3,6 +3,7 @@ package com.dk.piley.reminder
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.model.user.UserDao
 import kotlinx.coroutines.flow.*
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
@@ -11,6 +12,7 @@ class ReminderActionHandler @Inject constructor(
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
     private val taskDao: TaskDao,
+    private val userDao: UserDao,
 ) : IReminderActionHandler {
     override fun show(taskId: Long): Flow<Task> {
         return taskDao.getTaskById(taskId).take(1)
@@ -42,7 +44,11 @@ class ReminderActionHandler @Inject constructor(
         // no task found
         if (taskId.toInt() == -1) return emptyFlow()
         return taskDao.getTaskById(taskId).onEach {
-            reminderManager.startReminder(LocalDateTime.now().plusMinutes(30), it.id)
+            // TODO remove hardcoded
+            val user = userDao.getUserById(1).first()
+            reminderManager.startReminder(
+                LocalDateTime.now().plusMinutes(user.defaultReminderDelay.toLong()), it.id
+            )
             notificationManager.dismiss(taskId)
         }
     }

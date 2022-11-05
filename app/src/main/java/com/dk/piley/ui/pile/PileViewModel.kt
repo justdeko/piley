@@ -37,7 +37,8 @@ class PileViewModel @Inject constructor(
                 pileRepository.getPileById(user.selectedPileId).map { pileWithTasks ->
                     PileViewState(
                         pileWithTasks.pile,
-                        pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT }
+                        pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
+                        user.autoHideKeyboard
                     )
                 }
             }.collect {
@@ -74,5 +75,6 @@ class PileViewModel @Inject constructor(
 
 data class PileViewState(
     val pile: Pile = Pile(),
-    val tasks: List<Task> = emptyList()
+    val tasks: List<Task> = emptyList(),
+    val autoHideEnabled: Boolean = true,
 )

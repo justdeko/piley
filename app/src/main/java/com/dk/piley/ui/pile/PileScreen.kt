@@ -82,7 +82,9 @@ private fun PileScreen(
             onChange = { v: TextFieldValue -> query = v },
             onDone = {
                 if (query.text.isNotBlank()) {
-                    focusManager.clearFocus()
+                    if (viewState.autoHideEnabled) {
+                        focusManager.clearFocus()
+                    }
                     onAdd(query.text.trim())
                     query = TextFieldValue()
                 } else {

@@ -58,6 +58,12 @@ class SettingsViewModel @Inject constructor(
             pileRepository.resetPileModes()
         }
     }
+
+    fun updateHideKeyboardEnabled(hide: Boolean) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(autoHideKeyboard = hide))
+        }
+    }
 }
 
 data class SettingsViewState(

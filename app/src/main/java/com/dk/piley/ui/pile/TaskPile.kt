@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
@@ -36,18 +37,18 @@ fun TaskPile(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
     ) {
         itemsIndexed(tasks, key = { _, task -> task.id }) { index, task ->
-            val dismissState = rememberDismissState()
+            val dismissState = rememberDismissState(DismissValue.Default) {
+                if (cannotDismiss(pileMode, index, tasks.lastIndex)
+                    && it == DismissValue.DismissedToEnd
+                ) {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    false
+                } else true
+            }
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                 onDelete(task)
             } else if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
-                if (
-                    (pileMode == PileMode.FIFO && index != tasks.lastIndex)
-                    || (pileMode == PileMode.LIFO && index != 0)
-                ) {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                } else {
-                    onDone(task)
-                }
+                onDone(task)
             }
             PileTask(
                 Modifier
@@ -60,6 +61,9 @@ fun TaskPile(
         }
     }
 }
+
+fun cannotDismiss(pileMode: PileMode, index: Int, lastIndex: Int) =
+    (pileMode == PileMode.FIFO && index != 0) || (pileMode == PileMode.LIFO && index != lastIndex)
 
 @Preview
 @Composable

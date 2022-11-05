@@ -34,7 +34,8 @@ fun SettingsScreen(
         onNightModeChange = { viewModel.updateNightMode(it) },
         onDynamicColorChange = { viewModel.updateDynamicColorEnabled(it) },
         onPileModeChange = { viewModel.updateDefaultPileMode(it) },
-        onResetPileModes = { viewModel.onResetPileModes() }
+        onResetPileModes = { viewModel.onResetPileModes() },
+        onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) }
     )
 }
 
@@ -46,6 +47,7 @@ private fun SettingsScreen(
     onDynamicColorChange: (Boolean) -> Unit = {},
     onPileModeChange: (PileMode) -> Unit = {},
     onResetPileModes: () -> Unit = {},
+    onAutoHideKeyboardChange: (Boolean) -> Unit = {},
 ) {
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
@@ -83,6 +85,12 @@ private fun SettingsScreen(
                 title = "Reset all pile modes",
                 description = "Reset all pile modes to the default of \"Free\"",
                 onClick = onResetPileModes
+            )
+            SwitchSettingsItem(
+                title = "Automatically hide keyboard",
+                description = "Automatically hide the keyboard after creating a new task.",
+                value = viewState.user.autoHideKeyboard,
+                onValueChange = onAutoHideKeyboardChange
             )
         }
     }

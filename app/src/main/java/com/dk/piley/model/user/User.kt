@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey(autoGenerate = true) val userId: Long = 0,
     val name: String = "",
+    val email: String = "",
+    val password: String = "", // TODO: no password in db
     val selectedPileId: Long = 1,
     // user preferences
     val nightMode: NightMode = NightMode.SYSTEM,

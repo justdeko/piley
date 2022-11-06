@@ -11,6 +11,9 @@ interface UserDao {
     @Query("SELECT * FROM User WHERE userId=:userId")
     fun getUserById(userId: Long): Flow<User>
 
+    @Query("SELECT * FROM User WHERE email=:email")
+    fun getUserByEmail(email: String): Flow<User?>
+
     @Query("SELECT * FROM User WHERE userId=:userId")
     fun getUserWithPilesById(userId: Long): Flow<UserWithPiles>
 

@@ -8,6 +8,8 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
 
     fun getUserById(userId: Long): Flow<User> = userDao.getUserById(userId)
 
+    fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
+
     suspend fun insertUser(user: User): Long = userDao.insertUser(user)
 
     suspend fun deleteUser(user: User): Void = userDao.deleteUser(user)

@@ -24,6 +24,7 @@ import com.dk.piley.ui.pile.PileScreen
 import com.dk.piley.ui.piles.PileOverviewScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
+import com.dk.piley.ui.signin.SignInScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
@@ -49,7 +50,7 @@ fun Home(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
-    val navigationBarShown = rememberSaveable { (mutableStateOf(true)) }
+    val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -66,7 +67,10 @@ fun Home(
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
-        NavHost(navController, startDestination = Screen.Pile.route) {
+        NavHost(navController, startDestination = Screen.SignIn.route) {
+            composable(Screen.SignIn.route) {
+                SignInScreen(navController = navController)
+            }
             composable(Screen.Pile.route) {
                 PileScreen(
                     Modifier.padding(padding), navController

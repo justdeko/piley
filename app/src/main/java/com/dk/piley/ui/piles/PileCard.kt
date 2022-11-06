@@ -55,7 +55,10 @@ fun PileCard(
                     onCheckedChange = { onSelectPile(pileWithTasks.pile.pileId) }
                 ) {
                     if (selected) {
-                        Icon(Icons.Filled.Home, contentDescription = "pile selected as default")
+                        Icon(
+                            Icons.Filled.Home,
+                            contentDescription = "pile selected as default"
+                        )
                     } else {
                         Icon(
                             Icons.Outlined.Home,

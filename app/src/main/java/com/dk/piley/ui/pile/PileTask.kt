@@ -63,7 +63,7 @@ fun PileTask(
             ) {
                 Icon(
                     icon,
-                    contentDescription = "Localized description",
+                    contentDescription = null,
                     modifier = Modifier.scale(scale),
                     tint = color
                 )

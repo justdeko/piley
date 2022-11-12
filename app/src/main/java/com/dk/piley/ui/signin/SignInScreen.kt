@@ -1,5 +1,7 @@
 package com.dk.piley.ui.signin
 
+import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -32,9 +35,24 @@ fun SignInScreen(
     SignInScreen(modifier = modifier,
         viewState = viewState,
         onEmailChange = { viewModel.setEmail(it) },
+        onUsernameChange = { viewModel.setUsername(it) },
         onPasswordChange = { viewModel.setPassword(it) },
         onAttemptSignIn = { viewModel.attemptSignIn() },
-        onSignIn = { navController.navigate(Screen.Pile.route) }
+        onSignIn = {
+            navController.navigate(Screen.Pile.route) {
+                popUpTo(Screen.SignIn.route) {
+                    inclusive = true
+                }
+            }
+        },
+        onSignInError = { viewModel.setSignInState(SignInState.SIGNED_OUT) },
+        onChangeRegister = {
+            if (viewState.signInState == SignInState.REGISTER) {
+                viewModel.setSignInState(SignInState.SIGNED_OUT)
+            } else {
+                viewModel.setSignInState(SignInState.REGISTER)
+            }
+        }
     )
 }
 
@@ -44,12 +62,23 @@ private fun SignInScreen(
     modifier: Modifier = Modifier,
     viewState: SignInViewState,
     onEmailChange: (String) -> Unit = {},
+    onUsernameChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onAttemptSignIn: () -> Unit = {},
     onSignIn: () -> Unit = {},
+    onSignInError: () -> Unit = {},
+    onChangeRegister: () -> Unit = {},
 ) {
-    if (viewState.canSignIn) {
-        onSignIn()
+    val context = LocalContext.current
+    val isRegister = viewState.signInState == SignInState.REGISTER
+    val signInText = if (isRegister) "Register" else "Sign In"
+    when (viewState.signInState) {
+        SignInState.SIGNED_IN -> onSignIn()
+        SignInState.SIGN_IN_ERROR -> {
+            Toast.makeText(context, "Error signing in", Toast.LENGTH_SHORT).show()
+            onSignInError()
+        }
+        else -> {}
     }
     Column(
         modifier = modifier.fillMaxSize(),
@@ -63,7 +92,7 @@ private fun SignInScreen(
             tint = MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "Sign In",
+            text = signInText,
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 32.dp),
@@ -80,6 +109,19 @@ private fun SignInScreen(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
+        AnimatedVisibility(viewState.signInState == SignInState.REGISTER) {
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                value = viewState.username,
+                onValueChange = onUsernameChange,
+                placeholder = { Text("Username") },
+                shape = RoundedCornerShape(16.dp),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            )
+        }
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -96,7 +138,10 @@ private fun SignInScreen(
             onClick = onAttemptSignIn,
             enabled = viewState.email.isNotBlank() && viewState.password.isNotBlank()
         ) {
-            Text("Sign In")
+            Text(signInText)
+        }
+        TextButton(onClick = onChangeRegister) {
+            Text(if (isRegister) "Sign In instead" else "No account? Click here to register")
         }
     }
 }

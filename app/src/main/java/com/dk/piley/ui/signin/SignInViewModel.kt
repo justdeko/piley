@@ -36,16 +36,22 @@ class SignInViewModel @Inject constructor(
     fun attemptSignIn() {
         val userData = state.value
         viewModelScope.launch {
-            val user = userRepository.getUserByEmail(userData.email).first()
-            val canSignIn = if (user != null) {
-                user.password != userData.password
-            } else false
-            _state.update { it.copy(canSignIn = canSignIn) }
+            userRepository.getUserByEmail(userData.email).first()?.let { user ->
+                if (user.password != userData.password) {
+                    setSignInState(SignInState.SIGNED_IN)
+                } else {
+                    setSignInState(SignInState.SIGN_IN_ERROR)
+                }
+            } ?: run { setSignInState(SignInState.SIGN_IN_ERROR) }
         }
     }
 
+    fun setSignInState(signInState: SignInState) =
+        _state.update { it.copy(signInState = signInState) }
+
+
     fun setEmail(input: String) = _state.update { it.copy(email = input) }
-    fun setName(input: String) = _state.update { it.copy(username = input) }
+    fun setUsername(input: String) = _state.update { it.copy(username = input) }
     fun setPassword(input: String) = _state.update { it.copy(password = input) }
 }
 
@@ -53,5 +59,6 @@ data class SignInViewState(
     val username: String = "",
     val email: String = "",
     val password: String = "",
-    val canSignIn: Boolean = false,
+    val signInState: SignInState = SignInState.SIGNED_OUT,
 )
+

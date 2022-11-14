@@ -21,7 +21,7 @@ class SignInViewModel @Inject constructor(
     val state: StateFlow<SignInViewState>
         get() = _state
 
-    fun createUser() {
+    private fun createUser() {
         val userData = state.value
         val user = User(
             name = userData.username,
@@ -30,19 +30,28 @@ class SignInViewModel @Inject constructor(
         )
         viewModelScope.launch {
             userRepository.insertUser(user)
+            userRepository.setSignedInUser(user.userId)
+            setSignInState(SignInState.SIGNED_IN)
         }
     }
 
     fun attemptSignIn() {
         val userData = state.value
         viewModelScope.launch {
-            userRepository.getUserByEmail(userData.email).first()?.let { user ->
-                if (user.password != userData.password) {
-                    setSignInState(SignInState.SIGNED_IN)
-                } else {
-                    setSignInState(SignInState.SIGN_IN_ERROR)
-                }
-            } ?: run { setSignInState(SignInState.SIGN_IN_ERROR) }
+            if (state.value.signInState == SignInState.REGISTER) {
+                // Register
+                createUser()
+            } else {
+                // Attempt sign in
+                userRepository.getUserByEmail(userData.email).first()?.let { user ->
+                    if (user.password == userData.password) {
+                        userRepository.setSignedInUser(user.userId)
+                        setSignInState(SignInState.SIGNED_IN)
+                    } else {
+                        setSignInState(SignInState.SIGN_IN_ERROR)
+                    }
+                } ?: run { setSignInState(SignInState.SIGN_IN_ERROR) }
+            }
         }
     }
 

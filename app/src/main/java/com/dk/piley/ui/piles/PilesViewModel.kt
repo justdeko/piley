@@ -21,12 +21,12 @@ class PilesViewModel @Inject constructor(
     val state: StateFlow<PilesViewState>
         get() = _state
 
+    private val signedInUserFlow = userRepository.getSignedInUserNotNull()
+
     init {
         viewModelScope.launch {
             val pilesFlow = pileRepository.getPilesWithTasks()
-            // TODO remove hardcoded
-            val userFlow = userRepository.getUserById(1)
-            userFlow.combine(pilesFlow) { user, piles ->
+            signedInUserFlow.combine(pilesFlow) { user, piles ->
                 PilesViewState(piles, user.selectedPileId)
             }.collect { _state.value = it }
         }
@@ -34,7 +34,7 @@ class PilesViewModel @Inject constructor(
 
     fun createPile(name: String) {
         viewModelScope.launch {
-            userRepository.getUserById(1).take(1).collect { user ->
+            signedInUserFlow.take(1).collect { user ->
                 pileRepository.insertPile(Pile(name = name, pileMode = user.pileMode))
             }
         }
@@ -42,7 +42,7 @@ class PilesViewModel @Inject constructor(
 
     fun deletePile(pile: Pile) {
         viewModelScope.launch {
-            userRepository.getUserById(1).take(1).collect {
+            signedInUserFlow.take(1).collect {
                 userRepository.insertUser(it.copy(selectedPileId = 1))
                 pileRepository.deletePile(pile)
             }
@@ -54,8 +54,7 @@ class PilesViewModel @Inject constructor(
             it.copy(selectedPileId = id)
         }
         viewModelScope.launch {
-            // TODO: remove hardcoded
-            userRepository.getUserById(1).take(1).collect {
+            signedInUserFlow.take(1).collect {
                 userRepository.insertUser(it.copy(selectedPileId = id))
             }
         }

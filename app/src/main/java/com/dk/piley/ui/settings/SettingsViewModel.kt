@@ -26,8 +26,7 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // TODO: remove hardcoded
-            val userFlow = userRepository.getUserById(1)
+            val userFlow = userRepository.getSignedInUserNotNull()
             combine(userFlow) { (user) ->
                 SettingsViewState(user)
             }.collect { _state.value = it }

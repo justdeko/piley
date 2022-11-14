@@ -25,8 +25,7 @@ class ProfileViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val tasksFlow = taskRepository.getTasks()
-            // TODO: remove hardcoded
-            val userFlow = userRepository.getUserById(1)
+            val userFlow = userRepository.getSignedInUserNotNull()
             userFlow.combine(tasksFlow) { user, tasks ->
                 val done = tasks.count { it.status == TaskStatus.DONE }
                 val deleted = tasks.count { it.status == TaskStatus.DELETED }

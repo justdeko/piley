@@ -22,8 +22,7 @@ class ThemeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // TODO: remove hardcoded
-            val userFlow = userRepository.getUserById(1)
+            val userFlow = userRepository.getSignedInUserNotNull()
             combine(userFlow) { (user) ->
                 ThemeViewState(user.nightMode, user.dynamicColorOn)
             }.collect { _state.value = it }

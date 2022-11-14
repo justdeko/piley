@@ -1,6 +1,7 @@
 package com.dk.piley.di
 
 import android.content.Context
+import com.dk.piley.di.DataStoreModule.providePreferencesDataStore
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
@@ -53,5 +54,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideUserRepository(userDao: UserDao) = UserRepository(userDao)
+    fun provideUserRepository(
+        userDao: UserDao, @ApplicationContext appContext: Context
+    ) = UserRepository(userDao, providePreferencesDataStore(appContext))
 }

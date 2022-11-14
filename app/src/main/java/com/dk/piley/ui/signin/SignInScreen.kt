@@ -136,7 +136,7 @@ private fun SignInScreen(
         ElevatedButton(
             modifier = Modifier.padding(top = 16.dp, bottom = 32.dp),
             onClick = onAttemptSignIn,
-            enabled = viewState.email.isNotBlank() && viewState.password.isNotBlank()
+            enabled = signInButtonEnabled(isRegister, viewState)
         ) {
             Text(signInText)
         }
@@ -144,6 +144,13 @@ private fun SignInScreen(
             Text(if (isRegister) "Sign In instead" else "No account? Click here to register")
         }
     }
+}
+
+fun signInButtonEnabled(isRegister: Boolean, viewState: SignInViewState): Boolean {
+    val signInEnabled = viewState.email.isNotBlank() && viewState.password.isNotBlank()
+    return if (isRegister) {
+        signInEnabled && viewState.username.isNotBlank()
+    } else signInEnabled
 }
 
 @PreviewMainScreen

@@ -32,8 +32,7 @@ class PileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // TODO: remove hardcoded
-            userRepository.getUserById(1).flatMapLatest { user ->
+            userRepository.getSignedInUserNotNull().flatMapLatest { user ->
                 pileRepository.getPileById(user.selectedPileId).map { pileWithTasks ->
                     PileViewState(
                         pileWithTasks.pile,

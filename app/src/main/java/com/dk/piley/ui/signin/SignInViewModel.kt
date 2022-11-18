@@ -1,7 +1,11 @@
 package com.dk.piley.ui.signin
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.R
+import com.dk.piley.model.pile.Pile
+import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,14 +18,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    private val userRepository: UserRepository
-) : ViewModel() {
+    application: Application,
+    private val userRepository: UserRepository,
+    private val pileRepository: PileRepository,
+) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(SignInViewState())
 
     val state: StateFlow<SignInViewState>
         get() = _state
 
-    private fun createUser() {
+    private fun createAndSignInUser() {
         val userData = state.value
         val user = User(
             name = userData.username,
@@ -29,9 +35,20 @@ class SignInViewModel @Inject constructor(
             password = userData.password
         )
         viewModelScope.launch {
-            userRepository.insertUser(user)
+            // create user and set as signed in
+            val userId = userRepository.insertUser(user)
             userRepository.setSignedInUser(user.userId)
-            setSignInState(SignInState.SIGNED_IN)
+            // create default pile and assign to user
+            val pile = Pile(
+                name = getApplication<Application>().getString(R.string.daily_pile_name),
+                userId = userId
+            )
+            val pileId = pileRepository.insertPile(pile)
+            // update assigned pile as selected and set signed in state
+            userRepository.getSignedInUserNotNull().first().let { user ->
+                userRepository.insertUser(user.copy(selectedPileId = pileId))
+                setSignInState(SignInState.SIGNED_IN)
+            }
         }
     }
 
@@ -40,7 +57,7 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             if (state.value.signInState == SignInState.REGISTER) {
                 // Register
-                createUser()
+                createAndSignInUser()
             } else {
                 // Attempt sign in
                 userRepository.getUserByEmail(userData.email).first()?.let { user ->

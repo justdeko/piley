@@ -27,7 +27,7 @@ class PilesViewModel @Inject constructor(
         viewModelScope.launch {
             val pilesFlow = pileRepository.getPilesWithTasks()
             signedInUserFlow.combine(pilesFlow) { user, piles ->
-                PilesViewState(piles, user.selectedPileId)
+                PilesViewState(piles.filter { it.pile.userId == user.userId }, user.selectedPileId)
             }.collect { _state.value = it }
         }
     }

@@ -1,8 +1,7 @@
-package com.dk.piley.ui.theme
+package com.dk.piley.ui.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,25 +11,25 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ThemeViewModel @Inject constructor(
+class SplashViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
-    private val _state = MutableStateFlow(ThemeViewState())
+    private val _state = MutableStateFlow(SplashViewState())
 
-    val state: StateFlow<ThemeViewState>
+    val state: StateFlow<SplashViewState>
         get() = _state
 
     init {
         viewModelScope.launch {
-            val userFlow = userRepository.getSignedInUserNotNull()
-            combine(userFlow) { (user) ->
-                ThemeViewState(user.nightMode, user.dynamicColorOn)
+            combine(userRepository.getSignedInUser()) { (user) ->
+                SplashViewState(signedIn = user != null)
             }.collect { _state.value = it }
         }
     }
+
+    fun isSignedIn() = state.value.signedIn
 }
 
-data class ThemeViewState(
-    val nightModeEnabled: NightMode = NightMode.SYSTEM,
-    val dynamicColorEnabled: Boolean = true
+data class SplashViewState(
+    val signedIn: Boolean = false
 )

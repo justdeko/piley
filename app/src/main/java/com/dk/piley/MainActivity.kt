@@ -25,6 +25,7 @@ import com.dk.piley.ui.piles.PileOverviewScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.signin.SignInScreen
+import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
@@ -67,7 +68,10 @@ fun Home(
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
-        NavHost(navController, startDestination = Screen.SignIn.route) {
+        NavHost(navController, startDestination = Screen.Splash.route) {
+            composable(Screen.Splash.route) {
+                SplashScreen(navController = navController)
+            }
             composable(Screen.SignIn.route) {
                 SignInScreen(navController = navController)
             }

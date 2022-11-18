@@ -39,11 +39,8 @@ fun SignInScreen(
         onPasswordChange = { viewModel.setPassword(it) },
         onAttemptSignIn = { viewModel.attemptSignIn() },
         onSignIn = {
-            navController.navigate(Screen.Pile.route) {
-                popUpTo(Screen.SignIn.route) {
-                    inclusive = true
-                }
-            }
+            viewModel.setSignInState(SignInState.HOME)
+            navController.navigate(Screen.Pile.route) { popUpTo(0) }
         },
         onSignInError = { viewModel.setSignInState(SignInState.SIGNED_OUT) },
         onChangeRegister = {
@@ -73,7 +70,10 @@ private fun SignInScreen(
     val isRegister = viewState.signInState == SignInState.REGISTER
     val signInText = if (isRegister) "Register" else "Sign In"
     when (viewState.signInState) {
-        SignInState.SIGNED_IN -> onSignIn()
+        SignInState.SIGNED_IN -> {
+            Toast.makeText(context, "Signed in!", Toast.LENGTH_SHORT).show()
+            onSignIn()
+        }
         SignInState.SIGN_IN_ERROR -> {
             Toast.makeText(context, "Error signing in", Toast.LENGTH_SHORT).show()
             onSignInError()

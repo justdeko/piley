@@ -29,6 +29,10 @@ sealed class Screen(
     object SignIn : Screen(
         "login", R.string.sign_in, Pair(Icons.Outlined.Login, Icons.Filled.Login)
     )
+
+    object Splash : Screen(
+        "splash", R.string.splash_screen, Pair(Icons.Outlined.Square, Icons.Filled.Square)
+    )
 }
 
 sealed class IdentifierScreen(val route: String, val identifier: String, val root: String) {

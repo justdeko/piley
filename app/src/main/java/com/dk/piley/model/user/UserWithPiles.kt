@@ -8,7 +8,7 @@ data class UserWithPiles(
     @Embedded val user: User,
     @Relation(
         parentColumn = "userId",
-        entityColumn = "pileId"
+        entityColumn = "userId"
     )
     val piles: List<Pile>
 )

@@ -76,7 +76,7 @@ fun SplashScreen(onAnimFinished: () -> Unit = {}) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "piley",
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.displayMedium,
             modifier = Modifier
                 .padding(bottom = 32.dp)
@@ -93,13 +93,23 @@ private fun runAnimation(
     onFinished: () -> Unit = {}
 ) {
     coroutineScope.launch {
-        scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 500))
-        scaleFactor.animateTo(1.5f, tween(easing = FastOutSlowInEasing, durationMillis = 800))
+        scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 300))
+        scaleFactor.animateTo(1.5f, tween(easing = FastOutSlowInEasing, durationMillis = 400))
         awaitAll(
-            async { scaleFactor.animateTo(160f, tween(easing = FastOutSlowInEasing)) },
-            async { alpha.animateTo(0f, tween(easing = LinearOutSlowInEasing)) }
+            async {
+                scaleFactor.animateTo(
+                    160f,
+                    tween(easing = FastOutSlowInEasing, durationMillis = 600)
+                )
+            },
+            async {
+                alpha.animateTo(
+                    0f,
+                    tween(easing = LinearOutSlowInEasing, durationMillis = 400)
+                )
+                onFinished()
+            }
         )
-        onFinished()
     }
 }
 

@@ -29,13 +29,17 @@ import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
+import com.dk.piley.ui.util.isDarkMode
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        // set initial theme TODO: fix status bar color
-        setTheme(R.style.Theme_Piley_Dark)
+        // set initial theme
+        if (isDarkMode()) {
+            setTheme(R.style.Theme_Piley_Dark)
+        } else setTheme(R.style.Theme_Piley_Light)
+
         super.onCreate(savedInstanceState)
         setContent {
             ThemeHostScreen {

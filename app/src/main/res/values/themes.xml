@@ -2,10 +2,11 @@
 <resources>
 
     <style name="Theme.Piley" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
     </style>
 
     <style name="Theme.Piley.Light" parent="Theme.Piley">
+        <item name="android:windowBackground">@color/md_theme_light_background</item>
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
@@ -35,6 +36,7 @@
     </style>
 
     <style name="Theme.Piley.Dark" parent="Theme.Piley">
+        <item name="android:windowBackground">@color/md_theme_dark_background</item>
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>

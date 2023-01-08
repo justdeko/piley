@@ -89,7 +89,7 @@ fun AddReminderContent(
         ) {
             Text(
                 localDate?.toString() ?: (initialDateTime?.toLocalDate()?.toString()
-                    ?: "Pick a time")
+                    ?: "Pick a date")
             )
             IconButton(onClick = {
                 context.showDatePicker(localDate ?: initialDateTime?.toLocalDate()) {

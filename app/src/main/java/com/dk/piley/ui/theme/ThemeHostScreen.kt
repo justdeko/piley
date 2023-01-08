@@ -1,5 +1,6 @@
 package com.dk.piley.ui.theme
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,15 +24,13 @@ fun ThemeHostScreen(viewModel: ThemeViewModel = hiltViewModel(), content: @Compo
     // set theme for non-compose UI elements
     val mainTheme = if (nightModeEnabled) R.style.Theme_Piley_Dark else R.style.Theme_Piley_Light
     context.setTheme(mainTheme)
-    // set status bar color and icons color
-    val statusBarColor =
-        if (nightModeEnabled) md_theme_dark_background else md_theme_light_background
-    systemUiController.setSystemBarsColor(
-        color = statusBarColor,
-        darkIcons = !nightModeEnabled
-    )
     // wrap content inside compose theme
     PileyTheme(nightModeEnabled, viewState.dynamicColorEnabled) {
+        // set status bar color and icons color
+        systemUiController.setSystemBarsColor(
+            color = MaterialTheme.colorScheme.background,
+            darkIcons = !nightModeEnabled
+        )
         content()
     }
 }

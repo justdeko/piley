@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+const val SIGNED_OUT_USER_ID = -2L
+
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val userPrefs: DataStore<Preferences>

@@ -2,6 +2,7 @@ package com.dk.piley.ui.profile
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,28 +28,44 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
-    ProfileScreen(
-        modifier = modifier,
+    ProfileScreen(modifier = modifier,
         viewState = viewState,
-        onClickSettings = { navController.navigate(Screen.Settings.route) })
+        onClickSettings = { navController.navigate(Screen.Settings.route) },
+        onSignOut = {
+            viewModel.signOut()
+            navController.navigate(Screen.SignIn.route) { popUpTo(0) }
+        }
+    )
 }
 
 @Composable
 private fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewState: ProfileViewState,
-    onClickSettings: () -> Unit = {}
+    onClickSettings: () -> Unit = {},
+    onSignOut: () -> Unit = {}
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Spacer(modifier = Modifier.size(16.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             IconButton(onClick = onClickSettings) {
                 Icon(
                     Icons.Filled.Settings,
                     tint = MaterialTheme.colorScheme.secondary,
                     contentDescription = "go to settings"
+                )
+            }
+            IconButton(onClick = onSignOut) {
+                Icon(
+                    Icons.Filled.Logout,
+                    tint = MaterialTheme.colorScheme.secondary,
+                    contentDescription = "sign out"
                 )
             }
         }

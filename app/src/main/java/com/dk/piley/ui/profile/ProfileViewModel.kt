@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.model.user.SIGNED_OUT_USER_ID
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,12 @@ class ProfileViewModel @Inject constructor(
 
                 ProfileViewState(user.name, done, deleted, current)
             }.collect { _state.value = it }
+        }
+    }
+
+    fun signOut() {
+        viewModelScope.launch {
+            userRepository.setSignedInUser(SIGNED_OUT_USER_ID)
         }
     }
 }

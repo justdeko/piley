@@ -6,10 +6,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissState
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -37,13 +38,16 @@ fun TaskPile(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
     ) {
         itemsIndexed(tasks, key = { _, task -> task.id }) { index, task ->
-            val dismissState = rememberDismissState(DismissValue.Default) {
-                if (cannotDismiss(pileMode, index, tasks.lastIndex)
-                    && it == DismissValue.DismissedToEnd
-                ) {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    false
-                } else true
+            // recomposition key of tasks to recalculate possibility of dismiss for last/first item
+            val dismissState = remember(tasks) {
+                DismissState(DismissValue.Default) {
+                    if (cannotDismiss(pileMode, index, tasks.lastIndex)
+                        && it == DismissValue.DismissedToEnd
+                    ) {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        false
+                    } else true
+                }
             }
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                 onDelete(task)

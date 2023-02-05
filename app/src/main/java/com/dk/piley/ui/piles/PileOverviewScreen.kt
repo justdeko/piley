@@ -17,11 +17,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
@@ -57,6 +59,7 @@ fun PileOverviewScreen(
     onPileClick: (Pile) -> Unit = {},
 ) {
     val gridState = rememberLazyGridState()
+    val dailyPileName = stringResource(R.string.daily_pile_name)
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
     var pileTitle by rememberSaveable { mutableStateOf("") }
     val expandedFab by remember {
@@ -90,7 +93,8 @@ fun PileOverviewScreen(
                     PileCard(
                         modifier = Modifier.animateItemPlacement(),
                         pileWithTasks = pileWithTasks,
-                        canDelete = pileWithTasks.pile.pileId != 1L, // default pile cannot be deleted
+                        // default pile with name "Daily" cannot be deleted
+                        canDelete = pileWithTasks.pile.name != dailyPileName,
                         onSelectPile = onSelectPile,
                         onDeletePile = { onDeletePile(pileWithTasks.pile) },
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
@@ -115,11 +119,14 @@ fun PileOverviewScreen(
                 },
                 onDismissRequest = { createPileDialogOpen = false },
                 confirmButton = {
-                    TextButton(onClick = {
-                        onCreatePile(pileTitle)
-                        createPileDialogOpen = false
-                        pileTitle = ""
-                    }) {
+                    TextButton(
+                        onClick = {
+                            onCreatePile(pileTitle)
+                            createPileDialogOpen = false
+                            pileTitle = ""
+                        },
+                        enabled = pileTitle.isNotBlank() && pileTitle != dailyPileName
+                    ) {
                         Text("Create Pile")
                     }
                 }, dismissButton = {

@@ -37,6 +37,7 @@ sealed class Screen(
 
 sealed class IdentifierScreen(val route: String, val identifier: String, val root: String) {
     object Task : IdentifierScreen("task/{taskId}", "taskId", "task")
+    object Pile : IdentifierScreen("pile/{pileId}", "pileId", "pile")
 }
 
 val navItems = listOf(
@@ -46,4 +47,5 @@ val navItems = listOf(
 )
 
 val taskScreen = IdentifierScreen.Task
+val pileScreen = IdentifierScreen.Pile
 const val DEEPLINK_ROOT = "https://piley.app"

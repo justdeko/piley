@@ -1,5 +1,6 @@
 package com.dk.piley.ui.piles
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -27,10 +28,13 @@ fun PileCard(
     canDelete: Boolean = true,
     onSelectPile: (Long) -> Unit = {},
     onDeletePile: () -> Unit = {},
+    onClick: (pile: Pile) -> Unit = {}
 ) {
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     Card(
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
+            .padding(8.dp)
+            .clickable { onClick(pileWithTasks.pile) }
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()

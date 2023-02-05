@@ -21,6 +21,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.dk.piley.ui.nav.*
 import com.dk.piley.ui.pile.PileScreen
+import com.dk.piley.ui.piles.PileDetailScreen
 import com.dk.piley.ui.piles.PileOverviewScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
@@ -105,6 +106,15 @@ fun Home(
                 arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })
             ) {
                 TaskDetailScreen(navController)
+            }
+            composable(
+                pileScreen.route,
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "$DEEPLINK_ROOT/${pileScreen.route}"
+                }),
+                arguments = listOf(navArgument(pileScreen.identifier) { type = NavType.LongType })
+            ) {
+                PileDetailScreen(navController)
             }
         }
     }

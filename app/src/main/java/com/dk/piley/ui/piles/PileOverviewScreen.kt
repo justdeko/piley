@@ -26,6 +26,7 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
+import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -41,6 +42,7 @@ fun PileOverviewScreen(
         onCreatePile = { viewModel.createPile(it) },
         onDeletePile = { viewModel.deletePile(it) },
         onSelectPile = { viewModel.setSelectedPile(it) },
+        onPileClick = { navController.navigate(pileScreen.root + "/" + it.pileId) }
     )
 }
 
@@ -52,6 +54,7 @@ fun PileOverviewScreen(
     onCreatePile: (String) -> Unit = {},
     onDeletePile: (Pile) -> Unit = {},
     onSelectPile: (Long) -> Unit = {},
+    onPileClick: (Pile) -> Unit = {},
 ) {
     val gridState = rememberLazyGridState()
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
@@ -90,7 +93,8 @@ fun PileOverviewScreen(
                         canDelete = pileWithTasks.pile.pileId != 1L, // default pile cannot be deleted
                         onSelectPile = onSelectPile,
                         onDeletePile = { onDeletePile(pileWithTasks.pile) },
-                        selected = viewState.selectedPileId == pileWithTasks.pile.pileId
+                        selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
+                        onClick = onPileClick
                     )
                 }
             }

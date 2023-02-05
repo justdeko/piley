@@ -2,18 +2,17 @@ package com.dk.piley.ui.piles
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DoneAll
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
@@ -29,6 +28,7 @@ fun PileCard(
     onSelectPile: (Long) -> Unit = {},
     onDeletePile: () -> Unit = {},
 ) {
+    val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     Card(
         modifier = modifier.padding(8.dp)
     ) {
@@ -81,7 +81,7 @@ fun PileCard(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Icon(
-                    imageVector = Icons.Filled.List,
+                    imageVector = Icons.Filled.LibraryAdd,
                     contentDescription = "open tasks",
                     tint = MaterialTheme.colorScheme.secondary
                 )
@@ -100,6 +100,20 @@ fun PileCard(
                     tint = MaterialTheme.colorScheme.tertiary
                 )
                 Text(text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DONE }}")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Reorder,
+                    contentDescription = "pile mode",
+                    tint = MaterialTheme.colorScheme.tertiary
+                )
+                Text(text = pileModeValues[pileWithTasks.pile.pileMode.value])
             }
             Spacer(modifier = Modifier.height(8.dp))
         }

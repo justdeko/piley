@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -71,9 +72,11 @@ fun PileOverviewScreen(
             )
         },
         floatingActionButtonPosition = FabPosition.End,
-    ) {
+    ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
             LazyVerticalGrid(
                 modifier = Modifier.fillMaxSize(),
@@ -97,7 +100,7 @@ fun PileOverviewScreen(
                 title = { Text("Create a Pile") },
                 text = {
                     OutlinedTextField(
-                        modifier = modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         value = pileTitle,
                         onValueChange = { pileTitle = it },
                         placeholder = { Text("Pile Title") },

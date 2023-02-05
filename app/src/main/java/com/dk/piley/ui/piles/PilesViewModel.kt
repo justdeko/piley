@@ -35,7 +35,13 @@ class PilesViewModel @Inject constructor(
     fun createPile(name: String) {
         viewModelScope.launch {
             signedInUserFlow.take(1).collect { user ->
-                pileRepository.insertPile(Pile(name = name, pileMode = user.pileMode))
+                pileRepository.insertPile(
+                    Pile(
+                        name = name,
+                        pileMode = user.pileMode,
+                        userId = user.userId
+                    )
+                )
             }
         }
     }

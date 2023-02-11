@@ -1,4 +1,4 @@
-package com.dk.piley.ui.task
+package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

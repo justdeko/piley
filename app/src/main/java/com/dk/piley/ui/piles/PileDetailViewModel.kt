@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,7 +34,11 @@ class PileDetailViewModel @Inject constructor(
             val id = savedStateHandle.get<Long>(pileScreen.identifier)
             id?.let { pileRepository.getPileById(it) }?.collect { pileWithTasks ->
                 signedInUserFlow.take(1).collect {
-                    _state.value = PileDetailViewState(pileWithTasks.pile, id != it.defaultPileId)
+                    _state.value = PileDetailViewState(
+                        pileWithTasks.pile,
+                        pileWithTasks.pile.description,
+                        id != it.defaultPileId
+                    )
                 }
             }
         }
@@ -59,9 +64,25 @@ class PileDetailViewModel @Inject constructor(
             pileRepository.insertPile(state.value.pile.copy(pileMode = pileMode))
         }
     }
+
+    fun editDescription(description: String) {
+        _state.update {
+            it.copy(descriptionTextValue = description)
+        }
+        viewModelScope.launch {
+            pileRepository.insertPile(state.value.pile.copy(description = description))
+        }
+    }
+
+    fun setPileLimit(limit: Int) {
+        viewModelScope.launch {
+            pileRepository.insertPile(state.value.pile.copy(pileLimit = limit))
+        }
+    }
 }
 
 data class PileDetailViewState(
     val pile: Pile = Pile(),
+    val descriptionTextValue: String = "",
     val canDelete: Boolean = true
 )

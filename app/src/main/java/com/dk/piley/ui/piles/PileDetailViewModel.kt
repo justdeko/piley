@@ -36,6 +36,7 @@ class PileDetailViewModel @Inject constructor(
                 signedInUserFlow.take(1).collect {
                     _state.value = PileDetailViewState(
                         pileWithTasks.pile,
+                        pileWithTasks.pile.name,
                         pileWithTasks.pile.description,
                         id != it.defaultPileId
                     )
@@ -55,6 +56,9 @@ class PileDetailViewModel @Inject constructor(
 
     fun editTitle(title: String) {
         viewModelScope.launch {
+            _state.update {
+                it.copy(titleTextValue = title)
+            }
             pileRepository.insertPile(state.value.pile.copy(name = title))
         }
     }
@@ -83,6 +87,7 @@ class PileDetailViewModel @Inject constructor(
 
 data class PileDetailViewState(
     val pile: Pile = Pile(),
+    val titleTextValue: String = "",
     val descriptionTextValue: String = "",
-    val canDelete: Boolean = true
+    val canDeleteOrEdit: Boolean = true
 )

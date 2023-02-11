@@ -10,8 +10,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -51,6 +53,7 @@ fun PileDetailScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PileDetailScreen(
     modifier: Modifier = Modifier,
@@ -85,15 +88,24 @@ fun PileDetailScreen(
                     )
                 }
             }
-            Text(
-                text = viewState.pile.name,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onBackground
+            TextField(
+                value = viewState.titleTextValue,
+                enabled = viewState.canDeleteOrEdit,
+                onValueChange = onEditTitle,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .wrapContentSize(Alignment.Center),
+                label = null,
+                textStyle = MaterialTheme.typography.headlineSmall.copy(textDecoration = TextDecoration.None),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    textColor = MaterialTheme.colorScheme.onBackground,
+                    containerColor = Color.Transparent
+                )
             )
             EditDescriptionField(
-                value = viewState.pile.description,
+                value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
             )
             Text(
@@ -151,7 +163,7 @@ fun PileDetailScreen(
         }
         Button(
             onClick = onDeletePile,
-            enabled = viewState.canDelete,
+            enabled = viewState.canDeleteOrEdit,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,

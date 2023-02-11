@@ -10,6 +10,7 @@ data class User(
     val email: String = "",
     val password: String = "", // TODO: no password in db
     val selectedPileId: Long = 1,
+    val defaultPileId: Long = 1,
     // user preferences
     val nightMode: NightMode = NightMode.SYSTEM,
     val dynamicColorOn: Boolean = true,

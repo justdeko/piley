@@ -46,7 +46,12 @@ class SignInViewModel @Inject constructor(
             val pileId = pileRepository.insertPile(pile)
             // update assigned pile as selected and set signed in state
             userRepository.getSignedInUserNotNull().first().let { user ->
-                userRepository.insertUser(user.copy(selectedPileId = pileId))
+                userRepository.insertUser(
+                    user.copy(
+                        selectedPileId = pileId,
+                        defaultPileId = pileId
+                    )
+                )
                 setSignInState(SignInState.SIGNED_IN)
             }
         }

@@ -49,7 +49,7 @@ class PilesViewModel @Inject constructor(
     fun deletePile(pile: Pile) {
         viewModelScope.launch {
             signedInUserFlow.take(1).collect {
-                userRepository.insertUser(it.copy(selectedPileId = 1))
+                userRepository.insertUser(it.copy(selectedPileId = it.defaultPileId))
                 pileRepository.deletePile(pile)
             }
         }

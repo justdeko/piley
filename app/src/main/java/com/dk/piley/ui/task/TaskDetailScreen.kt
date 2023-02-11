@@ -116,9 +116,7 @@ fun TaskDetailScreen(
                     reminderDateTimeText = viewState.reminderDateTimeText,
                     onAddReminder = { scope.launch { drawerState.open() } },
                 )
-
             }
-
             Row(
                 modifier = Modifier
                     .weight(1f, false)

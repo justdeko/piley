@@ -37,7 +37,7 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             // create user and set as signed in
             val userId = userRepository.insertUser(user)
-            userRepository.setSignedInUser(user.userId)
+            userRepository.setSignedInUser(userId)
             // create default pile and assign to user
             val pile = Pile(
                 name = getApplication<Application>().getString(R.string.daily_pile_name),

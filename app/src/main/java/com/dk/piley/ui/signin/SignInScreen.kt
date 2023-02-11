@@ -78,6 +78,9 @@ private fun SignInScreen(
             Toast.makeText(context, "Error signing in", Toast.LENGTH_SHORT).show()
             onSignInError()
         }
+        SignInState.REGISTER_ERROR -> {
+            Toast.makeText(context, "Error when attempting to register", Toast.LENGTH_LONG).show()
+        }
         else -> {}
     }
     Column(

@@ -1,8 +1,7 @@
 package com.dk.piley.ui.piles
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
@@ -20,9 +19,8 @@ import javax.inject.Inject
 class PileDetailViewModel @Inject constructor(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
-    savedStateHandle: SavedStateHandle,
-    application: Application
-) : AndroidViewModel(application) {
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
     private val _state = MutableStateFlow(PileDetailViewState())
 
     val state: StateFlow<PileDetailViewState>

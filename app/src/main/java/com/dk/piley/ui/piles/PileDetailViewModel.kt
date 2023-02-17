@@ -55,11 +55,13 @@ class PileDetailViewModel @Inject constructor(
     }
 
     fun editTitle(title: String) {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(titleTextValue = title)
+        if (title.length <= 20) {
+            viewModelScope.launch {
+                _state.update {
+                    it.copy(titleTextValue = title)
+                }
+                pileRepository.insertPile(state.value.pile.copy(name = title))
             }
-            pileRepository.insertPile(state.value.pile.copy(name = title))
         }
     }
 

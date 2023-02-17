@@ -75,7 +75,8 @@ fun PileDetailScreen(
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onClose) {
                     Icon(
@@ -87,23 +88,36 @@ fun PileDetailScreen(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-            }
-            TextField(
-                value = viewState.titleTextValue,
-                enabled = viewState.canDeleteOrEdit,
-                onValueChange = onEditTitle,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .wrapContentSize(Alignment.Center),
-                label = null,
-                textStyle = MaterialTheme.typography.headlineSmall.copy(textDecoration = TextDecoration.None),
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    textColor = MaterialTheme.colorScheme.onBackground,
-                    containerColor = Color.Transparent
+                TextField(
+                    value = viewState.titleTextValue,
+                    enabled = viewState.canDeleteOrEdit,
+                    onValueChange = onEditTitle,
+                    modifier = Modifier.wrapContentSize(Alignment.Center),
+                    label = null,
+                    textStyle = MaterialTheme.typography.headlineSmall
+                        .copy(textDecoration = TextDecoration.None)
+                        .copy(textAlign = TextAlign.Center),
+                    singleLine = true,
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        disabledTrailingIconColor = Color.Transparent,
+                        textColor = MaterialTheme.colorScheme.onBackground,
+                        containerColor = Color.Transparent
+                    )
                 )
-            )
+                IconButton(onClick = { }, enabled = false) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        "close the task detail",
+                        modifier = Modifier.scale(
+                            1.5F
+                        ),
+                        tint = Color.Transparent
+                    )
+                }
+            }
             EditDescriptionField(
                 value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
@@ -187,7 +201,9 @@ fun PileDetailScreenPreview() {
                         description = "Some description",
                         pileMode = PileMode.FIFO,
                         pileLimit = 20
-                    )
+                    ),
+                    "some text",
+                    "some description"
                 )
             PileDetailScreen(viewState = viewState)
         }

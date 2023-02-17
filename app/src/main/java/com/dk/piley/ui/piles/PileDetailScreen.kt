@@ -11,19 +11,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.EditDescriptionField
-import com.dk.piley.ui.settings.DropdownSettingsItem
-import com.dk.piley.ui.settings.SliderSettingsItem
+import com.dk.piley.ui.common.EditableTitleText
 import com.dk.piley.ui.theme.PileyTheme
 import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData
@@ -53,7 +49,6 @@ fun PileDetailScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PileDetailScreen(
     modifier: Modifier = Modifier,
@@ -65,7 +60,6 @@ fun PileDetailScreen(
     onSetPileLimit: (Int) -> Unit = {},
     onClose: () -> Unit = {}
 ) {
-    val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -88,24 +82,8 @@ fun PileDetailScreen(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                TextField(
-                    value = viewState.titleTextValue,
-                    enabled = viewState.canDeleteOrEdit,
-                    onValueChange = onEditTitle,
-                    modifier = Modifier.wrapContentSize(Alignment.Center),
-                    label = null,
-                    textStyle = MaterialTheme.typography.headlineSmall
-                        .copy(textDecoration = TextDecoration.None)
-                        .copy(textAlign = TextAlign.Center),
-                    singleLine = true,
-                    colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        disabledTrailingIconColor = Color.Transparent,
-                        textColor = MaterialTheme.colorScheme.onBackground,
-                        containerColor = Color.Transparent
-                    )
+                EditableTitleText(
+                    viewState.titleTextValue, viewState.canDeleteOrEdit, onEditTitle
                 )
                 IconButton(onClick = { }, enabled = false) {
                     Icon(
@@ -118,34 +96,13 @@ fun PileDetailScreen(
                     )
                 }
             }
-            EditDescriptionField(
-                value = viewState.descriptionTextValue,
+            EditDescriptionField(value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
             )
-            Text(
-                text = "Settings",
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 16.dp),
-                textAlign = TextAlign.Start
-            )
-            DropdownSettingsItem(
-                title = "Pile mode",
-                description = "Set the task completion mode for this pile.",
-                optionLabel = "Pile Mode",
-                selectedValue = pileModeValues[viewState.pile.pileMode.value],
-                values = pileModeValues,
-                onValueChange = {
-                    onSetPileMode(PileMode.fromValue(pileModeValues.indexOf(it)))
-                }
-            )
-            SliderSettingsItem(
-                title = "Pile Limit",
-                description = "Set the limit of tasks in a pile. 0 means no limit",
-                value = viewState.pile.pileLimit,
-                range = Pair(0, 50),
-                steps = 10,
-                onValueChange = onSetPileLimit
+            PileDetailSettings(
+                viewState = viewState,
+                onSetPileMode = onSetPileMode,
+                onSetPileLimit = onSetPileLimit
             )
             Text(
                 text = "Statistics",
@@ -154,20 +111,26 @@ fun PileDetailScreen(
                 modifier = Modifier.padding(start = 16.dp),
                 textAlign = TextAlign.Start
             )
+            Spacer(
+                Modifier
+                    .fillMaxWidth()
+                    .height(16.dp)
+            )
             BarChart(
                 barChartData = BarChartData(
-                    bars = listOf(
+                    bars = viewState.completedTaskCounts.mapIndexed { index, value ->
                         BarChartData.Bar(
-                            label = "Bar Label",
-                            value = 100f,
+                            label = (viewState.completedTaskCounts.size - index).toString(),
+                            value = value,
                             color = MaterialTheme.colorScheme.secondary
                         )
-                    )
+                    }
                 ),
                 // Optional properties.
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp),
+                    .height(250.dp)
+                    .weight(1f, false),
                 animation = simpleChartAnimation(),
                 barDrawer = SimpleBarDrawer(),
                 xAxisDrawer = SimpleXAxisDrawer(),
@@ -194,17 +157,16 @@ fun PileDetailScreen(
 fun PileDetailScreenPreview() {
     PileyTheme {
         Surface {
-            val viewState =
-                PileDetailViewState(
-                    Pile(
-                        name = "Some Pile",
-                        description = "Some description",
-                        pileMode = PileMode.FIFO,
-                        pileLimit = 20
-                    ),
-                    "some text",
-                    "some description"
-                )
+            val viewState = PileDetailViewState(
+                Pile(
+                    name = "Some Pile",
+                    description = "Some description",
+                    pileMode = PileMode.FIFO,
+                    pileLimit = 20
+                ),
+                titleTextValue = "some text",
+                descriptionTextValue = "some description"
+            )
             PileDetailScreen(viewState = viewState)
         }
     }

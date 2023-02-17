@@ -8,6 +8,7 @@ import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.nav.pileScreen
+import com.dk.piley.util.getCompletedTasksForWeekValues
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +37,7 @@ class PileDetailViewModel @Inject constructor(
                 signedInUserFlow.take(1).collect {
                     _state.value = PileDetailViewState(
                         pileWithTasks.pile,
+                        getCompletedTasksForWeekValues(pileWithTasks),
                         pileWithTasks.pile.name,
                         pileWithTasks.pile.description,
                         id != it.defaultPileId
@@ -89,6 +91,7 @@ class PileDetailViewModel @Inject constructor(
 
 data class PileDetailViewState(
     val pile: Pile = Pile(),
+    val completedTaskCounts: List<Float> = emptyList(),
     val titleTextValue: String = "",
     val descriptionTextValue: String = "",
     val canDeleteOrEdit: Boolean = true

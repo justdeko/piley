@@ -55,9 +55,9 @@ android {
 
 dependencies {
     // core
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     // room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -69,20 +69,20 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     // compose
     implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:1.3.1"
+    implementation 'androidx.compose.material:material:1.4.2'
     implementation 'androidx.compose.material3:material3:1.0.1'
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_material_icons_version"
-    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha01"
-    implementation 'androidx.activity:activity-compose:1.6.1'
+    implementation 'androidx.datastore:datastore-preferences:1.1.0-alpha04'
+    implementation 'androidx.activity:activity-compose:1.7.1'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.1"
     // material design components
     implementation 'com.google.android.material:material:1.8.0'
     // charts
     implementation "com.github.tehras:charts:$charts_version"
     // local time and date below API 26
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.0'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
     // testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

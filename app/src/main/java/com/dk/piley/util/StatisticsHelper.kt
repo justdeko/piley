@@ -6,7 +6,7 @@ import org.threeten.bp.LocalDateTime
 
 fun getCompletedTasksForWeekValues(pileWithTasks: PileWithTasks): List<Float> = pileWithTasks.tasks
     .filter {
-        it.status == TaskStatus.DONE && it.modifiedAt >= LocalDateTime.now().minusWeeks(1)
+        it.status == TaskStatus.DONE && LocalDateTime.now().minusWeeks(1).isBefore(it.modifiedAt)
     }
     .groupingBy { it.modifiedAt.toLocalDate() }
     .eachCount()

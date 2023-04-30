@@ -36,11 +36,11 @@ class PileDetailViewModel @Inject constructor(
             id?.let { pileRepository.getPileById(it) }?.collect { pileWithTasks ->
                 signedInUserFlow.take(1).collect {
                     _state.value = PileDetailViewState(
-                        pileWithTasks.pile,
-                        getCompletedTasksForWeekValues(pileWithTasks),
-                        pileWithTasks.pile.name,
-                        pileWithTasks.pile.description,
-                        id != it.defaultPileId
+                        pile = pileWithTasks.pile,
+                        completedTaskCounts = getCompletedTasksForWeekValues(pileWithTasks),
+                        titleTextValue = pileWithTasks.pile.name,
+                        descriptionTextValue = pileWithTasks.pile.description,
+                        canDeleteOrEdit = id != it.defaultPileId
                     )
                 }
             }

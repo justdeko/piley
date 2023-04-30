@@ -1,9 +1,22 @@
 package com.dk.piley.ui.piles
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,16 +32,12 @@ import androidx.navigation.NavController
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
+import com.dk.piley.ui.charts.FrequencyChart
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.EditableTitleText
 import com.dk.piley.ui.theme.PileyTheme
-import com.github.tehras.charts.bar.BarChart
-import com.github.tehras.charts.bar.BarChartData
-import com.github.tehras.charts.bar.renderer.bar.SimpleBarDrawer
-import com.github.tehras.charts.bar.renderer.label.SimpleValueDrawer
-import com.github.tehras.charts.bar.renderer.xaxis.SimpleXAxisDrawer
-import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
-import com.github.tehras.charts.piechart.animation.simpleChartAnimation
+import com.jakewharton.threetenabp.AndroidThreeTen
+import org.threeten.bp.LocalDateTime
 
 @Composable
 fun PileDetailScreen(
@@ -60,6 +70,7 @@ fun PileDetailScreen(
     onSetPileLimit: (Int) -> Unit = {},
     onClose: () -> Unit = {}
 ) {
+    val today = LocalDateTime.now().toLocalDate()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -116,26 +127,9 @@ fun PileDetailScreen(
                     .fillMaxWidth()
                     .height(16.dp)
             )
-            BarChart(
-                barChartData = BarChartData(
-                    bars = viewState.completedTaskCounts.mapIndexed { index, value ->
-                        BarChartData.Bar(
-                            label = (viewState.completedTaskCounts.size - index).toString(),
-                            value = value,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-                ),
-                // Optional properties.
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-                    .weight(1f, false),
-                animation = simpleChartAnimation(),
-                barDrawer = SimpleBarDrawer(),
-                xAxisDrawer = SimpleXAxisDrawer(),
-                yAxisDrawer = SimpleYAxisDrawer(),
-                labelDrawer = SimpleValueDrawer()
+            FrequencyChart(
+                weekDayFrequencies = viewState.completedTaskCounts.map { it.toInt() },
+                currentDay = today
             )
         }
         Button(
@@ -155,6 +149,7 @@ fun PileDetailScreen(
 @PreviewMainScreen
 @Composable
 fun PileDetailScreenPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val viewState = PileDetailViewState(
@@ -165,7 +160,8 @@ fun PileDetailScreenPreview() {
                     pileLimit = 20
                 ),
                 titleTextValue = "some text",
-                descriptionTextValue = "some description"
+                descriptionTextValue = "some description",
+                completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4).map { it.toFloat() }
             )
             PileDetailScreen(viewState = viewState)
         }

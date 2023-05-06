@@ -128,7 +128,8 @@ fun PileDetailScreen(
                     .height(16.dp)
             )
             FrequencyChart(
-                weekDayFrequencies = viewState.completedTaskCounts.map { it.toInt() },
+                modifier = Modifier.padding(horizontal = 16.dp),
+                weekDayFrequencies = viewState.completedTaskCounts,
                 currentDay = today
             )
         }
@@ -161,7 +162,7 @@ fun PileDetailScreenPreview() {
                 ),
                 titleTextValue = "some text",
                 descriptionTextValue = "some description",
-                completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4).map { it.toFloat() }
+                completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4)
             )
             PileDetailScreen(viewState = viewState)
         }

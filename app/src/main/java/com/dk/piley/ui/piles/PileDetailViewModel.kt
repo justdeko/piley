@@ -91,7 +91,7 @@ class PileDetailViewModel @Inject constructor(
 
 data class PileDetailViewState(
     val pile: Pile = Pile(),
-    val completedTaskCounts: List<Float> = emptyList(),
+    val completedTaskCounts: List<Int> = emptyList(),
     val titleTextValue: String = "",
     val descriptionTextValue: String = "",
     val canDeleteOrEdit: Boolean = true

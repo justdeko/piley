@@ -48,31 +48,47 @@ fun FrequencyChart(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier
                 .fillMaxWidth()
-                .defaultMinSize(barHeight)
+                .defaultMinSize(minHeight = barHeight)
         ) {
             weekDayFrequencies.forEachIndexed { index, value ->
-                val boxHeight = if (value == 0) 50.dp else (value / max.toFloat()) * barHeight
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(vertical = 8.dp, horizontal = 2.dp)
-                        .height(boxHeight)
+                        .wrapContentHeight(),
+                    contentAlignment = Alignment.BottomCenter
                 ) {
+                    val boxHeight = if (value == 0) 50.dp else (value / max.toFloat()) * barHeight
                     Box(
                         modifier = Modifier
-                            .background(
-                                when {
-                                    value == 0 -> Color.Transparent
-                                    index == 6 -> MaterialTheme.colorScheme.primary
-                                    else -> MaterialTheme.colorScheme.secondary
-                                },
-                                RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
-                            )
-                            .fillMaxSize()
+                            .padding(vertical = 8.dp, horizontal = 2.dp)
+                            .height(boxHeight)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    when {
+                                        value == 0 -> Color.Transparent
+                                        index == 6 -> MaterialTheme.colorScheme.primary
+                                        else -> MaterialTheme.colorScheme.secondary
+                                    },
+                                    RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                                )
+                                .fillMaxSize()
+                        ) {
+
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp, horizontal = 2.dp)
+                            .height(if (boxHeight < 20.dp) 50.dp else boxHeight)
+                            .background(color = Color.Transparent)
+                            .fillMaxWidth()
                     ) {
                         Text(
                             text = value.toString(),
                             color = when {
+                                boxHeight < 20.dp -> MaterialTheme.colorScheme.onBackground
                                 value == 0 -> MaterialTheme.colorScheme.onBackground
                                 index == 6 -> MaterialTheme.colorScheme.onPrimary
                                 else -> MaterialTheme.colorScheme.onSecondary
@@ -128,7 +144,7 @@ fun FrequencyChartPreviewAllZeros() {
 @Composable
 fun FrequencyChartPreviewLargeContrast() {
     PileyTheme(useDarkTheme = true) {
-        val last7Days = listOf(0, 0, 0, 100, 0, 0, 1)
+        val last7Days = listOf(0, 0, 0, 20, 0, 0, 1)
         FrequencyChart(last7Days, LocalDate.of(2023, 4, 29))
     }
 }

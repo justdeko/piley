@@ -35,6 +35,7 @@ import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.charts.FrequencyChart
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.EditableTitleText
+import com.dk.piley.ui.profile.TaskStats
 import com.dk.piley.ui.theme.PileyTheme
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDateTime
@@ -127,6 +128,11 @@ fun PileDetailScreen(
                     .fillMaxWidth()
                     .height(16.dp)
             )
+            TaskStats(
+                doneCount = viewState.doneCount,
+                deletedCount = viewState.deletedCount,
+                currentCount = viewState.currentCount
+            )
             FrequencyChart(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 weekDayFrequencies = viewState.completedTaskCounts,
@@ -162,7 +168,10 @@ fun PileDetailScreenPreview() {
                 ),
                 titleTextValue = "some text",
                 descriptionTextValue = "some description",
-                completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4)
+                completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4),
+                doneCount = 2,
+                deletedCount = 4,
+                currentCount = 1
             )
             PileDetailScreen(viewState = viewState)
         }

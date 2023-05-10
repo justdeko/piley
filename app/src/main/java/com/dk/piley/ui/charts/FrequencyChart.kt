@@ -43,61 +43,73 @@ fun FrequencyChart(
         verticalArrangement = Arrangement.Bottom,
         modifier = modifier.wrapContentHeight()
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom,
-            modifier = Modifier
-                .fillMaxWidth()
-                .defaultMinSize(minHeight = barHeight)
-        ) {
-            weekDayFrequencies.forEachIndexed { index, value ->
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .wrapContentHeight(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    val boxHeight = if (value == 0) 50.dp else (value / max.toFloat()) * barHeight
+        Box(contentAlignment = Alignment.Center) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.Bottom,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .defaultMinSize(minHeight = barHeight)
+            ) {
+                weekDayFrequencies.forEachIndexed { index, value ->
                     Box(
                         modifier = Modifier
-                            .padding(vertical = 8.dp, horizontal = 2.dp)
-                            .height(boxHeight)
+                            .weight(1f)
+                            .wrapContentHeight(),
+                        contentAlignment = Alignment.BottomCenter
                     ) {
+                        val boxHeight =
+                            if (value == 0) 50.dp else (value / max.toFloat()) * barHeight
                         Box(
                             modifier = Modifier
-                                .background(
-                                    when {
-                                        value == 0 -> Color.Transparent
-                                        index == 6 -> MaterialTheme.colorScheme.primary
-                                        else -> MaterialTheme.colorScheme.secondary
-                                    },
-                                    RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
-                                )
-                                .fillMaxSize()
+                                .padding(vertical = 8.dp, horizontal = 2.dp)
+                                .height(boxHeight)
                         ) {
+                            Box(
+                                modifier = Modifier
+                                    .background(
+                                        when {
+                                            value == 0 -> Color.Transparent
+                                            index == 6 -> MaterialTheme.colorScheme.primary
+                                            else -> MaterialTheme.colorScheme.secondary
+                                        },
+                                        RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                                    )
+                                    .fillMaxSize()
+                            ) {
 
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .padding(vertical = 8.dp, horizontal = 2.dp)
+                                .height(if (boxHeight < 20.dp) 50.dp else boxHeight)
+                                .background(color = Color.Transparent)
+                                .fillMaxWidth()
+                        ) {
+                            Text(
+                                text = value.toString(),
+                                color = when {
+                                    boxHeight < 20.dp -> MaterialTheme.colorScheme.onBackground
+                                    value == 0 -> MaterialTheme.colorScheme.onBackground
+                                    index == 6 -> MaterialTheme.colorScheme.onPrimary
+                                    else -> MaterialTheme.colorScheme.onSecondary
+                                },
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
                         }
                     }
-                    Box(
-                        modifier = Modifier
-                            .padding(vertical = 8.dp, horizontal = 2.dp)
-                            .height(if (boxHeight < 20.dp) 50.dp else boxHeight)
-                            .background(color = Color.Transparent)
-                            .fillMaxWidth()
-                    ) {
-                        Text(
-                            text = value.toString(),
-                            color = when {
-                                boxHeight < 20.dp -> MaterialTheme.colorScheme.onBackground
-                                value == 0 -> MaterialTheme.colorScheme.onBackground
-                                index == 6 -> MaterialTheme.colorScheme.onPrimary
-                                else -> MaterialTheme.colorScheme.onSecondary
-                            },
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
                 }
+            }
+            if (weekDayFrequencies.none { it > 0 }) {
+                Text(
+                    text = "Looks like you haven't completed any tasks for this pile in a while...",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
+                    textAlign = TextAlign.Center
+                )
             }
         }
         Row(

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.nav.pileScreen
@@ -34,13 +35,16 @@ class PileDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val id = savedStateHandle.get<Long>(pileScreen.identifier)
             id?.let { pileRepository.getPileById(it) }?.collect { pileWithTasks ->
-                signedInUserFlow.take(1).collect {
+                signedInUserFlow.take(1).collect { user ->
                     _state.value = PileDetailViewState(
                         pile = pileWithTasks.pile,
                         completedTaskCounts = getCompletedTasksForWeekValues(pileWithTasks),
+                        doneCount = pileWithTasks.tasks.count { it.status == TaskStatus.DONE },
+                        deletedCount = pileWithTasks.tasks.count { it.status == TaskStatus.DELETED },
+                        currentCount = pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT },
                         titleTextValue = pileWithTasks.pile.name,
                         descriptionTextValue = pileWithTasks.pile.description,
-                        canDeleteOrEdit = id != it.defaultPileId
+                        canDeleteOrEdit = id != user.defaultPileId
                     )
                 }
             }
@@ -92,6 +96,9 @@ class PileDetailViewModel @Inject constructor(
 data class PileDetailViewState(
     val pile: Pile = Pile(),
     val completedTaskCounts: List<Int> = emptyList(),
+    val doneCount: Int = 0,
+    val deletedCount: Int = 0,
+    val currentCount: Int = 0,
     val titleTextValue: String = "",
     val descriptionTextValue: String = "",
     val canDeleteOrEdit: Boolean = true

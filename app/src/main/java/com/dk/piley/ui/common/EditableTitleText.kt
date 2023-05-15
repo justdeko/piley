@@ -1,7 +1,6 @@
 package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -14,7 +13,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditableTitleText(
     value: String,
@@ -31,13 +29,15 @@ fun EditableTitleText(
             .copy(textDecoration = TextDecoration.None)
             .copy(textAlign = TextAlign.Center),
         singleLine = true,
-        colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             disabledTrailingIconColor = Color.Transparent,
-            textColor = MaterialTheme.colorScheme.onBackground,
-            containerColor = Color.Transparent
         )
     )
 }

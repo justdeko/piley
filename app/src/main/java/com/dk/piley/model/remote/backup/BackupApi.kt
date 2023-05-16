@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -17,17 +18,20 @@ interface BackupApi {
     @POST("backup/{email}")
     suspend fun createOrUpdateBackup(
         @Path("email") email: String,
-        @Part filePart: MultipartBody.Part
+        @Part filePart: MultipartBody.Part,
+        @Header("Authorization") credentials: String
     ): Response<String>
 
     @GET("backup/{email}")
     @Streaming
     suspend fun getBackup(
         @Path("email") email: String,
+        @Header("Authorization") credentials: String
     ): Call<ResponseBody>
 
     @DELETE("backup/{email}")
-    suspend fun deleteUser(
-        @Path("email") email: String
+    suspend fun deleteBackup(
+        @Path("email") email: String,
+        @Header("Authorization") credentials: String
     ): Response<String>
 }

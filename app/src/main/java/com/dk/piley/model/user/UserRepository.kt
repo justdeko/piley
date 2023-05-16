@@ -7,6 +7,7 @@ import com.dk.piley.model.remote.resourceSuccessfulFlow
 import com.dk.piley.model.remote.user.UserApi
 import com.dk.piley.model.remote.user.UserRequest
 import com.dk.piley.model.remote.user.UserUpdateRequest
+import com.dk.piley.util.credentials
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -62,7 +63,7 @@ class UserRepository @Inject constructor(
             oldPassword = oldUser.password,
             newPassword = password
         )
-        userApi.updateUser(requestBody)
+        userApi.updateUser(requestBody, credentials(oldUser.email, oldUser.password))
     }
 
     fun registerUserFlow(user: User): Flow<Resource<String>> = resourceSuccessfulFlow {
@@ -70,7 +71,13 @@ class UserRepository @Inject constructor(
         userApi.createUser(requestBody)
     }
 
-    fun deleteUserFlow(email: String): Flow<Resource<String>> = resourceSuccessfulFlow {
-        userApi.deleteUser(email)
-    }
+    fun deleteUserFlow(email: String, password: String): Flow<Resource<String>> =
+        resourceSuccessfulFlow {
+            userApi.deleteUser(email, credentials(email, password))
+        }
+
+    fun authenticateUserFlow(email: String, password: String): Flow<Resource<String>> =
+        resourceSuccessfulFlow {
+            userApi.authenticateUser(credentials(email, password))
+        }
 }

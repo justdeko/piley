@@ -3,8 +3,11 @@ package com.dk.piley.di
 import android.content.Context
 import com.dk.piley.di.DataStoreModule.providePreferencesDataStore
 import com.dk.piley.model.PileDatabase
+import com.dk.piley.model.backup.BackupRepository
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.remote.backup.BackupApi
+import com.dk.piley.model.remote.user.UserApi
 import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.user.UserDao
@@ -16,6 +19,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -26,6 +33,19 @@ object AppModule {
     @Provides
     fun provideDatabase(@ApplicationContext appContext: Context) =
         PileDatabase.getInstance(appContext)
+
+    @Singleton
+    @Provides
+    fun provideApi(): Retrofit = Retrofit.Builder()
+        .baseUrl("http://localhost:8080/")
+        .addConverterFactory(MoshiConverterFactory.create())
+        .client(
+            OkHttpClient.Builder()
+                .callTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
+                .build()
+        ).build()
 
     // task
     @Singleton
@@ -54,7 +74,25 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideUserApi(retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
+
+    @Singleton
+    @Provides
     fun provideUserRepository(
-        userDao: UserDao, @ApplicationContext appContext: Context
-    ) = UserRepository(userDao, providePreferencesDataStore(appContext))
+        userDao: UserDao, userApi: UserApi, @ApplicationContext appContext: Context
+    ) = UserRepository(userDao, userApi, providePreferencesDataStore(appContext))
+
+    // backup
+    @Singleton
+    @Provides
+    fun provideBackupApi(retrofit: Retrofit): BackupApi =
+        retrofit.create(BackupApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideBackupRepository(
+        backupApi: BackupApi
+    ) = BackupRepository(backupApi)
+
 }

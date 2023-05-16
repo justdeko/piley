@@ -2,6 +2,11 @@ package com.dk.piley.model.user
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
+import com.dk.piley.model.remote.Resource
+import com.dk.piley.model.remote.resourceSuccessfulFlow
+import com.dk.piley.model.remote.user.UserApi
+import com.dk.piley.model.remote.user.UserRequest
+import com.dk.piley.model.remote.user.UserUpdateRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -13,6 +18,7 @@ const val SIGNED_OUT_USER_ID = -2L
 
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
+    private val userApi: UserApi,
     private val userPrefs: DataStore<Preferences>
 ) {
     // preference keys
@@ -39,4 +45,32 @@ class UserRepository @Inject constructor(
     suspend fun insertUser(user: User): Long = userDao.insertUser(user)
 
     suspend fun deleteUser(user: User): Void = userDao.deleteUser(user)
+
+    fun updateUserFlow(
+        oldUser: User,
+        newEmail: String? = null,
+        newPassword: String? = null,
+        newName: String? = null
+    ): Flow<Resource<String>> = resourceSuccessfulFlow {
+        val email = newEmail ?: oldUser.email
+        val password = newPassword ?: oldUser.password
+        val name = newName ?: oldUser.name
+        val requestBody = UserUpdateRequest(
+            oldEmail = oldUser.email,
+            newEmail = email,
+            name = name,
+            oldPassword = oldUser.password,
+            newPassword = password
+        )
+        userApi.updateUser(requestBody)
+    }
+
+    fun registerUserFlow(user: User): Flow<Resource<String>> = resourceSuccessfulFlow {
+        val requestBody = UserRequest(user.email, user.name, user.password)
+        userApi.createUser(requestBody)
+    }
+
+    fun deleteUserFlow(email: String): Flow<Resource<String>> = resourceSuccessfulFlow {
+        userApi.deleteUser(email)
+    }
 }

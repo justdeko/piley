@@ -25,8 +25,9 @@ interface UserApi {
         @Header("Authorization") credentials: String
     ): Response<String>
 
-    @GET("/authenticate")
-    suspend fun authenticateUser(
+    @GET("user/{email}")
+    suspend fun getUser(
+        @Path("email") email: String,
         @Header("Authorization") credentials: String
-    ): Response<String>
+    ): Response<UserResponse>
 }

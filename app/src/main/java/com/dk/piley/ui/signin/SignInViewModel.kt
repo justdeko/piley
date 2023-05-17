@@ -52,12 +52,12 @@ class SignInViewModel @Inject constructor(
 
     private suspend fun onRegisterSuccess(user: User) {
         // create user and set as signed in
-        val userId = userRepository.insertUser(user)
-        userRepository.setSignedInUser(userId)
+        userRepository.insertUser(user)
+        userRepository.setSignedInUser(user.email)
         // create default pile and assign to user
         val pile = Pile(
             name = getApplication<Application>().getString(R.string.daily_pile_name),
-            userId = userId
+            userEmail = user.email
         )
         val pileId = pileRepository.insertPile(pile)
         // signal loading process has finished to user
@@ -82,33 +82,29 @@ class SignInViewModel @Inject constructor(
                 attemptRegister()
             } else {
                 // Attempt sign in
-                userRepository.getUserByEmail(userData.email).first()?.let { user ->
-                    if (user.password == userData.password) {
-                        userRepository.setSignedInUser(user.userId)
-                        setSignInState(SignInState.SIGNED_IN)
-                    } else {
-                        setSignInState(SignInState.SIGN_IN_ERROR)
-                    }
-                } ?: run { attemptRemoteSignIn(userData.email, userData.password) }
+                attemptRemoteSignIn(userData.email, userData.password)
             }
         }
     }
 
     private suspend fun attemptRemoteSignIn(email: String, password: String) {
-        userRepository.authenticateUserFlow(email, password).collectLatest {
+        userRepository.getUserFlow(email, password).collectLatest {
             when (it) {
                 is Resource.Loading -> setLoading(true)
-                is Resource.Success -> onSignInSuccess()
+                is Resource.Success -> onRegisterSuccess(
+                    User(
+                        name = it.data.name,
+                        email = it.data.email,
+                        password = it.data.password
+                    )
+                )
+
                 is Resource.Failure -> {
                     setLoading(false)
                     setSignInState(SignInState.SIGN_IN_ERROR)
                 }
             }
         }
-    }
-
-    private fun onSignInSuccess() {
-        TODO("Not yet implemented")
     }
 
     fun setSignInState(signInState: SignInState) =

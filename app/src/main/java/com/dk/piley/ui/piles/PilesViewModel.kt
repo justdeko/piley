@@ -7,7 +7,11 @@ import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +31,10 @@ class PilesViewModel @Inject constructor(
         viewModelScope.launch {
             val pilesFlow = pileRepository.getPilesWithTasks()
             signedInUserFlow.combine(pilesFlow) { user, piles ->
-                PilesViewState(piles.filter { it.pile.userId == user.userId }, user.selectedPileId)
+                PilesViewState(
+                    piles.filter { it.pile.userEmail == user.email },
+                    user.selectedPileId
+                ) // TODO maybe use userwithpiles here
             }.collect { _state.value = it }
         }
     }
@@ -39,7 +46,7 @@ class PilesViewModel @Inject constructor(
                     Pile(
                         name = name,
                         pileMode = user.pileMode,
-                        userId = user.userId
+                        userEmail = user.email
                     )
                 )
             }

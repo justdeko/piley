@@ -6,6 +6,7 @@ import com.dk.piley.model.remote.Resource
 import com.dk.piley.model.remote.resourceSuccessfulFlow
 import com.dk.piley.model.remote.user.UserApi
 import com.dk.piley.model.remote.user.UserRequest
+import com.dk.piley.model.remote.user.UserResponse
 import com.dk.piley.model.remote.user.UserUpdateRequest
 import com.dk.piley.util.credentials
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,35 +16,31 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-const val SIGNED_OUT_USER_ID = -2L
-
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val userApi: UserApi,
     private val userPrefs: DataStore<Preferences>
 ) {
     // preference keys
-    private val signedInUser = longPreferencesKey("signed_in_user_id")
+    private val signedInUser = stringPreferencesKey("signed_in_user_id")
 
     fun getUsers(): Flow<List<User>> = userDao.getUsers()
 
-    private fun getUserById(userId: Long): Flow<User?> = userDao.getUserById(userId)
-
     fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
 
-    suspend fun setSignedInUser(id: Long) = userPrefs.edit { prefs ->
-        prefs[signedInUser] = id
+    suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
+        prefs[signedInUser] = email
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getSignedInUser(): Flow<User?> =
-        userPrefs.data.map { prefs -> prefs[signedInUser] ?: -1 }.flatMapLatest { id ->
-            getUserById(id)
+        userPrefs.data.map { prefs -> prefs[signedInUser] ?: "" }.flatMapLatest { email ->
+            getUserByEmail(email)
         }
 
     fun getSignedInUserNotNull(): Flow<User> = getSignedInUser().filterNotNull()
 
-    suspend fun insertUser(user: User): Long = userDao.insertUser(user)
+    suspend fun insertUser(user: User): Void = userDao.insertUser(user)
 
     suspend fun deleteUser(user: User): Void = userDao.deleteUser(user)
 
@@ -76,8 +73,8 @@ class UserRepository @Inject constructor(
             userApi.deleteUser(email, credentials(email, password))
         }
 
-    fun authenticateUserFlow(email: String, password: String): Flow<Resource<String>> =
+    fun getUserFlow(email: String, password: String): Flow<Resource<UserResponse>> =
         resourceSuccessfulFlow {
-            userApi.authenticateUser(credentials(email, password))
+            userApi.getUser(email, credentials(email, password))
         }
 }

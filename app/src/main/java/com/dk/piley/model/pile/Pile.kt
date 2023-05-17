@@ -9,7 +9,7 @@ import org.threeten.bp.LocalDateTime
 @Entity
 data class Pile(
     @PrimaryKey(autoGenerate = true) val pileId: Long = 0,
-    val userId: Long = 0,
+    val userEmail: String = "",
     val name: String = "",
     val description: String = "",
     val pileMode: PileMode = PileMode.FREE,

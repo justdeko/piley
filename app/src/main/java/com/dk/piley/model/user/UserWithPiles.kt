@@ -7,8 +7,8 @@ import com.dk.piley.model.pile.Pile
 data class UserWithPiles(
     @Embedded val user: User,
     @Relation(
-        parentColumn = "userId",
-        entityColumn = "userId"
+        parentColumn = "email",
+        entityColumn = "userEmail"
     )
     val piles: List<Pile>
 )

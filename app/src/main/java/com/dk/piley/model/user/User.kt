@@ -5,9 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class User(
-    @PrimaryKey(autoGenerate = true) val userId: Long = 0,
+    @PrimaryKey val email: String = "",
     val name: String = "",
-    val email: String = "",
     val password: String = "", // TODO: no password in db
     val selectedPileId: Long = 1,
     val defaultPileId: Long = 1,

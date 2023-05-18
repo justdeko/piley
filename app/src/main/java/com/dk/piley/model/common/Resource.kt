@@ -14,16 +14,20 @@ sealed class Resource<out T> {
 
 fun <T> resourceSuccessfulFlow(apiRequest: suspend () -> Response<T>): Flow<Resource<T>> = flow {
     emit(Resource.Loading())
-    val response = apiRequest()
-    if (response.isSuccessful) {
-        val body = response.body()
-        if (body != null) {
-            emit(Resource.Success(body))
+    try {
+        val response = apiRequest()
+        if (response.isSuccessful) {
+            val body = response.body()
+            if (body != null) {
+                emit(Resource.Success(body))
+            } else {
+                emit(Resource.Failure(Exception("empty body")))
+            }
         } else {
-            emit(Resource.Failure(Exception("empty body")))
+            val body = response.errorBody()?.string() ?: "No error body"
+            emit(Resource.Failure(Exception(body)))
         }
-    } else {
-        val body = response.errorBody()?.string() ?: "No error body"
-        emit(Resource.Failure(Exception(body)))
+    } catch (e: Exception) {
+        emit(Resource.Failure(Exception(e)))
     }
 }.flowOn(Dispatchers.IO)

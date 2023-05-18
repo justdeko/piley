@@ -16,7 +16,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import org.threeten.bp.Instant
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 import javax.inject.Inject
 
 class BackupRepository @Inject constructor(
@@ -32,8 +31,8 @@ class BackupRepository @Inject constructor(
 
     fun getBackupFileFlow(email: String): Flow<Resource<FileResponse>> = flow {
         emit(Resource.Loading())
-        val backupResponse = backupApi.getBackup(email, userRepository.localCredentials(email))
         try {
+            val backupResponse = backupApi.getBackup(email, userRepository.localCredentials(email))
             if (backupResponse.isSuccessful) {
                 val responseBody = backupResponse.body()
                 val contentDispositionHeaders = backupResponse.headers().contentDispositionHeaders()
@@ -59,7 +58,7 @@ class BackupRepository @Inject constructor(
                 val body = backupResponse.errorBody()?.string() ?: "No error body"
                 emit(Resource.Failure(Exception(body)))
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             emit(Resource.Failure(e))
         }
     }.flowOn(Dispatchers.IO)

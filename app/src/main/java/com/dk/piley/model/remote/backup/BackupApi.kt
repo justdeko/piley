@@ -2,7 +2,6 @@ package com.dk.piley.model.remote.backup
 
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -27,7 +26,7 @@ interface BackupApi {
     suspend fun getBackup(
         @Path("email") email: String,
         @Header("Authorization") credentials: String
-    ): Call<ResponseBody>
+    ): Response<ResponseBody>
 
     @DELETE("backup/{email}")
     suspend fun deleteBackup(

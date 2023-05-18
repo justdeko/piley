@@ -12,6 +12,7 @@ import com.dk.piley.util.credentials
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -27,6 +28,14 @@ class UserRepository @Inject constructor(
     fun getUsers(): Flow<List<User>> = userDao.getUsers()
 
     fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
+
+    suspend fun getUserPassword(email: String): String =
+        getUserByEmail(email).firstOrNull()?.password ?: ""
+
+    suspend fun localCredentials(email: String): String {
+        val user = getUserByEmail(email).firstOrNull()
+        return credentials(user?.name, user?.password)
+    }
 
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUser] = email

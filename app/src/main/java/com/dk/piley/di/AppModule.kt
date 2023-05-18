@@ -92,7 +92,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideBackupRepository(
-        backupApi: BackupApi
-    ) = BackupRepository(backupApi)
+        backupApi: BackupApi,
+        userRepository: UserRepository
+    ) = BackupRepository(backupApi, userRepository)
 
 }

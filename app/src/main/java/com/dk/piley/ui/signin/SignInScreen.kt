@@ -2,10 +2,22 @@ package com.dk.piley.ui.signin
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,7 +65,6 @@ fun SignInScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SignInScreen(
     modifier: Modifier = Modifier,
@@ -74,83 +85,95 @@ private fun SignInScreen(
             Toast.makeText(context, "Signed in!", Toast.LENGTH_SHORT).show()
             onSignIn()
         }
+
         SignInState.SIGN_IN_ERROR -> {
             Toast.makeText(context, "Error signing in", Toast.LENGTH_SHORT).show()
             onSignInError()
         }
+
         SignInState.REGISTER_ERROR -> {
             Toast.makeText(context, "Error when attempting to register", Toast.LENGTH_LONG).show()
         }
+
         else -> {}
     }
-    Column(
+    Box(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.TopCenter
     ) {
-        Icon(
-            modifier = Modifier.scale(1.5f),
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Text(
-            text = signInText,
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 32.dp),
-            textAlign = TextAlign.Center
-        )
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            value = viewState.email,
-            onValueChange = onEmailChange,
-            placeholder = { Text("Email") },
-            shape = RoundedCornerShape(16.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-        )
-        AnimatedVisibility(viewState.signInState == SignInState.REGISTER) {
+        AnimatedVisibility(viewState.loading) {
+            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+        }
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                modifier = Modifier.scale(1.5f),
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Text(
+                text = signInText,
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(bottom = 32.dp),
+                textAlign = TextAlign.Center
+            )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                value = viewState.username,
-                onValueChange = onUsernameChange,
-                placeholder = { Text("Username") },
+                value = viewState.email,
+                onValueChange = onEmailChange,
+                placeholder = { Text("Email") },
+                shape = RoundedCornerShape(16.dp),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            )
+            AnimatedVisibility(viewState.signInState == SignInState.REGISTER) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    value = viewState.username,
+                    onValueChange = onUsernameChange,
+                    placeholder = { Text("Username") },
+                    shape = RoundedCornerShape(16.dp),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                )
+            }
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                value = viewState.password,
+                onValueChange = onPasswordChange,
+                placeholder = { Text("Password") },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             )
-        }
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            value = viewState.password,
-            onValueChange = onPasswordChange,
-            placeholder = { Text("Password") },
-            shape = RoundedCornerShape(16.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        )
-        ElevatedButton(
-            modifier = Modifier.padding(top = 16.dp, bottom = 32.dp),
-            onClick = onAttemptSignIn,
-            enabled = signInButtonEnabled(isRegister, viewState)
-        ) {
-            Text(signInText)
-        }
-        TextButton(onClick = onChangeRegister) {
-            Text(if (isRegister) "Sign In instead" else "No account? Click here to register")
+            ElevatedButton(
+                modifier = Modifier.padding(top = 16.dp, bottom = 32.dp),
+                onClick = onAttemptSignIn,
+                enabled = signInButtonEnabled(isRegister, viewState)
+            ) {
+                Text(signInText)
+            }
+            TextButton(onClick = onChangeRegister) {
+                Text(if (isRegister) "Sign In instead" else "No account? Click here to register")
+            }
         }
     }
 }
 
 fun signInButtonEnabled(isRegister: Boolean, viewState: SignInViewState): Boolean {
     val signInEnabled = viewState.email.isNotBlank() && viewState.password.isNotBlank()
+    if (viewState.loading) return false
     return if (isRegister) {
         signInEnabled && viewState.username.isNotBlank()
     } else signInEnabled
@@ -162,6 +185,21 @@ fun TaskDetailScreenPreview() {
     PileyTheme {
         Surface {
             val state = SignInViewState()
+            SignInScreen(viewState = state)
+        }
+    }
+}
+
+@PreviewMainScreen
+@Composable
+fun TaskDetailScreenPreviewLoading() {
+    PileyTheme {
+        Surface {
+            val state = SignInViewState(
+                loading = true,
+                username = "John Doe",
+                signInState = SignInState.REGISTER
+            )
             SignInScreen(viewState = state)
         }
     }

@@ -35,12 +35,14 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
+    if (viewState.signedOut) {
+        navController.navigate(Screen.SignIn.route) { popUpTo(0) }
+    }
     ProfileScreen(modifier = modifier,
         viewState = viewState,
         onClickSettings = { navController.navigate(Screen.Settings.route) },
         onSignOut = {
             viewModel.signOut()
-            navController.navigate(Screen.SignIn.route) { popUpTo(0) }
         }
     )
 }

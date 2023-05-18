@@ -1,6 +1,7 @@
 package com.dk.piley.di
 
 import android.content.Context
+import com.dk.piley.BuildConfig
 import com.dk.piley.di.DataStoreModule.providePreferencesDataStore
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
@@ -43,7 +44,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideApi(): Retrofit = Retrofit.Builder()
-        .baseUrl("http://localhost:8080/")
+        .baseUrl(BuildConfig.LOCAL_API_BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create())
         .client(
             OkHttpClient.Builder()

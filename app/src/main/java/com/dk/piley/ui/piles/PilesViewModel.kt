@@ -32,9 +32,9 @@ class PilesViewModel @Inject constructor(
             val pilesFlow = pileRepository.getPilesWithTasks()
             signedInUserFlow.combine(pilesFlow) { user, piles ->
                 PilesViewState(
-                    piles.filter { it.pile.userEmail == user.email },
+                    piles,
                     user.selectedPileId
-                ) // TODO maybe use userwithpiles here
+                )
             }.collect { _state.value = it }
         }
     }
@@ -45,8 +45,7 @@ class PilesViewModel @Inject constructor(
                 pileRepository.insertPile(
                     Pile(
                         name = name,
-                        pileMode = user.pileMode,
-                        userEmail = user.email
+                        pileMode = user.pileMode
                     )
                 )
             }

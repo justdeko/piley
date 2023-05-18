@@ -57,7 +57,7 @@ class BackupManager @Inject constructor(
         }
     }
 
-    private fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> = flow<Resource<String>> {
+    fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> = flow<Resource<String>> {
         val email = userRepository.getSignedInUserEmail()
         if (email.isNotBlank()) {
             backupRepository.createOrUpdateBackupFlow(

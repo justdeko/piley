@@ -65,23 +65,22 @@ class SignInViewModel @Inject constructor(
                             setLoading(false)
                             setSignInState(SignInState.SIGNED_IN)
                         } else {
-                            createAndSetUserPile(user)
+                            createAndSetUserPile()
                         }
                     }
 
-                    is Resource.Failure -> createAndSetUserPile(user)
+                    is Resource.Failure -> createAndSetUserPile()
                 }
             }
         } else {
-            createAndSetUserPile(user)
+            createAndSetUserPile()
         }
     }
 
-    private suspend fun createAndSetUserPile(user: User) {
-        // create default pile and assign to user
+    private suspend fun createAndSetUserPile() {
+        // create default pile
         val pile = Pile(
             name = getApplication<Application>().getString(R.string.daily_pile_name),
-            userEmail = user.email
         )
         val pileId = pileRepository.insertPile(pile)
         // update assigned pile as selected and set signed in state

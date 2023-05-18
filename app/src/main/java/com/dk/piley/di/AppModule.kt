@@ -3,6 +3,7 @@ package com.dk.piley.di
 import android.content.Context
 import com.dk.piley.di.DataStoreModule.providePreferencesDataStore
 import com.dk.piley.model.PileDatabase
+import com.dk.piley.model.UserDatabase
 import com.dk.piley.model.backup.BackupRepository
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
@@ -33,6 +34,11 @@ object AppModule {
     @Provides
     fun provideDatabase(@ApplicationContext appContext: Context) =
         PileDatabase.getInstance(appContext)
+
+    @Singleton
+    @Provides
+    fun provideUserDatabase(@ApplicationContext appContext: Context) =
+        UserDatabase.getInstance(appContext)
 
     @Singleton
     @Provides
@@ -70,7 +76,7 @@ object AppModule {
     // user
     @Singleton
     @Provides
-    fun provideUserDao(db: PileDatabase) = db.userDao()
+    fun provideUserDao(db: UserDatabase) = db.userDao()
 
     @Singleton
     @Provides

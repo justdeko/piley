@@ -9,19 +9,16 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskDao
-import com.dk.piley.model.user.User
-import com.dk.piley.model.user.UserDao
 
 const val DATABASE_NAME = "piley-db"
 const val DATABASE_NAME_WITH_EXTENSION = "$DATABASE_NAME.db"
 
-@Database(entities = [Pile::class, Task::class, User::class], version = 1, exportSchema = false)
+@Database(entities = [Pile::class, Task::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PileDatabase : RoomDatabase() {
     // DAOs
     abstract fun taskDao(): TaskDao
     abstract fun pileDao(): PileDao
-    abstract fun userDao(): UserDao
 
     companion object {
         // For Singleton instantiation

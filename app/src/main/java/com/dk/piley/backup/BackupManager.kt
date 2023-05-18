@@ -7,14 +7,19 @@ import com.dk.piley.model.backup.BackupRepository
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.remote.backup.FileResponse
 import com.dk.piley.model.user.UserRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import org.threeten.bp.Instant
+import timber.log.Timber
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
@@ -39,11 +44,29 @@ class BackupManager @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> = flow<Resource<String>> {
-        backupRepository.createOrUpdateBackupFlow(
-            userRepository.getSignedInUserEmail(),
-            context.getDatabasePath(DATABASE_NAME_WITH_EXTENSION)
-        )
+    fun syncBackupJob() = CoroutineScope(Dispatchers.IO).launch {
+        // wait first because job is triggered on startup
+        delay(20000) // TODO: custom frequency
+        // attempt to push
+        pushBackupToRemoteForUserFlow().collect {
+            when (it) {
+                is Resource.Loading -> Timber.i("Syncing local backup to remote")
+                is Resource.Success -> Timber.i("Backup successfully synced, response: ${it.data}")
+                is Resource.Failure -> Timber.w(it.exception)
+            }
+        }
+    }
+
+    private fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> = flow<Resource<String>> {
+        val email = userRepository.getSignedInUserEmail()
+        if (email.isNotBlank()) {
+            backupRepository.createOrUpdateBackupFlow(
+                email,
+                context.getDatabasePath(DATABASE_NAME_WITH_EXTENSION)
+            )
+        } else {
+            emptyFlow()
+        }
     }.flowOn(Dispatchers.IO)
 
 

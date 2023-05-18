@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
+import com.dk.piley.backup.BackupManager
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
@@ -23,6 +24,7 @@ class SignInViewModel @Inject constructor(
     application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,
+    private val backupManager: BackupManager,
 ) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(SignInViewState())
 
@@ -50,18 +52,38 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private suspend fun onRegisterSuccess(user: User) {
+    private suspend fun onRegisterSuccess(user: User, isSignIn: Boolean = false) {
         // create user and set as signed in
         userRepository.insertUser(user)
         userRepository.setSignedInUser(user.email)
+        if (isSignIn) {
+            backupManager.syncBackupToLocalForUserFlow().collect {
+                when (it) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        if (it.data) {
+                            setLoading(false)
+                            setSignInState(SignInState.SIGNED_IN)
+                        } else {
+                            createAndSetUserPile(user)
+                        }
+                    }
+
+                    is Resource.Failure -> createAndSetUserPile(user)
+                }
+            }
+        } else {
+            createAndSetUserPile(user)
+        }
+    }
+
+    private suspend fun createAndSetUserPile(user: User) {
         // create default pile and assign to user
         val pile = Pile(
             name = getApplication<Application>().getString(R.string.daily_pile_name),
             userEmail = user.email
         )
         val pileId = pileRepository.insertPile(pile)
-        // signal loading process has finished to user
-        setLoading(false)
         // update assigned pile as selected and set signed in state
         userRepository.getSignedInUserNotNull().first().let { signedInUser ->
             userRepository.insertUser(
@@ -70,8 +92,10 @@ class SignInViewModel @Inject constructor(
                     defaultPileId = pileId
                 )
             )
-            setSignInState(SignInState.SIGNED_IN)
         }
+        // signal loading process has finished to user and set state to signed in
+        setLoading(false)
+        setSignInState(SignInState.SIGNED_IN)
     }
 
     fun attemptSignIn() {
@@ -96,7 +120,8 @@ class SignInViewModel @Inject constructor(
                         name = it.data.name,
                         email = it.data.email,
                         password = it.data.password
-                    )
+                    ),
+                    isSignIn = true
                 )
 
                 is Resource.Failure -> {

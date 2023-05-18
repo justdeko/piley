@@ -12,6 +12,9 @@ import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserDao
 
+const val DATABASE_NAME = "piley-db"
+const val DATABASE_NAME_WITH_EXTENSION = "$DATABASE_NAME.db"
+
 @Database(entities = [Pile::class, Task::class, User::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PileDatabase : RoomDatabase() {
@@ -32,7 +35,7 @@ abstract class PileDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context): PileDatabase {
-            return Room.databaseBuilder(context, PileDatabase::class.java, "piley-db").build()
+            return Room.databaseBuilder(context, PileDatabase::class.java, DATABASE_NAME).build()
         }
     }
 }

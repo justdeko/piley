@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
+import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
-import com.dk.piley.model.remote.Resource
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

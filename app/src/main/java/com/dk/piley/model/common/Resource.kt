@@ -1,4 +1,4 @@
-package com.dk.piley.model.remote
+package com.dk.piley.model.common
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

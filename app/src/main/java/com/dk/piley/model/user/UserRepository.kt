@@ -2,8 +2,8 @@ package com.dk.piley.model.user
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
-import com.dk.piley.model.remote.Resource
-import com.dk.piley.model.remote.resourceSuccessfulFlow
+import com.dk.piley.model.common.Resource
+import com.dk.piley.model.common.resourceSuccessfulFlow
 import com.dk.piley.model.remote.user.UserApi
 import com.dk.piley.model.remote.user.UserRequest
 import com.dk.piley.model.remote.user.UserResponse

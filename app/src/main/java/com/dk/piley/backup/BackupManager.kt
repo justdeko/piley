@@ -1,12 +1,12 @@
 package com.dk.piley.backup
 
 import android.content.Context
-import android.util.Log
 import com.dk.piley.model.DATABASE_NAME_WITH_EXTENSION
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.backup.BackupRepository
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.remote.backup.FileResponse
+import com.dk.piley.model.user.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import org.threeten.bp.Instant
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
@@ -21,29 +22,42 @@ import javax.inject.Inject
 
 class BackupManager @Inject constructor(
     private val backupRepository: BackupRepository,
+    private val userRepository: UserRepository,
     private val db: PileDatabase,
     private val context: Context
 ) {
     @OptIn(FlowPreview::class)
-    fun syncBackupToLocalForUserFlow(email: String): Flow<Resource<Boolean>> =
-        backupRepository.getBackupFileFlow(email).flatMapConcat {
+    fun syncBackupToLocalForUserFlow(): Flow<Resource<Boolean>> = flow<Resource<Boolean>> {
+        backupRepository.getBackupFileFlow(
+            userRepository.getSignedInUserEmail()
+        ).flatMapConcat {
             when (it) {
                 is Resource.Loading -> flowOf(Resource.Loading())
                 is Resource.Success -> createOrUpdateDbFileFlow(it.data)
                 is Resource.Failure -> flowOf(Resource.Failure(it.exception))
             }
         }
+    }.flowOn(Dispatchers.IO)
 
-    fun pushBackupToRemoteForUserFlow(email: String): Flow<Resource<String>> =
+    fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> = flow<Resource<String>> {
         backupRepository.createOrUpdateBackupFlow(
-            email,
+            userRepository.getSignedInUserEmail(),
             context.getDatabasePath(DATABASE_NAME_WITH_EXTENSION)
         )
+    }.flowOn(Dispatchers.IO)
+
 
     private fun createOrUpdateDbFileFlow(fileResponse: FileResponse): Flow<Resource<Boolean>> =
         flow {
             emit(Resource.Loading())
             val dbFile = context.getDatabasePath(DATABASE_NAME_WITH_EXTENSION)
+            val localLastModified = Instant.ofEpochMilli(dbFile.lastModified())
+            // if local file was modified more recently than remote file
+            // then emit success but with false representing no update of local backup
+            if (fileResponse.lastModified < localLastModified) {
+                emit(Resource.Success(false))
+                return@flow
+            }
             val dbPath = dbFile.absolutePath
             // close db instance
             db.close()
@@ -62,7 +76,6 @@ class BackupManager @Inject constructor(
                 }
                 emit(Resource.Success(true))
             } catch (ex: IOException) {
-                Log.e("BackupManager", ex.toString())
                 emit(Resource.Failure(ex))
             }
         }.flowOn(Dispatchers.IO)

@@ -32,6 +32,9 @@ class UserRepository @Inject constructor(
     suspend fun getUserPassword(email: String): String =
         getUserByEmail(email).firstOrNull()?.password ?: ""
 
+    suspend fun getSignedInUserEmail(): String =
+        getSignedInUser().firstOrNull()?.email ?: ""
+
     suspend fun localCredentials(email: String): String {
         val user = getUserByEmail(email).firstOrNull()
         return credentials(user?.name, user?.password)

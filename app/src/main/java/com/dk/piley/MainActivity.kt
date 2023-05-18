@@ -22,7 +22,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.dk.piley.backup.BackupManager
 import com.dk.piley.ui.nav.BottomNavigationBar
 import com.dk.piley.ui.nav.DEEPLINK_ROOT
 import com.dk.piley.ui.nav.Screen
@@ -41,16 +40,9 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
 import com.dk.piley.ui.util.isDarkMode
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var backupManager: BackupManager
-
-    private lateinit var job: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // set initial theme
@@ -58,20 +50,12 @@ class MainActivity : AppCompatActivity() {
             setTheme(R.style.Theme_Piley_Dark)
         } else setTheme(R.style.Theme_Piley_Light)
 
-        // start backing up data
-        job = backupManager.syncBackupJob()
-
         super.onCreate(savedInstanceState)
         setContent {
             ThemeHostScreen {
                 Home()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        job.cancel()
     }
 }
 

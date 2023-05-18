@@ -69,6 +69,12 @@ class SettingsViewModel @Inject constructor(
             userRepository.insertUser(state.value.user.copy(defaultReminderDelay = delay))
         }
     }
+
+    fun updateBackupFrequency(frequency: Int) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(defaultBackupFrequency = frequency))
+        }
+    }
 }
 
 data class SettingsViewState(

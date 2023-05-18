@@ -3,6 +3,7 @@ package com.dk.piley.ui.settings
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.ViewAgenda
@@ -37,7 +38,8 @@ fun SettingsScreen(
         onPileModeChange = { viewModel.updateDefaultPileMode(it) },
         onResetPileModes = { viewModel.onResetPileModes() },
         onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) },
-        onReminderDelayChange = { viewModel.updateReminderDelay(it) }
+        onReminderDelayChange = { viewModel.updateReminderDelay(it) },
+        onBackupFrequencyChange = { viewModel.updateBackupFrequency(it) },
     )
 }
 
@@ -51,6 +53,7 @@ private fun SettingsScreen(
     onResetPileModes: () -> Unit = {},
     onAutoHideKeyboardChange: (Boolean) -> Unit = {},
     onReminderDelayChange: (Int) -> Unit = {},
+    onBackupFrequencyChange: (Int) -> Unit = {},
 ) {
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
@@ -104,6 +107,16 @@ private fun SettingsScreen(
                 range = Pair(15, 60),
                 steps = 2,
                 onValueChange = onReminderDelayChange
+            )
+        }
+        SettingsSection(title = "Backups", icon = Icons.Filled.Backup) {
+            SliderSettingsItem(
+                title = "Backup Frequency",
+                description = "Set the frequency of backups in seconds.",
+                value = viewState.user.defaultBackupFrequency,
+                range = Pair(10, 1000),
+                steps = 10,
+                onValueChange = onBackupFrequencyChange
             )
         }
     }

@@ -8,6 +8,7 @@ import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +27,9 @@ class ProfileViewModel @Inject constructor(
 
     val state: StateFlow<ProfileViewState>
         get() = _state
+
+    // start backing up data
+    private var backupJob: Job = backupManager.syncBackupJob()
 
     init {
         viewModelScope.launch {
@@ -63,6 +67,12 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun setSignedOut() = _state.update { it.copy(signedOut = true) }
+
+    override fun onCleared() {
+        super.onCleared()
+        // cancel backup sync
+        backupJob.cancel()
+    }
 }
 
 

@@ -40,7 +40,7 @@ class BackupRepository @Inject constructor(
                 val filename = contentDispositionHeaders?.filename ?: "backup.db"
                 val lastModified = contentDispositionHeaders?.lastModified ?: Instant.now()
                 if (responseBody != null) {
-                    val file = File("path/to/save/$filename")
+                    val file = File("db/tmp/$filename")
                     val inputStream = responseBody.byteStream()
                     val outputStream = FileOutputStream(file)
                     val buffer = ByteArray(4096)

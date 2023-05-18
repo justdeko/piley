@@ -13,6 +13,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -45,8 +46,6 @@ class BackupManager @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
     fun syncBackupJob() = CoroutineScope(Dispatchers.IO).launch {
-        // wait first because job is triggered on startup
-        delay(20000) // TODO: custom frequency
         // attempt to push
         pushBackupToRemoteForUserFlow().collect {
             when (it) {
@@ -55,6 +54,9 @@ class BackupManager @Inject constructor(
                 is Resource.Failure -> Timber.w(it.exception)
             }
         }
+        val frequency =
+            userRepository.getSignedInUserNotNull().firstOrNull()?.defaultBackupFrequency?.toLong()
+        delay(frequency ?: 20000)
     }
 
     fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> = flow<Resource<String>> {
@@ -97,6 +99,8 @@ class BackupManager @Inject constructor(
                         input.copyTo(output)
                     }
                 }
+                // delete temp file
+                fileResponse.file.delete()
                 emit(Resource.Success(true))
             } catch (ex: IOException) {
                 emit(Resource.Failure(ex))

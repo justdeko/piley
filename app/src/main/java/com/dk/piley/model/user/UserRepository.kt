@@ -27,13 +27,13 @@ class UserRepository @Inject constructor(
 
     fun getUsers(): Flow<List<User>> = userDao.getUsers()
 
-    fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
+    private fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
 
     suspend fun getUserPassword(email: String): String =
         getUserByEmail(email).firstOrNull()?.password ?: ""
 
     suspend fun getSignedInUserEmail(): String =
-        getSignedInUser().firstOrNull()?.email ?: ""
+        getUserPrefsEmail().firstOrNull() ?: ""
 
     suspend fun localCredentials(email: String): String {
         val user = getUserByEmail(email).firstOrNull()
@@ -44,9 +44,12 @@ class UserRepository @Inject constructor(
         prefs[signedInUser] = email
     }
 
+    private fun getUserPrefsEmail(): Flow<String> =
+        userPrefs.data.map { prefs -> prefs[signedInUser] ?: "" }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getSignedInUser(): Flow<User?> =
-        userPrefs.data.map { prefs -> prefs[signedInUser] ?: "" }.flatMapLatest { email ->
+        getUserPrefsEmail().flatMapLatest { email ->
             getUserByEmail(email)
         }
 
@@ -85,7 +88,7 @@ class UserRepository @Inject constructor(
             userApi.deleteUser(email, credentials(email, password))
         }
 
-    fun getUserFlow(email: String, password: String): Flow<Resource<UserResponse>> =
+    fun getUserFromRemoteFlow(email: String, password: String): Flow<Resource<UserResponse>> =
         resourceSuccessfulFlow {
             userApi.getUser(email, credentials(email, password))
         }

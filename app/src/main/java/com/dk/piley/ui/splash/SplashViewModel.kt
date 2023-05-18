@@ -6,10 +6,11 @@ import com.dk.piley.backup.BackupManager
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -25,23 +26,38 @@ class SplashViewModel @Inject constructor(
         get() = _state
 
     init {
-        fetchBackup()
         viewModelScope.launch {
-            combine(userRepository.getSignedInUser()) { (user) ->
-                SplashViewState(signedIn = user != null)
-            }.collect { _state.value = it }
+            val userEmail = userRepository.getSignedInUserEmail()
+            if (userEmail.isNotBlank()) {
+                combine(loadingBackupFlow()) { (loadingBackup) ->
+                    if (loadingBackup) {
+                        SplashViewState(signedIn = false, loadingBackup = true)
+                    } else {
+                        SplashViewState(signedIn = true, loadingBackup = false)
+                    }
+                }.collect { _state.value = it }
+            }
         }
     }
 
     fun isSignedIn() = state.value.signedIn
 
-    private fun fetchBackup() {
-        viewModelScope.launch {
-            backupManager.syncBackupToLocalForUserFlow().collectLatest {
-                when (it) {
-                    is Resource.Loading -> Timber.i("Loading backup")
-                    is Resource.Success -> Timber.i("Remote backup request successful, replaced local db: ${it.data}")
-                    is Resource.Failure -> Timber.e(it.exception)
+    private suspend fun loadingBackupFlow(): Flow<Boolean> = flow {
+        backupManager.syncBackupToLocalForUserFlow().collect {
+            when (it) {
+                is Resource.Loading -> {
+                    emit(true)
+                    Timber.i("Loading backup")
+                }
+
+                is Resource.Success -> {
+                    Timber.i("Remote backup request successful, replaced local db: ${it.data}")
+                    emit(false)
+                }
+
+                is Resource.Failure -> {
+                    Timber.e(it.exception)
+                    emit(false)
                 }
             }
         }
@@ -49,5 +65,6 @@ class SplashViewModel @Inject constructor(
 }
 
 data class SplashViewState(
-    val signedIn: Boolean = false
+    val signedIn: Boolean = false,
+    val loadingBackup: Boolean = false,
 )

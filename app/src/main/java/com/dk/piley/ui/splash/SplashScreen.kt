@@ -1,14 +1,25 @@
 package com.dk.piley.ui.splash
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -32,20 +43,30 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SplashScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     viewModel: SplashViewModel = hiltViewModel()
 ) {
-    SplashScreen(onAnimFinished = {
-        val destination = if (viewModel.isSignedIn()) Screen.Pile.route else Screen.SignIn.route
-        navController.navigate(destination) {
-            popUpTo(0)
+    val viewState by viewModel.state.collectAsState()
+    SplashScreen(
+        modifier,
+        viewState,
+        onAnimFinished = {
+            val destination = if (viewModel.isSignedIn()) Screen.Pile.route else Screen.SignIn.route
+            navController.navigate(destination) {
+                popUpTo(0)
+            }
         }
-    })
+    )
 }
 
 
 @Composable
-fun SplashScreen(onAnimFinished: () -> Unit = {}) {
+fun SplashScreen(
+    modifier: Modifier = Modifier,
+    viewState: SplashViewState,
+    onAnimFinished: () -> Unit = {}
+) {
     val scaleFactor = remember { Animatable(1.5f) }
     val alphaFactor = remember { Animatable(1f) }
     val coroutineScope = rememberCoroutineScope()
@@ -54,6 +75,7 @@ fun SplashScreen(onAnimFinished: () -> Unit = {}) {
             coroutineScope,
             scaleFactor,
             alphaFactor,
+            viewState.loadingBackup,
             onAnimFinished
         )
     }
@@ -90,11 +112,14 @@ private fun runAnimation(
     coroutineScope: CoroutineScope,
     scaleFactor: Animatable<Float, AnimationVector1D>,
     alpha: Animatable<Float, AnimationVector1D>,
+    loading: Boolean,
     onFinished: () -> Unit = {}
 ) {
     coroutineScope.launch {
-        scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 300))
-        scaleFactor.animateTo(1.5f, tween(easing = FastOutSlowInEasing, durationMillis = 400))
+        do {
+            scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 300))
+            scaleFactor.animateTo(1.5f, tween(easing = FastOutSlowInEasing, durationMillis = 400))
+        } while (loading)
         awaitAll(
             async {
                 scaleFactor.animateTo(
@@ -118,7 +143,7 @@ private fun runAnimation(
 fun TaskDetailScreenPreview() {
     PileyTheme {
         Surface {
-            SplashScreen()
+            SplashScreen(viewState = SplashViewState())
         }
     }
 }

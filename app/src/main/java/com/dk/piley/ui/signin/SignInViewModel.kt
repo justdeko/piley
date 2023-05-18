@@ -88,7 +88,7 @@ class SignInViewModel @Inject constructor(
     }
 
     private suspend fun attemptRemoteSignIn(email: String, password: String) {
-        userRepository.getUserFlow(email, password).collectLatest {
+        userRepository.getUserFromRemoteFlow(email, password).collectLatest {
             when (it) {
                 is Resource.Loading -> setLoading(true)
                 is Resource.Success -> onRegisterSuccess(

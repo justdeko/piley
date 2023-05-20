@@ -9,23 +9,25 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
+const val USER_RESOURCE_PREFIX = "users"
+
 interface UserApi {
-    @POST("user")
+    @POST(USER_RESOURCE_PREFIX)
     suspend fun createUser(@Body userRequest: UserRequest): Response<String>
 
-    @PUT("user")
+    @PUT(USER_RESOURCE_PREFIX)
     suspend fun updateUser(
         @Body userUpdateRequest: UserUpdateRequest,
         @Header("Authorization") credentials: String
     ): Response<String>
 
-    @DELETE("user/{email}")
+    @DELETE("$USER_RESOURCE_PREFIX/{email}")
     suspend fun deleteUser(
         @Path("email") email: String,
         @Header("Authorization") credentials: String
     ): Response<String>
 
-    @GET("user/{email}")
+    @GET("$USER_RESOURCE_PREFIX/{email}")
     suspend fun getUser(
         @Path("email") email: String,
         @Header("Authorization") credentials: String

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
+import timber.log.Timber
 
 sealed class Resource<out T> {
     class Loading<out T> : Resource<T>()
@@ -25,9 +26,11 @@ fun <T> resourceSuccessfulFlow(apiRequest: suspend () -> Response<T>): Flow<Reso
             }
         } else {
             val body = response.errorBody()?.string() ?: "No error body"
+            Timber.e(body)
             emit(Resource.Failure(Exception(body)))
         }
     } catch (e: Exception) {
+        Timber.e(e)
         emit(Resource.Failure(Exception(e)))
     }
 }.flowOn(Dispatchers.IO)

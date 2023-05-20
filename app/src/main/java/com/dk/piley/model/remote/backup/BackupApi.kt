@@ -12,23 +12,25 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Streaming
 
+const val BACKUP_RESOURCE_PREFIX = "backup"
+
 interface BackupApi {
     @Multipart
-    @POST("backup/{email}")
+    @POST("$BACKUP_RESOURCE_PREFIX/{email}")
     suspend fun createOrUpdateBackup(
         @Path("email") email: String,
         @Part filePart: MultipartBody.Part,
         @Header("Authorization") credentials: String
     ): Response<String>
 
-    @GET("backup/{email}")
+    @GET("$BACKUP_RESOURCE_PREFIX/{email}")
     @Streaming
     suspend fun getBackup(
         @Path("email") email: String,
         @Header("Authorization") credentials: String
     ): Response<ResponseBody>
 
-    @DELETE("backup/{email}")
+    @DELETE("$BACKUP_RESOURCE_PREFIX/{email}")
     suspend fun deleteBackup(
         @Path("email") email: String,
         @Header("Authorization") credentials: String

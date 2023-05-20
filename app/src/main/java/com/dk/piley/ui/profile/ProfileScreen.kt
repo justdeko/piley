@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -41,7 +42,9 @@ fun ProfileScreen(
 ) {
     val viewState by viewModel.state.collectAsState()
     if (viewState.signedOutState == SignOutState.SIGNED_OUT) {
-        navController.navigateClearBackstack(Screen.SignIn.route)
+        LaunchedEffect(viewState.signedOutState) {
+            navController.navigateClearBackstack(Screen.SignIn.route)
+        }
     }
     ProfileScreen(modifier = modifier,
         viewState = viewState,

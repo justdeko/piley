@@ -1,16 +1,17 @@
 package com.dk.piley.backup
 
 import android.content.Context
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.dk.piley.model.DATABASE_NAME
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.backup.BackupRepository
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.remote.backup.FileResponse
 import com.dk.piley.model.user.UserRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
@@ -18,17 +19,19 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.launch
 import org.threeten.bp.Instant
-import timber.log.Timber
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+const val BACKUP_WORKER_TAG = "backup"
 
 class BackupManager @Inject constructor(
     private val backupRepository: BackupRepository,
     private val userRepository: UserRepository,
+    private val workManager: WorkManager,
     private val db: PileDatabase,
     private val context: Context
 ) {
@@ -44,22 +47,6 @@ class BackupManager @Inject constructor(
             }
         }.flowOn(Dispatchers.IO)
 
-    fun syncBackupJob() = CoroutineScope(Dispatchers.IO).launch {
-        // attempt to push
-        pushBackupToRemoteForUserFlow().collect {
-            when (it) {
-                is Resource.Loading -> Timber.i("Syncing local backup to remote")
-                is Resource.Success -> Timber.i("Backup successfully synced, response: ${it.data}")
-                is Resource.Failure -> Timber.w(it.exception)
-            }
-        }
-        val frequencyInSeconds =
-            userRepository.getSignedInUserNotNull().firstOrNull()?.defaultBackupFrequency?.toLong()
-        if (frequencyInSeconds != null) {
-            delay(frequencyInSeconds * 1000)
-        } else delay(60000)
-    }
-
     suspend fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> {
         val email = userRepository.getSignedInUserEmail()
         return if (email.isNotBlank()) {
@@ -70,6 +57,25 @@ class BackupManager @Inject constructor(
         } else {
             emptyFlow()
         }
+    }
+
+
+    suspend fun schedulePeriodicBackup() {
+        val frequencyInSeconds =
+            userRepository.getSignedInUserNotNull().firstOrNull()?.defaultBackupFrequency?.toLong()
+                ?: 60
+        val request =
+            PeriodicWorkRequestBuilder<BackupWorker>(frequencyInSeconds, TimeUnit.SECONDS)
+                .build()
+        workManager.enqueueUniquePeriodicWork(
+            BACKUP_WORKER_TAG,
+            ExistingPeriodicWorkPolicy.KEEP,
+            request
+        )
+    }
+
+    fun cancelPeriodicBackup() {
+        workManager.cancelUniqueWork(BACKUP_WORKER_TAG)
     }
 
 

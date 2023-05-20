@@ -68,6 +68,7 @@ dependencies {
     // hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+    implementation "androidx.hilt:hilt-work:1.0.0"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
     // compose
     implementation "androidx.compose.ui:ui:$compose_version"
@@ -79,6 +80,8 @@ dependencies {
     implementation 'androidx.datastore:datastore-preferences:1.1.0-alpha04'
     implementation 'androidx.activity:activity-compose:1.7.1'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.1"
+    // work manager
+    implementation("androidx.work:work-runtime-ktx:$work_version")
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"

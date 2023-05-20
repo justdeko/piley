@@ -5,6 +5,5 @@ enum class SignInState {
     SIGN_IN_ERROR,
     REGISTER_ERROR,
     SIGNED_IN,
-    HOME,
     REGISTER
 }

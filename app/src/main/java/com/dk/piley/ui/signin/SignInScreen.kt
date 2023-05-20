@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,16 +46,18 @@ fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.state.collectAsState()
-    SignInScreen(modifier = modifier,
+    if (viewState.signInState == SignInState.SIGNED_IN) {
+        LaunchedEffect(viewState.signInState) {
+            navController.navigateClearBackstack(Screen.Pile.route)
+        }
+    }
+    SignInScreen(
+        modifier = modifier,
         viewState = viewState,
         onEmailChange = { viewModel.setEmail(it) },
         onUsernameChange = { viewModel.setUsername(it) },
         onPasswordChange = { viewModel.setPassword(it) },
         onAttemptSignIn = { viewModel.attemptSignIn() },
-        onSignIn = {
-            viewModel.setSignInState(SignInState.HOME)
-            navController.navigateClearBackstack(Screen.Pile.route)
-        },
         onSignInError = { viewModel.setSignInState(SignInState.SIGNED_OUT) },
         onChangeRegister = {
             if (viewState.signInState == SignInState.REGISTER) {
@@ -74,7 +77,6 @@ private fun SignInScreen(
     onUsernameChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onAttemptSignIn: () -> Unit = {},
-    onSignIn: () -> Unit = {},
     onSignInError: () -> Unit = {},
     onChangeRegister: () -> Unit = {},
 ) {
@@ -84,7 +86,6 @@ private fun SignInScreen(
     when (viewState.signInState) {
         SignInState.SIGNED_IN -> {
             Toast.makeText(context, "Signed in!", Toast.LENGTH_SHORT).show()
-            onSignIn()
         }
 
         SignInState.SIGN_IN_ERROR -> {

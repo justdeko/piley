@@ -11,7 +11,6 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskDao
 
 const val DATABASE_NAME = "piley-db"
-const val DATABASE_NAME_WITH_EXTENSION = "$DATABASE_NAME.db"
 
 @Database(entities = [Pile::class, Task::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)

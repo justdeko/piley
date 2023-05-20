@@ -133,7 +133,10 @@ private fun SignInScreen(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             )
-            AnimatedVisibility(viewState.signInState == SignInState.REGISTER) {
+            AnimatedVisibility(
+                viewState.signInState == SignInState.REGISTER
+                    || viewState.signInState == SignInState.REGISTER_ERROR
+            ) {
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()

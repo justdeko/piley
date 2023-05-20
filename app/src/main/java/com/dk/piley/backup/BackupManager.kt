@@ -1,7 +1,7 @@
 package com.dk.piley.backup
 
 import android.content.Context
-import com.dk.piley.model.DATABASE_NAME_WITH_EXTENSION
+import com.dk.piley.model.DATABASE_NAME
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.backup.BackupRepository
 import com.dk.piley.model.common.Resource
@@ -33,17 +33,16 @@ class BackupManager @Inject constructor(
     private val context: Context
 ) {
     @OptIn(FlowPreview::class)
-    fun syncBackupToLocalForUserFlow(): Flow<Resource<Boolean>> = flow<Resource<Boolean>> {
+    suspend fun syncBackupToLocalForUserFlow(): Flow<Resource<Boolean>> =
         backupRepository.getBackupFileFlow(
-            userRepository.getSignedInUserEmail()
+            userRepository.getSignedInUserEmail(), context
         ).flatMapConcat {
             when (it) {
                 is Resource.Loading -> flowOf(Resource.Loading())
                 is Resource.Success -> createOrUpdateDbFileFlow(it.data)
                 is Resource.Failure -> flowOf(Resource.Failure(it.exception))
             }
-        }
-    }.flowOn(Dispatchers.IO)
+        }.flowOn(Dispatchers.IO)
 
     fun syncBackupJob() = CoroutineScope(Dispatchers.IO).launch {
         // attempt to push
@@ -54,28 +53,30 @@ class BackupManager @Inject constructor(
                 is Resource.Failure -> Timber.w(it.exception)
             }
         }
-        val frequency =
+        val frequencyInSeconds =
             userRepository.getSignedInUserNotNull().firstOrNull()?.defaultBackupFrequency?.toLong()
-        delay(frequency ?: 20000)
+        if (frequencyInSeconds != null) {
+            delay(frequencyInSeconds * 1000)
+        } else delay(60000)
     }
 
-    fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> = flow<Resource<String>> {
+    suspend fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> {
         val email = userRepository.getSignedInUserEmail()
-        if (email.isNotBlank()) {
+        return if (email.isNotBlank()) {
             backupRepository.createOrUpdateBackupFlow(
                 email,
-                context.getDatabasePath(DATABASE_NAME_WITH_EXTENSION)
-            )
+                context.getDatabasePath(DATABASE_NAME)
+            ).flowOn(Dispatchers.IO)
         } else {
             emptyFlow()
         }
-    }.flowOn(Dispatchers.IO)
+    }
 
 
     private fun createOrUpdateDbFileFlow(fileResponse: FileResponse): Flow<Resource<Boolean>> =
         flow {
             emit(Resource.Loading())
-            val dbFile = context.getDatabasePath(DATABASE_NAME_WITH_EXTENSION)
+            val dbFile = context.getDatabasePath(DATABASE_NAME)
             val localLastModified = Instant.ofEpochMilli(dbFile.lastModified())
             // if local file was modified more recently than remote file
             // then emit success but with false representing no update of local backup

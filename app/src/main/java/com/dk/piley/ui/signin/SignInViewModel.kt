@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -59,7 +60,7 @@ class SignInViewModel @Inject constructor(
         if (isSignIn) {
             backupManager.syncBackupToLocalForUserFlow().collect {
                 when (it) {
-                    is Resource.Loading -> {}
+                    is Resource.Loading -> Timber.i("attempting to load remote backup")
                     is Resource.Success -> {
                         if (it.data) {
                             setLoading(false)
@@ -118,7 +119,7 @@ class SignInViewModel @Inject constructor(
                     User(
                         name = it.data.name,
                         email = it.data.email,
-                        password = it.data.password
+                        password = password
                     ),
                     isSignIn = true
                 )

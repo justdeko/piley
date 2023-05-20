@@ -25,6 +25,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -46,6 +47,7 @@ object AppModule {
     @Provides
     fun provideApi(): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.LOCAL_API_BASE_URL)
+        .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create())
         .client(
             OkHttpClient.Builder()

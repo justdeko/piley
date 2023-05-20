@@ -1,5 +1,6 @@
 package com.dk.piley.model.backup
 
+import android.content.Context
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.common.resourceSuccessfulFlow
 import com.dk.piley.model.remote.backup.BackupApi
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 class BackupRepository @Inject constructor(
     private val backupApi: BackupApi,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     fun createOrUpdateBackupFlow(email: String, file: File): Flow<Resource<String>> =
         resourceSuccessfulFlow {
@@ -29,7 +30,7 @@ class BackupRepository @Inject constructor(
             backupApi.createOrUpdateBackup(email, filePart, userRepository.localCredentials(email))
         }
 
-    fun getBackupFileFlow(email: String): Flow<Resource<FileResponse>> = flow {
+    fun getBackupFileFlow(email: String, context: Context): Flow<Resource<FileResponse>> = flow {
         emit(Resource.Loading())
         try {
             val backupResponse = backupApi.getBackup(email, userRepository.localCredentials(email))
@@ -39,7 +40,7 @@ class BackupRepository @Inject constructor(
                 val filename = contentDispositionHeaders?.filename ?: "backup.db"
                 val lastModified = contentDispositionHeaders?.lastModified ?: Instant.now()
                 if (responseBody != null) {
-                    val file = File("db/tmp/$filename")
+                    val file = File(context.cacheDir, filename)
                     val inputStream = responseBody.byteStream()
                     val outputStream = FileOutputStream(file)
                     val buffer = ByteArray(4096)

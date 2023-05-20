@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -37,7 +38,8 @@ class UserRepository @Inject constructor(
 
     suspend fun localCredentials(email: String): String {
         val user = getUserByEmail(email).firstOrNull()
-        return credentials(user?.name, user?.password)
+        Timber.d("generating credentials using user: $user")
+        return credentials(user?.email, user?.password)
     }
 
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->

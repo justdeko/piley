@@ -9,7 +9,6 @@ import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserDao
 
 const val USER_DATABASE_NAME = "piley-db-users"
-const val USER_DATABASE_NAME_WITH_EXTENSION = "$DATABASE_NAME.db"
 
 @Database(entities = [User::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)

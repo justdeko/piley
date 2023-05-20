@@ -36,6 +36,7 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.navigateClearBackstack
 
 @Composable
 fun SignInScreen(
@@ -52,7 +53,7 @@ fun SignInScreen(
         onAttemptSignIn = { viewModel.attemptSignIn() },
         onSignIn = {
             viewModel.setSignInState(SignInState.HOME)
-            navController.navigate(Screen.Pile.route) { popUpTo(0) }
+            navController.navigateClearBackstack(Screen.Pile.route)
         },
         onSignInError = { viewModel.setSignInState(SignInState.SIGNED_OUT) },
         onChangeRegister = {

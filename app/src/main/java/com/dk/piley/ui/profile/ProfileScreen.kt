@@ -1,5 +1,6 @@
 package com.dk.piley.ui.profile
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,11 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.navigateClearBackstack
 
 
 @Composable
@@ -35,11 +40,12 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
-    if (viewState.signedOut) {
-        navController.navigate(Screen.SignIn.route) { popUpTo(0) }
+    if (viewState.signedOutState == SignOutState.SIGNED_OUT) {
+        navController.navigateClearBackstack(Screen.SignIn.route)
     }
     ProfileScreen(modifier = modifier,
         viewState = viewState,
+        setSignOutState = { viewModel.setSignedOutState(it) },
         onClickSettings = { navController.navigate(Screen.Settings.route) },
         onSignOut = {
             viewModel.signOut()
@@ -51,12 +57,29 @@ fun ProfileScreen(
 private fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewState: ProfileViewState,
+    setSignOutState: (state: SignOutState) -> Unit = {},
     onClickSettings: () -> Unit = {},
     onSignOut: () -> Unit = {}
 ) {
+    if (viewState.signedOutState == SignOutState.SIGNED_OUT_ERROR) {
+        AlertDialog(
+            onDismissRequest = { setSignOutState(SignOutState.SIGNED_IN) },
+            title = { Text(text = "Error when uploading backup") },
+            text = { Text(text = "An error when uploading the backup. Do you still want to sign out? Recent changes might be lost.") },
+            confirmButton = {
+                TextButton(onClick = { setSignOutState(SignOutState.SIGNED_OUT) }) { Text("Sign out") }
+            },
+            dismissButton = {
+                TextButton(onClick = { setSignOutState(SignOutState.SIGNED_IN) }) { Text("Cancel") }
+            }
+        )
+    }
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
+        AnimatedVisibility(viewState.signedOutState == SignOutState.SIGNING_OUT) {
+            LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()

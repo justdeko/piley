@@ -49,16 +49,18 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             backupManager.pushBackupToRemoteForUserFlow().collectLatest {
                 when (it) {
-                    is Resource.Loading -> {} // TODO: show syncing backup loading progress
+                    is Resource.Loading -> {
+                        setSignedOutState(SignOutState.SIGNING_OUT)
+                    }
+
                     is Resource.Success -> {
                         userRepository.setSignedInUser("")
-                        setSignedOut()
+                        backupJob.cancel()
+                        setSignedOutState(SignOutState.SIGNED_OUT)
                     }
 
                     is Resource.Failure -> {
-                        // TODO: add warning that backup didn't succeed (maybe with dialog?)
-                        userRepository.setSignedInUser("")
-                        setSignedOut()
+                        setSignedOutState(SignOutState.SIGNED_OUT_ERROR)
                     }
                 }
             }
@@ -66,7 +68,8 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun setSignedOut() = _state.update { it.copy(signedOut = true) }
+    fun setSignedOutState(state: SignOutState) =
+        _state.update { it.copy(signedOutState = state) }
 
     override fun onCleared() {
         super.onCleared()
@@ -81,5 +84,9 @@ data class ProfileViewState(
     val doneTasks: Int = 0,
     val deletedTasks: Int = 0,
     val currentTasks: Int = 0,
-    val signedOut: Boolean = false,
+    val signedOutState: SignOutState = SignOutState.SIGNED_IN,
 )
+
+enum class SignOutState {
+    SIGNED_IN, SIGNING_OUT, SIGNED_OUT, SIGNED_OUT_ERROR
+}

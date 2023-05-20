@@ -36,6 +36,7 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.navigateClearBackstack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -53,9 +54,7 @@ fun SplashScreen(
         viewState,
         onAnimFinished = {
             val destination = if (viewModel.isSignedIn()) Screen.Pile.route else Screen.SignIn.route
-            navController.navigate(destination) {
-                popUpTo(0)
-            }
+            navController.navigateClearBackstack(destination)
         }
     )
 }

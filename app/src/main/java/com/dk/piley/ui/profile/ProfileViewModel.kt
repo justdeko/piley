@@ -51,7 +51,6 @@ class ProfileViewModel @Inject constructor(
 
                     is Resource.Success -> {
                         userRepository.setSignedInUser("")
-                        backupManager.cancelPeriodicBackup()
                         setSignedOutState(SignOutState.SIGNED_OUT)
                     }
 

@@ -35,7 +35,7 @@ class PileViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             // init work manager backup task
-            backupManager.schedulePeriodicBackup()
+            backupManager.doBackup()
             // get piles and start updating state
             userRepository.getSignedInUserNotNull().flatMapLatest { user ->
                 pileRepository.getPileById(user.selectedPileId).map { pileWithTasks ->

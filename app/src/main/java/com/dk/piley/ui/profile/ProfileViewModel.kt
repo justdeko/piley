@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +37,13 @@ class ProfileViewModel @Inject constructor(
                 val deleted = tasks.count { it.status == TaskStatus.DELETED }
                 val current = tasks.count { it.status == TaskStatus.DEFAULT }
 
-                ProfileViewState(user.name, done, deleted, current)
+                ProfileViewState(
+                    userName = user.name,
+                    lastBackup = user.lastBackup,
+                    doneTasks = done,
+                    deletedTasks = deleted,
+                    currentTasks = current
+                )
             }.collect { _state.value = it }
         }
     }
@@ -65,15 +72,37 @@ class ProfileViewModel @Inject constructor(
 
     fun setSignedOutState(state: SignOutState) =
         _state.update { it.copy(signedOutState = state) }
+
+    private fun setShowProgressbar(visible: Boolean) =
+        _state.update { it.copy(showProgressBar = visible) }
+
+    fun setToastMessage(message: String?) =
+        _state.update { it.copy(toastMessage = message) }
+
+    fun attemptBackup() {
+        viewModelScope.launch {
+            setShowProgressbar(true)
+            val successful = backupManager.doBackup()
+            setShowProgressbar(false)
+            if (successful) {
+                setToastMessage("Backup upload successful")
+            } else {
+                setToastMessage("Failed to upload backup")
+            }
+        }
+    }
 }
 
 
 data class ProfileViewState(
     val userName: String = "",
+    val lastBackup: LocalDateTime = LocalDateTime.now(),
     val doneTasks: Int = 0,
     val deletedTasks: Int = 0,
     val currentTasks: Int = 0,
     val signedOutState: SignOutState = SignOutState.SIGNED_IN,
+    val showProgressBar: Boolean = false,
+    val toastMessage: String? = null,
 )
 
 enum class SignOutState {

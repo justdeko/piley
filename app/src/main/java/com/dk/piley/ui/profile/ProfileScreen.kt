@@ -1,7 +1,9 @@
 package com.dk.piley.ui.profile
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +35,8 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.navigateClearBackstack
+import com.jakewharton.threetenabp.AndroidThreeTen
+import org.threeten.bp.LocalDateTime
 
 
 @Composable
@@ -41,15 +46,22 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
+    val context = LocalContext.current
+
     if (viewState.signedOutState == SignOutState.SIGNED_OUT) {
         LaunchedEffect(viewState.signedOutState) {
             navController.navigateClearBackstack(Screen.SignIn.route)
         }
     }
+    if (viewState.toastMessage != null) {
+        Toast.makeText(context, viewState.toastMessage, Toast.LENGTH_SHORT).show()
+        viewModel.setToastMessage(null)
+    }
     ProfileScreen(modifier = modifier,
         viewState = viewState,
         setSignOutState = { viewModel.setSignedOutState(it) },
         onClickSettings = { navController.navigate(Screen.Settings.route) },
+        onBackup = { viewModel.attemptBackup() },
         onSignOut = {
             viewModel.signOut()
         }
@@ -62,6 +74,7 @@ private fun ProfileScreen(
     viewState: ProfileViewState,
     setSignOutState: (state: SignOutState) -> Unit = {},
     onClickSettings: () -> Unit = {},
+    onBackup: () -> Unit = {},
     onSignOut: () -> Unit = {}
 ) {
     if (viewState.signedOutState == SignOutState.SIGNED_OUT_ERROR) {
@@ -77,55 +90,64 @@ private fun ProfileScreen(
             }
         )
     }
-    Column(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        AnimatedVisibility(viewState.signedOutState == SignOutState.SIGNING_OUT) {
+    Box(modifier = modifier.fillMaxSize()) {
+        AnimatedVisibility(viewState.signedOutState == SignOutState.SIGNING_OUT || viewState.showProgressBar) {
             LinearProgressIndicator(modifier = modifier.fillMaxWidth())
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(onClick = onClickSettings) {
-                Icon(
-                    Icons.Filled.Settings,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    contentDescription = "go to settings"
-                )
+        Column(Modifier.fillMaxSize()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                IconButton(onClick = onClickSettings) {
+                    Icon(
+                        Icons.Filled.Settings,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        contentDescription = "go to settings"
+                    )
+                }
+                IconButton(onClick = onSignOut) {
+                    Icon(
+                        Icons.Filled.Logout,
+                        tint = MaterialTheme.colorScheme.secondary,
+                        contentDescription = "sign out"
+                    )
+                }
             }
-            IconButton(onClick = onSignOut) {
-                Icon(
-                    Icons.Filled.Logout,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    contentDescription = "sign out"
-                )
-            }
+            UserInfo(name = viewState.userName)
+            Text(
+                text = "Statistics",
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(start = 16.dp),
+                textAlign = TextAlign.Start
+            )
+            TaskStats(
+                doneCount = viewState.doneTasks,
+                deletedCount = viewState.deletedTasks,
+                currentCount = viewState.currentTasks
+            )
+            Text(
+                text = "Backup",
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                textAlign = TextAlign.Start
+            )
+            BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
         }
-        UserInfo(name = viewState.userName)
-        Text(
-            text = "Statistics",
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(start = 16.dp),
-            textAlign = TextAlign.Start
-        )
-        TaskStats(
-            doneCount = viewState.doneTasks,
-            deletedCount = viewState.deletedTasks,
-            currentCount = viewState.currentTasks
-        )
     }
 }
 
 @PreviewMainScreen
 @Composable
 fun ProfileScreenPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
-            val state = ProfileViewState("Thomas", 0, 2, 3)
+            val state = ProfileViewState("Thomas", LocalDateTime.now(), 0, 2, 3)
             ProfileScreen(viewState = state)
         }
     }

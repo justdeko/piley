@@ -63,6 +63,7 @@ class SignInViewModel @Inject constructor(
                     is Resource.Loading -> Timber.i("attempting to load remote backup")
                     is Resource.Success -> {
                         if (it.data) {
+                            Timber.i("Backup loaded, going into main view")
                             setLoading(false)
                             setSignInState(SignInState.SIGNED_IN)
                         } else {

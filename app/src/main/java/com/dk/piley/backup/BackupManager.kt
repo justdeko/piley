@@ -11,12 +11,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
 import timber.log.Timber
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -57,8 +59,12 @@ class BackupManager @Inject constructor(
         // attempt to push
         when (pushBackupToRemoteForUserFlow().last()) {
             is Resource.Loading -> Timber.i("Syncing local backup to remote")
-            is Resource.Success -> return true
-                .also { Timber.i("Backup successfully synced") }
+            is Resource.Success -> {
+                val user = userRepository.getSignedInUserNotNull().firstOrNull()
+                user?.let { userRepository.insertUser(user.copy(lastBackup = LocalDateTime.now())) }
+                Timber.i("Backup successfully synced")
+                return true
+            }
 
             is Resource.Failure -> return false.also { Timber.i("Failed to sync backup") }
         }

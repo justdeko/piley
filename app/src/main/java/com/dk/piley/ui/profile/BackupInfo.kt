@@ -26,7 +26,7 @@ import org.threeten.bp.LocalDateTime
 @Composable
 fun BackupInfo(
     modifier: Modifier = Modifier,
-    lastBackup: LocalDateTime,
+    lastBackup: LocalDateTime?,
     onClickBackup: () -> Unit = {}
 ) {
     Row(
@@ -36,15 +36,18 @@ fun BackupInfo(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
+            if (lastBackup != null) {
+                Text(
+                    text = "Last backup",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.labelLarge,
+                    textAlign = TextAlign.Start
+                )
+            }
             Text(
-                text = "Last backup",
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.labelLarge,
-                textAlign = TextAlign.Start
-            )
-            Text(
-                text = lastBackup.dateTimeString(),
+                text = lastBackup?.dateTimeString()
+                    ?: "No backup yet.\nClick on the icon on the right side to create your first backup",
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start
@@ -66,8 +69,18 @@ fun BackupInfoPreview() {
     AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         BackupInfo(
-            modifier = Modifier.fillMaxWidth(),
             lastBackup = LocalDateTime.now()
+        )
+    }
+}
+
+@Preview
+@Composable
+fun BackupInfoNoBackupPreview() {
+    AndroidThreeTen.init(LocalContext.current)
+    PileyTheme(useDarkTheme = true) {
+        BackupInfo(
+            lastBackup = null
         )
     }
 }

@@ -2,7 +2,6 @@ package com.dk.piley.model.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dk.piley.ui.util.utcZoneId
 import org.threeten.bp.LocalDateTime
 
 @Entity
@@ -12,7 +11,7 @@ data class User(
     val password: String = "", // TODO: no password in db
     val selectedPileId: Long = 1,
     val defaultPileId: Long = 1,
-    val lastBackup: LocalDateTime = LocalDateTime.now(utcZoneId),
+    val lastBackup: LocalDateTime? = null,
     // user preferences
     val nightMode: NightMode = NightMode.SYSTEM,
     val dynamicColorOn: Boolean = true,

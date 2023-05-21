@@ -96,7 +96,7 @@ class ProfileViewModel @Inject constructor(
 
 data class ProfileViewState(
     val userName: String = "",
-    val lastBackup: LocalDateTime = LocalDateTime.now(),
+    val lastBackup: LocalDateTime? = null,
     val doneTasks: Int = 0,
     val deletedTasks: Int = 0,
     val currentTasks: Int = 0,

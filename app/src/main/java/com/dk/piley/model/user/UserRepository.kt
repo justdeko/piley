@@ -28,6 +28,7 @@ class UserRepository @Inject constructor(
 
     fun getUsers(): Flow<List<User>> = userDao.getUsers()
 
+    // TODO: make these non-flows because we don't need them as flows
     private fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
 
     suspend fun getUserPassword(email: String): String =

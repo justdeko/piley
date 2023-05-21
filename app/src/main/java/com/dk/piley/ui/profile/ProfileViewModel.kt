@@ -4,9 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.backup.BackupManager
 import com.dk.piley.model.common.Resource
+import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.util.getUpcomingTasks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
+    private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val backupManager: BackupManager
 ) : ViewModel() {
@@ -30,9 +34,10 @@ class ProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val tasksFlow = taskRepository.getTasks()
+            val pileFlow = pileRepository.getPilesWithTasks()
             val userFlow = userRepository.getSignedInUserNotNull()
-            userFlow.combine(tasksFlow) { user, tasks ->
+            userFlow.combine(pileFlow) { user, pilesWithTasks ->
+                val tasks = pilesWithTasks.flatMap { it.tasks }
                 val done = tasks.count { it.status == TaskStatus.DONE }
                 val deleted = tasks.count { it.status == TaskStatus.DELETED }
                 val current = tasks.count { it.status == TaskStatus.DEFAULT }
@@ -42,7 +47,8 @@ class ProfileViewModel @Inject constructor(
                     lastBackup = user.lastBackup,
                     doneTasks = done,
                     deletedTasks = deleted,
-                    currentTasks = current
+                    currentTasks = current,
+                    upcomingTaskList = getUpcomingTasks(pilesWithTasks)
                 )
             }.collect { _state.value = it }
         }
@@ -100,6 +106,7 @@ data class ProfileViewState(
     val doneTasks: Int = 0,
     val deletedTasks: Int = 0,
     val currentTasks: Int = 0,
+    val upcomingTaskList: List<Pair<String, Task>> = emptyList(),
     val signedOutState: SignOutState = SignOutState.SIGNED_IN,
     val showProgressBar: Boolean = false,
     val toastMessage: String? = null,

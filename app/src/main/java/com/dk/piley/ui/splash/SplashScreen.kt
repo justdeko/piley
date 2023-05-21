@@ -41,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun SplashScreen(
@@ -53,6 +54,7 @@ fun SplashScreen(
         modifier,
         viewState,
         onAnimFinished = {
+            Timber.d("anim finished")
             val destination = if (viewModel.isSignedIn()) Screen.Pile.route else Screen.SignIn.route
             navController.navigateClearBackstack(destination)
         }
@@ -71,11 +73,11 @@ fun SplashScreen(
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
         runAnimation(
-            coroutineScope,
-            scaleFactor,
-            alphaFactor,
-            viewState.loadingBackup,
-            onAnimFinished
+            coroutineScope = coroutineScope,
+            scaleFactor = scaleFactor,
+            alpha = alphaFactor,
+            loading = viewState.loadingBackup,
+            onFinished = onAnimFinished
         )
     }
 
@@ -116,6 +118,7 @@ private fun runAnimation(
 ) {
     coroutineScope.launch {
         do {
+            Timber.d("loading animation triggered")
             scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 300))
             scaleFactor.animateTo(1.5f, tween(easing = FastOutSlowInEasing, durationMillis = 400))
         } while (loading)

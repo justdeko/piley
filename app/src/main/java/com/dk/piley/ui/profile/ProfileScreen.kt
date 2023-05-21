@@ -129,6 +129,20 @@ private fun ProfileScreen(
                 deletedCount = viewState.deletedTasks,
                 currentCount = viewState.currentTasks
             )
+            // TODO average time to complete tasks
+            Text(
+                text = "Upcoming Tasks",
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.headlineSmall,
+                modifier = Modifier.padding(start = 16.dp),
+                textAlign = TextAlign.Start
+            )
+            UpcomingTasksList(
+                modifier = Modifier.fillMaxWidth(),
+                pileNameTaskList = viewState.upcomingTaskList
+            )
+            // TODO pile-related, e.g. "most used pile" etc.
+            // TODO bottom bar with GitHub feedback, app version etc.
             Text(
                 text = "Backup",
                 color = MaterialTheme.colorScheme.secondary,
@@ -147,7 +161,14 @@ fun ProfileScreenPreview() {
     AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
-            val state = ProfileViewState("Thomas", LocalDateTime.now(), 0, 2, 3)
+            val state = ProfileViewState(
+                userName = "Thomas",
+                lastBackup = LocalDateTime.now(),
+                doneTasks = 0,
+                deletedTasks = 2,
+                currentTasks = 3,
+                upcomingTaskList = previewUpcomingTasksList
+            )
             ProfileScreen(viewState = state)
         }
     }

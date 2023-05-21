@@ -1,6 +1,7 @@
 package com.dk.piley.util
 
 import com.dk.piley.model.pile.PileWithTasks
+import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -29,3 +30,11 @@ fun getCompletedTasksForWeekValues(pileWithTasks: PileWithTasks): List<Int> =
     pileFrequenciesForDatesWithZeros(
         pileFrequenciesForDates(pileWithTasks)
     ).values.toList().reversed()
+
+
+fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Task>> =
+    pilesWithTasks.flatMap { pileWithTasks ->
+        pileWithTasks.tasks
+            .filter { it.reminder != null }
+            .map { Pair(pileWithTasks.pile.name, it) }
+    }.sortedBy { it.second.reminder }.take(3)

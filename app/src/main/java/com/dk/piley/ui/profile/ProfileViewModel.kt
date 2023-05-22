@@ -6,9 +6,10 @@ import com.dk.piley.backup.BackupManager
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
-import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.util.getAverageTaskCompletionInHours
+import com.dk.piley.util.getBiggestPile
 import com.dk.piley.util.getUpcomingTasks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val taskRepository: TaskRepository,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val backupManager: BackupManager
@@ -48,7 +48,9 @@ class ProfileViewModel @Inject constructor(
                     doneTasks = done,
                     deletedTasks = deleted,
                     currentTasks = current,
-                    upcomingTaskList = getUpcomingTasks(pilesWithTasks)
+                    upcomingTaskList = getUpcomingTasks(pilesWithTasks),
+                    biggestPileName = getBiggestPile(pilesWithTasks),
+                    averageTaskDurationInHours = getAverageTaskCompletionInHours(pilesWithTasks)
                 )
             }.collect { _state.value = it }
         }
@@ -107,6 +109,8 @@ data class ProfileViewState(
     val deletedTasks: Int = 0,
     val currentTasks: Int = 0,
     val upcomingTaskList: List<Pair<String, Task>> = emptyList(),
+    val averageTaskDurationInHours: Long = 0,
+    val biggestPileName: String = "None",
     val signedOutState: SignOutState = SignOutState.SIGNED_IN,
     val showProgressBar: Boolean = false,
     val toastMessage: String? = null,

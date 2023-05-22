@@ -131,7 +131,8 @@ fun PileDetailScreen(
             TaskStats(
                 doneCount = viewState.doneCount,
                 deletedCount = viewState.deletedCount,
-                currentCount = viewState.currentCount
+                currentCount = viewState.currentCount,
+                tasksOnly = true
             )
             FrequencyChart(
                 modifier = Modifier.padding(horizontal = 16.dp),

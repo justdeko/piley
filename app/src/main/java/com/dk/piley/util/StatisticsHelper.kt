@@ -5,6 +5,8 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.temporal.ChronoUnit
+import kotlin.math.roundToLong
 
 fun pileFrequenciesForDates(pileWithTasks: PileWithTasks): Map<LocalDate, Int> =
     pileWithTasks.tasks
@@ -38,3 +40,15 @@ fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Tas
             .filter { it.reminder != null }
             .map { Pair(pileWithTasks.pile.name, it) }
     }.sortedBy { it.second.reminder }.take(3)
+
+fun getBiggestPile(pilesWithTasks: List<PileWithTasks>): String =
+    pilesWithTasks.maxByOrNull { pileWithTasks ->
+        pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }
+    }?.pile?.name ?: "None"
+
+fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long =
+    pilesWithTasks.flatMap { pileWithTasks ->
+        pileWithTasks.tasks
+            .filter { it.status == TaskStatus.DONE }
+            .map { ChronoUnit.HOURS.between(it.createdAt, it.modifiedAt) }
+    }.average().roundToLong()

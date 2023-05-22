@@ -127,9 +127,10 @@ private fun ProfileScreen(
             TaskStats(
                 doneCount = viewState.doneTasks,
                 deletedCount = viewState.deletedTasks,
-                currentCount = viewState.currentTasks
+                currentCount = viewState.currentTasks,
+                averageTaskDuration = viewState.averageTaskDurationInHours,
+                biggestPile = viewState.biggestPileName,
             )
-            // TODO average time to complete tasks
             Text(
                 text = "Upcoming Tasks",
                 color = MaterialTheme.colorScheme.secondary,
@@ -141,13 +142,12 @@ private fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 pileNameTaskList = viewState.upcomingTaskList
             )
-            // TODO pile-related, e.g. "most used pile" etc.
             // TODO bottom bar with GitHub feedback, app version etc.
             Text(
                 text = "Backup",
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
                 textAlign = TextAlign.Start
             )
             BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)

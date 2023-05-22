@@ -46,9 +46,13 @@ fun getBiggestPile(pilesWithTasks: List<PileWithTasks>): String =
         pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }
     }?.pile?.name ?: "None"
 
-fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long =
-    pilesWithTasks.flatMap { pileWithTasks ->
+fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
+    val taskDurations = pilesWithTasks.flatMap { pileWithTasks ->
         pileWithTasks.tasks
             .filter { it.status == TaskStatus.DONE }
             .map { ChronoUnit.HOURS.between(it.createdAt, it.modifiedAt) }
-    }.average().roundToLong()
+    }
+    return if (taskDurations.isNotEmpty()) {
+        taskDurations.average().roundToLong()
+    } else 0
+}

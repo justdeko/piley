@@ -56,7 +56,7 @@ fun BackupInfo(
         IconButton(onClick = onClickBackup) {
             Icon(
                 Icons.Filled.Backup,
-                tint = MaterialTheme.colorScheme.secondary,
+                tint = MaterialTheme.colorScheme.primary,
                 contentDescription = "create a new backup"
             )
         }

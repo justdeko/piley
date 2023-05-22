@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -142,7 +143,6 @@ private fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 pileNameTaskList = viewState.upcomingTaskList
             )
-            // TODO bottom bar with GitHub feedback, app version etc.
             Text(
                 text = "Backup",
                 color = MaterialTheme.colorScheme.secondary,
@@ -151,6 +151,9 @@ private fun ProfileScreen(
                 textAlign = TextAlign.Start
             )
             BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
+            Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
+                AppInfo()
+            }
         }
     }
 }

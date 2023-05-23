@@ -2,6 +2,7 @@ package com.dk.piley.ui.pile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.backup.BackupManager
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
@@ -24,6 +25,7 @@ class PileViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
+    private val backupManager: BackupManager,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PileViewState())
 
@@ -32,6 +34,8 @@ class PileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // perform a recurring backup if necessary
+            backupManager.performBackupIfNecessary()
             // get piles and start updating state
             userRepository.getSignedInUserNotNull().flatMapLatest { user ->
                 pileRepository.getPileById(user.selectedPileId).map { pileWithTasks ->

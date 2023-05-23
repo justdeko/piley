@@ -55,6 +55,16 @@ class BackupManager @Inject constructor(
         }
     }
 
+    suspend fun performBackupIfNecessary() {
+        userRepository.getSignedInUserNotNull().firstOrNull()?.let {
+            val lastBackup = it.lastBackup
+            val latestBackupDate = LocalDateTime.now().minusDays(it.defaultBackupFrequency.toLong())
+            if (lastBackup != null && lastBackup.isBefore(latestBackupDate)) {
+                doBackup()
+            }
+        }
+    }
+
     suspend fun doBackup(): Boolean {
         // attempt to push
         when (pushBackupToRemoteForUserFlow().last()) {
@@ -78,7 +88,8 @@ class BackupManager @Inject constructor(
             val localLastModified = Instant.ofEpochMilli(dbFile.lastModified())
             // if local file was modified more recently than remote file
             // then emit success but with false representing no update of local backup
-            if (fileResponse.lastModified < localLastModified) {
+            if (fileResponse.lastModified.isBefore(localLastModified)) {
+                Timber.i("Remote backup file is outdated, no overwrite needed")
                 emit(Resource.Success(false))
                 return@flow
             }
@@ -91,6 +102,7 @@ class BackupManager @Inject constructor(
             }
             // attempt to copy new file
             try {
+                Timber.i("Overwriting backup file")
                 val inputStream = FileInputStream(fileResponse.file)
                 val outputStream = FileOutputStream(dbPath)
                 inputStream.use { input ->

@@ -109,13 +109,13 @@ private fun SettingsScreen(
                 onValueChange = onReminderDelayChange
             )
         }
-        SettingsSection(title = "Backups", icon = Icons.Filled.Backup) {
+        SettingsSection(title = "Backup", icon = Icons.Filled.Backup) {
             SliderSettingsItem(
                 title = "Backup Frequency",
-                description = "Set the frequency of backups in seconds.",
+                description = "Set the frequency of backups in days.",
                 value = viewState.user.defaultBackupFrequency,
-                range = Pair(10, 1000),
-                steps = 10,
+                range = Pair(1, 14),
+                steps = 14,
                 onValueChange = onBackupFrequencyChange
             )
         }

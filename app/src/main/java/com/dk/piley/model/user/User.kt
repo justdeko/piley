@@ -17,6 +17,6 @@ data class User(
     val dynamicColorOn: Boolean = true,
     val pileMode: PileMode = PileMode.FREE,
     val defaultReminderDelay: Int = 15,
-    val defaultBackupFrequency: Int = 60,
+    val defaultBackupFrequency: Int = 2,
     val autoHideKeyboard: Boolean = true,
 )

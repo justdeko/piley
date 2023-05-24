@@ -12,14 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.navigateClearBackstack
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDateTime
@@ -79,16 +78,12 @@ private fun ProfileScreen(
     onSignOut: () -> Unit = {}
 ) {
     if (viewState.signedOutState == SignOutState.SIGNED_OUT_ERROR) {
-        AlertDialog(
-            onDismissRequest = { setSignOutState(SignOutState.SIGNED_IN) },
-            title = { Text(text = "Error when uploading backup") },
-            text = { Text(text = "An error when uploading the backup. Do you still want to sign out? Recent changes might be lost.") },
-            confirmButton = {
-                TextButton(onClick = { setSignOutState(SignOutState.SIGNED_OUT) }) { Text("Sign out") }
-            },
-            dismissButton = {
-                TextButton(onClick = { setSignOutState(SignOutState.SIGNED_IN) }) { Text("Cancel") }
-            }
+        AlertDialogHelper(
+            title = "Error when uploading backup",
+            description = "An error when uploading the backup. Do you still want to sign out? Recent changes might be lost.",
+            confirmText = "Sign out",
+            onConfirm = { setSignOutState(SignOutState.SIGNED_OUT) },
+            onDismiss = { setSignOutState(SignOutState.SIGNED_IN) }
         )
     }
     Box(modifier = modifier.fillMaxSize()) {

@@ -27,6 +27,9 @@ class TaskRepository @Inject constructor(
         return taskDao.deleteTask(task)
     }
 
+    suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long): Void =
+        taskDao.deleteCompletedDeletedForPile(pileId)
+
     private fun dismissAlarmAndNotification(taskId: Long) {
         reminderManager.cancelReminder(taskId)
         notificationManager.dismiss(taskId)

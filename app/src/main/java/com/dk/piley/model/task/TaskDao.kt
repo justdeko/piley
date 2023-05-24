@@ -16,4 +16,7 @@ interface TaskDao {
 
     @Delete
     suspend fun deleteTask(task: Task): Void
+
+    @Query("DELETE FROM Task WHERE pileId=:pileId AND status IN ('DONE', 'DELETED')")
+    suspend fun deleteCompletedDeletedForPile(pileId: Long): Void
 }

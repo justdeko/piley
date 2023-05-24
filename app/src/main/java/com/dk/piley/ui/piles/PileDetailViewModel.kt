@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.UserRepository
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PileDetailViewModel @Inject constructor(
     private val pileRepository: PileRepository,
+    private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -89,6 +91,12 @@ class PileDetailViewModel @Inject constructor(
     fun setPileLimit(limit: Int) {
         viewModelScope.launch {
             pileRepository.insertPile(state.value.pile.copy(pileLimit = limit))
+        }
+    }
+
+    fun clearStatistics() {
+        viewModelScope.launch {
+            taskRepository.deleteAllCompletedDeletedTasksForPile(state.value.pile.pileId)
         }
     }
 }

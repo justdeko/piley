@@ -3,10 +3,8 @@ package com.dk.piley.ui.piles
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,9 +15,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -37,6 +38,7 @@ import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.EditableTitleText
 import com.dk.piley.ui.profile.TaskStats
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.AlertDialogHelper
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDateTime
 
@@ -56,7 +58,8 @@ fun PileDetailScreen(
         onEditDescription = { viewModel.editDescription(it) },
         onSetPileMode = { viewModel.setPileMode(it) },
         onSetPileLimit = { viewModel.setPileLimit(it) },
-        onClose = { navController.popBackStack() }
+        onClose = { navController.popBackStack() },
+        onClearStatistics = { viewModel.clearStatistics() }
     )
 }
 
@@ -69,9 +72,20 @@ fun PileDetailScreen(
     onEditDescription: (String) -> Unit = {},
     onSetPileMode: (PileMode) -> Unit = {},
     onSetPileLimit: (Int) -> Unit = {},
+    onClearStatistics: () -> Unit = {},
     onClose: () -> Unit = {}
 ) {
     val today = LocalDateTime.now().toLocalDate()
+    val dialogOpen = remember { mutableStateOf(false) }
+    if (dialogOpen.value) {
+        AlertDialogHelper(
+            title = "Clear all pile statistics",
+            description = "This is will clear all statistics of this pile by deleting all completed and deleted tasks.\nDo you want to continue?",
+            confirmText = "Continue",
+            onConfirm = onClearStatistics.also { dialogOpen.value = false },
+            onDismiss = { dialogOpen.value = false }
+        )
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -116,18 +130,22 @@ fun PileDetailScreen(
                 onSetPileMode = onSetPileMode,
                 onSetPileLimit = onSetPileLimit
             )
-            Text(
-                text = "Statistics",
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 16.dp),
-                textAlign = TextAlign.Start
-            )
-            Spacer(
-                Modifier
-                    .fillMaxWidth()
-                    .height(16.dp)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Statistics",
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(start = 16.dp),
+                    textAlign = TextAlign.Start
+                )
+                TextButton(onClick = { dialogOpen.value = true }) {
+                    Text("Clear Statistics")
+                }
+            }
             TaskStats(
                 doneCount = viewState.doneCount,
                 deletedCount = viewState.deletedCount,

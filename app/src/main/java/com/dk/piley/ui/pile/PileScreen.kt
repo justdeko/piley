@@ -1,18 +1,17 @@
 package com.dk.piley.ui.pile
 
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -22,6 +21,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileScreen(
     modifier: Modifier = Modifier,
@@ -32,6 +32,7 @@ fun PileScreen(
     PileScreen(
         modifier = modifier,
         viewState = viewState,
+        titlePagerState = viewModel.titlePagerState,
         onDone = { viewModel.done(it) },
         onDelete = { viewModel.delete(it) },
         onAdd = { viewModel.add(it) },
@@ -39,10 +40,12 @@ fun PileScreen(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun PileScreen(
     modifier: Modifier = Modifier,
     viewState: PileViewState,
+    titlePagerState: PagerState = rememberPagerState(),
     onDone: (Task) -> Unit = {},
     onDelete: (Task) -> Unit = {},
     onAdd: (String) -> Unit = {},
@@ -59,13 +62,10 @@ private fun PileScreen(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom
     ) {
-        Text(
-            text = viewState.pile.name,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 16.dp),
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
+        PileTitlePager(
+            modifier = Modifier.fillMaxWidth(),
+            pileTitleList = viewState.pileIdTitleList.map { it.second },
+            pagerState = titlePagerState
         )
         TaskPile(
             modifier = Modifier
@@ -95,6 +95,7 @@ private fun PileScreen(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @PreviewMainScreen
 @Composable
 fun ProfileScreenPreview() {
@@ -102,7 +103,11 @@ fun ProfileScreenPreview() {
         Surface {
             val tasks = listOf(Task(id = 1, title = "Hi there"), Task(id = 2, title = "Sup"))
             val pile = Pile(name = "Daily")
-            val state = PileViewState(pile, tasks)
+            val state = PileViewState(
+                pile = pile,
+                tasks = tasks,
+                pileIdTitleList = listOf(Pair(1, "Pile1"), Pair(2, "Pile2"))
+            )
             PileScreen(viewState = state)
         }
     }

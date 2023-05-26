@@ -1,5 +1,8 @@
 package com.dk.piley.ui.pile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.backup.BackupManager
@@ -14,12 +17,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalFoundationApi::class)
 @HiltViewModel
 class PileViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
@@ -28,6 +32,10 @@ class PileViewModel @Inject constructor(
     private val backupManager: BackupManager,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PileViewState())
+
+    @OptIn(ExperimentalFoundationApi::class)
+    val titlePagerState: PagerState = PagerState()
+
 
     val state: StateFlow<PileViewState>
         get() = _state
@@ -38,15 +46,33 @@ class PileViewModel @Inject constructor(
             backupManager.performBackupIfNecessary()
             // get piles and start updating state
             userRepository.getSignedInUserNotNull().flatMapLatest { user ->
-                pileRepository.getPileById(user.selectedPileId).map { pileWithTasks ->
-                    PileViewState(
-                        pileWithTasks.pile,
-                        pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
-                        user.autoHideKeyboard
-                    )
+                pileRepository.getPilesWithTasks().map { pilesWithTasks ->
+                    pilesWithTasks
+                        .find { it.pile.pileId == user.selectedPileId }
+                        ?.let { pileWithTasks ->
+                            PileViewState(
+                                pile = pileWithTasks.pile,
+                                tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
+                                autoHideEnabled = user.autoHideKeyboard,
+                                pileIdTitleList = pilesWithTasks.map {
+                                    Pair(
+                                        it.pile.pileId,
+                                        it.pile.name
+                                    )
+                                }
+                            )
+                        }
                 }
-            }.collect {
-                _state.value = it
+            }.collect { viewState ->
+                if (viewState != null) {
+                    _state.value = viewState
+                }
+            }
+            // listen to changes in pager state
+            snapshotFlow { titlePagerState.currentPage }.collect { page ->
+                val user = userRepository.getSignedInUserNotNull().last()
+                // TODO use current selected pile instead
+                userRepository.insertUser(user.copy(selectedPileId = state.value.pileIdTitleList[page].first))
             }
         }
     }
@@ -81,4 +107,5 @@ data class PileViewState(
     val pile: Pile = Pile(),
     val tasks: List<Task> = emptyList(),
     val autoHideEnabled: Boolean = true,
+    val pileIdTitleList: List<Pair<Long, String>> = emptyList()
 )

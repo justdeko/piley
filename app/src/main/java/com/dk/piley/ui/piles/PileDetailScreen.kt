@@ -82,7 +82,10 @@ fun PileDetailScreen(
             title = "Clear all pile statistics",
             description = "This is will clear all statistics of this pile by deleting all completed and deleted tasks.\nDo you want to continue?",
             confirmText = "Continue",
-            onConfirm = onClearStatistics.also { dialogOpen.value = false },
+            onConfirm = {
+                onClearStatistics()
+                dialogOpen.value = false
+            },
             onDismiss = { dialogOpen.value = false }
         )
     }

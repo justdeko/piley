@@ -1,13 +1,17 @@
 package com.dk.piley.ui.pile
 
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -21,7 +25,6 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileScreen(
     modifier: Modifier = Modifier,
@@ -32,20 +35,19 @@ fun PileScreen(
     PileScreen(
         modifier = modifier,
         viewState = viewState,
-        titlePagerState = viewModel.titlePagerState,
         onDone = { viewModel.done(it) },
         onDelete = { viewModel.delete(it) },
         onAdd = { viewModel.add(it) },
-        onClick = { navController.navigate(taskScreen.root + "/" + it.id) }
+        onClick = { navController.navigate(taskScreen.root + "/" + it.id) },
+        onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun PileScreen(
     modifier: Modifier = Modifier,
     viewState: PileViewState,
-    titlePagerState: PagerState = rememberPagerState(),
+    onTitlePageChanged: (Int) -> Unit = {},
     onDone: (Task) -> Unit = {},
     onDelete: (Task) -> Unit = {},
     onAdd: (String) -> Unit = {},
@@ -65,7 +67,7 @@ private fun PileScreen(
         PileTitlePager(
             modifier = Modifier.fillMaxWidth(),
             pileTitleList = viewState.pileIdTitleList.map { it.second },
-            pagerState = titlePagerState
+            onPageChanged = onTitlePageChanged
         )
         TaskPile(
             modifier = Modifier
@@ -95,7 +97,6 @@ private fun PileScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @PreviewMainScreen
 @Composable
 fun ProfileScreenPreview() {

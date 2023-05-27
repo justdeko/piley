@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -19,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.dk.piley.ui.theme.PileyTheme
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -26,8 +28,16 @@ import kotlin.math.absoluteValue
 fun PileTitlePager(
     modifier: Modifier = Modifier,
     pileTitleList: List<String>,
-    pagerState: PagerState
+    onPageChanged: (Int) -> Unit = {},
 ) {
+    val pagerState = rememberPagerState()
+    LaunchedEffect(pagerState) {
+        snapshotFlow {
+            pagerState.currentPage
+        }.distinctUntilChanged().collect { page ->
+            onPageChanged(page)
+        }
+    }
     Box(modifier = modifier) {
         // TODO make infinite
         HorizontalPager(pageCount = pileTitleList.size, state = pagerState) { page ->
@@ -61,7 +71,6 @@ fun PileTitlePager(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview(showBackground = false)
 @Composable
 fun PileTitlePagerPreview() {
@@ -69,7 +78,6 @@ fun PileTitlePagerPreview() {
         PileTitlePager(
             modifier = Modifier.fillMaxWidth(),
             pileTitleList = listOf("Pile1", "Pile2", "Pile3", "Pile4"),
-            pagerState = rememberPagerState()
         )
     }
 }

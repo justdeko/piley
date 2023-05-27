@@ -1,8 +1,5 @@
 package com.dk.piley.ui.pile
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.backup.BackupManager
@@ -17,13 +14,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PileViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
@@ -33,9 +30,7 @@ class PileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(PileViewState())
 
-    @OptIn(ExperimentalFoundationApi::class)
-    val titlePagerState: PagerState = PagerState()
-
+    private val selectedPileStateFlow: MutableStateFlow<Int?> = MutableStateFlow(null)
 
     val state: StateFlow<PileViewState>
         get() = _state
@@ -46,33 +41,33 @@ class PileViewModel @Inject constructor(
             backupManager.performBackupIfNecessary()
             // get piles and start updating state
             userRepository.getSignedInUserNotNull().flatMapLatest { user ->
-                pileRepository.getPilesWithTasks().map { pilesWithTasks ->
-                    pilesWithTasks
-                        .find { it.pile.pileId == user.selectedPileId }
-                        ?.let { pileWithTasks ->
-                            PileViewState(
-                                pile = pileWithTasks.pile,
-                                tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
-                                autoHideEnabled = user.autoHideKeyboard,
-                                pileIdTitleList = pilesWithTasks.map {
-                                    Pair(
-                                        it.pile.pileId,
-                                        it.pile.name
-                                    )
-                                }
-                            )
-                        }
+                pileRepository.getPilesWithTasks().flatMapLatest { pilesWithTasks ->
+                    selectedPileStateFlow.map { page ->
+                        val newPileId =
+                            page?.let { state.value.pileIdTitleList.getOrNull(page)?.first }
+                        val selectedPileId = newPileId
+                            ?: user.selectedPileId // TODO fix this so app starts at favorite pile
+                        pilesWithTasks
+                            .find { it.pile.pileId == selectedPileId }
+                            ?.let { pileWithTasks ->
+                                PileViewState(
+                                    pile = pileWithTasks.pile,
+                                    tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
+                                    autoHideEnabled = user.autoHideKeyboard,
+                                    pileIdTitleList = pilesWithTasks.map {
+                                        Pair(
+                                            it.pile.pileId,
+                                            it.pile.name
+                                        )
+                                    }
+                                )
+                            }
+                    }
                 }
             }.collect { viewState ->
                 if (viewState != null) {
                     _state.value = viewState
                 }
-            }
-            // listen to changes in pager state
-            snapshotFlow { titlePagerState.currentPage }.collect { page ->
-                val user = userRepository.getSignedInUserNotNull().last()
-                // TODO use current selected pile instead
-                userRepository.insertUser(user.copy(selectedPileId = state.value.pileIdTitleList[page].first))
             }
         }
     }
@@ -100,6 +95,10 @@ class PileViewModel @Inject constructor(
         viewModelScope.launch {
             taskRepository.insertTask(task.copy(status = TaskStatus.DELETED))
         }
+    }
+
+    fun onPileChanged(page: Int) {
+        selectedPileStateFlow.update { page }
     }
 }
 

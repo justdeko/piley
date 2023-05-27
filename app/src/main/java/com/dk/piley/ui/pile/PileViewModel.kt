@@ -29,9 +29,12 @@ class PileViewModel @Inject constructor(
     private val backupManager: BackupManager,
 ) : ViewModel() {
     private val _state = MutableStateFlow(PileViewState())
-
     val state: StateFlow<PileViewState>
         get() = _state
+
+    private val _selectedPileIndex = MutableStateFlow(-1)
+    val selectedPileIndex: StateFlow<Int>
+        get() = _selectedPileIndex
 
     init {
         viewModelScope.launch {
@@ -39,28 +42,34 @@ class PileViewModel @Inject constructor(
             backupManager.performBackupIfNecessary()
             // get piles and start updating state
             userRepository.getSignedInUserNotNull().flatMapLatest { user ->
-                pileRepository.getPilesWithTasks().map { pilesWithTasks ->
-                    val idTitleList = pilesWithTasks.map {
-                        Pair(
-                            it.pile.pileId,
-                            it.pile.name
-                        )
-                    }
-                    // set index if needed
-                    val selectedPileId =
-                        idTitleList.getOrNull(state.value.selectedPileIndex) ?: user.selectedPileId
-                    // start mapping pile to view state
-                    pilesWithTasks
-                        .find { it.pile.pileId == selectedPileId }
-                        ?.let { pileWithTasks ->
-                            PileViewState(
-                                pile = pileWithTasks.pile,
-                                tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
-                                autoHideEnabled = user.autoHideKeyboard,
-                                pileIdTitleList = idTitleList,
-                                selectedPileIndex = state.value.selectedPileIndex
+                pileRepository.getPilesWithTasks().flatMapLatest { pilesWithTasks ->
+                    selectedPileIndex.map { index ->
+                        val idTitleList = pilesWithTasks.map {
+                            Pair(
+                                it.pile.pileId,
+                                it.pile.name
                             )
                         }
+                        val selectedPileIndex =
+                            idTitleList.indexOfFirst { it.first == user.selectedPileId }
+                        if (selectedPileIndex != -1) {
+                            onPileChanged(selectedPileIndex)
+                        }
+                        // set index if needed
+                        val selectedPileId =
+                            idTitleList.getOrNull(index) ?: user.selectedPileId
+                        // start mapping pile to view state
+                        pilesWithTasks
+                            .find { it.pile.pileId == selectedPileId }
+                            ?.let { pileWithTasks ->
+                                PileViewState(
+                                    pile = pileWithTasks.pile,
+                                    tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
+                                    autoHideEnabled = user.autoHideKeyboard,
+                                    pileIdTitleList = idTitleList,
+                                )
+                            }
+                    }
                 }
             }.collect { viewState ->
                 if (viewState != null) {
@@ -96,7 +105,7 @@ class PileViewModel @Inject constructor(
     }
 
     fun onPileChanged(index: Int) {
-        _state.update { it.copy(selectedPileIndex = index) }
+        _selectedPileIndex.update { index }
     }
 }
 
@@ -105,5 +114,4 @@ data class PileViewState(
     val tasks: List<Task> = emptyList(),
     val autoHideEnabled: Boolean = true,
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),
-    val selectedPileIndex: Int = -1
 )

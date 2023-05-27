@@ -32,9 +32,11 @@ fun PileScreen(
     viewModel: PileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
+    val selectedPileViewState by viewModel.selectedPileIndex.collectAsState()
     PileScreen(
         modifier = modifier,
         viewState = viewState,
+        selectedPileIndex = selectedPileViewState,
         onDone = { viewModel.done(it) },
         onDelete = { viewModel.delete(it) },
         onAdd = { viewModel.add(it) },
@@ -47,6 +49,7 @@ fun PileScreen(
 private fun PileScreen(
     modifier: Modifier = Modifier,
     viewState: PileViewState,
+    selectedPileIndex: Int = 0,
     onTitlePageChanged: (Int) -> Unit = {},
     onDone: (Task) -> Unit = {},
     onDelete: (Task) -> Unit = {},
@@ -68,7 +71,7 @@ private fun PileScreen(
             modifier = Modifier.fillMaxWidth(),
             pileTitleList = viewState.pileIdTitleList.map { it.second },
             onPageChanged = onTitlePageChanged,
-            selectedPageIndex = viewState.selectedPileIndex
+            selectedPageIndex = selectedPileIndex
         )
         TaskPile(
             modifier = Modifier

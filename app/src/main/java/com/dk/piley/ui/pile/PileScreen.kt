@@ -67,14 +67,15 @@ private fun PileScreen(
         PileTitlePager(
             modifier = Modifier.fillMaxWidth(),
             pileTitleList = viewState.pileIdTitleList.map { it.second },
-            onPageChanged = onTitlePageChanged
+            onPageChanged = onTitlePageChanged,
+            selectedPageIndex = viewState.selectedPileIndex
         )
         TaskPile(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            viewState.tasks,
-            viewState.pile.pileMode,
+            tasks = viewState.tasks,
+            pileMode = viewState.pile.pileMode,
             onDone = onDone,
             onDelete = onDelete,
             onTaskClick = onClick

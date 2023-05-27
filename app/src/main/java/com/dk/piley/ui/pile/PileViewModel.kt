@@ -45,8 +45,16 @@ class PileViewModel @Inject constructor(
                     selectedPileStateFlow.map { page ->
                         val newPileId =
                             page?.let { state.value.pileIdTitleList.getOrNull(page)?.first }
-                        val selectedPileId = newPileId
-                            ?: user.selectedPileId // TODO fix this so app starts at favorite pile
+                        val selectedPileId = newPileId ?: user.selectedPileId
+                        val idTitleList = pilesWithTasks.map {
+                            Pair(
+                                it.pile.pileId,
+                                it.pile.name
+                            )
+                        }
+                        // set index if needed
+                        updateSelectedPileIndex(selectedPileId, idTitleList)
+                        // start mapping pile to view state
                         pilesWithTasks
                             .find { it.pile.pileId == selectedPileId }
                             ?.let { pileWithTasks ->
@@ -54,12 +62,7 @@ class PileViewModel @Inject constructor(
                                     pile = pileWithTasks.pile,
                                     tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
                                     autoHideEnabled = user.autoHideKeyboard,
-                                    pileIdTitleList = pilesWithTasks.map {
-                                        Pair(
-                                            it.pile.pileId,
-                                            it.pile.name
-                                        )
-                                    }
+                                    pileIdTitleList = idTitleList
                                 )
                             }
                     }
@@ -82,6 +85,16 @@ class PileViewModel @Inject constructor(
                     modifiedAt = LocalDateTime.now()
                 )
             )
+        }
+    }
+
+    private fun updateSelectedPileIndex(
+        selectedPileId: Long,
+        idTitleList: List<Pair<Long, String>>
+    ) {
+        val pileIndex = idTitleList.indexOfFirst { it.first == selectedPileId }
+        if (pileIndex != -1) {
+            selectedPileStateFlow.update { pileIndex }
         }
     }
 

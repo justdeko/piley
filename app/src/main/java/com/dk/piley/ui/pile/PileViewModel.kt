@@ -36,6 +36,8 @@ class PileViewModel @Inject constructor(
     val selectedPileIndex: StateFlow<Int>
         get() = _selectedPileIndex
 
+    private var differsFromSelected = false
+
     init {
         viewModelScope.launch {
             // perform a recurring backup if necessary
@@ -50,14 +52,16 @@ class PileViewModel @Inject constructor(
                                 it.pile.name
                             )
                         }
-                        val selectedPileIndex =
-                            idTitleList.indexOfFirst { it.first == user.selectedPileId }
-                        if (selectedPileIndex != -1) {
-                            onPileChanged(selectedPileIndex)
+                        if (!differsFromSelected) {
+                            val selectedPileIndex =
+                                idTitleList.indexOfFirst { it.first == user.selectedPileId }
+                            if (selectedPileIndex != -1) {
+                                onPileChanged(selectedPileIndex, false)
+                            }
                         }
                         // set index if needed
                         val selectedPileId =
-                            idTitleList.getOrNull(index) ?: user.selectedPileId
+                            idTitleList.getOrNull(index)?.first ?: user.selectedPileId
                         // start mapping pile to view state
                         pilesWithTasks
                             .find { it.pile.pileId == selectedPileId }
@@ -104,7 +108,8 @@ class PileViewModel @Inject constructor(
         }
     }
 
-    fun onPileChanged(index: Int) {
+    fun onPileChanged(index: Int, setDiffersFromSelected: Boolean = true) {
+        differsFromSelected = setDiffersFromSelected
         _selectedPileIndex.update { index }
     }
 }

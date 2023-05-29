@@ -1,7 +1,9 @@
 package com.dk.piley.model.user
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.common.resourceSuccessfulFlow
 import com.dk.piley.model.remote.user.UserApi
@@ -9,11 +11,9 @@ import com.dk.piley.model.remote.user.UserRequest
 import com.dk.piley.model.remote.user.UserResponse
 import com.dk.piley.model.remote.user.UserUpdateRequest
 import com.dk.piley.util.credentials
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,17 +28,18 @@ class UserRepository @Inject constructor(
 
     fun getUsers(): Flow<List<User>> = userDao.getUsers()
 
-    // TODO: make these non-flows because we don't need them as flows
-    private fun getUserByEmail(email: String): Flow<User?> = userDao.getUserByEmail(email)
+    private fun getUserByEmailFlow(email: String): Flow<User?> = userDao.getUserByEmailFlow(email)
+
+    private suspend fun getUserByEmail(email: String): User? = userDao.getUserByEmail(email)
 
     suspend fun getUserPassword(email: String): String =
-        getUserByEmail(email).firstOrNull()?.password ?: ""
+        getUserByEmail(email)?.password ?: ""
 
     suspend fun getSignedInUserEmail(): String =
         getUserPrefsEmail().firstOrNull() ?: ""
 
     suspend fun localCredentials(email: String): String {
-        val user = getUserByEmail(email).firstOrNull()
+        val user = getUserByEmail(email)
         Timber.d("generating credentials using user: $user")
         return credentials(user?.email, user?.password)
     }
@@ -50,9 +51,8 @@ class UserRepository @Inject constructor(
     private fun getUserPrefsEmail(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[signedInUser] ?: "" }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun getSignedInUser(): Flow<User?> =
-        getUserPrefsEmail().flatMapLatest { email ->
+        getUserPrefsEmail().map { email ->
             getUserByEmail(email)
         }
 

@@ -12,7 +12,9 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -103,8 +105,8 @@ fun PileTask(
 
 @Composable
 fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
-    androidx.compose.material3.Card(modifier = modifier.padding(horizontal = 8.dp)) {
-        androidx.compose.material3.Text(
+    Card(modifier = modifier.padding(horizontal = 8.dp)) {
+        Text(
             text = taskText,
             modifier = modifier
                 .padding(all = 16.dp)

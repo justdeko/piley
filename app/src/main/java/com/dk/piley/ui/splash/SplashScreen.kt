@@ -22,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -55,7 +56,10 @@ fun SplashScreen(
         viewState,
         onAnimFinished = {
             Timber.d("anim finished")
-            val destination = if (viewModel.isSignedIn()) Screen.Pile.route else Screen.SignIn.route
+            val destination =
+                if (viewModel.state.value.initState == InitState.NOT_SIGNED_IN) {
+                    Screen.SignIn.route
+                } else Screen.Pile.route
             navController.navigateClearBackstack(destination)
         }
     )
@@ -71,15 +75,14 @@ fun SplashScreen(
     val scaleFactor = remember { Animatable(1.5f) }
     val alphaFactor = remember { Animatable(1f) }
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(key1 = true) {
-        runAnimation(
-            coroutineScope = coroutineScope,
-            scaleFactor = scaleFactor,
-            alpha = alphaFactor,
-            loading = viewState.loadingBackup,
-            onFinished = onAnimFinished
-        )
-    }
+
+    SplashAnimationLaunchedEffect(
+        coroutineScope = coroutineScope,
+        scaleFactor = scaleFactor,
+        alpha = alphaFactor,
+        viewState = viewState,
+        onFinished = onAnimFinished
+    )
 
     Column(
         modifier = modifier
@@ -109,34 +112,42 @@ fun SplashScreen(
     }
 }
 
-private fun runAnimation(
+@Composable
+private fun SplashAnimationLaunchedEffect(
     coroutineScope: CoroutineScope,
     scaleFactor: Animatable<Float, AnimationVector1D>,
     alpha: Animatable<Float, AnimationVector1D>,
-    loading: Boolean,
+    viewState: SplashViewState,
     onFinished: () -> Unit = {}
 ) {
-    coroutineScope.launch {
-        do {
-            Timber.d("loading animation triggered")
-            scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 300))
-            scaleFactor.animateTo(1.5f, tween(easing = FastOutSlowInEasing, durationMillis = 400))
-        } while (loading)
-        awaitAll(
-            async {
+    val splashViewState by rememberUpdatedState(viewState)
+    val onAnimFinishedState by rememberUpdatedState(onFinished)
+    LaunchedEffect(key1 = true) {
+        coroutineScope.launch {
+            do {
+                Timber.d("loading animation triggered, init state: $splashViewState")
+                scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 300))
                 scaleFactor.animateTo(
-                    160f,
-                    tween(easing = FastOutSlowInEasing, durationMillis = 600)
+                    1.5f,
+                    tween(easing = FastOutSlowInEasing, durationMillis = 400)
                 )
-            },
-            async {
-                alpha.animateTo(
-                    0f,
-                    tween(easing = LinearOutSlowInEasing, durationMillis = 400)
-                )
-                onFinished()
-            }
-        )
+            } while (splashViewState.initState == InitState.LOADING_BACKUP || splashViewState.initState == InitState.INIT)
+            awaitAll(
+                async {
+                    scaleFactor.animateTo(
+                        160f,
+                        tween(easing = FastOutSlowInEasing, durationMillis = 600)
+                    )
+                },
+                async {
+                    alpha.animateTo(
+                        0f,
+                        tween(easing = LinearOutSlowInEasing, durationMillis = 400)
+                    )
+                    onAnimFinishedState()
+                }
+            )
+        }
     }
 }
 

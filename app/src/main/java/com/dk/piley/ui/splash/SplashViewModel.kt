@@ -31,16 +31,18 @@ class SplashViewModel @Inject constructor(
             if (userEmail.isNotBlank()) {
                 combine(loadingBackupFlow()) { (loadingBackup) ->
                     if (loadingBackup) {
-                        SplashViewState(signedIn = false, loadingBackup = true)
+                        Timber.d("loading backup..")
+                        SplashViewState(InitState.LOADING_BACKUP)
                     } else {
-                        SplashViewState(signedIn = true, loadingBackup = false)
+                        Timber.d("backup loading attempt finished...")
+                        SplashViewState(InitState.BACKUP_LOADED_SIGNED_IN)
                     }
                 }.collect { _state.value = it }
+            } else {
+                _state.value = SplashViewState(InitState.NOT_SIGNED_IN)
             }
         }
     }
-
-    fun isSignedIn() = state.value.signedIn
 
     private suspend fun loadingBackupFlow(): Flow<Boolean> = flow {
         backupManager.syncBackupToLocalForUserFlow().collect {
@@ -65,6 +67,12 @@ class SplashViewModel @Inject constructor(
 }
 
 data class SplashViewState(
-    val signedIn: Boolean = false,
-    val loadingBackup: Boolean = false,
+    val initState: InitState = InitState.INIT
 )
+
+enum class InitState {
+    INIT,
+    NOT_SIGNED_IN,
+    LOADING_BACKUP,
+    BACKUP_LOADED_SIGNED_IN,
+}

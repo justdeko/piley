@@ -1,7 +1,11 @@
 package com.dk.piley.ui.pile
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,10 +15,12 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +35,13 @@ fun PileTask(
     task: Task,
     onClick: (task: Task) -> Unit = {}
 ) {
+    val transitionState = remember {
+        MutableTransitionState(false).apply {
+            targetState = true
+        }
+    }
+    val density = LocalDensity.current
+
     SwipeToDismiss(
         state = dismissState,
         modifier = modifier.clickable { onClick(task) },
@@ -70,12 +83,20 @@ fun PileTask(
             }
         },
         dismissContent = {
-            PileEntry(
-                modifier = Modifier
-                    .defaultMinSize(minHeight = 20.dp)
-                    .fillMaxWidth(),
-                taskText = task.title
-            )
+            AnimatedVisibility(
+                visibleState = transitionState,
+                enter = slideInVertically {
+                    // 40dp slide in from top
+                    with(density) { -40.dp.roundToPx() }
+                } + fadeIn(initialAlpha = 0.3f)
+            ) {
+                PileEntry(
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 20.dp)
+                        .fillMaxWidth(),
+                    taskText = task.title
+                )
+            }
         }
     )
 }

@@ -61,6 +61,10 @@ fun PileCard(
             targetState = true
         }
     }
+    if (!transitionState.targetState && !transitionState.currentState) {
+        onDeletePile()
+        return
+    }
     val density = LocalDensity.current
 
     Box {
@@ -85,7 +89,7 @@ fun PileCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         if (canDelete) {
-                            IconButton(onClick = onDeletePile) {
+                            IconButton(onClick = { transitionState.targetState = false }) {
                                 Icon(
                                     Icons.Filled.Delete,
                                     tint = Color.Red,

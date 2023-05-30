@@ -2,6 +2,7 @@ package com.dk.piley.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
@@ -11,6 +12,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -75,8 +78,44 @@ class SettingsViewModel @Inject constructor(
             userRepository.insertUser(state.value.user.copy(defaultBackupFrequency = frequency))
         }
     }
+
+    fun deleteUser(password: String) {
+        viewModelScope.launch {
+            val existingUser = userRepository.getSignedInUserNotNull().firstOrNull()
+            if (existingUser != null && existingUser.password == password) {
+                userRepository.deleteUserFlow(existingUser.email, password)
+            }
+        }
+    }
+
+    fun updateUser(
+        newEmail: String,
+        oldPassword: String,
+        newPassword: String,
+        name: String
+    ) {
+        viewModelScope.launch {
+            val existingUser = userRepository.getSignedInUserNotNull().firstOrNull()
+            if (existingUser != null && oldPassword == existingUser.password) {
+                userRepository.updateUserFlow(existingUser, newEmail, newPassword, name)
+                    .collect { resource ->
+                        when (resource) {
+                            is Resource.Loading -> _state.update { it.copy(loading = false) }
+                            is Resource.Failure -> {
+                                _state.update { it.copy(loading = false) }
+                            }
+
+                            is Resource.Success -> {
+                                _state.update { it.copy(loading = false) }
+                            }
+                        }
+                    }
+            }
+        }
+    }
 }
 
 data class SettingsViewState(
     val user: User = User(),
+    val loading: Boolean = false
 )

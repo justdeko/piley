@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -76,17 +77,17 @@ fun PileDetailScreen(
     onClose: () -> Unit = {}
 ) {
     val today = LocalDateTime.now().toLocalDate()
-    val dialogOpen = remember { mutableStateOf(false) }
-    if (dialogOpen.value) {
+    var dialogOpen by remember { mutableStateOf(false) }
+    if (dialogOpen) {
         AlertDialogHelper(
             title = "Clear all pile statistics",
             description = "This is will clear all statistics of this pile by deleting all completed and deleted tasks.\nDo you want to continue?",
             confirmText = "Continue",
             onConfirm = {
                 onClearStatistics()
-                dialogOpen.value = false
+                dialogOpen = false
             },
-            onDismiss = { dialogOpen.value = false }
+            onDismiss = { dialogOpen = false }
         )
     }
     Column(
@@ -145,7 +146,7 @@ fun PileDetailScreen(
                     modifier = Modifier.padding(start = 16.dp),
                     textAlign = TextAlign.Start
                 )
-                TextButton(onClick = { dialogOpen.value = true }) {
+                TextButton(onClick = { dialogOpen = true }) {
                     Text("Clear Statistics")
                 }
             }

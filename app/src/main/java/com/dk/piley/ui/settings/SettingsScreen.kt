@@ -16,6 +16,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -79,8 +80,10 @@ private fun SettingsScreen(
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
 
-    if (viewState.errorMessage != null) {
-        Toast.makeText(context, viewState.errorMessage, Toast.LENGTH_LONG).show()
+    if (viewState.message != null) {
+        LaunchedEffect(key1 = viewState.message) {
+            Toast.makeText(context, viewState.message, Toast.LENGTH_LONG).show()
+        }
     }
 
     if (editUserDialogOpen) {
@@ -90,7 +93,10 @@ private fun SettingsScreen(
             EditUserContent(
                 existingEmail = viewState.user.email,
                 existingName = viewState.user.name,
-                onConfirm = { result -> onEditUser(result) },
+                onConfirm = { result ->
+                    editUserDialogOpen = false
+                    onEditUser(result)
+                },
                 onCancel = { editUserDialogOpen = false }
             )
         }

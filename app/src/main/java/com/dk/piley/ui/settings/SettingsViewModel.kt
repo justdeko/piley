@@ -99,20 +99,39 @@ class SettingsViewModel @Inject constructor(
                     newName = result.name
                 ).collect { resource ->
                     when (resource) {
-                        is Resource.Loading -> _state.update { it.copy(loading = false) }
+                        is Resource.Loading -> _state.update { it.copy(loading = true) }
                         is Resource.Failure -> {
                             _state.update {
                                 it.copy(
                                     loading = false,
-                                    errorMessage = it.errorMessage
+                                    message = it.message
                                 )
                             }
                         }
 
                         is Resource.Success -> {
-                            _state.update { it.copy(loading = false) }
+                            userRepository.insertUser(
+                                existingUser.copy(
+                                    email = result.email,
+                                    name = result.name,
+                                    password = result.newPassword
+                                )
+                            )
+                            _state.update {
+                                it.copy(
+                                    loading = false,
+                                    message = "User updated successfully!"
+                                )
+                            }
                         }
                     }
+                }
+            } else {
+                _state.update {
+                    it.copy(
+                        loading = false,
+                        message = "Error updating user: Your password is incorrect"
+                    )
                 }
             }
         }
@@ -122,5 +141,5 @@ class SettingsViewModel @Inject constructor(
 data class SettingsViewState(
     val user: User = User(),
     val loading: Boolean = false,
-    val errorMessage: String? = ""
+    val message: String? = null
 )

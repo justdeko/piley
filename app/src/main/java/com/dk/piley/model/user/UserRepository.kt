@@ -68,9 +68,9 @@ class UserRepository @Inject constructor(
         newPassword: String? = null,
         newName: String? = null
     ): Flow<Resource<String>> = resourceSuccessfulFlow {
-        val email = newEmail ?: oldUser.email
-        val password = newPassword ?: oldUser.password
-        val name = newName ?: oldUser.name
+        val email = if (!newEmail.isNullOrBlank()) newEmail else oldUser.email
+        val password = if (!newPassword.isNullOrBlank()) newPassword else oldUser.password
+        val name = if (!newName.isNullOrBlank()) newName else oldUser.name
         val requestBody = UserUpdateRequest(
             oldEmail = oldUser.email,
             newEmail = email,

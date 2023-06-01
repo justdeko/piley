@@ -88,28 +88,32 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun updateUser(
-        newEmail: String,
-        oldPassword: String,
-        newPassword: String,
-        name: String
-    ) {
+    fun updateUser(result: EditUserResult) {
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserNotNull().firstOrNull()
-            if (existingUser != null && oldPassword == existingUser.password) {
-                userRepository.updateUserFlow(existingUser, newEmail, newPassword, name)
-                    .collect { resource ->
-                        when (resource) {
-                            is Resource.Loading -> _state.update { it.copy(loading = false) }
-                            is Resource.Failure -> {
-                                _state.update { it.copy(loading = false) }
-                            }
-
-                            is Resource.Success -> {
-                                _state.update { it.copy(loading = false) }
+            if (existingUser != null && result.oldPassword == existingUser.password) {
+                userRepository.updateUserFlow(
+                    oldUser = existingUser,
+                    newEmail = result.email,
+                    newPassword = result.newPassword,
+                    newName = result.name
+                ).collect { resource ->
+                    when (resource) {
+                        is Resource.Loading -> _state.update { it.copy(loading = false) }
+                        is Resource.Failure -> {
+                            _state.update {
+                                it.copy(
+                                    loading = false,
+                                    errorMessage = it.errorMessage
+                                )
                             }
                         }
+
+                        is Resource.Success -> {
+                            _state.update { it.copy(loading = false) }
+                        }
                     }
+                }
             }
         }
     }
@@ -117,5 +121,6 @@ class SettingsViewModel @Inject constructor(
 
 data class SettingsViewState(
     val user: User = User(),
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val errorMessage: String? = ""
 )

@@ -1,5 +1,7 @@
 package com.dk.piley.ui.settings
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +34,7 @@ import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.IndefiniteProgressBar
 
 @Composable
 fun SettingsScreen(
@@ -49,6 +53,7 @@ fun SettingsScreen(
         onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) },
         onReminderDelayChange = { viewModel.updateReminderDelay(it) },
         onBackupFrequencyChange = { viewModel.updateBackupFrequency(it) },
+        onEditUser = { result -> viewModel.updateUser(result) },
         onDeleteUser = { viewModel.deleteUser("") }
     )
 }
@@ -65,12 +70,18 @@ private fun SettingsScreen(
     onAutoHideKeyboardChange: (Boolean) -> Unit = {},
     onReminderDelayChange: (Int) -> Unit = {},
     onBackupFrequencyChange: (Int) -> Unit = {},
+    onEditUser: (EditUserResult) -> Unit = {},
     onDeleteUser: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
+
+    if (viewState.errorMessage != null) {
+        Toast.makeText(context, viewState.errorMessage, Toast.LENGTH_LONG).show()
+    }
 
     if (editUserDialogOpen) {
         AlertDialog(
@@ -78,88 +89,93 @@ private fun SettingsScreen(
         ) {
             EditUserContent(
                 existingEmail = viewState.user.email,
-                existingName = viewState.user.name
+                existingName = viewState.user.name,
+                onConfirm = { result -> onEditUser(result) },
+                onCancel = { editUserDialogOpen = false }
             )
         }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-    ) {
-        SettingsSection(title = "Appearance", icon = Icons.Filled.FormatPaint) {
-            DropdownSettingsItem(
-                title = "Night mode enabled",
-                description = "Set whether night mode is enabled.",
-                optionLabel = "Night Mode",
-                selectedValue = nightModeValues[viewState.user.nightMode.value],
-                values = nightModeValues,
-                onValueChange = {
-                    onNightModeChange(NightMode.fromValue(nightModeValues.indexOf(it)))
-                }
-            )
-            SwitchSettingsItem(
-                title = "Dynamic Color enabled",
-                description = "Set whether dynamic color is enabled.",
-                value = viewState.user.dynamicColorOn,
-                onValueChange = onDynamicColorChange
-            )
-        }
-        SettingsSection(title = "Piles", icon = Icons.Filled.ViewAgenda) {
-            DropdownSettingsItem(
-                title = "Default pile mode",
-                description = "Set the default task completion mode for piles.",
-                optionLabel = "Pile Mode",
-                selectedValue = pileModeValues[viewState.user.pileMode.value],
-                values = pileModeValues,
-                onValueChange = {
-                    onPileModeChange(PileMode.fromValue(pileModeValues.indexOf(it)))
-                }
-            )
-            SettingsItem(
-                title = "Reset all pile modes",
-                description = "Reset all pile modes to the default of \"Free\"",
-                onClick = onResetPileModes
-            )
-            SwitchSettingsItem(
-                title = "Automatically hide keyboard",
-                description = "Automatically hide the keyboard after creating a new task.",
-                value = viewState.user.autoHideKeyboard,
-                onValueChange = onAutoHideKeyboardChange
-            )
-        }
-        SettingsSection(title = "Notifications", icon = Icons.Filled.Notifications) {
-            SliderSettingsItem(
-                title = "Reminder Delay Duration",
-                description = "Set the duration for the \"Delay\" button in your task reminders.",
-                value = viewState.user.defaultReminderDelay,
-                range = Pair(15, 60),
-                steps = 2,
-                onValueChange = onReminderDelayChange
-            )
-        }
-        SettingsSection(title = "Backup", icon = Icons.Filled.Backup) {
-            SliderSettingsItem(
-                title = "Backup Frequency",
-                description = "Set the frequency of backups in days.",
-                value = viewState.user.defaultBackupFrequency,
-                range = Pair(1, 14),
-                steps = 14,
-                onValueChange = onBackupFrequencyChange
-            )
-        }
-        SettingsSection(title = "User", icon = Icons.Filled.Person) {
-            SettingsItem(
-                title = "Update User",
-                description = "Update the current user data",
-                onClick = { editUserDialogOpen = true }
-            )
-            SettingsItem(
-                title = "Delete User",
-                description = "Delete the current user permanently",
-                onClick = onDeleteUser
-            )
+    Box(Modifier.fillMaxSize()) {
+        IndefiniteProgressBar(visible = viewState.loading)
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ) {
+            SettingsSection(title = "Appearance", icon = Icons.Filled.FormatPaint) {
+                DropdownSettingsItem(
+                    title = "Night mode enabled",
+                    description = "Set whether night mode is enabled.",
+                    optionLabel = "Night Mode",
+                    selectedValue = nightModeValues[viewState.user.nightMode.value],
+                    values = nightModeValues,
+                    onValueChange = {
+                        onNightModeChange(NightMode.fromValue(nightModeValues.indexOf(it)))
+                    }
+                )
+                SwitchSettingsItem(
+                    title = "Dynamic Color enabled",
+                    description = "Set whether dynamic color is enabled.",
+                    value = viewState.user.dynamicColorOn,
+                    onValueChange = onDynamicColorChange
+                )
+            }
+            SettingsSection(title = "Piles", icon = Icons.Filled.ViewAgenda) {
+                DropdownSettingsItem(
+                    title = "Default pile mode",
+                    description = "Set the default task completion mode for piles.",
+                    optionLabel = "Pile Mode",
+                    selectedValue = pileModeValues[viewState.user.pileMode.value],
+                    values = pileModeValues,
+                    onValueChange = {
+                        onPileModeChange(PileMode.fromValue(pileModeValues.indexOf(it)))
+                    }
+                )
+                SettingsItem(
+                    title = "Reset all pile modes",
+                    description = "Reset all pile modes to the default of \"Free\"",
+                    onClick = onResetPileModes
+                )
+                SwitchSettingsItem(
+                    title = "Automatically hide keyboard",
+                    description = "Automatically hide the keyboard after creating a new task.",
+                    value = viewState.user.autoHideKeyboard,
+                    onValueChange = onAutoHideKeyboardChange
+                )
+            }
+            SettingsSection(title = "Notifications", icon = Icons.Filled.Notifications) {
+                SliderSettingsItem(
+                    title = "Reminder Delay Duration",
+                    description = "Set the duration for the \"Delay\" button in your task reminders.",
+                    value = viewState.user.defaultReminderDelay,
+                    range = Pair(15, 60),
+                    steps = 2,
+                    onValueChange = onReminderDelayChange
+                )
+            }
+            SettingsSection(title = "Backup", icon = Icons.Filled.Backup) {
+                SliderSettingsItem(
+                    title = "Backup Frequency",
+                    description = "Set the frequency of backups in days.",
+                    value = viewState.user.defaultBackupFrequency,
+                    range = Pair(1, 14),
+                    steps = 14,
+                    onValueChange = onBackupFrequencyChange
+                )
+            }
+            SettingsSection(title = "User", icon = Icons.Filled.Person) {
+                SettingsItem(
+                    title = "Update User",
+                    description = "Update the current user data",
+                    onClick = { editUserDialogOpen = true }
+                )
+                SettingsItem(
+                    title = "Delete User",
+                    description = "Delete the current user permanently",
+                    onClick = onDeleteUser
+                )
+            }
         }
     }
 }

@@ -10,6 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -64,6 +65,7 @@ fun PileDetailScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PileDetailScreen(
     modifier: Modifier = Modifier,
@@ -97,35 +99,22 @@ fun PileDetailScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            CenterAlignedTopAppBar(title = {
+                EditableTitleText(
+                    viewState.titleTextValue, viewState.canDeleteOrEdit, onEditTitle
+                )
+            }, navigationIcon = {
                 IconButton(onClick = onClose) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
-                        "close the task detail",
+                        "close the pile detail",
                         modifier = Modifier.scale(
                             1.5F
                         ),
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                EditableTitleText(
-                    viewState.titleTextValue, viewState.canDeleteOrEdit, onEditTitle
-                )
-                IconButton(onClick = { }, enabled = false) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        "close the task detail",
-                        modifier = Modifier.scale(
-                            1.5F
-                        ),
-                        tint = Color.Transparent
-                    )
-                }
-            }
+            })
             EditDescriptionField(value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
             )

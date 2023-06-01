@@ -88,6 +88,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun resetToastMessage() {
+        _state.update { it.copy(message = null) }
+    }
+
     fun updateUser(result: EditUserResult) {
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserNotNull().firstOrNull()

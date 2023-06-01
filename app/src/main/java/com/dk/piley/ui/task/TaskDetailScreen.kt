@@ -1,13 +1,26 @@
 package com.dk.piley.ui.task
 
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomDrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberBottomDrawerState
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,7 +65,7 @@ fun TaskDetailScreen(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskDetailScreen(
     modifier: Modifier = Modifier,
@@ -85,10 +98,15 @@ fun TaskDetailScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                CenterAlignedTopAppBar(title = {
+                    Text(
+                        text = viewState.task.title,
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }, navigationIcon = {
                     IconButton(onClick = onClose) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
@@ -99,14 +117,7 @@ fun TaskDetailScreen(
                             tint = MaterialTheme.colorScheme.secondary
                         )
                     }
-                }
-                Text(
-                    text = viewState.task.title,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+                })
                 EditDescriptionField(
                     value = viewState.descriptionTextValue,
                     onChange = {
@@ -143,7 +154,7 @@ fun TaskDetailScreen(
                     Text(text = "Delete")
                 }
             }
-        }
+        } // TODO more elements
     }
 }
 

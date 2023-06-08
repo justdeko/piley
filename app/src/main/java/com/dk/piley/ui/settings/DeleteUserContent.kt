@@ -32,17 +32,12 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
-fun EditUserContent(
+fun DeleteUserContent(
     modifier: Modifier = Modifier,
-    existingEmail: String,
-    existingName: String,
-    onConfirm: (EditUserResult) -> Unit = {},
+    onConfirm: (String) -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
-    var email by rememberSaveable { mutableStateOf(existingEmail) }
-    var name by rememberSaveable { mutableStateOf(existingName) }
-    var oldPassword by rememberSaveable { mutableStateOf("") }
-    var newPassword by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
     Surface(
         modifier = Modifier
             .wrapContentWidth()
@@ -55,7 +50,7 @@ fun EditUserContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Modify your personal data here.",
+                text = "Delete user",
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center
@@ -65,42 +60,9 @@ fun EditUserContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                value = email,
-                onValueChange = { email = it },
-                placeholder = { Text("Email") },
-                shape = RoundedCornerShape(16.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                value = name,
-                onValueChange = { name = it },
-                placeholder = { Text("Name") },
-                shape = RoundedCornerShape(16.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                value = newPassword,
-                onValueChange = { newPassword = it },
-                placeholder = { Text("New Password (leave empty if unchanged)") },
-                shape = RoundedCornerShape(16.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                value = oldPassword,
-                onValueChange = { oldPassword = it },
-                placeholder = { Text("Current password to confirm") },
+                value = password,
+                onValueChange = { password = it },
+                placeholder = { Text("Enter your password to confirm") },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -121,40 +83,26 @@ fun EditUserContent(
                     Text("Cancel")
                 }
                 ElevatedButton(
-                    onClick = {
-                        onConfirm(
-                            EditUserResult(
-                                email = email,
-                                name = name,
-                                oldPassword = oldPassword,
-                                newPassword = newPassword
-                            )
-                        )
-                    },
-                    enabled = oldPassword.isNotBlank() && email.isNotBlank() && name.isNotBlank()
+                    onClick = { onConfirm(password) },
+                    enabled = password.isNotBlank(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    )
                 ) {
-                    Text("Update")
+                    Text("Delete")
                 }
             }
         }
     }
 }
 
-data class EditUserResult(
-    val email: String,
-    val name: String,
-    val oldPassword: String,
-    val newPassword: String
-)
-
 @Preview
 @Composable
-fun EditUserContentPreview() {
+fun DeleteUserContentPreview() {
     PileyTheme(useDarkTheme = true) {
-        EditUserContent(
+        DeleteUserContent(
             modifier = Modifier.fillMaxWidth(),
-            existingEmail = "thomas@test.com",
-            existingName = "Thomas"
         )
     }
 }

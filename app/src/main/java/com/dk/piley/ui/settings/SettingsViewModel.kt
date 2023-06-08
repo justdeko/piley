@@ -83,7 +83,30 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserNotNull().firstOrNull()
             if (existingUser != null && existingUser.password == password) {
-                userRepository.deleteUserFlow(existingUser.email, password)
+                userRepository.deleteUserFlow(existingUser.email, password).collect { resource ->
+                    when (resource) {
+                        is Resource.Loading -> _state.update { it.copy(loading = true) }
+                        is Resource.Failure -> {
+                            _state.update {
+                                it.copy(
+                                    loading = false,
+                                    message = it.message
+                                )
+                            }
+                        }
+
+                        is Resource.Success -> {
+                            userRepository.setSignedInUser("")
+                            _state.update {
+                                it.copy(
+                                    loading = false,
+                                    userDeleted = true,
+                                    message = "User deleted, signing out"
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -145,5 +168,6 @@ class SettingsViewModel @Inject constructor(
 data class SettingsViewState(
     val user: User = User(),
     val loading: Boolean = false,
-    val message: String? = null
+    val message: String? = null,
+    val userDeleted: Boolean = false
 )

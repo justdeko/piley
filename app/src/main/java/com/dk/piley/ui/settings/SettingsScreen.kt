@@ -41,8 +41,10 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
+import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.IndefiniteProgressBar
+import com.dk.piley.util.navigateClearBackstack
 
 @Composable
 fun SettingsScreen(
@@ -59,6 +61,11 @@ fun SettingsScreen(
             viewModel.resetToastMessage()
         }
     }
+    if (viewState.userDeleted) {
+        LaunchedEffect(true) {
+            navController.navigateClearBackstack(Screen.SignIn.route)
+        }
+    }
 
     SettingsScreen(
         modifier = modifier,
@@ -71,7 +78,7 @@ fun SettingsScreen(
         onReminderDelayChange = { viewModel.updateReminderDelay(it) },
         onBackupFrequencyChange = { viewModel.updateBackupFrequency(it) },
         onEditUser = { result -> viewModel.updateUser(result) },
-        onDeleteUser = { viewModel.deleteUser("") },
+        onDeleteUser = { password -> viewModel.deleteUser(password) },
         onCloseSettings = { navController.popBackStack() }
     )
 }
@@ -89,13 +96,14 @@ private fun SettingsScreen(
     onReminderDelayChange: (Int) -> Unit = {},
     onBackupFrequencyChange: (Int) -> Unit = {},
     onEditUser: (EditUserResult) -> Unit = {},
-    onDeleteUser: () -> Unit = {},
+    onDeleteUser: (String) -> Unit = {},
     onCloseSettings: () -> Unit = {},
 ) {
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
+    var deleteUserDialogOpen by remember { mutableStateOf(false) }
 
     if (editUserDialogOpen) {
         AlertDialog(
@@ -109,6 +117,19 @@ private fun SettingsScreen(
                     onEditUser(result)
                 },
                 onCancel = { editUserDialogOpen = false }
+            )
+        }
+    }
+
+    if (deleteUserDialogOpen) {
+        AlertDialog(onDismissRequest = { deleteUserDialogOpen = false }) {
+            DeleteUserContent(
+                onConfirm = { password ->
+                    onDeleteUser(password)
+                },
+                onCancel = {
+                    deleteUserDialogOpen = false
+                }
             )
         }
     }
@@ -204,7 +225,7 @@ private fun SettingsScreen(
                 SettingsItem(
                     title = "Delete User",
                     description = "Delete the current user permanently",
-                    onClick = onDeleteUser
+                    onClick = { deleteUserDialogOpen = true }
                 )
             }
         }

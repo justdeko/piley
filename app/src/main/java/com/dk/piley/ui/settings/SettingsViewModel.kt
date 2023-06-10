@@ -90,12 +90,13 @@ class SettingsViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     loading = false,
-                                    message = it.message
+                                    message = resource.exception.message
                                 )
                             }
                         }
 
                         is Resource.Success -> {
+                            userRepository.deleteUser(existingUser)
                             userRepository.setSignedInUser("")
                             _state.update {
                                 it.copy(
@@ -107,6 +108,8 @@ class SettingsViewModel @Inject constructor(
                         }
                     }
                 }
+            } else {
+                _state.update { it.copy(message = "Error deleting user: Your password is incorrect") }
             }
         }
     }
@@ -121,7 +124,6 @@ class SettingsViewModel @Inject constructor(
             if (existingUser != null && result.oldPassword == existingUser.password) {
                 userRepository.updateUserFlow(
                     oldUser = existingUser,
-                    newEmail = result.email,
                     newPassword = result.newPassword,
                     newName = result.name
                 ).collect { resource ->
@@ -131,7 +133,7 @@ class SettingsViewModel @Inject constructor(
                             _state.update {
                                 it.copy(
                                     loading = false,
-                                    message = it.message
+                                    message = resource.exception.message
                                 )
                             }
                         }
@@ -139,7 +141,6 @@ class SettingsViewModel @Inject constructor(
                         is Resource.Success -> {
                             userRepository.insertUser(
                                 existingUser.copy(
-                                    email = result.email,
                                     name = result.name,
                                     password = result.newPassword
                                 )

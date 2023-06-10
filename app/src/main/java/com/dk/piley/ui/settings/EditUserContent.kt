@@ -34,12 +34,10 @@ import com.dk.piley.ui.theme.PileyTheme
 @Composable
 fun EditUserContent(
     modifier: Modifier = Modifier,
-    existingEmail: String,
     existingName: String,
     onConfirm: (EditUserResult) -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
-    var email by rememberSaveable { mutableStateOf(existingEmail) }
     var name by rememberSaveable { mutableStateOf(existingName) }
     var oldPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
@@ -65,17 +63,6 @@ fun EditUserContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                value = email,
-                onValueChange = { email = it },
-                placeholder = { Text("Email") },
-                shape = RoundedCornerShape(16.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            )
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = name,
                 onValueChange = { name = it },
                 placeholder = { Text("Name") },
@@ -89,7 +76,7 @@ fun EditUserContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = newPassword,
                 onValueChange = { newPassword = it },
-                placeholder = { Text("New Password (leave empty if unchanged)") },
+                placeholder = { Text("New Password\n(leave empty if unchanged)") },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -124,14 +111,13 @@ fun EditUserContent(
                     onClick = {
                         onConfirm(
                             EditUserResult(
-                                email = email,
                                 name = name,
                                 oldPassword = oldPassword,
                                 newPassword = newPassword
                             )
                         )
                     },
-                    enabled = oldPassword.isNotBlank() && email.isNotBlank() && name.isNotBlank()
+                    enabled = oldPassword.isNotBlank() && name.isNotBlank()
                 ) {
                     Text("Update")
                 }
@@ -141,7 +127,6 @@ fun EditUserContent(
 }
 
 data class EditUserResult(
-    val email: String,
     val name: String,
     val oldPassword: String,
     val newPassword: String
@@ -153,7 +138,6 @@ fun EditUserContentPreview() {
     PileyTheme(useDarkTheme = true) {
         EditUserContent(
             modifier = Modifier.fillMaxWidth(),
-            existingEmail = "thomas@test.com",
             existingName = "Thomas"
         )
     }

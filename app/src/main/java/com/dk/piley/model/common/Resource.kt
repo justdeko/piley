@@ -31,6 +31,6 @@ fun <T> resourceSuccessfulFlow(apiRequest: suspend () -> Response<T>): Flow<Reso
         }
     } catch (e: Exception) {
         Timber.e(e)
-        emit(Resource.Failure(Exception(e)))
+        emit(Resource.Failure(e))
     }
 }.flowOn(Dispatchers.IO)

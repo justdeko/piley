@@ -110,7 +110,6 @@ private fun SettingsScreen(
             onDismissRequest = { editUserDialogOpen = false },
         ) {
             EditUserContent(
-                existingEmail = viewState.user.email,
                 existingName = viewState.user.name,
                 onConfirm = { result ->
                     editUserDialogOpen = false
@@ -125,6 +124,7 @@ private fun SettingsScreen(
         AlertDialog(onDismissRequest = { deleteUserDialogOpen = false }) {
             DeleteUserContent(
                 onConfirm = { password ->
+                    deleteUserDialogOpen = false
                     onDeleteUser(password)
                 },
                 onCancel = {

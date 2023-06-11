@@ -12,7 +12,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val userFlow = userRepository.getSignedInUserNotNull()
+            val userFlow = userRepository.getSignedInUserNotNullFlow()
             combine(userFlow) { (user) ->
                 SettingsViewState(user)
             }.collect { _state.value = it }
@@ -81,7 +80,7 @@ class SettingsViewModel @Inject constructor(
 
     fun deleteUser(password: String) {
         viewModelScope.launch {
-            val existingUser = userRepository.getSignedInUserNotNull().firstOrNull()
+            val existingUser = userRepository.getSignedInUserEntity()
             if (existingUser != null && existingUser.password == password) {
                 userRepository.deleteUserFlow(existingUser.email, password).collect { resource ->
                     when (resource) {
@@ -96,7 +95,9 @@ class SettingsViewModel @Inject constructor(
                         }
 
                         is Resource.Success -> {
+                            // delete user and all piles, set signed in user to empty
                             userRepository.deleteUser(existingUser)
+                            pileRepository.deleteAllPiles()
                             userRepository.setSignedInUser("")
                             _state.update {
                                 it.copy(
@@ -120,7 +121,7 @@ class SettingsViewModel @Inject constructor(
 
     fun updateUser(result: EditUserResult) {
         viewModelScope.launch {
-            val existingUser = userRepository.getSignedInUserNotNull().firstOrNull()
+            val existingUser = userRepository.getSignedInUserEntity()
             if (existingUser != null && result.oldPassword == existingUser.password) {
                 userRepository.updateUserFlow(
                     oldUser = existingUser,
@@ -142,7 +143,7 @@ class SettingsViewModel @Inject constructor(
                             userRepository.insertUser(
                                 existingUser.copy(
                                     name = result.name,
-                                    password = result.newPassword
+                                    password = result.newPassword.ifBlank { result.oldPassword }
                                 )
                             )
                             _state.update {

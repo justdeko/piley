@@ -31,7 +31,7 @@ class PileDetailViewModel @Inject constructor(
     val state: StateFlow<PileDetailViewState>
         get() = _state
 
-    private val signedInUserFlow = userRepository.getSignedInUserNotNull()
+    private val signedInUserFlow = userRepository.getSignedInUserNotNullFlow()
 
     init {
         viewModelScope.launch {

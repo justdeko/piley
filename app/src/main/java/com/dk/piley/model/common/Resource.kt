@@ -25,9 +25,8 @@ fun <T> resourceSuccessfulFlow(apiRequest: suspend () -> Response<T>): Flow<Reso
                 emit(Resource.Failure(Exception("empty body")))
             }
         } else {
-            val body = response.errorBody()?.string() ?: "No error body"
-            Timber.e(body)
-            emit(Resource.Failure(Exception(body)))
+            Timber.e(response.message())
+            emit(Resource.Failure(Exception(response.message())))
         }
     } catch (e: Exception) {
         Timber.e(e)

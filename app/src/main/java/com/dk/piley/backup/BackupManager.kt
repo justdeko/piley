@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -56,7 +55,7 @@ class BackupManager @Inject constructor(
     }
 
     suspend fun performBackupIfNecessary() {
-        userRepository.getSignedInUserNotNull().firstOrNull()?.let {
+        userRepository.getSignedInUserEntity()?.let {
             val lastBackup = it.lastBackup
             val latestBackupDate = LocalDateTime.now().minusDays(it.defaultBackupFrequency.toLong())
             if (lastBackup != null && lastBackup.isBefore(latestBackupDate)) {
@@ -70,7 +69,7 @@ class BackupManager @Inject constructor(
         when (pushBackupToRemoteForUserFlow().last()) {
             is Resource.Loading -> Timber.i("Syncing local backup to remote")
             is Resource.Success -> {
-                val user = userRepository.getSignedInUserNotNull().firstOrNull()
+                val user = userRepository.getSignedInUserEntity()
                 user?.let { userRepository.insertUser(user.copy(lastBackup = LocalDateTime.now())) }
                 Timber.i("Backup successfully synced")
                 return true

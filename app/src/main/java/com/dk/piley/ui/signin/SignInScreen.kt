@@ -146,7 +146,7 @@ private fun SignInScreen(
                     placeholder = { Text("Username") },
                     shape = RoundedCornerShape(16.dp),
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 )
             }
             OutlinedTextField(

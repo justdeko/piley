@@ -11,9 +11,11 @@ import com.dk.piley.model.remote.user.UserRequest
 import com.dk.piley.model.remote.user.UserResponse
 import com.dk.piley.model.remote.user.UserUpdateRequest
 import com.dk.piley.util.credentials
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
@@ -51,12 +53,15 @@ class UserRepository @Inject constructor(
     private fun getUserPrefsEmail(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[signedInUser] ?: "" }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     fun getSignedInUser(): Flow<User?> =
-        getUserPrefsEmail().map { email ->
-            getUserByEmail(email)
+        getUserPrefsEmail().flatMapLatest { email ->
+            getUserByEmailFlow(email)
         }
 
-    fun getSignedInUserNotNull(): Flow<User> = getSignedInUser().filterNotNull()
+    fun getSignedInUserNotNullFlow(): Flow<User> = getSignedInUser().filterNotNull()
+
+    suspend fun getSignedInUserEntity(): User? = getSignedInUser().firstOrNull()
 
     suspend fun insertUser(user: User): Void = userDao.insertUser(user)
 

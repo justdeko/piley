@@ -35,7 +35,7 @@ class ProfileViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val pileFlow = pileRepository.getPilesWithTasks()
-            val userFlow = userRepository.getSignedInUserNotNull()
+            val userFlow = userRepository.getSignedInUserNotNullFlow()
             userFlow.combine(pileFlow) { user, pilesWithTasks ->
                 val tasks = pilesWithTasks.flatMap { it.tasks }
                 val done = tasks.count { it.status == TaskStatus.DONE }

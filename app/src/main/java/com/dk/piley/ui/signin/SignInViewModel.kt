@@ -14,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -86,7 +85,7 @@ class SignInViewModel @Inject constructor(
         )
         val pileId = pileRepository.insertPile(pile)
         // update assigned pile as selected and set signed in state
-        userRepository.getSignedInUserNotNull().first().let { signedInUser ->
+        userRepository.getSignedInUserEntity()?.let { signedInUser ->
             userRepository.insertUser(
                 signedInUser.copy(
                     selectedPileId = pileId,

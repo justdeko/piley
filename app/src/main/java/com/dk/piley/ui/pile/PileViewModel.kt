@@ -43,7 +43,7 @@ class PileViewModel @Inject constructor(
             // perform a recurring backup if necessary
             backupManager.performBackupIfNecessary()
             // get piles and start updating state
-            userRepository.getSignedInUserNotNull().flatMapLatest { user ->
+            userRepository.getSignedInUserNotNullFlow().flatMapLatest { user ->
                 pileRepository.getPilesWithTasks().flatMapLatest { pilesWithTasks ->
                     selectedPileIndex.map { index ->
                         val idTitleList = pilesWithTasks.map {

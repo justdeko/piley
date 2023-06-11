@@ -25,7 +25,7 @@ class PilesViewModel @Inject constructor(
     val state: StateFlow<PilesViewState>
         get() = _state
 
-    private val signedInUserFlow = userRepository.getSignedInUserNotNull()
+    private val signedInUserFlow = userRepository.getSignedInUserNotNullFlow()
 
     init {
         viewModelScope.launch {

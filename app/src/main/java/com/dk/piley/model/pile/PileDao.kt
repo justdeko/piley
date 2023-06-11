@@ -18,6 +18,9 @@ interface PileDao {
     @Query("UPDATE Pile SET pileMode=:pileMode")
     suspend fun updateAllPileModes(pileMode: PileMode): Int
 
+    @Query("DELETE FROM Pile")
+    suspend fun deleteAllPiles(): Void
+
     @Delete
     suspend fun deletePile(pile: Pile): Void
 }

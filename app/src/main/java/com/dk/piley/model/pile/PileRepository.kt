@@ -20,6 +20,10 @@ class PileRepository @Inject constructor(
         return pileDao.deletePile(pile)
     }
 
+    suspend fun deleteAllPiles(): Void {
+        return pileDao.deleteAllPiles()
+    }
+
     suspend fun resetPileModes(defaultPileMode: PileMode = PileMode.FREE): Int {
         return pileDao.updateAllPileModes(defaultPileMode)
     }

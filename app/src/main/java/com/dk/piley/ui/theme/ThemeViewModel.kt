@@ -22,7 +22,7 @@ class ThemeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val userFlow = userRepository.getSignedInUserNotNull()
+            val userFlow = userRepository.getSignedInUserNotNullFlow()
             combine(userFlow) { (user) ->
                 ThemeViewState(user.nightMode, user.dynamicColorOn)
             }.collect { _state.value = it }

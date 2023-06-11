@@ -24,14 +24,29 @@ import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
 
+/**
+ * Handles local and remote backup operations
+ * like downloading backups, overwriting the database, pushing the current database to remote, etc.
+ *
+ * @property backupRepository instance of backup repository for remote calls
+ * @property userRepository instance of user repository to get user and user preferences regarding backup
+ * @property db instance of the database to close when needed
+ * @property context generic context
+ */
 class BackupManager @Inject constructor(
     private val backupRepository: BackupRepository,
     private val userRepository: UserRepository,
     private val db: PileDatabase,
     private val context: Context
 ) {
+    /**
+     * Flow for syncing the remote backup from the server for the current user.
+     *
+     * @return Resource Flow with a nullable [Instant]
+     * that represents whether the sync was needed (null if not) and when the downloaded backup occurred
+     */
     @OptIn(FlowPreview::class)
-    suspend fun syncBackupToLocalForUserFlow(): Flow<Resource<Boolean>> =
+    suspend fun syncBackupToLocalForUserFlow(): Flow<Resource<Instant?>> =
         backupRepository.getBackupFileFlow(
             userRepository.getSignedInUserEmail(), context
         ).flatMapConcat {
@@ -42,6 +57,11 @@ class BackupManager @Inject constructor(
             }
         }.flowOn(Dispatchers.IO)
 
+    /**
+     * Flow for uploading the local backup file to the server
+     *
+     * @return Resource flow with the response string if successful
+     */
     suspend fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> {
         val email = userRepository.getSignedInUserEmail()
         return if (email.isNotBlank()) {
@@ -54,6 +74,10 @@ class BackupManager @Inject constructor(
         }
     }
 
+    /**
+     * Performs a [doBackup] call if the last backup date was outside the backup frequency set by the user
+     *
+     */
     suspend fun performBackupIfNecessary() {
         userRepository.getSignedInUserEntity()?.let {
             val lastBackup = it.lastBackup
@@ -64,6 +88,11 @@ class BackupManager @Inject constructor(
         }
     }
 
+    /**
+     * Performs a backup by attempting to upload the current db file to the server
+     *
+     * @return Boolean whether the backup was successful
+     */
     suspend fun doBackup(): Boolean {
         // attempt to push
         when (pushBackupToRemoteForUserFlow().last()) {
@@ -80,7 +109,13 @@ class BackupManager @Inject constructor(
         return false.also { Timber.i("Failed to sync backup") }
     }
 
-    private fun createOrUpdateDbFileFlow(fileResponse: FileResponse): Flow<Resource<Boolean>> =
+    /**
+     * Flow of updating the current database if the received user backup is more recent than the current db
+     *
+     * @param fileResponse the file response from the server containing the backup file and metadata
+     * @return a resource flow with an Instant which is null if the local database was not overwritten
+     */
+    private fun createOrUpdateDbFileFlow(fileResponse: FileResponse): Flow<Resource<Instant?>> =
         flow {
             emit(Resource.Loading())
             val dbFile = context.getDatabasePath(DATABASE_NAME)
@@ -89,7 +124,7 @@ class BackupManager @Inject constructor(
             // then emit success but with false representing no update of local backup
             if (fileResponse.lastModified.isBefore(localLastModified)) {
                 Timber.i("Remote backup file is outdated, no overwrite needed")
-                emit(Resource.Success(false))
+                emit(Resource.Success(null))
                 return@flow
             }
             val dbPath = dbFile.absolutePath
@@ -111,7 +146,7 @@ class BackupManager @Inject constructor(
                 }
                 // delete temp file
                 fileResponse.file.delete()
-                emit(Resource.Success(true))
+                emit(Resource.Success(fileResponse.lastModified))
             } catch (ex: IOException) {
                 emit(Resource.Failure(ex))
             }

@@ -10,12 +10,14 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.ui.util.utcZoneId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDateTime
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -61,7 +63,16 @@ class SignInViewModel @Inject constructor(
                 when (it) {
                     is Resource.Loading -> Timber.i("attempting to load remote backup")
                     is Resource.Success -> {
-                        if (it.data) {
+                        if (it.data != null) {
+                            // set user backup date
+                            userRepository.insertUser(
+                                user.copy(
+                                    lastBackup = LocalDateTime.ofInstant(
+                                        it.data,
+                                        utcZoneId
+                                    )
+                                )
+                            )
                             Timber.i("Backup loaded, going into main view")
                             setLoading(false)
                             setSignInState(SignInState.SIGNED_IN)

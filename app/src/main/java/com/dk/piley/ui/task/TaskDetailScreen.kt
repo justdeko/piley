@@ -128,6 +128,10 @@ fun TaskDetailScreen(
                     reminderDateTimeText = viewState.reminderDateTimeText,
                     onAddReminder = { scope.launch { drawerState.open() } },
                 )
+                TaskInfo(
+                    modifier = Modifier.fillMaxWidth(),
+                    task = viewState.task
+                )
             }
             Row(
                 modifier = Modifier

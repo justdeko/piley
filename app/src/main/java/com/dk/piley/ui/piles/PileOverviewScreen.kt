@@ -48,7 +48,7 @@ fun PileOverviewScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,

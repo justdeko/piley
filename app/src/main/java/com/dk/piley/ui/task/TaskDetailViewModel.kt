@@ -1,6 +1,5 @@
 package com.dk.piley.ui.task
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,7 +55,7 @@ class TaskDetailViewModel @Inject constructor(
     }
 
     fun addReminder(reminderDateTime: LocalDateTime) {
-        Log.d("TaskDetailViewModel", "adding reminder")
+        Timber.d("adding reminder for time $reminderDateTime")
         _state.update {
             it.copy(reminderDateTimeText = reminderDateTime.dateTimeString())
         }

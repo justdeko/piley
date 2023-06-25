@@ -2,7 +2,11 @@ package com.dk.piley.ui.task
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
@@ -18,12 +22,16 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
 fun ReminderInfo(
     modifier: Modifier = Modifier,
     reminderDateTimeText: String? = null,
+    isRecurring: Boolean = false,
+    recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
+    recurringFrequency: Int = 1,
     onAddReminder: () -> Unit = {},
 ) {
     val reminderSet = reminderDateTimeText != null
@@ -68,7 +76,6 @@ fun ReminderInfo(
             }
         }
     }
-
 }
 
 @Preview

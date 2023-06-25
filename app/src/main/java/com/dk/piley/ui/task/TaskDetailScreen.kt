@@ -40,7 +40,6 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.theme.PileyTheme
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDateTime
 
 @Composable
 fun TaskDetailScreen(
@@ -74,7 +73,7 @@ fun TaskDetailScreen(
     onCompleteTask: () -> Unit = {},
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
-    onAddReminder: (LocalDateTime) -> Unit = {},
+    onAddReminder: (ReminderState) -> Unit = {},
     onCancelReminder: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current

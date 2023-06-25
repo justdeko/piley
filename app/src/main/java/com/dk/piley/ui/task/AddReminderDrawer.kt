@@ -12,16 +12,19 @@ import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.showDatePicker
 import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.util.utcZoneId
+import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -33,18 +36,24 @@ fun AddReminderDrawer(
     modifier: Modifier = Modifier,
     drawerState: BottomDrawerState,
     initialDate: LocalDateTime? = null,
-    onAddReminder: (LocalDateTime) -> Unit = {},
+    isRecurring: Boolean = false,
+    recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
+    recurringFrequency: Int = 1,
+    onAddReminder: (ReminderState) -> Unit = {},
     onDeleteReminder: () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
     BottomDrawer(
         drawerContent = {
             AddReminderContent(
-                modifier,
-                drawerState,
-                onAddReminder,
-                onDeleteReminder,
-                initialDate
+                modifier = modifier,
+                drawerState = drawerState,
+                onAddReminder = onAddReminder,
+                onDeleteReminder = onDeleteReminder,
+                initialDateTime = initialDate,
+                isRecurring = isRecurring,
+                recurringTimeRange = recurringTimeRange,
+                recurringFrequency = recurringFrequency
             )
         },
         gesturesEnabled = !drawerState.isClosed,
@@ -61,14 +70,20 @@ fun AddReminderDrawer(
 fun AddReminderContent(
     modifier: Modifier = Modifier,
     drawerState: BottomDrawerState,
-    onAddReminder: (LocalDateTime) -> Unit,
+    onAddReminder: (ReminderState) -> Unit,
     onDeleteReminder: () -> Unit = {},
-    initialDateTime: LocalDateTime? = null
+    initialDateTime: LocalDateTime? = null,
+    isRecurring: Boolean = false,
+    recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
+    recurringFrequency: Int = 1,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var localDate: LocalDate? by remember { mutableStateOf(null) }
     var localTime: LocalTime? by remember { mutableStateOf(null) }
+    var recurring by rememberSaveable { (mutableStateOf(isRecurring)) }
+    var timeRange by rememberSaveable { (mutableStateOf(recurringTimeRange)) }
+    var frequency by rememberSaveable { (mutableStateOf(recurringFrequency)) }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -137,14 +152,20 @@ fun AddReminderContent(
                 onClick = {
                     if (localTime != null && localDate != null) {
                         localTime?.atDate(localDate)?.let {
-                            onAddReminder(it)
+                            onAddReminder(ReminderState(it, recurringTimeRange, recurringFrequency))
                         }
                     } else if (initialDateTime != null) {
                         // case of an existing reminder getting updated
                         // where only one or no fields were touched
                         val time = localTime ?: initialDateTime.toLocalTime()
                         val date = localDate ?: initialDateTime.toLocalDate()
-                        onAddReminder(time.atDate(date))
+                        onAddReminder(
+                            ReminderState(
+                                reminder = time.atDate(date),
+                                recurringTimeRange = recurringTimeRange,
+                                recurringFrequency = recurringFrequency
+                            )
+                        )
                     }
                     coroutineScope.launch {
                         drawerState.close()
@@ -170,14 +191,20 @@ fun AddReminderContent(
                 }
             }
         }
-
     }
 }
+
+data class ReminderState(
+    val reminder: LocalDateTime,
+    val recurringTimeRange: RecurringTimeRange,
+    val recurringFrequency: Int,
+)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AddReminderDrawerPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         Surface {
             val drawerState = BottomDrawerState(BottomDrawerValue.Open)
@@ -194,6 +221,7 @@ fun AddReminderDrawerPreview() {
 @Preview(showBackground = true)
 @Composable
 fun EditReminderDrawerPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)

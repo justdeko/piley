@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDateTime
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -54,15 +53,15 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
-    fun addReminder(reminderDateTime: LocalDateTime) {
-        Timber.d("adding reminder for time $reminderDateTime")
+    fun addReminder(reminderState: ReminderState) {
+        Timber.d("adding reminder for state $reminderState")
         _state.update {
-            it.copy(reminderDateTimeText = reminderDateTime.dateTimeString())
+            it.copy(reminderDateTimeText = reminderState.reminder.dateTimeString())
         }
         viewModelScope.launch {
-            repository.insertTask(state.value.task.copy(reminder = reminderDateTime))
+            repository.insertTask(state.value.task.copy(reminder = reminderState.reminder))
             dismissAlarmAndNotification()
-            reminderManager.startReminder(reminderDateTime, state.value.task.id)
+            reminderManager.startReminder(reminderState.reminder, state.value.task.id)
         }
     }
 

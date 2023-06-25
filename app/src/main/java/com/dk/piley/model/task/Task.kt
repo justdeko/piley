@@ -14,5 +14,8 @@ data class Task(
     val createdAt: LocalDateTime = LocalDateTime.now(utcZoneId),
     val modifiedAt: LocalDateTime = LocalDateTime.now(utcZoneId),
     val reminder: LocalDateTime? = null,
+    val isRecurring: Boolean = false,
+    val recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
+    val recurringFrequency: Int = 1,
     val status: TaskStatus = TaskStatus.DEFAULT,
 )

@@ -28,4 +28,17 @@
         <item>LIFO</item>
     </string-array>
 
+    <!--reminder frequency-->
+    <string-array name="time_range">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
+
+    <plurals name="plural_s">
+        <item quantity="one" />
+        <item quantity="other">s</item>
+    </plurals>
+
 </resources>

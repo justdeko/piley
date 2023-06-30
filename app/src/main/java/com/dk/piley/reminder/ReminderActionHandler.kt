@@ -41,8 +41,19 @@ class ReminderActionHandler @Inject constructor(
             }.forEach { task ->
                 // start a reminder
                 task.reminder?.let { reminder ->
-                    reminderManager.startReminder(reminder, task.id)
-                } // TODO make recurring reminder with offset
+                    if (task.status == TaskStatus.DEFAULT) {
+                        reminderManager.startReminder(reminder, task.id)
+                    } else if (task.status == TaskStatus.DONE) {
+                        reminderManager.startReminder(
+                            reminderDateTime = getNextReminderTime(
+                                task.reminder,
+                                task.recurringTimeRange,
+                                task.recurringFrequency
+                            ),
+                            taskId = task.id
+                        )
+                    }
+                }
             }
         }
     }

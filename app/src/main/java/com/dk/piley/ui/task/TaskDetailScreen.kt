@@ -4,9 +4,11 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomDrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -127,6 +129,7 @@ fun TaskDetailScreen(
                     reminderDateTimeText = viewState.reminderDateTimeText,
                     onAddReminder = { scope.launch { drawerState.open() } },
                 )
+                Spacer(Modifier.size(16.dp))
                 TaskInfo(
                     modifier = Modifier.fillMaxWidth(),
                     task = viewState.task

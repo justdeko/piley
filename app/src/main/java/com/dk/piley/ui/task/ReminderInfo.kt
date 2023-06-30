@@ -5,12 +5,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.getFrequencyString
 
 @Composable
 fun ReminderInfo(
@@ -75,6 +79,39 @@ fun ReminderInfo(
                 )
             }
         }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Recurring",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Checkbox(
+                checked = isRecurring,
+                onCheckedChange = null
+            )
+        }
+        Spacer(Modifier.size(8.dp))
+        if (isRecurring) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = getFrequencyString(recurringTimeRange, recurringFrequency),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
+        }
     }
 }
 
@@ -90,6 +127,11 @@ fun ReminderInfoPreview() {
 @Composable
 fun ReminderInfoSetPreview() {
     PileyTheme(useDarkTheme = true) {
-        ReminderInfo(Modifier.fillMaxWidth(), "08.02.2020 13:34")
+        ReminderInfo(
+            modifier = Modifier.fillMaxWidth(),
+            reminderDateTimeText = "08.02.2020 13:34",
+            isRecurring = true,
+            recurringFrequency = 2
+        )
     }
 }

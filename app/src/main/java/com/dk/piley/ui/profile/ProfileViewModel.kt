@@ -65,8 +65,7 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
-                        userRepository.setSignedInUser("")
-                        setSignedOutState(SignOutState.SIGNED_OUT)
+                        signOutLocally()
                     }
 
                     is Resource.Failure -> {
@@ -98,6 +97,14 @@ class ProfileViewModel @Inject constructor(
                 setToastMessage("Failed to upload backup")
             }
         }
+    }
+
+    fun signOutAfterError() = viewModelScope.launch { signOutLocally() }
+
+    private suspend fun signOutLocally() {
+        userRepository.setSignedInUser("")
+        userRepository.deleteUserData()
+        setSignedOutState(SignOutState.SIGNED_OUT)
     }
 }
 

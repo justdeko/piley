@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
@@ -63,6 +65,9 @@ fun ProfileScreen(
         onBackup = { viewModel.attemptBackup() },
         onSignOut = {
             viewModel.signOut()
+        },
+        onSignOutWithError = {
+            viewModel.signOutAfterError()
         }
     )
 }
@@ -74,20 +79,26 @@ private fun ProfileScreen(
     setSignOutState: (state: SignOutState) -> Unit = {},
     onClickSettings: () -> Unit = {},
     onBackup: () -> Unit = {},
-    onSignOut: () -> Unit = {}
+    onSignOut: () -> Unit = {},
+    onSignOutWithError: () -> Unit = {},
 ) {
+    val scrollState = rememberScrollState()
     if (viewState.signedOutState == SignOutState.SIGNED_OUT_ERROR) {
         AlertDialogHelper(
             title = "Error when uploading backup",
             description = "An error when uploading the backup. Do you still want to sign out? Recent changes might be lost.",
             confirmText = "Sign out",
-            onConfirm = { setSignOutState(SignOutState.SIGNED_OUT) },
+            onConfirm = onSignOutWithError,
             onDismiss = { setSignOutState(SignOutState.SIGNED_IN) }
         )
     }
     Box(modifier = modifier.fillMaxSize()) {
         IndefiniteProgressBar(visible = viewState.signedOutState == SignOutState.SIGNING_OUT || viewState.showProgressBar)
-        Column(Modifier.fillMaxSize()) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

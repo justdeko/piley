@@ -67,6 +67,8 @@ class UserRepository @Inject constructor(
 
     suspend fun deleteUser(user: User): Void = userDao.deleteUser(user)
 
+    suspend fun deleteUserData() = userDao.deleteUserData()
+
     fun updateUserFlow(
         oldUser: User,
         newPassword: String? = null,

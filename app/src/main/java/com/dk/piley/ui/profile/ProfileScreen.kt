@@ -86,7 +86,7 @@ private fun ProfileScreen(
     if (viewState.signedOutState == SignOutState.SIGNED_OUT_ERROR) {
         AlertDialogHelper(
             title = "Error when uploading backup",
-            description = "An error when uploading the backup. Do you still want to sign out? Recent changes might be lost.",
+            description = "An error occurred when uploading the backup. Do you still want to sign out? Recent changes might be lost.",
             confirmText = "Sign out",
             onConfirm = onSignOutWithError,
             onDismiss = { setSignOutState(SignOutState.SIGNED_IN) }

@@ -16,14 +16,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
+import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.showDatePicker
 import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.util.utcZoneId
+import com.dk.piley.util.toRecurringTimeRange
+import com.dk.piley.util.toText
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
@@ -65,7 +70,7 @@ fun AddReminderDrawer(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddReminderContent(
     modifier: Modifier = Modifier,
@@ -81,6 +86,9 @@ fun AddReminderContent(
     val coroutineScope = rememberCoroutineScope()
     var localDate: LocalDate? by remember { mutableStateOf(null) }
     var localTime: LocalTime? by remember { mutableStateOf(null) }
+    var expandedTimeRange by remember { mutableStateOf(false) }
+    var expandedFrequency by remember { mutableStateOf(false) }
+    val timeRanges = stringArrayResource(R.array.time_range).toList()
     var recurring by rememberSaveable { (mutableStateOf(isRecurring)) }
     var timeRange by rememberSaveable { (mutableStateOf(recurringTimeRange)) }
     var frequency by rememberSaveable { (mutableStateOf(recurringFrequency)) }
@@ -140,6 +148,32 @@ fun AddReminderContent(
                     tint = MaterialTheme.colorScheme.secondary
                 )
             }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DropDown(
+                modifier = Modifier.weight(1f),
+                value = timeRange.toText(),
+                dropdownValues = timeRanges,
+                expanded = expandedTimeRange,
+                label = "Time Range",
+                onExpandedChange = { expandedTimeRange = !it },
+                onValueClick = { timeRange = it.toRecurringTimeRange(context) },
+                onDismiss = { expandedTimeRange = false }
+            )
+            DropDown(
+                modifier = Modifier.weight(1f),
+                value = frequency.toString(),
+                dropdownValues = listOf(0, 1, 2, 3, 4, 5).map { it.toString() },
+                expanded = expandedFrequency,
+                label = "Frequency",
+                onExpandedChange = { expandedFrequency = !it },
+                onValueClick = { frequency = Integer.parseInt(it) },
+                onDismiss = { expandedFrequency = false }
+            )
         }
         Row(
             modifier = Modifier

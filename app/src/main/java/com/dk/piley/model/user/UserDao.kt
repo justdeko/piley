@@ -22,19 +22,4 @@ interface UserDao {
 
     @Query("DELETE FROM User")
     suspend fun deleteUserTable(): Void
-
-
-    @Query("DELETE FROM Pile")
-    suspend fun deletePileTable(): Void
-
-
-    @Query("DELETE FROM Task")
-    suspend fun deleteTaskTable(): Void
-
-    @Transaction
-    suspend fun deleteUserData() {
-        deleteUserTable()
-        deletePileTable()
-        deleteTaskTable()
-    }
 }

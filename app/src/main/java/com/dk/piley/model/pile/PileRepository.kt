@@ -27,4 +27,6 @@ class PileRepository @Inject constructor(
     suspend fun resetPileModes(defaultPileMode: PileMode = PileMode.FREE): Int {
         return pileDao.updateAllPileModes(defaultPileMode)
     }
+
+    suspend fun deletePileData() = pileDao.deletePileData()
 }

@@ -103,7 +103,8 @@ class ProfileViewModel @Inject constructor(
 
     private suspend fun signOutLocally() {
         userRepository.setSignedInUser("")
-        userRepository.deleteUserData()
+        userRepository.deleteUserTable()
+        pileRepository.deletePileData()
         setSignedOutState(SignOutState.SIGNED_OUT)
     }
 }

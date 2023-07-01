@@ -97,7 +97,8 @@ class SettingsViewModel @Inject constructor(
                         is Resource.Success -> {
                             // delete user and all piles, set signed in user to empty
                             userRepository.setSignedInUser("")
-                            userRepository.deleteUserData()
+                            userRepository.deleteUserTable()
+                            pileRepository.deletePileData()
                             _state.update {
                                 it.copy(
                                     loading = false,

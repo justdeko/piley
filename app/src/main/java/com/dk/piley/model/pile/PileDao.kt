@@ -23,4 +23,17 @@ interface PileDao {
 
     @Delete
     suspend fun deletePile(pile: Pile): Void
+
+    @Query("DELETE FROM Pile")
+    suspend fun deletePileTable(): Void
+
+
+    @Query("DELETE FROM Task")
+    suspend fun deleteTaskTable(): Void
+
+    @Transaction
+    suspend fun deletePileData() {
+        deletePileTable()
+        deleteTaskTable()
+    }
 }

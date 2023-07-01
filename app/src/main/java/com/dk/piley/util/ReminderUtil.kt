@@ -1,5 +1,6 @@
 package com.dk.piley.util
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringArrayResource
@@ -28,13 +29,28 @@ fun getFrequencyString(
     recurringFrequency: Int
 ): String {
     val pluralS = pluralStringResource(id = R.plurals.plural_s, count = recurringFrequency)
+    val frequency = if (recurringFrequency == 1) "" else recurringFrequency.toString()
+    return "Repeats: Every $frequency ${recurringTimeRange.toText()}$pluralS"
+}
+
+@Composable
+fun RecurringTimeRange.toText(): String {
     val timeRanges = stringArrayResource(id = R.array.time_range)
-    val timeRangeString = when (recurringTimeRange) {
+    return when (this) {
         DAILY -> timeRanges[0]
         WEEKLY -> timeRanges[1]
         MONTHLY -> timeRanges[2]
         YEARLY -> timeRanges[3]
     }
-    val frequency = if (recurringFrequency == 1) "" else recurringFrequency.toString()
-    return "Repeats: Every $frequency ${timeRangeString}$pluralS"
+}
+
+fun String.toRecurringTimeRange(context: Context): RecurringTimeRange {
+    val timeRanges = context.resources.getStringArray(R.array.time_range)
+    return when (this) {
+        timeRanges[0] -> DAILY
+        timeRanges[1] -> WEEKLY
+        timeRanges[2] -> MONTHLY
+        timeRanges[3] -> YEARLY
+        else -> DAILY
+    }
 }

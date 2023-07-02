@@ -208,7 +208,14 @@ fun AddReminderContent(
                 onClick = {
                     if (localTime != null && localDate != null) {
                         localTime?.atDate(localDate)?.let {
-                            onAddReminder(ReminderState(it, recurringTimeRange, recurringFrequency))
+                            onAddReminder(
+                                ReminderState(
+                                    reminder = it,
+                                    recurring = isRecurring,
+                                    recurringTimeRange = recurringTimeRange,
+                                    recurringFrequency = recurringFrequency
+                                )
+                            )
                         }
                     } else if (initialDateTime != null) {
                         // case of an existing reminder getting updated
@@ -218,6 +225,7 @@ fun AddReminderContent(
                         onAddReminder(
                             ReminderState(
                                 reminder = time.atDate(date),
+                                recurring = isRecurring,
                                 recurringTimeRange = recurringTimeRange,
                                 recurringFrequency = recurringFrequency
                             )
@@ -252,6 +260,7 @@ fun AddReminderContent(
 
 data class ReminderState(
     val reminder: LocalDateTime,
+    val recurring: Boolean,
     val recurringTimeRange: RecurringTimeRange,
     val recurringFrequency: Int,
 )

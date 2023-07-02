@@ -59,7 +59,14 @@ class TaskDetailViewModel @Inject constructor(
             it.copy(reminderDateTimeText = reminderState.reminder.dateTimeString())
         }
         viewModelScope.launch {
-            repository.insertTask(state.value.task.copy(reminder = reminderState.reminder))
+            repository.insertTask(
+                state.value.task.copy(
+                    reminder = reminderState.reminder,
+                    isRecurring = reminderState.recurring,
+                    recurringFrequency = reminderState.recurringFrequency,
+                    recurringTimeRange = reminderState.recurringTimeRange,
+                )
+            )
             dismissAlarmAndNotification()
             reminderManager.startReminder(reminderState.reminder, state.value.task.id)
         }

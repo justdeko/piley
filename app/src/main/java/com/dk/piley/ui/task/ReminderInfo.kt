@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.RecurringTimeRange
+import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getFrequencyString
 
@@ -79,23 +79,13 @@ fun ReminderInfo(
                 )
             }
         }
-        Row(
-            Modifier
+        TextWithCheckbox(
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Recurring",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-            Checkbox(
-                checked = isRecurring,
-                onCheckedChange = null
-            )
-        }
+            description = "Recurring",
+            checked = isRecurring
+        )
         Spacer(Modifier.size(8.dp))
         if (isRecurring) {
             Row(

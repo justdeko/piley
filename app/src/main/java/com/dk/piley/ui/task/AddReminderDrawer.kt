@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
@@ -23,10 +24,12 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.DropDown
+import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.common.showDatePicker
 import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.util.utcZoneId
+import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.toRecurringTimeRange
 import com.dk.piley.util.toText
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -70,7 +73,7 @@ fun AddReminderDrawer(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddReminderContent(
     modifier: Modifier = Modifier,
@@ -134,7 +137,7 @@ fun AddReminderContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                localTime?.toString() ?: (initialDateTime?.toLocalTime()?.toString()
+                localTime?.toString() ?: (initialDateTime?.toLocalTime()?.withNano(0)?.toString()
                     ?: "Pick a time")
             )
             IconButton(onClick = {
@@ -149,30 +152,46 @@ fun AddReminderContent(
                 )
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            DropDown(
-                modifier = Modifier.weight(1f),
-                value = timeRange.toText(),
-                dropdownValues = timeRanges,
-                expanded = expandedTimeRange,
-                label = "Time Range",
-                onExpandedChange = { expandedTimeRange = !it },
-                onValueClick = { timeRange = it.toRecurringTimeRange(context) },
-                onDismiss = { expandedTimeRange = false }
-            )
-            DropDown(
-                modifier = Modifier.weight(1f),
-                value = frequency.toString(),
-                dropdownValues = listOf(0, 1, 2, 3, 4, 5).map { it.toString() },
-                expanded = expandedFrequency,
-                label = "Frequency",
-                onExpandedChange = { expandedFrequency = !it },
-                onValueClick = { frequency = Integer.parseInt(it) },
-                onDismiss = { expandedFrequency = false }
+        TextWithCheckbox(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            description = "Recurring",
+            checked = recurring
+        ) { recurring = it }
+        if (recurring) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DropDown(
+                    modifier = Modifier.weight(1f),
+                    value = timeRange.toText(),
+                    dropdownValues = timeRanges,
+                    expanded = expandedTimeRange,
+                    label = "Time Range",
+                    onExpandedChange = { expandedTimeRange = !it },
+                    onValueClick = { timeRange = it.toRecurringTimeRange(context) },
+                    onDismiss = { expandedTimeRange = false }
+                )
+                Spacer(Modifier.size(16.dp))
+                DropDown(
+                    modifier = Modifier.weight(1f),
+                    value = frequency.toString(),
+                    dropdownValues = listOf(0, 1, 2, 3, 4, 5).map { it.toString() },
+                    expanded = expandedFrequency,
+                    label = "Frequency",
+                    onExpandedChange = { expandedFrequency = !it },
+                    onValueClick = { frequency = Integer.parseInt(it) },
+                    onDismiss = { expandedFrequency = false }
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .align(CenterHorizontally)
+                    .padding(top = 8.dp),
+                text = getFrequencyString(recurringTimeRange, recurringFrequency)
             )
         }
         Row(
@@ -265,6 +284,24 @@ fun EditReminderDrawerPreview() {
                     Text("some text here")
                 }
             }, modifier = Modifier, drawerState = drawerState)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Preview(showBackground = true)
+@Composable
+fun EditReminderDrawerRecurringPreview() {
+    AndroidThreeTen.init(LocalContext.current)
+    PileyTheme(useDarkTheme = true) {
+        Surface {
+            val initialDateTime = LocalDateTime.now(utcZoneId)
+            val drawerState = BottomDrawerState(BottomDrawerValue.Open)
+            AddReminderDrawer(initialDate = initialDateTime, content = {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Text("some text here")
+                }
+            }, isRecurring = true, modifier = Modifier, drawerState = drawerState)
         }
     }
 }

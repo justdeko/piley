@@ -1,6 +1,7 @@
 package com.dk.piley.ui.task
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomDrawer
@@ -159,40 +160,42 @@ fun AddReminderContent(
             description = "Recurring",
             checked = recurring
         ) { recurring = it }
-        if (recurring) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DropDown(
-                    modifier = Modifier.weight(1f),
-                    value = timeRange.toText(),
-                    dropdownValues = timeRanges,
-                    expanded = expandedTimeRange,
-                    label = "Time Range",
-                    onExpandedChange = { expandedTimeRange = !it },
-                    onValueClick = { timeRange = it.toRecurringTimeRange(context) },
-                    onDismiss = { expandedTimeRange = false }
-                )
-                Spacer(Modifier.size(16.dp))
-                DropDown(
-                    modifier = Modifier.weight(1f),
-                    value = frequency.toString(),
-                    dropdownValues = listOf(0, 1, 2, 3, 4, 5).map { it.toString() },
-                    expanded = expandedFrequency,
-                    label = "Frequency",
-                    onExpandedChange = { expandedFrequency = !it },
-                    onValueClick = { frequency = Integer.parseInt(it) },
-                    onDismiss = { expandedFrequency = false }
+        AnimatedVisibility(recurring) {
+            Column {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    DropDown(
+                        modifier = Modifier.weight(1f),
+                        value = timeRange.toText(),
+                        dropdownValues = timeRanges,
+                        expanded = expandedTimeRange,
+                        label = "Time Range",
+                        onExpandedChange = { expandedTimeRange = !it },
+                        onValueClick = { timeRange = it.toRecurringTimeRange(context) },
+                        onDismiss = { expandedTimeRange = false }
+                    )
+                    Spacer(Modifier.size(16.dp))
+                    DropDown(
+                        modifier = Modifier.weight(1f),
+                        value = frequency.toString(),
+                        dropdownValues = listOf(0, 1, 2, 3, 4, 5).map { it.toString() },
+                        expanded = expandedFrequency,
+                        label = "Frequency",
+                        onExpandedChange = { expandedFrequency = !it },
+                        onValueClick = { frequency = Integer.parseInt(it) },
+                        onDismiss = { expandedFrequency = false }
+                    )
+                }
+                Text(
+                    modifier = Modifier
+                        .align(CenterHorizontally)
+                        .padding(top = 8.dp),
+                    text = getFrequencyString(recurringTimeRange, recurringFrequency)
                 )
             }
-            Text(
-                modifier = Modifier
-                    .align(CenterHorizontally)
-                    .padding(top = 8.dp),
-                text = getFrequencyString(recurringTimeRange, recurringFrequency)
-            )
         }
         Row(
             modifier = Modifier

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -93,9 +92,9 @@ fun AddReminderContent(
     var expandedTimeRange by remember { mutableStateOf(false) }
     var expandedFrequency by remember { mutableStateOf(false) }
     val timeRanges = stringArrayResource(R.array.time_range).toList()
-    var recurring by rememberSaveable { (mutableStateOf(isRecurring)) }
-    var timeRange by rememberSaveable { (mutableStateOf(recurringTimeRange)) }
-    var frequency by rememberSaveable { (mutableStateOf(recurringFrequency)) }
+    var recurring by remember { (mutableStateOf(isRecurring)) }
+    var timeRange by remember { (mutableStateOf(recurringTimeRange)) }
+    var frequency by remember { (mutableStateOf(recurringFrequency)) }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -173,19 +172,25 @@ fun AddReminderContent(
                         dropdownValues = timeRanges,
                         expanded = expandedTimeRange,
                         label = "Time Range",
-                        onExpandedChange = { expandedTimeRange = !it },
-                        onValueClick = { timeRange = it.toRecurringTimeRange(context) },
+                        onExpandedChange = { expandedTimeRange = !expandedTimeRange },
+                        onValueClick = {
+                            expandedTimeRange = false
+                            timeRange = it.toRecurringTimeRange(context)
+                        },
                         onDismiss = { expandedTimeRange = false }
                     )
                     Spacer(Modifier.size(16.dp))
                     DropDown(
                         modifier = Modifier.weight(1f),
                         value = frequency.toString(),
-                        dropdownValues = listOf(0, 1, 2, 3, 4, 5).map { it.toString() },
+                        dropdownValues = listOf(1, 2, 3, 4, 5).map { it.toString() },
                         expanded = expandedFrequency,
                         label = "Frequency",
-                        onExpandedChange = { expandedFrequency = !it },
-                        onValueClick = { frequency = Integer.parseInt(it) },
+                        onExpandedChange = { expandedFrequency = !expandedFrequency },
+                        onValueClick = {
+                            expandedFrequency = false
+                            frequency = Integer.parseInt(it)
+                        },
                         onDismiss = { expandedFrequency = false }
                     )
                 }
@@ -193,7 +198,7 @@ fun AddReminderContent(
                     modifier = Modifier
                         .align(CenterHorizontally)
                         .padding(top = 8.dp),
-                    text = getFrequencyString(recurringTimeRange, recurringFrequency)
+                    text = getFrequencyString(timeRange, frequency)
                 )
             }
         }
@@ -211,9 +216,9 @@ fun AddReminderContent(
                             onAddReminder(
                                 ReminderState(
                                     reminder = it,
-                                    recurring = isRecurring,
-                                    recurringTimeRange = recurringTimeRange,
-                                    recurringFrequency = recurringFrequency
+                                    recurring = recurring,
+                                    recurringTimeRange = timeRange,
+                                    recurringFrequency = frequency
                                 )
                             )
                         }
@@ -225,9 +230,9 @@ fun AddReminderContent(
                         onAddReminder(
                             ReminderState(
                                 reminder = time.atDate(date),
-                                recurring = isRecurring,
-                                recurringTimeRange = recurringTimeRange,
-                                recurringFrequency = recurringFrequency
+                                recurring = recurring,
+                                recurringTimeRange = timeRange,
+                                recurringFrequency = frequency
                             )
                         )
                     }

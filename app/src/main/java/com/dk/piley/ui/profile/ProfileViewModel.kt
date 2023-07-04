@@ -50,7 +50,8 @@ class ProfileViewModel @Inject constructor(
                     currentTasks = current,
                     upcomingTaskList = getUpcomingTasks(pilesWithTasks),
                     biggestPileName = getBiggestPile(pilesWithTasks),
-                    averageTaskDurationInHours = getAverageTaskCompletionInHours(pilesWithTasks)
+                    averageTaskDurationInHours = getAverageTaskCompletionInHours(pilesWithTasks),
+                    userIsOffline = user.isOffline
                 )
             }.collect { _state.value = it }
         }
@@ -122,6 +123,7 @@ data class ProfileViewState(
     val signedOutState: SignOutState = SignOutState.SIGNED_IN,
     val showProgressBar: Boolean = false,
     val toastMessage: String? = null,
+    val userIsOffline: Boolean = false
 )
 
 enum class SignOutState {

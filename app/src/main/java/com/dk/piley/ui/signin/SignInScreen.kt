@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.IndefiniteProgressBar
@@ -65,6 +66,13 @@ fun SignInScreen(
             } else {
                 viewModel.setSignInState(SignInState.REGISTER)
             }
+        },
+        onChangeOfflineRegister = { isOffline ->
+            if (isOffline) {
+                viewModel.setSignInState(SignInState.REGISTER_OFFLINE)
+            } else {
+                viewModel.setSignInState(SignInState.REGISTER)
+            }
         }
     )
 }
@@ -79,6 +87,7 @@ private fun SignInScreen(
     onAttemptSignIn: () -> Unit = {},
     onSignInError: () -> Unit = {},
     onChangeRegister: () -> Unit = {},
+    onChangeOfflineRegister: (Boolean) -> Unit = {}
 ) {
     val context = LocalContext.current
     val isRegister = viewState.signInState == SignInState.REGISTER
@@ -135,7 +144,8 @@ private fun SignInScreen(
             )
             AnimatedVisibility(
                 viewState.signInState == SignInState.REGISTER
-                    || viewState.signInState == SignInState.REGISTER_ERROR
+                        || viewState.signInState == SignInState.REGISTER_OFFLINE
+                        || viewState.signInState == SignInState.REGISTER_ERROR
             ) {
                 OutlinedTextField(
                     modifier = Modifier
@@ -160,6 +170,20 @@ private fun SignInScreen(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             )
+            AnimatedVisibility(
+                viewState.signInState == SignInState.REGISTER
+                        || viewState.signInState == SignInState.REGISTER_OFFLINE
+                        || viewState.signInState == SignInState.REGISTER_ERROR
+            ) {
+                TextWithCheckbox(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 8.dp),
+                    description = "Make user offline",
+                    checked = viewState.signInState == SignInState.REGISTER_OFFLINE,
+                    onChecked = onChangeOfflineRegister
+                )
+            }
             ElevatedButton(
                 modifier = Modifier.padding(top = 16.dp, bottom = 32.dp),
                 onClick = onAttemptSignIn,

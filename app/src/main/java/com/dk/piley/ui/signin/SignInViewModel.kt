@@ -112,13 +112,39 @@ class SignInViewModel @Inject constructor(
     fun attemptSignIn() {
         val userData = state.value
         viewModelScope.launch {
-            if (state.value.signInState == SignInState.REGISTER) {
-                // Register
-                attemptRegister()
-            } else {
-                // Attempt sign in
-                attemptRemoteSignIn(userData.email, userData.password)
+            when (state.value.signInState) {
+                SignInState.REGISTER -> {
+                    // Register
+                    attemptRegister()
+                }
+
+                SignInState.REGISTER_OFFLINE -> {
+                    // register but only locally
+                    doOfflineRegister()
+                }
+
+                else -> {
+                    // Attempt sign in
+                    attemptRemoteSignIn(userData.email, userData.password)
+                }
             }
+        }
+    }
+
+    private fun doOfflineRegister() {
+        setLoading(true)
+        val userData = state.value
+        val user = User(
+            name = userData.username,
+            email = userData.email,
+            password = userData.password,
+            isOffline = true
+        )
+        viewModelScope.launch {
+            userRepository.insertUser(user)
+            userRepository.setSignedInUser(user.email)
+            createAndSetUserPile()
+            setLoading(false)
         }
     }
 

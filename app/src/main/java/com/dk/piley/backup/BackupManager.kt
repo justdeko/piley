@@ -46,8 +46,12 @@ class BackupManager @Inject constructor(
      * that represents whether the sync was needed (null if not) and when the downloaded backup occurred
      */
     @OptIn(FlowPreview::class)
-    suspend fun syncBackupToLocalForUserFlow(): Flow<Resource<Instant?>> =
-        backupRepository.getBackupFileFlow(
+    suspend fun syncBackupToLocalForUserFlow(): Flow<Resource<Instant?>> {
+        // if user is in offline mode, do nothing and return successful flow
+        if (userRepository.getSignedInUserEntity()?.isOffline == true) {
+            return flowOf(Resource.Success(null))
+        }
+        return backupRepository.getBackupFileFlow(
             userRepository.getSignedInUserEmail(), context
         ).flatMapConcat {
             when (it) {
@@ -56,6 +60,7 @@ class BackupManager @Inject constructor(
                 is Resource.Failure -> flowOf(Resource.Failure(it.exception))
             }
         }.flowOn(Dispatchers.IO)
+    }
 
     /**
      * Flow for uploading the local backup file to the server
@@ -80,6 +85,9 @@ class BackupManager @Inject constructor(
      */
     suspend fun performBackupIfNecessary() {
         userRepository.getSignedInUserEntity()?.let {
+            // if user is offline, don't perform backup
+            if (it.isOffline) return
+            // get date of last backup and perform new backup if date was too long ago
             val lastBackup = it.lastBackup
             val latestBackupDate = LocalDateTime.now().minusDays(it.defaultBackupFrequency.toLong())
             if (lastBackup != null && lastBackup.isBefore(latestBackupDate)) {

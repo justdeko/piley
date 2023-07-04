@@ -79,6 +79,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteUser(password: String) {
+        // TODO consider offline user
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserEntity()
             if (existingUser != null && existingUser.password == password) {
@@ -120,6 +121,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun updateUser(result: EditUserResult) {
+        // TODO consider offline user
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserEntity()
             if (existingUser != null && result.oldPassword == existingUser.password) {

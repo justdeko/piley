@@ -146,14 +146,16 @@ private fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 pileNameTaskList = viewState.upcomingTaskList
             )
-            Text(
-                text = "Backup",
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                textAlign = TextAlign.Start
-            )
-            BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
+            if (!viewState.userIsOffline) {
+                Text(
+                    text = "Backup",
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp),
+                    textAlign = TextAlign.Start
+                )
+                BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
+            }
             Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
                 AppInfo()
             }

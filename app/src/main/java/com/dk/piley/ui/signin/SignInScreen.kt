@@ -90,7 +90,8 @@ private fun SignInScreen(
     onChangeOfflineRegister: (Boolean) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val isRegister = viewState.signInState == SignInState.REGISTER
+    val isRegister =
+        viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE
     val signInText = if (isRegister) "Register" else "Sign In"
     when (viewState.signInState) {
         SignInState.SIGNED_IN -> {

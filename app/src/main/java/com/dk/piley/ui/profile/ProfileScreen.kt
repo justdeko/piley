@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -112,12 +114,16 @@ private fun ProfileScreen(
                         contentDescription = "go to settings"
                     )
                 }
-                IconButton(onClick = onSignOut) {
-                    Icon(
-                        Icons.Filled.Logout,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        contentDescription = "sign out"
-                    )
+                if (viewState.userIsOffline) {
+                    Spacer(modifier = Modifier.size(0.dp))
+                } else {
+                    IconButton(onClick = onSignOut) {
+                        Icon(
+                            Icons.Filled.Logout,
+                            tint = MaterialTheme.colorScheme.secondary,
+                            contentDescription = "sign out"
+                        )
+                    }
                 }
             }
             UserInfo(name = viewState.userName)

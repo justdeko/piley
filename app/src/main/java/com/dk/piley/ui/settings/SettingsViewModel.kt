@@ -79,40 +79,48 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun deleteUser(password: String) {
-        // TODO consider offline user
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserEntity()
             if (existingUser != null && existingUser.password == password) {
-                userRepository.deleteUserFlow(existingUser.email, password).collect { resource ->
-                    when (resource) {
-                        is Resource.Loading -> _state.update { it.copy(loading = true) }
-                        is Resource.Failure -> {
-                            _state.update {
-                                it.copy(
-                                    loading = false,
-                                    message = resource.exception.message
-                                )
-                            }
-                        }
+                if (existingUser.isOffline) {
+                    deleteUserLocally()
+                } else {
+                    userRepository.deleteUserFlow(existingUser.email, password)
+                        .collect { resource ->
+                            when (resource) {
+                                is Resource.Loading -> _state.update { it.copy(loading = true) }
+                                is Resource.Failure -> {
+                                    _state.update {
+                                        it.copy(
+                                            loading = false,
+                                            message = resource.exception.message
+                                        )
+                                    }
+                                }
 
-                        is Resource.Success -> {
-                            // delete user and all piles, set signed in user to empty
-                            userRepository.setSignedInUser("")
-                            userRepository.deleteUserTable()
-                            pileRepository.deletePileData()
-                            _state.update {
-                                it.copy(
-                                    loading = false,
-                                    userDeleted = true,
-                                    message = "User deleted, signing out"
-                                )
+                                is Resource.Success -> {
+                                    // delete user and all piles, set signed in user to empty
+                                    deleteUserLocally()
+                                }
                             }
                         }
-                    }
                 }
             } else {
                 _state.update { it.copy(message = "Error deleting user: Your password is incorrect") }
             }
+        }
+    }
+
+    private suspend fun deleteUserLocally() {
+        userRepository.setSignedInUser("")
+        userRepository.deleteUserTable()
+        pileRepository.deletePileData()
+        _state.update {
+            it.copy(
+                loading = false,
+                userDeleted = true,
+                message = "User deleted, signing out"
+            )
         }
     }
 
@@ -121,38 +129,30 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun updateUser(result: EditUserResult) {
-        // TODO consider offline user
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserEntity()
             if (existingUser != null && result.oldPassword == existingUser.password) {
-                userRepository.updateUserFlow(
-                    oldUser = existingUser,
-                    newPassword = result.newPassword,
-                    newName = result.name
-                ).collect { resource ->
-                    when (resource) {
-                        is Resource.Loading -> _state.update { it.copy(loading = true) }
-                        is Resource.Failure -> {
-                            _state.update {
-                                it.copy(
-                                    loading = false,
-                                    message = resource.exception.message
-                                )
+                if (existingUser.isOffline) {
+                    updateUserLocally(existingUser, result)
+                } else {
+                    userRepository.updateUserFlow(
+                        oldUser = existingUser,
+                        newPassword = result.newPassword,
+                        newName = result.name
+                    ).collect { resource ->
+                        when (resource) {
+                            is Resource.Loading -> _state.update { it.copy(loading = true) }
+                            is Resource.Failure -> {
+                                _state.update {
+                                    it.copy(
+                                        loading = false,
+                                        message = resource.exception.message
+                                    )
+                                }
                             }
-                        }
 
-                        is Resource.Success -> {
-                            userRepository.insertUser(
-                                existingUser.copy(
-                                    name = result.name,
-                                    password = result.newPassword.ifBlank { result.oldPassword }
-                                )
-                            )
-                            _state.update {
-                                it.copy(
-                                    loading = false,
-                                    message = "User updated successfully!"
-                                )
+                            is Resource.Success -> {
+                                updateUserLocally(existingUser, result)
                             }
                         }
                     }
@@ -165,6 +165,21 @@ class SettingsViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private suspend fun updateUserLocally(existingUser: User, result: EditUserResult) {
+        userRepository.insertUser(
+            existingUser.copy(
+                name = result.name,
+                password = result.newPassword.ifBlank { result.oldPassword }
+            )
+        )
+        _state.update {
+            it.copy(
+                loading = false,
+                message = "User updated successfully!"
+            )
         }
     }
 }

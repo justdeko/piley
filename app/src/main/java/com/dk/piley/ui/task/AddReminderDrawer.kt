@@ -37,6 +37,7 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -85,6 +86,7 @@ fun AddReminderContent(
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
 ) {
+    Timber.d("is recurring: $isRecurring")
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var localDate: LocalDate? by remember { mutableStateOf(null) }
@@ -92,9 +94,9 @@ fun AddReminderContent(
     var expandedTimeRange by remember { mutableStateOf(false) }
     var expandedFrequency by remember { mutableStateOf(false) }
     val timeRanges = stringArrayResource(R.array.time_range).toList()
-    var recurring by remember { (mutableStateOf(isRecurring)) }
-    var timeRange by remember { (mutableStateOf(recurringTimeRange)) }
-    var frequency by remember { (mutableStateOf(recurringFrequency)) }
+    var recurring by remember(isRecurring) { (mutableStateOf(isRecurring)) }
+    var timeRange by remember(recurringTimeRange) { (mutableStateOf(recurringTimeRange)) }
+    var frequency by remember(recurringFrequency) { (mutableStateOf(recurringFrequency)) }
     Column(
         modifier = modifier
             .fillMaxWidth()

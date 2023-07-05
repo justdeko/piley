@@ -27,6 +27,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -141,7 +143,10 @@ private fun SignInScreen(
                 placeholder = { Text("Email") },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Email
+                ),
             )
             AnimatedVisibility(
                 viewState.signInState == SignInState.REGISTER
@@ -167,9 +172,13 @@ private fun SignInScreen(
                 value = viewState.password,
                 onValueChange = onPasswordChange,
                 placeholder = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
             )
             AnimatedVisibility(
                 viewState.signInState == SignInState.REGISTER

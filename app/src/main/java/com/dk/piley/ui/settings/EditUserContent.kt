@@ -26,6 +26,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,21 +78,29 @@ fun EditUserContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = newPassword,
                 onValueChange = { newPassword = it },
+                visualTransformation = PasswordVisualTransformation(),
                 placeholder = { Text("New Password\n(leave empty if unchanged)") },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Password
+                ),
             )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = oldPassword,
+                visualTransformation = PasswordVisualTransformation(),
                 onValueChange = { oldPassword = it },
                 placeholder = { Text("Current password to confirm") },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
             )
             Row(
                 modifier = Modifier

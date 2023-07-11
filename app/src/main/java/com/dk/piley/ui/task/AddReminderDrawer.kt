@@ -1,6 +1,9 @@
 package com.dk.piley.ui.task
 
+import android.Manifest
 import android.content.res.Configuration
+import android.os.Build
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,12 +35,14 @@ import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.toRecurringTimeRange
 import com.dk.piley.util.toText
 import com.dk.piley.util.utcZoneId
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -74,7 +79,7 @@ fun AddReminderDrawer(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun AddReminderContent(
     modifier: Modifier = Modifier,
@@ -86,7 +91,6 @@ fun AddReminderContent(
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
 ) {
-    Timber.d("is recurring: $isRecurring")
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var localDate: LocalDate? by remember { mutableStateOf(null) }
@@ -96,7 +100,14 @@ fun AddReminderContent(
     val timeRanges = stringArrayResource(R.array.time_range).toList()
     var recurring by remember(isRecurring) { (mutableStateOf(isRecurring)) }
     var timeRange by remember(recurringTimeRange) { (mutableStateOf(recurringTimeRange)) }
-    var frequency by remember(recurringFrequency) { (mutableStateOf(recurringFrequency)) }
+    var frequency by remember(recurringFrequency) { (mutableIntStateOf(recurringFrequency)) }
+    val permissionState =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            null
+        }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -213,6 +224,15 @@ fun AddReminderContent(
             Button(
                 enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
                 onClick = {
+                    // if permission denied, do nothing and show toast
+                    if (permissionState != null && !permissionState.status.isGranted) {
+                        Toast.makeText(
+                            context,
+                            "This reminder won't show up because you haven't enabled notifications.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return@Button
+                    }
                     if (localTime != null && localDate != null) {
                         localTime?.atDate(localDate)?.let {
                             onAddReminder(

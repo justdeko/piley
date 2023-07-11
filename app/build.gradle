@@ -89,6 +89,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     // local time and date below API 26
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
+    // permissions
+    implementation "com.google.accompanist:accompanist-permissions:0.31.5-beta"
     // logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
     // testing

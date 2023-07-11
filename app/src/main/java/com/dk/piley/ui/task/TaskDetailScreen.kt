@@ -1,5 +1,7 @@
 package com.dk.piley.ui.task
 
+import RequestNotificationPermissionDialog
+import android.os.Build
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +30,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -84,6 +89,15 @@ fun TaskDetailScreen(
     val scope = rememberCoroutineScope()
     val drawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
     val scrollState = rememberScrollState()
+
+    // notification permission
+    var rationaleOpen by remember { mutableStateOf(true) }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && drawerState.isOpen) {
+        RequestNotificationPermissionDialog(rationaleOpen) {
+            rationaleOpen = false
+        }
+    }
+
     AddReminderDrawer(
         drawerState = drawerState,
         onAddReminder = onAddReminder,

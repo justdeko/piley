@@ -14,7 +14,7 @@ fun AlertDialogHelper(
     title: String,
     description: String,
     confirmText: String = "OK",
-    dismissText: String = "Cancel",
+    dismissText: String? = "Cancel",
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {}
 ) {
@@ -22,7 +22,11 @@ fun AlertDialogHelper(
         title = { Text(text = title) },
         text = { Text(text = description) },
         confirmButton = { TextButton(onClick = onConfirm) { Text(confirmText) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(dismissText) } },
+        dismissButton = {
+            if (dismissText != null) {
+                TextButton(onClick = onDismiss) { Text(dismissText) }
+            }
+        },
         onDismissRequest = onDismiss
     )
 }

@@ -5,7 +5,14 @@ import android.content.res.Configuration
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomDrawer
 import androidx.compose.material.BottomDrawerState
@@ -14,8 +21,20 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -36,6 +55,7 @@ import com.dk.piley.util.toRecurringTimeRange
 import com.dk.piley.util.toText
 import com.dk.piley.util.utcZoneId
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -44,7 +64,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun AddReminderDrawer(
     modifier: Modifier = Modifier,
@@ -55,7 +75,12 @@ fun AddReminderDrawer(
     recurringFrequency: Int = 1,
     onAddReminder: (ReminderState) -> Unit = {},
     onDeleteReminder: () -> Unit = {},
-    content: @Composable () -> Unit,
+    permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        null
+    },
+    content: @Composable () -> Unit
 ) {
     BottomDrawer(
         drawerContent = {
@@ -67,7 +92,8 @@ fun AddReminderDrawer(
                 initialDateTime = initialDate,
                 isRecurring = isRecurring,
                 recurringTimeRange = recurringTimeRange,
-                recurringFrequency = recurringFrequency
+                recurringFrequency = recurringFrequency,
+                permissionState = permissionState
             )
         },
         gesturesEnabled = !drawerState.isClosed,
@@ -90,6 +116,11 @@ fun AddReminderContent(
     isRecurring: Boolean = false,
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
+    permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        null
+    },
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -101,12 +132,6 @@ fun AddReminderContent(
     var recurring by remember(isRecurring) { (mutableStateOf(isRecurring)) }
     var timeRange by remember(recurringTimeRange) { (mutableStateOf(recurringTimeRange)) }
     var frequency by remember(recurringFrequency) { (mutableIntStateOf(recurringFrequency)) }
-    val permissionState =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-        } else {
-            null
-        }
 
     Column(
         modifier = modifier
@@ -150,7 +175,8 @@ fun AddReminderContent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                localTime?.toString() ?: (initialDateTime?.toLocalTime()?.withNano(0)?.toString()
+                localTime?.toString() ?: (initialDateTime?.toLocalTime()?.withNano(0)
+                    ?.toString()
                     ?: "Pick a time")
             )
             IconButton(onClick = {
@@ -292,7 +318,7 @@ data class ReminderState(
     val recurringFrequency: Int,
 )
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AddReminderDrawerPreview() {
@@ -300,16 +326,18 @@ fun AddReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
             val drawerState = BottomDrawerState(BottomDrawerValue.Open)
-            AddReminderDrawer(content = {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Text("some text here")
-                }
-            }, modifier = Modifier, drawerState = drawerState)
+            AddReminderDrawer(
+                content = {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Text("some text here")
+                    }
+                }, modifier = Modifier, drawerState = drawerState, permissionState = null
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Preview(showBackground = true)
 @Composable
 fun EditReminderDrawerPreview() {
@@ -318,16 +346,18 @@ fun EditReminderDrawerPreview() {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
             val drawerState = BottomDrawerState(BottomDrawerValue.Open)
-            AddReminderDrawer(initialDate = initialDateTime, content = {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Text("some text here")
-                }
-            }, modifier = Modifier, drawerState = drawerState)
+            AddReminderDrawer(
+                initialDate = initialDateTime, content = {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Text("some text here")
+                    }
+                }, modifier = Modifier, drawerState = drawerState, permissionState = null
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Preview(showBackground = true)
 @Composable
 fun EditReminderDrawerRecurringPreview() {
@@ -336,11 +366,18 @@ fun EditReminderDrawerRecurringPreview() {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
             val drawerState = BottomDrawerState(BottomDrawerValue.Open)
-            AddReminderDrawer(initialDate = initialDateTime, content = {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Text("some text here")
-                }
-            }, isRecurring = true, modifier = Modifier, drawerState = drawerState)
+            AddReminderDrawer(
+                initialDate = initialDateTime,
+                content = {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        Text("some text here")
+                    }
+                },
+                isRecurring = true,
+                modifier = Modifier,
+                drawerState = drawerState,
+                permissionState = null
+            )
         }
     }
 }

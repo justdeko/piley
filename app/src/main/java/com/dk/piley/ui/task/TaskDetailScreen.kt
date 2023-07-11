@@ -1,6 +1,7 @@
 package com.dk.piley.ui.task
 
 import RequestNotificationPermissionDialog
+import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -48,8 +49,12 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.theme.PileyTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController = rememberNavController(),
@@ -73,7 +78,11 @@ fun TaskDetailScreen(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterialApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalPermissionsApi::class
+)
 @Composable
 fun TaskDetailScreen(
     modifier: Modifier = Modifier,
@@ -83,7 +92,12 @@ fun TaskDetailScreen(
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
     onAddReminder: (ReminderState) -> Unit = {},
-    onCancelReminder: () -> Unit = {}
+    onCancelReminder: () -> Unit = {},
+    permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        null
+    },
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
@@ -91,7 +105,7 @@ fun TaskDetailScreen(
     val scrollState = rememberScrollState()
 
     // notification permission
-    var rationaleOpen by remember { mutableStateOf(true) }
+    var rationaleOpen by remember { mutableStateOf(false) }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && drawerState.isOpen) {
         RequestNotificationPermissionDialog(rationaleOpen) {
             rationaleOpen = false
@@ -105,7 +119,8 @@ fun TaskDetailScreen(
         initialDate = viewState.task.reminder,
         isRecurring = viewState.task.isRecurring,
         recurringFrequency = viewState.task.recurringFrequency,
-        recurringTimeRange = viewState.task.recurringTimeRange
+        recurringTimeRange = viewState.task.recurringTimeRange,
+        permissionState = permissionState
     ) {
         Column(
             modifier = modifier
@@ -191,13 +206,14 @@ fun TaskDetailScreen(
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @PreviewMainScreen
 @Composable
 fun TaskDetailScreenPreview() {
     PileyTheme {
         Surface {
             val state = TaskDetailViewState(task = Task(title = "Hello"))
-            TaskDetailScreen(viewState = state)
+            TaskDetailScreen(viewState = state, permissionState = null)
         }
     }
 }

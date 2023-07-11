@@ -143,15 +143,16 @@ private fun SignInScreen(
                 placeholder = { Text("Email") },
                 shape = RoundedCornerShape(16.dp),
                 isError = emailError,
-                supportingText = {
-                    if (emailError) {
+                supportingText = if (emailError) {
+                    @Composable
+                    {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             text = "Not a valid email",
                             color = MaterialTheme.colorScheme.error
                         )
                     }
-                },
+                } else null,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
@@ -243,7 +244,6 @@ fun TaskDetailScreenPreviewLoading() {
         Surface {
             val state = SignInViewState(
                 loading = true,
-                username = "John Doe",
                 signInState = SignInState.REGISTER
             )
             SignInScreen(viewState = state)

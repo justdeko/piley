@@ -49,11 +49,20 @@ fun SignInScreen(
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.state.collectAsState()
+    val context = LocalContext.current
+
     if (viewState.signInState == SignInState.SIGNED_IN) {
         LaunchedEffect(viewState.signInState) {
             navController.navigateClearBackstack(Screen.Pile.route)
         }
     }
+    if (viewState.toastMessage != null) {
+        LaunchedEffect(key1 = viewState.toastMessage) {
+            Toast.makeText(context, viewState.toastMessage, Toast.LENGTH_SHORT).show()
+            viewModel.setToastMessage(null)
+        }
+    }
+
     SignInScreen(
         modifier = modifier,
         viewState = viewState,
@@ -61,7 +70,6 @@ fun SignInScreen(
         onUsernameChange = { viewModel.setUsername(it) },
         onPasswordChange = { viewModel.setPassword(it) },
         onAttemptSignIn = { viewModel.attemptSignIn() },
-        onSignInError = { viewModel.setSignInState(SignInState.SIGNED_OUT) },
         onChangeRegister = {
             if (viewState.signInState == SignInState.REGISTER) {
                 viewModel.setSignInState(SignInState.SIGNED_OUT)
@@ -87,30 +95,13 @@ private fun SignInScreen(
     onUsernameChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onAttemptSignIn: () -> Unit = {},
-    onSignInError: () -> Unit = {},
     onChangeRegister: () -> Unit = {},
     onChangeOfflineRegister: (Boolean) -> Unit = {}
 ) {
-    val context = LocalContext.current
     val isRegister =
         viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE
     val signInText = if (isRegister) "Register" else "Sign In"
-    when (viewState.signInState) {
-        SignInState.SIGNED_IN -> {
-            Toast.makeText(context, "Signed in!", Toast.LENGTH_SHORT).show()
-        } // TODO fix using launched effect
 
-        SignInState.SIGN_IN_ERROR -> {
-            Toast.makeText(context, "Error signing in", Toast.LENGTH_SHORT).show()
-            onSignInError()
-        }
-
-        SignInState.REGISTER_ERROR -> {
-            Toast.makeText(context, "Error when attempting to register", Toast.LENGTH_LONG).show()
-        }
-
-        else -> {}
-    }
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -151,7 +142,6 @@ private fun SignInScreen(
             AnimatedVisibility(
                 viewState.signInState == SignInState.REGISTER
                         || viewState.signInState == SignInState.REGISTER_OFFLINE
-                        || viewState.signInState == SignInState.REGISTER_ERROR
             ) {
                 OutlinedTextField(
                     modifier = Modifier
@@ -183,7 +173,6 @@ private fun SignInScreen(
             AnimatedVisibility(
                 viewState.signInState == SignInState.REGISTER
                         || viewState.signInState == SignInState.REGISTER_OFFLINE
-                        || viewState.signInState == SignInState.REGISTER_ERROR
             ) {
                 TextWithCheckbox(
                     modifier = Modifier

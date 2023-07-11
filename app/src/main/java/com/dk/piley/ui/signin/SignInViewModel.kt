@@ -47,7 +47,7 @@ class SignInViewModel @Inject constructor(
                     is Resource.Success -> onRegisterSuccess(user)
                     is Resource.Failure -> {
                         setLoading(false)
-                        setSignInState(SignInState.REGISTER_ERROR)
+                        setToastMessage("Error when attempting to register")
                     }
                 }
             }
@@ -74,8 +74,7 @@ class SignInViewModel @Inject constructor(
                                 )
                             )
                             Timber.i("Backup loaded, going into main view")
-                            setLoading(false)
-                            setSignInState(SignInState.SIGNED_IN)
+                            updateUIOnSignInSuccess()
                         } else {
                             createAndSetUserPile()
                         }
@@ -105,7 +104,12 @@ class SignInViewModel @Inject constructor(
             )
         }
         // signal loading process has finished to user and set state to signed in
+       updateUIOnSignInSuccess()
+    }
+
+    private fun updateUIOnSignInSuccess(){
         setLoading(false)
+        setToastMessage("Signed in!")
         setSignInState(SignInState.SIGNED_IN)
     }
 
@@ -163,7 +167,7 @@ class SignInViewModel @Inject constructor(
 
                 is Resource.Failure -> {
                     setLoading(false)
-                    setSignInState(SignInState.SIGN_IN_ERROR)
+                    setToastMessage("Error signing in")
                 }
             }
         }
@@ -176,6 +180,7 @@ class SignInViewModel @Inject constructor(
     fun setEmail(input: String) = _state.update { it.copy(email = input) }
     fun setUsername(input: String) = _state.update { it.copy(username = input) }
     fun setPassword(input: String) = _state.update { it.copy(password = input) }
+    fun setToastMessage(message: String?) = _state.update { it.copy(toastMessage = message) }
 }
 
 data class SignInViewState(
@@ -183,6 +188,7 @@ data class SignInViewState(
     val email: String = "",
     val password: String = "",
     val signInState: SignInState = SignInState.SIGNED_OUT,
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val toastMessage: String? = null,
 )
 

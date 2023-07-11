@@ -57,8 +57,10 @@ fun ProfileScreen(
         }
     }
     if (viewState.toastMessage != null) {
-        Toast.makeText(context, viewState.toastMessage, Toast.LENGTH_SHORT).show()
-        viewModel.setToastMessage(null)
+        LaunchedEffect(key1 = viewState.toastMessage) {
+            Toast.makeText(context, viewState.toastMessage, Toast.LENGTH_SHORT).show()
+            viewModel.setToastMessage(null)
+        }
     }
     ProfileScreen(modifier = modifier,
         viewState = viewState,

@@ -78,14 +78,11 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun setSignedOutState(state: SignOutState) =
-        _state.update { it.copy(signedOutState = state) }
-
     private fun setShowProgressbar(visible: Boolean) =
         _state.update { it.copy(showProgressBar = visible) }
 
-    fun setToastMessage(message: String?) =
-        _state.update { it.copy(toastMessage = message) }
+    fun setSignedOutState(state: SignOutState) = _state.update { it.copy(signedOutState = state) }
+    fun setToastMessage(message: String?) = _state.update { it.copy(toastMessage = message) }
 
     fun attemptBackup() {
         viewModelScope.launch {

@@ -21,9 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -40,6 +44,7 @@ import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.IndefiniteProgressBar
+import com.dk.piley.util.isValidEmail
 import com.dk.piley.util.navigateClearBackstack
 
 @Composable
@@ -101,6 +106,9 @@ private fun SignInScreen(
     val isRegister =
         viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE
     val signInText = if (isRegister) "Register" else "Sign In"
+    var emailFocused by remember { mutableStateOf(false) }
+    val emailError =
+        !viewState.email.isValidEmail() && viewState.email.isNotBlank() && !emailFocused
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -128,11 +136,22 @@ private fun SignInScreen(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .onFocusChanged { emailFocused = it.isFocused },
                 value = viewState.email,
                 onValueChange = onEmailChange,
                 placeholder = { Text("Email") },
                 shape = RoundedCornerShape(16.dp),
+                isError = emailError,
+                supportingText = {
+                    if (emailError) {
+                        Text(
+                            modifier = Modifier.fillMaxWidth(),
+                            text = "Not a valid email",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
@@ -198,7 +217,8 @@ private fun SignInScreen(
 }
 
 fun signInButtonEnabled(isRegister: Boolean, viewState: SignInViewState): Boolean {
-    val signInEnabled = viewState.email.isNotBlank() && viewState.password.isNotBlank()
+    val signInEnabled =
+        viewState.email.isNotBlank() && viewState.password.isNotBlank() && viewState.email.isValidEmail()
     if (viewState.loading) return false
     return if (isRegister) {
         signInEnabled && viewState.username.isNotBlank()

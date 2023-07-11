@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.util.dateTimeString
+import com.dk.piley.util.dateTimeString
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDateTime
 

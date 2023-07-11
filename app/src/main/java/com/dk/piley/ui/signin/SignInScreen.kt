@@ -98,7 +98,7 @@ private fun SignInScreen(
     when (viewState.signInState) {
         SignInState.SIGNED_IN -> {
             Toast.makeText(context, "Signed in!", Toast.LENGTH_SHORT).show()
-        }
+        } // TODO fix using launched effect
 
         SignInState.SIGN_IN_ERROR -> {
             Toast.makeText(context, "Error signing in", Toast.LENGTH_SHORT).show()

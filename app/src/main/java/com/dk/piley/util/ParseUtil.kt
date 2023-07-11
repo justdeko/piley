@@ -1,4 +1,4 @@
-package com.dk.piley.ui.util
+package com.dk.piley.util
 
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate

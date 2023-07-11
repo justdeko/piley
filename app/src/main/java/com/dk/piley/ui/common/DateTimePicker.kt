@@ -7,7 +7,7 @@ package com.dk.piley.ui.common
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import com.dk.piley.ui.util.utcZoneId
+import com.dk.piley.util.utcZoneId
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat

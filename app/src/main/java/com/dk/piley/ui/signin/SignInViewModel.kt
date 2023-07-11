@@ -10,7 +10,7 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
-import com.dk.piley.ui.util.utcZoneId
+import com.dk.piley.util.utcZoneId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

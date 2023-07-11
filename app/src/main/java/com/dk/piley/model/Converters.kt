@@ -1,8 +1,8 @@
 package com.dk.piley.model
 
 import androidx.room.TypeConverter
-import com.dk.piley.ui.util.toLocalDateTime
-import com.dk.piley.ui.util.toTimestamp
+import com.dk.piley.util.toLocalDateTime
+import com.dk.piley.util.toTimestamp
 import org.threeten.bp.LocalDateTime
 
 class Converters {

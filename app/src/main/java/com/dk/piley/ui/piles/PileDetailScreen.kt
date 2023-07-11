@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -80,6 +82,7 @@ fun PileDetailScreen(
 ) {
     val today = LocalDateTime.now().toLocalDate()
     var dialogOpen by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
     if (dialogOpen) {
         AlertDialogHelper(
             title = "Clear all pile statistics",
@@ -95,7 +98,8 @@ fun PileDetailScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {

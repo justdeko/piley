@@ -1,4 +1,4 @@
-package com.dk.piley.ui.util
+package com.dk.piley.util
 
 import android.content.Context
 import android.content.res.Configuration

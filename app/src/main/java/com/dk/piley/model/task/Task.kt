@@ -2,7 +2,7 @@ package com.dk.piley.model.task
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dk.piley.ui.util.utcZoneId
+import com.dk.piley.util.utcZoneId
 import org.threeten.bp.LocalDateTime
 
 @Entity

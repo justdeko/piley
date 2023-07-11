@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.util.lastSevenDays
+import com.dk.piley.util.lastSevenDays
 import org.threeten.bp.LocalDate
 
 

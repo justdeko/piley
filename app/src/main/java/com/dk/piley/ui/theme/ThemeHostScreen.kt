@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dk.piley.R
 import com.dk.piley.model.user.NightMode
-import com.dk.piley.ui.util.isDarkMode
+import com.dk.piley.util.isDarkMode
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable

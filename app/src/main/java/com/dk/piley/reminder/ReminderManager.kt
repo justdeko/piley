@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.receiver.ReminderAlarmReceiver
-import com.dk.piley.ui.util.toTimestamp
+import com.dk.piley.util.toTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject

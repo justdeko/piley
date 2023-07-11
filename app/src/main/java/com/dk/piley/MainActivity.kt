@@ -38,7 +38,7 @@ import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
-import com.dk.piley.ui.util.isDarkMode
+import com.dk.piley.util.isDarkMode
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

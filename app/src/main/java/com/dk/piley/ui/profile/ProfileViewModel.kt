@@ -100,10 +100,15 @@ class ProfileViewModel @Inject constructor(
     fun signOutAfterError() = viewModelScope.launch { signOutLocally() }
 
     private suspend fun signOutLocally() {
+        pileRepository.deletePileData()
         userRepository.setSignedInUser("")
         userRepository.deleteUserTable()
-        pileRepository.deletePileData()
-        setSignedOutState(SignOutState.SIGNED_OUT)
+        _state.update {
+            it.copy(
+                toastMessage = "Signed out!",
+                signedOutState = SignOutState.SIGNED_OUT
+            )
+        }
     }
 }
 

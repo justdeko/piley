@@ -43,6 +43,7 @@ class ReminderManager @Inject constructor(
     fun cancelReminder(
         taskId: Long
     ) {
+        Timber.i("cancelling reminder for task id $taskId")
         val intent = Intent(context, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW
         }.let { intent ->

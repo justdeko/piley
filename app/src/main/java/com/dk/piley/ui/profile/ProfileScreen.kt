@@ -52,7 +52,7 @@ fun ProfileScreen(
     val context = LocalContext.current
 
     if (viewState.signedOutState == SignOutState.SIGNED_OUT) {
-        LaunchedEffect(viewState.signedOutState) {
+        LaunchedEffect(true) {
             navController.navigateClearBackstack(Screen.SignIn.route)
         }
     }

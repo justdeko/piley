@@ -10,7 +10,6 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
-import com.dk.piley.util.utcZoneId
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -69,7 +69,7 @@ class SignInViewModel @Inject constructor(
                                 user.copy(
                                     lastBackup = LocalDateTime.ofInstant(
                                         it.data,
-                                        utcZoneId
+                                        ZoneId.systemDefault()
                                     )
                                 )
                             )
@@ -104,10 +104,10 @@ class SignInViewModel @Inject constructor(
             )
         }
         // signal loading process has finished to user and set state to signed in
-       updateUIOnSignInSuccess()
+        updateUIOnSignInSuccess()
     }
 
-    private fun updateUIOnSignInSuccess(){
+    private fun updateUIOnSignInSuccess() {
         setLoading(false)
         setToastMessage("Signed in!")
         setSignInState(SignInState.SIGNED_IN)

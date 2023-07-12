@@ -3,6 +3,7 @@ package com.dk.piley.ui.task
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
@@ -77,7 +78,15 @@ class TaskDetailViewModel @Inject constructor(
             it.copy(reminderDateTimeText = null)
         }
         viewModelScope.launch {
-            repository.insertTask(state.value.task.copy(reminder = null))
+            // reset reminder to default values
+            repository.insertTask(
+                state.value.task.copy(
+                    reminder = null,
+                    recurringTimeRange = RecurringTimeRange.DAILY,
+                    recurringFrequency = 1,
+                    isRecurring = false
+                )
+            )
             dismissAlarmAndNotification()
         }
     }

@@ -9,6 +9,7 @@ import com.dk.piley.receiver.ReminderAlarmReceiver
 import com.dk.piley.util.toTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.threeten.bp.LocalDateTime
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +23,7 @@ class ReminderManager @Inject constructor(
     fun startReminder(
         reminderDateTime: LocalDateTime, taskId: Long
     ) {
+        Timber.i("starting reminder with datetime $reminderDateTime for task id $taskId")
         val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW
             putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)

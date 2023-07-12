@@ -37,21 +37,19 @@ class ReminderActionHandler @Inject constructor(
             taskList.take(1).filter {
                 // only tasks that are either recurring or not completed yet
                 (it.status == TaskStatus.DEFAULT && it.reminder != null)
-                    || (it.status != TaskStatus.DELETED && it.reminder != null && it.isRecurring)
+                        || (it.status != TaskStatus.DELETED && it.reminder != null && it.isRecurring)
             }.forEach { task ->
                 // start a reminder
                 task.reminder?.let { reminder ->
                     if (task.status == TaskStatus.DEFAULT) {
                         reminderManager.startReminder(reminder, task.id)
                     } else if (task.status == TaskStatus.DONE) {
-                        reminderManager.startReminder(
-                            reminderDateTime = getNextReminderTime(
-                                task.reminder,
-                                task.recurringTimeRange,
-                                task.recurringFrequency
-                            ),
-                            taskId = task.id
-                        )
+                        task.getNextReminderTime()?.let {
+                            reminderManager.startReminder(
+                                reminderDateTime = it,
+                                taskId = task.id
+                            )
+                        }
                     }
                 }
             }
@@ -63,17 +61,19 @@ class ReminderActionHandler @Inject constructor(
             reminderManager.cancelReminder(taskId)
             // set next reminder if task is recurring
             if (it.isRecurring && it.reminder != null) {
-                reminderManager.startReminder(
-                    reminderDateTime = getNextReminderTime(
-                        it.reminder,
-                        it.recurringTimeRange,
-                        it.recurringFrequency
-                    ),
-                    taskId = taskId
-                )
+                val newReminderTime = it.getNextReminderTime()
+                newReminderTime?.let { reminderTime ->
+                    reminderManager.startReminder(
+                        reminderDateTime = reminderTime,
+                        taskId = taskId
+                    )
+                    // set new reminder time inside task
+                    taskDao.insertTask(it.copy(status = TaskStatus.DONE, reminder = reminderTime))
+                }
+            } else {
+                taskDao.insertTask(it.copy(status = TaskStatus.DONE))
             }
             notificationManager.dismiss(taskId)
-            taskDao.insertTask(it.copy(status = TaskStatus.DONE))
         }
     }
 

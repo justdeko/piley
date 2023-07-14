@@ -5,6 +5,7 @@ import com.dk.piley.model.DATABASE_NAME
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.backup.BackupRepository
 import com.dk.piley.model.common.Resource
+import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.remote.backup.FileResponse
 import com.dk.piley.model.user.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,7 @@ import javax.inject.Inject
 class BackupManager @Inject constructor(
     private val backupRepository: BackupRepository,
     private val userRepository: UserRepository,
+    private val pileRepository: PileRepository,
     private val db: PileDatabase,
     private val context: Context
 ) {
@@ -70,10 +72,12 @@ class BackupManager @Inject constructor(
     suspend fun pushBackupToRemoteForUserFlow(): Flow<Resource<String>> {
         val email = userRepository.getSignedInUserEmail()
         return if (email.isNotBlank()) {
-            backupRepository.createOrUpdateBackupFlow(
-                email,
-                context.getDatabasePath(DATABASE_NAME)
-            ).flowOn(Dispatchers.IO)
+            // perform wal checkpoint to copy data over to main db file
+            pileRepository.performDatabaseCheckpoint()
+            // push db file to remote
+            val dbPath = context.getDatabasePath(DATABASE_NAME)
+            Timber.i("pushing backup from file $dbPath with size ${dbPath.length()}b")
+            backupRepository.createOrUpdateBackupFlow(email, dbPath).flowOn(Dispatchers.IO)
         } else {
             emptyFlow()
         }
@@ -137,14 +141,15 @@ class BackupManager @Inject constructor(
             }
             val dbPath = dbFile.absolutePath
             // close db instance
-            db.close()
+            db.close() // TODO fix this, issues with invalidation tracker
             // delete old file
             if (dbFile.exists()) {
+                Timber.d("Deleting backup file at $dbPath")
                 dbFile.delete()
             }
             // attempt to copy new file
             try {
-                Timber.i("Overwriting backup file")
+                Timber.d("Writing backup file at $dbPath")
                 val inputStream = FileInputStream(fileResponse.file)
                 val outputStream = FileOutputStream(dbPath)
                 inputStream.use { input ->
@@ -153,6 +158,7 @@ class BackupManager @Inject constructor(
                     }
                 }
                 // delete temp file
+                Timber.d("Deleting temp file at ${fileResponse.file.absolutePath}")
                 fileResponse.file.delete()
                 emit(Resource.Success(fileResponse.lastModified))
             } catch (ex: IOException) {

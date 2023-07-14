@@ -53,7 +53,7 @@ class SplashViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    Timber.i("Remote backup request successful, replaced local db: ${it.data}")
+                    Timber.i("Remote backup request successful, replaced local db: ${it.data != null}")
                     emit(false)
                 }
 

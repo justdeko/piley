@@ -3,6 +3,7 @@ package com.dk.piley.backup
 import android.content.Context
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.backup.BackupRepository
+import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -19,7 +20,14 @@ object BackupModule {
     fun provideBackupManager(
         backupRepository: BackupRepository,
         userRepository: UserRepository,
+        pileRepository: PileRepository,
         db: PileDatabase,
         @ApplicationContext appContext: Context
-    ) = BackupManager(backupRepository, userRepository, db, appContext)
+    ) = BackupManager(
+        backupRepository = backupRepository,
+        userRepository = userRepository,
+        pileRepository = pileRepository,
+        db = db,
+        context = appContext
+    )
 }

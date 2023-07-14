@@ -5,6 +5,7 @@ import okhttp3.Credentials
 import okhttp3.Headers
 import org.threeten.bp.Instant
 import org.threeten.bp.format.DateTimeParseException
+import timber.log.Timber
 
 fun credentials(username: String?, password: String?) =
     Credentials.basic(username ?: "", password ?: "")
@@ -12,15 +13,13 @@ fun credentials(username: String?, password: String?) =
 fun Headers.contentDispositionHeaders(): ContentDispositionHeaders? {
     val contentDisposition = this["Content-Disposition"]
     if (contentDisposition != null) {
-        val fileNameRegex = Regex("filename=['\"]?([^'\"\\s]+)['\"]?")
-        val fileNameMatchResult = fileNameRegex.find(contentDisposition)
-        val fileName = fileNameMatchResult?.groupValues?.get(1)
+        val fileName = contentDisposition.substringAfter("filename=").substringBefore(";", "")
+        val modificationDateString = contentDisposition.substringAfter("modification-date=")
+        // todo split string by ; and then search, this way it is more consistent
+        Timber.d("content disposition data. filename: $fileName modification date: $modificationDateString")
 
-        val modifiedRegex = Regex("modification-date=['\"]?([^'\"\\s]+)['\"]?")
-        val modifiedMatchResult = modifiedRegex.find(contentDisposition)
-        val modifiedDateString = modifiedMatchResult?.groupValues?.get(1)
         val modifiedInstant = try {
-            Instant.parse(modifiedDateString)
+            Instant.parse(modificationDateString)
         } catch (e: DateTimeParseException) {
             null
         }

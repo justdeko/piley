@@ -1,5 +1,6 @@
 package com.dk.piley.model.pile
 
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -29,4 +30,8 @@ class PileRepository @Inject constructor(
     }
 
     suspend fun deletePileData() = pileDao.deletePileData()
+
+    suspend fun performDatabaseCheckpoint() {
+        pileDao.checkpoint(SimpleSQLiteQuery("pragma wal_checkpoint(full)"))
+    }
 }

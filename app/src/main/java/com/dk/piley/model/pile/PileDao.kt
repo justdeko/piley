@@ -1,8 +1,10 @@
 package com.dk.piley.model.pile
 
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
+
 
 @Dao
 interface PileDao {
@@ -36,4 +38,7 @@ interface PileDao {
         deletePileTable()
         deleteTaskTable()
     }
+
+    @RawQuery
+    suspend fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int
 }

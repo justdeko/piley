@@ -31,7 +31,10 @@ abstract class PileDatabase : RoomDatabase() {
         }
 
         private fun buildDatabase(context: Context): PileDatabase {
-            return Room.databaseBuilder(context, PileDatabase::class.java, DATABASE_NAME).build()
+            return Room
+                .databaseBuilder(context, PileDatabase::class.java, DATABASE_NAME)
+                .setJournalMode(JournalMode.TRUNCATE)
+                .build()
         }
     }
 }

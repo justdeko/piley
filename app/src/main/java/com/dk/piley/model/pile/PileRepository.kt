@@ -32,6 +32,7 @@ class PileRepository @Inject constructor(
     suspend fun deletePileData() = pileDao.deletePileData()
 
     suspend fun performDatabaseCheckpoint() {
-        pileDao.checkpoint(SimpleSQLiteQuery("pragma wal_checkpoint(full)"))
+        // wal checkpoint with truncating wal file
+        pileDao.checkpoint(SimpleSQLiteQuery("pragma wal_checkpoint(truncate)"))
     }
 }

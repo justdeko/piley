@@ -1,6 +1,8 @@
 package com.dk.piley.ui.signin
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
@@ -20,6 +22,7 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import timber.log.Timber
 import javax.inject.Inject
+
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
@@ -111,6 +114,20 @@ class SignInViewModel @Inject constructor(
         setLoading(false)
         setToastMessage("Signed in!")
         setSignInState(SignInState.SIGNED_IN)
+        // TODO remove intermediate solution when runtime db fixed
+        restartApplication(getApplication())
+    }
+
+    /**
+     * Programmatically restart application
+     */
+    private fun restartApplication(context: Context) {
+        val packageManager = context.packageManager
+        val intent = packageManager.getLaunchIntentForPackage(context.packageName)
+        val componentName = intent!!.component
+        val mainIntent = Intent.makeRestartActivityTask(componentName)
+        context.startActivity(mainIntent)
+        Runtime.getRuntime().exit(0)
     }
 
     fun attemptSignIn() {

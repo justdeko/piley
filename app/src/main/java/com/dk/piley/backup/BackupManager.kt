@@ -141,7 +141,7 @@ class BackupManager @Inject constructor(
             }
             val dbPath = dbFile.absolutePath
             // close db instance
-            db.close() // TODO fix this, issues with invalidation tracker
+            db.close()
             // delete old file
             if (dbFile.exists()) {
                 Timber.d("Deleting backup file at $dbPath")

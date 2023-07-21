@@ -13,14 +13,19 @@ fun credentials(username: String?, password: String?) =
 fun Headers.contentDispositionHeaders(): ContentDispositionHeaders? {
     val contentDisposition = this["Content-Disposition"]
     if (contentDisposition != null) {
-        val fileName = contentDisposition.substringAfter("filename=").substringBefore(";", "")
-        val modificationDateString = contentDisposition.substringAfter("modification-date=")
-        // todo split string by ; and then search, this way it is more consistent
+        val entries = contentDisposition.split(";")
+        val fileName = entries.find { it.contains("filename=") }?.substringAfter("=")
+        val modificationDateString =
+            entries.find { it.contains("modification-date=") }
+                ?.substringAfter("=")
+                ?.removeSurrounding("\"")
         Timber.d("content disposition data. filename: $fileName modification date: $modificationDateString")
 
         val modifiedInstant = try {
             Instant.parse(modificationDateString)
         } catch (e: DateTimeParseException) {
+            null
+        } catch (e: NullPointerException) {
             null
         }
         return ContentDispositionHeaders(

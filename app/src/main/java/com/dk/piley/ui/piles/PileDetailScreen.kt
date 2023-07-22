@@ -30,10 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
@@ -85,9 +87,9 @@ fun PileDetailScreen(
     val scrollState = rememberScrollState()
     if (dialogOpen) {
         AlertDialogHelper(
-            title = "Clear all pile statistics",
-            description = "This is will clear all statistics of this pile by deleting all completed and deleted tasks.\nDo you want to continue?",
-            confirmText = "Continue",
+            title = stringResource(R.string.clear_statistics_dialog_title),
+            description = stringResource(R.string.clear_statistics_dialog_description),
+            confirmText = stringResource(R.string.clear_statistics_dialog_confirm),
             onConfirm = {
                 onClearStatistics()
                 dialogOpen = false
@@ -133,14 +135,14 @@ fun PileDetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Statistics",
+                    text = stringResource(R.string.statistics_section_title),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(start = 16.dp),
                     textAlign = TextAlign.Start
                 )
                 TextButton(onClick = { dialogOpen = true }) {
-                    Text("Clear Statistics")
+                    Text(stringResource(R.string.clear_statistics_button_text))
                 }
             }
             TaskStats(
@@ -164,7 +166,7 @@ fun PileDetailScreen(
                 contentColor = MaterialTheme.colorScheme.onErrorContainer
             )
         ) {
-            Text(text = "Delete")
+            Text(text = stringResource(R.string.delete_pile_button_text))
         }
     }
 }

@@ -1,7 +1,10 @@
 package com.dk.piley.ui.profile
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.R
 import com.dk.piley.backup.BackupManager
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
@@ -23,10 +26,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    application: Application,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val backupManager: BackupManager
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(ProfileViewState())
 
     val state: StateFlow<ProfileViewState>
@@ -89,10 +93,11 @@ class ProfileViewModel @Inject constructor(
             setShowProgressbar(true)
             val successful = backupManager.doBackup()
             setShowProgressbar(false)
+            val context: Context = getApplication()
             if (successful) {
-                setToastMessage("Backup upload successful")
+                setToastMessage(context.getString(R.string.backup_upload_successful_message))
             } else {
-                setToastMessage("Failed to upload backup")
+                setToastMessage(context.getString(R.string.backup_upload_error_message))
             }
         }
     }

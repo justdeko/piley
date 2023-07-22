@@ -25,12 +25,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -52,7 +54,7 @@ fun DeleteUserContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Delete user",
+                text = stringResource(R.string.delete_user_dialog_title),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center
@@ -64,7 +66,7 @@ fun DeleteUserContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = password,
                 onValueChange = { password = it },
-                placeholder = { Text("Enter your password to confirm") },
+                placeholder = { Text(stringResource(R.string.user_password_confirm_hint)) },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -86,7 +88,7 @@ fun DeleteUserContent(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.delete_user_dialog_cancel_button))
                 }
                 ElevatedButton(
                     onClick = { onConfirm(password) },
@@ -96,7 +98,7 @@ fun DeleteUserContent(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
                     )
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete_user_dialog_confirm_button))
                 }
             }
         }

@@ -111,7 +111,7 @@ fun PileOverviewScreen(
                         modifier = Modifier.fillMaxWidth(),
                         value = pileTitle,
                         onValueChange = { pileTitle = it },
-                        placeholder = { Text("Pile Title") },
+                        placeholder = { Text(stringResource(R.string.pile_title_hint)) },
                         shape = RoundedCornerShape(16.dp),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -127,11 +127,11 @@ fun PileOverviewScreen(
                         },
                         enabled = pileTitle.isNotBlank() && pileTitle != dailyPileName
                     ) {
-                        Text("Create Pile")
+                        Text(stringResource(R.string.pile_create_dialog_confirm_button_text))
                     }
                 }, dismissButton = {
                     TextButton(onClick = { createPileDialogOpen = false }) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.pile_create_dialog_dismiss_button_text))
                     }
                 })
         }

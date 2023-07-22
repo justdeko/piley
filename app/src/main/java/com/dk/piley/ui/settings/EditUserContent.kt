@@ -25,12 +25,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -55,7 +57,7 @@ fun EditUserContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Modify your personal data here.",
+                text = stringResource(R.string.edit_user_dialog_title),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center
@@ -67,7 +69,7 @@ fun EditUserContent(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = name,
                 onValueChange = { name = it },
-                placeholder = { Text("Name") },
+                placeholder = { Text(stringResource(R.string.user_name_hint)) },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -79,7 +81,7 @@ fun EditUserContent(
                 value = newPassword,
                 onValueChange = { newPassword = it },
                 visualTransformation = PasswordVisualTransformation(),
-                placeholder = { Text("New Password\n(leave empty if unchanged)") },
+                placeholder = { Text(stringResource(R.string.user_new_password_hint)) },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -94,7 +96,7 @@ fun EditUserContent(
                 value = oldPassword,
                 visualTransformation = PasswordVisualTransformation(),
                 onValueChange = { oldPassword = it },
-                placeholder = { Text("Current password to confirm") },
+                placeholder = { Text(stringResource(R.string.user_current_password_hint)) },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
@@ -115,7 +117,7 @@ fun EditUserContent(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.edit_user_dialog_cancel_button))
                 }
                 ElevatedButton(
                     onClick = {
@@ -129,7 +131,7 @@ fun EditUserContent(
                     },
                     enabled = oldPassword.isNotBlank() && name.isNotBlank()
                 ) {
-                    Text("Update")
+                    Text(stringResource(R.string.edit_user_dialog_confirm_button))
                 }
             }
         }

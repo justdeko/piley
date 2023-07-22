@@ -15,9 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -39,15 +41,14 @@ fun BackupInfo(
         Column(modifier = Modifier.weight(1f)) {
             if (lastBackup != null) {
                 Text(
-                    text = "Last backup",
+                    text = stringResource(R.string.last_backup_label),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.labelLarge,
                     textAlign = TextAlign.Start
                 )
             }
             Text(
-                text = lastBackup?.dateTimeString()
-                    ?: "No backup yet.\nClick on the icon on the right side to create your first backup",
+                text = lastBackup?.dateTimeString() ?: stringResource(R.string.no_backup_text),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start

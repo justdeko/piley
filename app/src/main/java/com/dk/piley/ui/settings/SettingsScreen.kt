@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -142,7 +143,10 @@ private fun SettingsScreen(
                 .verticalScroll(scrollState)
         ) {
             CenterAlignedTopAppBar(title = {
-                Text("Settings", style = MaterialTheme.typography.headlineMedium)
+                Text(
+                    stringResource(R.string.settings_screen_title),
+                    style = MaterialTheme.typography.headlineMedium
+                )
             }, navigationIcon = {
                 IconButton(onClick = onCloseSettings) {
                     Icon(
@@ -155,11 +159,14 @@ private fun SettingsScreen(
                     )
                 }
             })
-            SettingsSection(title = "Appearance", icon = Icons.Filled.FormatPaint) {
+            SettingsSection(
+                title = stringResource(R.string.settings_section_appearance_title),
+                icon = Icons.Filled.FormatPaint
+            ) {
                 DropdownSettingsItem(
-                    title = "Night mode enabled",
-                    description = "Set whether night mode is enabled.",
-                    optionLabel = "Night Mode",
+                    title = stringResource(R.string.night_mode_enabled_setting_title),
+                    description = stringResource(R.string.night_mode_enabled_setting_description),
+                    optionLabel = stringResource(R.string.night_mode_enabled_setting_option_label),
                     selectedValue = nightModeValues[viewState.user.nightMode.value],
                     values = nightModeValues,
                     onValueChange = {
@@ -167,17 +174,20 @@ private fun SettingsScreen(
                     }
                 )
                 SwitchSettingsItem(
-                    title = "Dynamic Color enabled",
-                    description = "Set whether dynamic color is enabled.",
+                    title = stringResource(R.string.dynamic_color_enabled_setting_title),
+                    description = stringResource(R.string.dynamic_color_enabled_setting_description),
                     value = viewState.user.dynamicColorOn,
                     onValueChange = onDynamicColorChange
                 )
             }
-            SettingsSection(title = "Piles", icon = Icons.Filled.ViewAgenda) {
+            SettingsSection(
+                title = stringResource(R.string.settings_section_piles_title),
+                icon = Icons.Filled.ViewAgenda
+            ) {
                 DropdownSettingsItem(
-                    title = "Default pile mode",
-                    description = "Set the default task completion mode for piles.",
-                    optionLabel = "Pile Mode",
+                    title = stringResource(R.string.default_pile_mode_setting_title),
+                    description = stringResource(R.string.default_pile_mode_setting_description),
+                    optionLabel = stringResource(R.string.default_pile_mode_setting_option_label),
                     selectedValue = pileModeValues[viewState.user.pileMode.value],
                     values = pileModeValues,
                     onValueChange = {
@@ -185,21 +195,21 @@ private fun SettingsScreen(
                     }
                 )
                 SettingsItem(
-                    title = "Reset all pile modes",
-                    description = "Reset all pile modes to the default of \"Free\"",
+                    title = stringResource(R.string.reset_all_pile_modes_setting_title),
+                    description = stringResource(R.string.reset_all_pile_modes_setting_description),
                     onClick = onResetPileModes
                 )
                 SwitchSettingsItem(
-                    title = "Automatically hide keyboard",
-                    description = "Automatically hide the keyboard after creating a new task.",
+                    title = stringResource(R.string.automatically_hide_keyboard_setting_title),
+                    description = stringResource(R.string.automatically_hide_keyboard_setting_description),
                     value = viewState.user.autoHideKeyboard,
                     onValueChange = onAutoHideKeyboardChange
                 )
             }
-            SettingsSection(title = "Notifications", icon = Icons.Filled.Notifications) {
+            SettingsSection(title = stringResource(R.string.settings_section_notifications_title), icon = Icons.Filled.Notifications) {
                 SliderSettingsItem(
-                    title = "Reminder Delay Duration",
-                    description = "Set the duration for the \"Delay\" button in your task reminders.",
+                    title = stringResource(R.string.reminder_delay_duration_setting_title),
+                    description = stringResource(R.string.reminder_delay_duration_setting_description),
                     value = viewState.user.defaultReminderDelay,
                     range = Pair(15, 60),
                     steps = 2,
@@ -207,10 +217,10 @@ private fun SettingsScreen(
                 )
             }
             if (!viewState.user.isOffline) {
-                SettingsSection(title = "Backup", icon = Icons.Filled.Backup) {
+                SettingsSection(title = stringResource(R.string.settings_section_backup_title), icon = Icons.Filled.Backup) {
                     SliderSettingsItem(
-                        title = "Backup Frequency",
-                        description = "Set the frequency of backups in days.",
+                        title = stringResource(R.string.backup_frequency_setting_title),
+                        description = stringResource(R.string.backup_frequency_setting_description),
                         value = viewState.user.defaultBackupFrequency,
                         range = Pair(1, 14),
                         steps = 14,
@@ -218,15 +228,15 @@ private fun SettingsScreen(
                     )
                 }
             }
-            SettingsSection(title = "User", icon = Icons.Filled.Person) {
+            SettingsSection(title = stringResource(R.string.settings_section_user_title), icon = Icons.Filled.Person) {
                 SettingsItem(
-                    title = "Update User",
-                    description = "Update the current user data",
+                    title = stringResource(R.string.update_user_setting_title),
+                    description = stringResource(R.string.update_user_setting_description),
                     onClick = { editUserDialogOpen = true }
                 )
                 SettingsItem(
-                    title = "Delete User",
-                    description = "Delete the current user permanently",
+                    title = stringResource(R.string.delete_user_setting_title),
+                    description = stringResource(R.string.delete_user_setting_description),
                     onClick = { deleteUserDialogOpen = true }
                 )
             }

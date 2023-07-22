@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,23 +29,25 @@ fun PileDetailSettings(
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
-            text = "Settings",
+            text = stringResource(R.string.pile_settings_section_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = 16.dp),
             textAlign = TextAlign.Start
         )
-        DropdownSettingsItem(title = "Pile mode",
-            description = "Set the task completion mode for this pile.",
-            optionLabel = "Pile Mode",
+        DropdownSettingsItem(
+            title = stringResource(R.string.pile_mode_setting_title),
+            description = stringResource(R.string.pile_mode_setting_description),
+            optionLabel = stringResource(R.string.pile_mode_setting_dropdown_label),
             selectedValue = pileModeValues[viewState.pile.pileMode.value],
             values = pileModeValues,
             onValueChange = {
                 onSetPileMode(PileMode.fromValue(pileModeValues.indexOf(it)))
-            })
+            }
+        )
         SliderSettingsItem(
-            title = "Pile Limit",
-            description = "Set the limit of tasks in a pile. 0 means no limit",
+            title = stringResource(R.string.pile_limit_setting_title),
+            description = stringResource(R.string.pile_limit_setting_description),
             value = viewState.pile.pileLimit,
             range = Pair(0, 50),
             steps = 10,

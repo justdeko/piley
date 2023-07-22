@@ -16,6 +16,105 @@
     <string name="reminder_notification_channel_title">Reminder</string>
     <string name="reminder_notification_channel_description">Reminder</string>
 
+
+    <!-- task detail screen -->
+    <string name="no_pile_completed_hint">Looks like you haven\'t completed any tasks for this pile in a while…</string>
+    <string name="add_description_hint">Click here to add a description</string>
+
+    <!-- pile screen -->
+    <string name="add_task_placeholder">Add your task here</string>
+    <string name="task_empty_not_allowed_hint">Task can\'t be empty</string>
+
+    <!-- pile detail screen -->
+    <string name="delete_pile_button_text">Delete</string>
+
+    <!-- clear statistics dialog -->
+    <string name="clear_statistics_dialog_title">Clear all pile statistics</string>
+    <string name="clear_statistics_dialog_description">This is will clear all statistics of this pile by deleting all completed and deleted tasks.\nDo you want to continue?</string>
+    <string name="clear_statistics_dialog_confirm">Continue</string>
+    <!-- pile statistics section -->
+    <string name="statistics_section_title">Statistics</string>
+    <string name="clear_statistics_button_text">Clear Statistics</string>
+    <!-- pile settings -->
+    <string name="pile_settings_section_title">Settings</string>
+    <string name="pile_mode_setting_title">Pile mode</string>
+    <string name="pile_mode_setting_description">Set the task completion mode for this pile.</string>
+    <string name="pile_mode_setting_dropdown_label">Pile Mode</string>
+    <string name="pile_limit_setting_title">Pile Limit</string>
+    <string name="pile_limit_setting_description">Set the limit of tasks in a pile. 0 means no limit</string>
+
+    <!-- create pile dialog -->
+    <string name="pile_title_hint">Pile Title</string>
+    <string name="pile_create_dialog_confirm_button_text">Create Pile</string>
+    <string name="pile_create_dialog_dismiss_button_text">Cancel</string>
+
+    <!-- profile screen -->
+    <string name="last_backup_label">Last backup</string>
+    <string name="no_backup_text">No backup yet.\nClick on the icon on the right side to create your first backup</string>
+    <!-- backup error dialog -->
+    <string name="backup_error_dialog_title">Error when uploading backup</string>
+    <string name="backup_error_dialog_description">An error occurred when uploading the backup. Do you still want to sign out? Recent changes might be lost.</string>
+    <string name="backup_error_dialog_confirm_button">Sign out</string>
+    <!-- user profile sections -->
+    <string name="user_statistics_section_title">Statistics</string>
+    <string name="upcoming_tasks_section_title">Upcoming Tasks</string>
+    <string name="backup_section_title">Backup</string>
+    <string name="backup_upload_successful_message">Backup upload successful</string>
+    <string name="backup_upload_error_message">Failed to upload backup</string>
+    <string name="done_tasks_label">Done</string>
+    <string name="current_tasks_label">Current</string>
+    <string name="deleted_tasks_label">Deleted</string>
+    <string name="average_task_completion_duration_label">Average time spent on a task:</string>
+    <string name="biggest_pile_label">Biggest Pile right now:</string>
+    <string name="no_upcoming_tasks_hint">No upcoming tasks</string>
+
+    <!-- delete user dialog -->
+    <string name="delete_user_dialog_title">Delete user</string>
+    <string name="user_password_confirm_hint">Enter your password to confirm</string>
+    <string name="delete_user_dialog_cancel_button">Cancel</string>
+    <string name="delete_user_dialog_confirm_button">Delete</string>
+
+    <!-- edit user dialog -->
+    <string name="edit_user_dialog_title">Modify your personal data here.</string>
+    <string name="user_name_hint">Name</string>
+    <string name="user_new_password_hint">New Password\n(leave empty if unchanged)</string>
+    <string name="user_current_password_hint">Current password to confirm</string>
+    <string name="edit_user_dialog_cancel_button">Cancel</string>
+    <string name="edit_user_dialog_confirm_button">Update</string>
+
+    <!-- settings screen -->
+    <string name="settings_screen_title">@string/settings</string>
+    <!-- appearance settings section-->
+    <string name="settings_section_appearance_title">Appearance</string>
+    <string name="night_mode_enabled_setting_title">Night mode enabled</string>
+    <string name="night_mode_enabled_setting_description">Set whether night mode is enabled.</string>
+    <string name="night_mode_enabled_setting_option_label">Night Mode</string>
+    <string name="dynamic_color_enabled_setting_title">Dynamic Color enabled</string>
+    <string name="dynamic_color_enabled_setting_description">Set whether dynamic color is enabled.</string>
+    <!-- piles settings section-->
+    <string name="settings_section_piles_title">Piles</string>
+    <string name="default_pile_mode_setting_title">Default pile mode</string>
+    <string name="default_pile_mode_setting_description">Set the default task completion mode for piles.</string>
+    <string name="default_pile_mode_setting_option_label">Pile Mode</string>
+    <string name="reset_all_pile_modes_setting_title">Reset all pile modes</string>
+    <string name="reset_all_pile_modes_setting_description">Reset all pile modes to the default of \"Free\"</string>
+    <string name="automatically_hide_keyboard_setting_title">Automatically hide keyboard</string>
+    <string name="automatically_hide_keyboard_setting_description">Automatically hide the keyboard after creating a new task.</string>
+    <!-- piles settings section-->
+    <string name="settings_section_notifications_title">Notifications</string>
+    <string name="reminder_delay_duration_setting_title">Reminder Delay Duration</string>
+    <string name="reminder_delay_duration_setting_description">Set the duration for the \"Delay\" button in your task reminders.</string>
+    <!-- backup settings section-->
+    <string name="settings_section_backup_title">Backup</string>
+    <string name="backup_frequency_setting_title">Backup Frequency</string>
+    <string name="backup_frequency_setting_description">Set the frequency of backups in days.</string>
+    <!-- user settings section-->
+    <string name="settings_section_user_title">User</string>
+    <string name="update_user_setting_title">Update User</string>
+    <string name="update_user_setting_description">Update the current user data</string>
+    <string name="delete_user_setting_title">Delete User</string>
+    <string name="delete_user_setting_description">Delete the current user permanently</string>
+
     <!--preferences and enums-->
     <string-array name="night_modes">
         <item>System</item>

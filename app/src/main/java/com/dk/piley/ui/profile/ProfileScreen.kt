@@ -27,11 +27,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
@@ -89,9 +91,9 @@ private fun ProfileScreen(
     val scrollState = rememberScrollState()
     if (viewState.signedOutState == SignOutState.SIGNED_OUT_ERROR) {
         AlertDialogHelper(
-            title = "Error when uploading backup",
-            description = "An error occurred when uploading the backup. Do you still want to sign out? Recent changes might be lost.",
-            confirmText = "Sign out",
+            title = stringResource(R.string.backup_error_dialog_title),
+            description = stringResource(R.string.backup_error_dialog_description),
+            confirmText = stringResource(R.string.backup_error_dialog_confirm_button),
             onConfirm = onSignOutWithError,
             onDismiss = { setSignOutState(SignOutState.SIGNED_IN) }
         )
@@ -130,7 +132,7 @@ private fun ProfileScreen(
             }
             UserInfo(name = viewState.userName)
             Text(
-                text = "Statistics",
+                text = stringResource(R.string.user_statistics_section_title),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(start = 16.dp),
@@ -144,7 +146,7 @@ private fun ProfileScreen(
                 biggestPile = viewState.biggestPileName,
             )
             Text(
-                text = "Upcoming Tasks",
+                text = stringResource(R.string.upcoming_tasks_section_title),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(start = 16.dp),
@@ -156,7 +158,7 @@ private fun ProfileScreen(
             )
             if (!viewState.userIsOffline) {
                 Text(
-                    text = "Backup",
+                    text = stringResource(R.string.backup_section_title),
                     color = MaterialTheme.colorScheme.secondary,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp),

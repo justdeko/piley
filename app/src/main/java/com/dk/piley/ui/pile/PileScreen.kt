@@ -19,6 +19,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.task.Task
@@ -94,7 +95,11 @@ private fun PileScreen(
                     onAdd(query.text.trim())
                     query = TextFieldValue()
                 } else {
-                    Toast.makeText(context, "Task can't be empty", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.task_empty_not_allowed_hint),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         )

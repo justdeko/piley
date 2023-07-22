@@ -19,11 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.lastSevenDays
 import org.threeten.bp.LocalDate
@@ -104,7 +106,7 @@ fun FrequencyChart(
             }
             if (weekDayFrequencies.none { it > 0 }) {
                 Text(
-                    text = "Looks like you haven't completed any tasks for this pile in a while...",
+                    text = stringResource(R.string.no_pile_completed_hint),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile">Profil</string>
+    <string name="task_details">Task-Details</string>
+    <string name="settings">Einstellungen</string>
+    <string name="sign_in">Anmelden</string>
+    <string name="daily_pile_name">Täglich</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="no_pile_completed_hint">Es scheint als hättest du seit einer Weile keine Tasks abgeschlossen…</string>
+    <string name="add_description_hint">Hier klicken, um Beschreibung hinzuzufügen</string>
+    <string name="add_task_placeholder">Füge dein Task hier hinzu</string>
+    <string name="task_empty_not_allowed_hint">Task kann nicht leer sein</string>
+    <string name="delete_pile_button_text">Löschen</string>
+    <string name="clear_statistics_dialog_title">Alle Pile-Statistiken zurücksetzen</string>
+    <string name="clear_statistics_dialog_description">Dieser Schritt wird alle Statistiken zu diesem Pile zurücksetzen, indem alle abgeschlossenen Tasks gelöscht werden. Möchtest du fortfahren?</string>
+    <string name="clear_statistics_dialog_confirm">Weiter</string>
+    <string name="statistics_section_title">Statistik</string>
+    <string name="clear_statistics_button_text">Statistik zurücksetzen</string>
+    <string name="pile_settings_section_title">Einstellungen</string>
+    <string name="pile_mode_setting_title">Pile-Mode</string>
+    <string name="pile_mode_setting_description">Setze den Task-Abschließung-Modus für diesen Pile.</string>
+    <string name="pile_mode_setting_dropdown_label">Pile-Modus</string>
+    <string name="pile_limit_setting_title">Pile-Limit</string>
+    <string name="pile_limit_setting_description">Setze den Limit an Tasks in diesem Pile.</string>
+    <string name="add_pile_button">Pile erstellen</string>
+    <string name="create_pile_dialog_title">Erstelle einen Pile</string>
+    <string name="pile_title_hint">Titel des Piles</string>
+    <string name="pile_create_dialog_confirm_button_text">Pile erstellen</string>
+    <string name="pile_create_dialog_dismiss_button_text">Abbrechen</string>
+    <string name="last_backup_label">Letztes Backup</string>
+    <string name="backup_error_dialog_title">Fehler beim Hochladen des Backups</string>
+    <string name="backup_error_dialog_description">Ein Fehler ist beim Hochladen des Backups aufgetreten. Möchtest du dich trotzdem abmelden? Neuere Änderungen könnten verloren gehen.</string>
+    <string name="backup_error_dialog_confirm_button">Abmelden</string>
+    <string name="user_statistics_section_title">Statistik</string>
+    <string name="upcoming_tasks_section_title">Anstehende Tasks</string>
+    <string name="backup_section_title">Backup</string>
+    <string name="backup_upload_successful_message">Backup erfolgreich hochgeladen</string>
+    <string name="backup_upload_error_message">Fehler beim Backup-Upload</string>
+    <string name="sign_out_successful_message">Abgemeldet!</string>
+    <string name="done_tasks_label">Fertig</string>
+    <string name="current_tasks_label">Aktuell</string>
+    <string name="deleted_tasks_label">Gelöscht</string>
+    <string name="average_task_completion_duration_label">Durchschnittliche Zeit pro Task:</string>
+    <string name="biggest_pile_label">Größter Pile aktuell:</string>
+    <string name="no_upcoming_tasks_hint">Keine anstehenden Tasks</string>
+    <string name="average_task_completion_duration_value">%1$dh</string>
+    <string name="no_pile">Keiner</string>
+    <string name="delete_user_dialog_title">User löschen</string>
+    <string name="user_password_confirm_hint">Passwort zur Bestätigung</string>
+    <string name="delete_user_dialog_cancel_button">Abbrechen</string>
+    <string name="delete_user_dialog_confirm_button">Löschen</string>
+    <string name="edit_user_dialog_title">Bearbeite deine Nutzerdaten hier.</string>
+    <string name="user_name_hint">Name</string>
+    <string name="user_new_password_hint">Neues Passwort (leerlassen, wenn unverändert)</string>
+    <string name="user_current_password_hint">Aktuelles Passwort zur Bestätigung</string>
+    <string name="edit_user_dialog_cancel_button">Abbrechen</string>
+    <string name="edit_user_dialog_confirm_button">Aktualisieren</string>
+    <string name="settings_screen_title">\@string/settings</string>
+    <string name="settings_section_appearance_title">Aussehen</string>
+    <string name="night_mode_enabled_setting_title">Nachtmodus aktiviert</string>
+    <string name="night_mode_enabled_setting_description">Einstellen, ob Nachtmodus aktiviert ist.</string>
+    <string name="night_mode_enabled_setting_option_label">Nachtmodus</string>
+    <string name="dynamic_color_enabled_setting_title">Dynamisches Theming</string>
+    <string name="dynamic_color_enabled_setting_description">Einstellen, ob dynamisches Theming aktiviert ist.</string>
+    <string name="settings_section_piles_title">Piles</string>
+    <string name="default_pile_mode_setting_title">Standard-Pile-Modus</string>
+    <string name="default_pile_mode_setting_description">Einstellen, was der standardmäßige Modus für das Abschließen von Tasks ist.</string>
+    <string name="default_pile_mode_setting_option_label">Pile-Modus</string>
+    <string name="reset_all_pile_modes_setting_title">Alle Pile-Modi zurücksetzen</string>
+    <string name="reset_all_pile_modes_setting_description">Setze alle Pile-Modi zu dem standardmäßigen \"Frei\" zurück.</string>
+    <string name="automatically_hide_keyboard_setting_title">Tastatur automatisch verstecken</string>
+    <string name="automatically_hide_keyboard_setting_description">Verstecke automatisch die Tastatur, nachdem ein Task erstellt wurde.</string>
+    <string name="settings_section_notifications_title">Benachrichtigungen</string>
+    <string name="reminder_delay_duration_setting_title">Reminder-Verzögerung-Dauer</string>
+    <string name="reminder_delay_duration_setting_description">Setze die Dauer für die Verzögerung beim \"Später\"-Button in deinen Reminder-Benachrichtigungen.</string>
+    <string name="no_backup_text">Noch kein Backup. Klicke auf den Button auf der rechten Seite, um dein erstes zu erstellen</string>
+    <string name="settings_section_backup_title">Backup</string>
+    <string name="backup_frequency_setting_title">Backup-Häufigkeit</string>
+    <string name="backup_frequency_setting_description">Setze die Häufigkeit deiner Backups in Tagen.</string>
+    <string name="settings_section_user_title">Benutzer</string>
+    <string name="update_user_setting_title">Benutzerdaten aktualisieren</string>
+    <string name="update_user_setting_description">Aktualisiere die Benutzerdaten</string>
+    <string name="delete_user_setting_title">Benutzer löschen</string>
+    <string name="delete_user_setting_description">Lösche permanent den aktuellen Benutzer</string>
+    <string name="delete_user_error_wrong_password">Fehler beim löschen des Benutzers: Falsches Passwort</string>
+    <string name="delete_user_success_info">Benutzer gelöscht, wird abgemeldet</string>
+    <string name="update_user_error_wrong_password">Fehler beim aktualisieren: Falsches Passwort</string>
+    <string name="user_update_success_info">Benutzerdaten erfolgreich aktualisiert!</string>
+    <string name="register_button_text">Registrieren</string>
+    <string name="sign_in_button_text">Anmelden</string>
+    <string name="user_email_placeholder">E-Mail</string>
+    <string name="invalid_email_hint">Keine gültige E-Mail</string>
+    <string name="username_placeholder">Benutzername</string>
+    <string name="password_placeholder">Passwort</string>
+    <string name="user_offline_checkbox_label">Benutzer offline machen</string>
+    <string name="navigate_to_sign_in_button_text">Stattdessen anmelden</string>
+    <string name="navigate_to_register_button_text">Noch kein Konto? Hier klicken, um zu registrieren</string>
+    <string name="user_register_error_message">Fehler beim registrieren</string>
+    <string name="sign_in_success_message">Erfolgreich angemeldet!</string>
+    <string name="sign_in_error_message">Fehler beim anmelden</string>
+    <string name="edit_reminder_title">Reminder bearbeiten</string>
+    <string name="add_reminder_title">Reminder erstellen</string>
+    <string name="date_selection_placeholder">Wähle ein Datum aus</string>
+    <string name="time_selection_placeholder">Wähle eine Uhrzeit aus</string>
+    <string name="reminder_recurring_label">Wiederholt sich</string>
+    <string name="reminder_frequency_label">Häufigkeit</string>
+    <string name="no_notification_permission_reminder_warning">Dieser Reminder wird nicht angezeigt, weil du keine Berechtigung für Benachrichtigungen gegeben hast.</string>
+    <string name="set_reminder_button">Reminder setzen</string>
+    <string name="update_reminder_button">Aktualisieren</string>
+    <string name="delete_reminder_button">Löschen</string>
+    <string name="reminder_time_range_label">Zeitraum</string>
+    <string name="reminder_info_title">Reminder</string>
+    <string name="no_reminder_set_placeholder">Kein Reminder gesetzt</string>
+    <string name="complete_task_button">Abschließen</string>
+    <string name="delete_task_button">Löschen</string>
+    <string name="task_info_title">Weitere Infos</string>
+    <string name="task_created_at_label">Erstellt am:</string>
+    <string name="task_modified_at_label">Geändert am:</string>
+    <string name="notification_permission_dialog_title">Erlaubnis für Benachrichtigungen erforderlich</string>
+    <string name="notification_permission_dialog_description">Diese App benötigt die Berechtigung für Benachrichtigungen, um dir Reminder zu deinen Tasks zu zeigen.</string>
+    <string name="notification_permission_dialog_confirm_button">Berechtigung geben</string>
+    <string name="reminder_repeat_frequency_value">Wiederholt sich alle %1$s</string>
+    <string name="reminder_complete_action">Fertig</string>
+    <string name="reminder_delay_action">Später</string>
+
+    <!--preferences and enums-->
+    <string-array name="night_modes">
+        <item>System</item>
+        <item>Aktiviert</item>
+        <item>Deaktiviert</item>
+    </string-array>
+    <string-array name="pile_modes">
+        <item>Frei</item>
+        <item>FIFO</item>
+        <item>LIFO</item>
+    </string-array>
+
+    <!--reminder frequency-->
+    <string-array name="time_range">
+        <item>Tag(e)</item>
+        <item>Woche(n)</item>
+        <item>Monat(e)</item>
+        <item>Jahr(e)</item>
+    </string-array>
+
+    <plurals name="plural_s">
+        <item quantity="one" />
+        <item quantity="other" />
+    </plurals>
+</resources>

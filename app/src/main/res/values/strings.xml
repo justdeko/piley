@@ -1,20 +1,22 @@
 <resources>
-    <string name="app_name">piley</string>
+    <string name="app_name" translatable="false">piley</string>
 
     <!--Nav locations-->
-    <string name="pile">Pile</string>
-    <string name="piles">Piles</string>
+    <string name="pile" translatable="false">Pile</string>
+    <string name="piles" translatable="false">Piles</string>
     <string name="profile">Profile</string>
     <string name="task_details">Task Details</string>
     <string name="settings">Settings</string>
     <string name="sign_in">Sign In</string>
-    <string name="splash_screen">Splash Screen</string>
+    <string name="splash_screen" translatable="false">Splash Screen</string>
 
     <string name="daily_pile_name">Daily</string>
 
-    <!--notification channel-->
-    <string name="reminder_notification_channel_title">Reminder</string>
-    <string name="reminder_notification_channel_description">Reminder</string>
+    <!--notifications-->
+    <string name="reminder_notification_channel_title" translatable="false">Reminder</string>
+    <string name="reminder_notification_channel_description" translatable="false">Reminder</string>
+    <string name="reminder_complete_action">Complete</string>
+    <string name="reminder_delay_action">Delay</string>
 
     <!-- common strings -->
     <string name="ok">OK</string>

@@ -73,7 +73,12 @@ class NotificationManager @Inject constructor(
     private fun getNotificationAction(
         taskId: Long, isDoneAction: Boolean = false
     ): NotificationCompat.Action {
-        val actionTitle = if (isDoneAction) "Complete" else "Delay"
+        val actionTitle =
+            if (isDoneAction) {
+                context.getString(R.string.reminder_complete_action)
+            } else context.getString(
+                R.string.reminder_delay_action
+            )
         val requestCode = if (isDoneAction) COMPLETE_CODE else DELAY_CODE
         // action intent
         val receiverIntent = Intent(context, ReminderAlarmReceiver::class.java).apply {

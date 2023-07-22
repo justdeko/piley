@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import timber.log.Timber
@@ -49,16 +50,31 @@ class BackupManager @Inject constructor(
      */
     @OptIn(FlowPreview::class)
     suspend fun syncBackupToLocalForUserFlow(): Flow<Resource<Instant?>> {
+        val user = userRepository.getSignedInUserEntity() ?: return flowOf(
+            Resource.Failure(
+                Exception("no user found")
+            )
+        )
         // if user is in offline mode, do nothing and return successful flow
-        if (userRepository.getSignedInUserEntity()?.isOffline == true) {
+        if (user.isOffline) {
+            return flowOf(Resource.Success(null))
+        }
+        // if backup fetch wasn't too long ago (<1 day), do nothing and return successful flow
+        if (user.lastBackupQuery?.isAfter(Instant.now().minus(Duration.ofDays(1))) == true) {
+            Timber.i("last backup not too long ago, aborting backup sync")
             return flowOf(Resource.Success(null))
         }
         return backupRepository.getBackupFileFlow(
-            userRepository.getSignedInUserEmail(), context
+            user.email, context
         ).flatMapConcat {
             when (it) {
                 is Resource.Loading -> flowOf(Resource.Loading())
-                is Resource.Success -> createOrUpdateDbFileFlow(it.data)
+                is Resource.Success -> createOrUpdateDbFileFlow(it.data).also {
+                    userRepository.insertUser(
+                        user.copy(lastBackupQuery = Instant.now())
+                    )
+                }
+
                 is Resource.Failure -> flowOf(Resource.Failure(it.exception))
             }
         }.flowOn(Dispatchers.IO)

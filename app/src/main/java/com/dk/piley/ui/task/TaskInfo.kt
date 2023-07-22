@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
@@ -29,7 +31,7 @@ fun TaskInfo(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = "Other Information",
+            text = stringResource(R.string.task_info_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = 16.dp),
@@ -44,7 +46,7 @@ fun TaskInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Created at:",
+                text = stringResource(R.string.task_created_at_label),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge
             )
@@ -63,7 +65,7 @@ fun TaskInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Modified at:",
+                text = stringResource(R.string.task_modified_at_label),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.labelLarge
             )

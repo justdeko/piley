@@ -21,9 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.theme.PileyTheme
@@ -41,7 +43,7 @@ fun ReminderInfo(
     val reminderSet = reminderDateTimeText != null
     Column(modifier = modifier) {
         Text(
-            text = "Reminder",
+            text = stringResource(R.string.reminder_info_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = 16.dp),
@@ -59,7 +61,7 @@ fun ReminderInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = reminderDateTimeText ?: "No reminder set",
+                text = reminderDateTimeText ?: stringResource(R.string.no_reminder_set_placeholder),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(start = 16.dp),
                 style = MaterialTheme.typography.bodyLarge,
@@ -83,7 +85,7 @@ fun ReminderInfo(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            description = "Recurring",
+            description = stringResource(R.string.reminder_recurring_label),
             checked = isRecurring
         )
         Spacer(Modifier.size(8.dp))

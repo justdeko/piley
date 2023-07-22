@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -139,7 +140,11 @@ fun AddReminderContent(
             .padding(32.dp)
     ) {
         Text(
-            text = if (initialDateTime != null) "Edit reminder" else "Add reminder",
+            text = if (initialDateTime != null) {
+                stringResource(R.string.edit_reminder_title)
+            } else stringResource(
+                R.string.add_reminder_title
+            ),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start
@@ -153,7 +158,7 @@ fun AddReminderContent(
         ) {
             Text(
                 localDate?.toString() ?: (initialDateTime?.toLocalDate()?.toString()
-                    ?: "Pick a date")
+                    ?: stringResource(R.string.date_selection_placeholder))
             )
             IconButton(onClick = {
                 context.showDatePicker(localDate ?: initialDateTime?.toLocalDate()) {
@@ -177,7 +182,7 @@ fun AddReminderContent(
             Text(
                 localTime?.toString() ?: (initialDateTime?.toLocalTime()?.withNano(0)
                     ?.toString()
-                    ?: "Pick a time")
+                    ?: stringResource(R.string.time_selection_placeholder))
             )
             IconButton(onClick = {
                 context.showTimePicker(localTime ?: initialDateTime?.toLocalTime()) {
@@ -195,7 +200,7 @@ fun AddReminderContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            description = "Recurring",
+            description = stringResource(R.string.reminder_recurring_label),
             checked = recurring
         ) { recurring = it }
         AnimatedVisibility(recurring) {
@@ -210,7 +215,7 @@ fun AddReminderContent(
                         value = timeRange.toText(),
                         dropdownValues = timeRanges,
                         expanded = expandedTimeRange,
-                        label = "Time Range",
+                        label = stringResource(R.string.reminder_time_range_label),
                         onExpandedChange = { expandedTimeRange = !expandedTimeRange },
                         onValueClick = {
                             expandedTimeRange = false
@@ -224,7 +229,7 @@ fun AddReminderContent(
                         value = frequency.toString(),
                         dropdownValues = listOf(1, 2, 3, 4, 5).map { it.toString() },
                         expanded = expandedFrequency,
-                        label = "Frequency",
+                        label = stringResource(R.string.reminder_frequency_label),
                         onExpandedChange = { expandedFrequency = !expandedFrequency },
                         onValueClick = {
                             expandedFrequency = false
@@ -247,6 +252,8 @@ fun AddReminderContent(
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            val noPermissionWarningText =
+                stringResource(R.string.no_notification_permission_reminder_warning)
             Button(
                 enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
                 onClick = {
@@ -254,7 +261,7 @@ fun AddReminderContent(
                     if (permissionState != null && !permissionState.status.isGranted) {
                         Toast.makeText(
                             context,
-                            "This reminder won't show up because you haven't enabled notifications.",
+                            noPermissionWarningText,
                             Toast.LENGTH_LONG
                         ).show()
                         return@Button
@@ -289,7 +296,13 @@ fun AddReminderContent(
                     }
                 }
             ) {
-                Text(if (initialDateTime == null) "Set Reminder" else "Update")
+                Text(
+                    if (initialDateTime == null) {
+                        stringResource(R.string.set_reminder_button)
+                    } else stringResource(
+                        R.string.update_reminder_button
+                    )
+                )
             }
             if (initialDateTime != null) {
                 Button(
@@ -304,7 +317,7 @@ fun AddReminderContent(
                         onDeleteReminder()
                     }
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete_reminder_button))
                 }
             }
         }

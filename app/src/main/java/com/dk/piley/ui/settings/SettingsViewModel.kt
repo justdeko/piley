@@ -1,7 +1,9 @@
 package com.dk.piley.ui.settings
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.R
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.NightMode
@@ -18,9 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private val _state = MutableStateFlow(SettingsViewState())
 
     val state: StateFlow<SettingsViewState>
@@ -106,7 +109,7 @@ class SettingsViewModel @Inject constructor(
                         }
                 }
             } else {
-                _state.update { it.copy(message = "Error deleting user: Your password is incorrect") }
+                _state.update { it.copy(message = application.getString(R.string.delete_user_error_wrong_password)) }
             }
         }
     }
@@ -119,7 +122,7 @@ class SettingsViewModel @Inject constructor(
             it.copy(
                 loading = false,
                 userDeleted = true,
-                message = "User deleted, signing out"
+                message = application.getString(R.string.delete_user_success_info)
             )
         }
     }
@@ -161,7 +164,7 @@ class SettingsViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         loading = false,
-                        message = "Error updating user: Your password is incorrect"
+                        message = application.getString(R.string.update_user_error_wrong_password)
                     )
                 }
             }
@@ -178,7 +181,7 @@ class SettingsViewModel @Inject constructor(
         _state.update {
             it.copy(
                 loading = false,
-                message = "User updated successfully!"
+                message = application.getString(R.string.user_update_success_info)
             )
         }
     }

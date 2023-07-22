@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    application: Application,
+    private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,
     private val backupManager: BackupManager,
@@ -50,7 +50,7 @@ class SignInViewModel @Inject constructor(
                     is Resource.Success -> onRegisterSuccess(user)
                     is Resource.Failure -> {
                         setLoading(false)
-                        setToastMessage("Error when attempting to register")
+                        setToastMessage(application.getString(R.string.user_register_error_message))
                     }
                 }
             }
@@ -94,7 +94,7 @@ class SignInViewModel @Inject constructor(
     private suspend fun createAndSetUserPile() {
         // create default pile
         val pile = Pile(
-            name = getApplication<Application>().getString(R.string.daily_pile_name),
+            name = application.getString(R.string.daily_pile_name),
         )
         val pileId = pileRepository.insertPile(pile)
         // update assigned pile as selected and set signed in state
@@ -112,7 +112,7 @@ class SignInViewModel @Inject constructor(
 
     private fun updateUIOnSignInSuccess() {
         setLoading(false)
-        setToastMessage("Signed in!")
+        setToastMessage(application.getString(R.string.sign_in_success_message))
         setSignInState(SignInState.SIGNED_IN)
         // TODO remove intermediate solution when runtime db fixed
         restartApplication(getApplication())
@@ -184,7 +184,7 @@ class SignInViewModel @Inject constructor(
 
                 is Resource.Failure -> {
                     setLoading(false)
-                    setToastMessage("Error signing in")
+                    setToastMessage(application.getString(R.string.sign_in_error_message))
                 }
             }
         }

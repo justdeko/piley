@@ -8,13 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.dk.piley.R
 
 @Composable
 fun AlertDialogHelper(
     title: String,
     description: String,
-    confirmText: String = "OK",
-    dismissText: String? = "Cancel",
+    confirmText: String = stringResource(R.string.ok),
+    dismissText: String? = stringResource(R.string.cancel),
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {}
 ) {

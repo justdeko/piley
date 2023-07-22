@@ -3,6 +3,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.res.stringResource
+import com.dk.piley.R
 import com.dk.piley.util.AlertDialogHelper
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -18,10 +20,10 @@ fun RequestNotificationPermissionDialog(rationaleOpen: Boolean, onDismiss: () ->
     if (!permissionState.status.isGranted && permissionState.status.shouldShowRationale && rationaleOpen) {
         // permission denied once, show rationale
         AlertDialogHelper(
-            title = "Notification permission needed",
-            description = "This app needs the notification permission to show you reminders about your tasks.",
+            title = stringResource(R.string.notification_permission_dialog_title),
+            description = stringResource(R.string.notification_permission_dialog_description),
             dismissText = null,
-            confirmText = "Grant Permission",
+            confirmText = stringResource(R.string.notification_permission_dialog_confirm_button),
             onDismiss = onDismiss,
             onConfirm = {
                 permissionState.launchPermissionRequest()

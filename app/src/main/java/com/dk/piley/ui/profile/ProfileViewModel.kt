@@ -12,7 +12,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.util.getAverageTaskCompletionInHours
-import com.dk.piley.util.getBiggestPile
+import com.dk.piley.util.getBiggestPileName
 import com.dk.piley.util.getUpcomingTasks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +53,7 @@ class ProfileViewModel @Inject constructor(
                     deletedTasks = deleted,
                     currentTasks = current,
                     upcomingTaskList = getUpcomingTasks(pilesWithTasks),
-                    biggestPileName = getBiggestPile(pilesWithTasks),
+                    biggestPileName = getBiggestPileName(pilesWithTasks, application),
                     averageTaskDurationInHours = getAverageTaskCompletionInHours(pilesWithTasks),
                     userIsOffline = user.isOffline
                 )

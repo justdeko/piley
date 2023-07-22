@@ -40,11 +40,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.EditDescriptionField
@@ -190,7 +192,7 @@ fun TaskDetailScreen(
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 ) {
-                    Text(text = "Complete")
+                    Text(text = stringResource(R.string.complete_task_button))
                 }
                 Button(
                     onClick = onDeleteTask,
@@ -199,7 +201,7 @@ fun TaskDetailScreen(
                         contentColor = MaterialTheme.colorScheme.onErrorContainer
                     )
                 ) {
-                    Text(text = "Delete")
+                    Text(text = stringResource(R.string.delete_task_button))
                 }
             }
         } // TODO more elements

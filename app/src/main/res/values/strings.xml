@@ -16,8 +16,11 @@
     <string name="reminder_notification_channel_title">Reminder</string>
     <string name="reminder_notification_channel_description">Reminder</string>
 
+    <!-- common strings -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
-    <!-- task detail screen -->
+    <!-- generic ui views -->
     <string name="no_pile_completed_hint">Looks like you haven\'t completed any tasks for this pile in a while…</string>
     <string name="add_description_hint">Click here to add a description</string>
 
@@ -43,7 +46,10 @@
     <string name="pile_limit_setting_title">Pile Limit</string>
     <string name="pile_limit_setting_description">Set the limit of tasks in a pile. 0 means no limit</string>
 
+    <!-- pile overview screen -->
+    <string name="add_pile_button">Add Pile</string>
     <!-- create pile dialog -->
+    <string name="create_pile_dialog_title">Create a Pile</string>
     <string name="pile_title_hint">Pile Title</string>
     <string name="pile_create_dialog_confirm_button_text">Create Pile</string>
     <string name="pile_create_dialog_dismiss_button_text">Cancel</string>
@@ -67,6 +73,7 @@
     <string name="average_task_completion_duration_label">Average time spent on a task:</string>
     <string name="biggest_pile_label">Biggest Pile right now:</string>
     <string name="no_upcoming_tasks_hint">No upcoming tasks</string>
+    <string name="no_pile">None</string>
 
     <!-- delete user dialog -->
     <string name="delete_user_dialog_title">Delete user</string>
@@ -114,6 +121,52 @@
     <string name="update_user_setting_description">Update the current user data</string>
     <string name="delete_user_setting_title">Delete User</string>
     <string name="delete_user_setting_description">Delete the current user permanently</string>
+    <string name="delete_user_error_wrong_password">Error deleting user: Your password is incorrect</string>
+    <string name="delete_user_success_info">User deleted, signing out</string>
+    <string name="update_user_error_wrong_password">Error updating user: Your password is incorrect</string>
+    <string name="user_update_success_info">User updated successfully!</string>
+
+    <!-- sign in screen -->
+    <string name="register_button_text">Register</string>
+    <string name="sign_in_button_text">Sign In</string>
+    <string name="user_email_placeholder">Email</string>
+    <string name="invalid_email_hint">Not a valid email</string>
+    <string name="username_placeholder">Username</string>
+    <string name="password_placeholder">Password</string>
+    <string name="user_offline_checkbox_label">Make user offline</string>
+    <string name="navigate_to_sign_in_button_text">Sign In instead</string>
+    <string name="navigate_to_register_button_text">No account? Click here to register</string>
+    <string name="user_register_error_message">Error when attempting to register</string>
+    <string name="sign_in_success_message">Signed in!</string>
+    <string name="sign_in_error_message">Error signing in</string>
+
+    <!-- add reminder sheet -->
+    <string name="edit_reminder_title">Edit reminder</string>
+    <string name="add_reminder_title">Add reminder</string>
+    <string name="date_selection_placeholder">Pick a date</string>
+    <string name="time_selection_placeholder">Pick a time</string>
+    <string name="reminder_recurring_label">Recurring</string>
+    <string name="reminder_frequency_label">Frequency</string>
+    <string name="no_notification_permission_reminder_warning">This reminder won\'t show up because you haven\'t enabled notifications.</string>
+    <string name="set_reminder_button">Set Reminder</string>
+    <string name="update_reminder_button">Update</string>
+    <string name="delete_reminder_button">Delete</string>
+    <string name="reminder_time_range_label">Time Range</string>
+
+
+    <!-- task detail screen -->
+    <string name="reminder_info_title">Reminder</string>
+    <string name="no_reminder_set_placeholder">No reminder set</string>
+    <string name="complete_task_button">Complete</string>
+    <string name="delete_task_button">Delete</string>
+    <string name="task_info_title">Other Information</string>
+    <string name="task_created_at_label">Created at:</string>
+    <string name="task_modified_at_label">Modified at:</string>
+
+    <!-- notification permission dialog -->
+    <string name="notification_permission_dialog_title">Notification permission needed</string>
+    <string name="notification_permission_dialog_description">This app needs the notification permission to show you reminders about your tasks.</string>
+    <string name="notification_permission_dialog_confirm_button">Grant Permission</string>
 
     <!--preferences and enums-->
     <string-array name="night_modes">

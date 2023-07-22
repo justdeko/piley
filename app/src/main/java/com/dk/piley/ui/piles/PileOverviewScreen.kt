@@ -74,7 +74,7 @@ fun PileOverviewScreen(
                 onClick = { createPileDialogOpen = true },
                 expanded = expandedFab,
                 icon = { Icon(Icons.Filled.Add, "Add Pile Icon") },
-                text = { Text(text = "Add Pile") },
+                text = { Text(text = stringResource(R.string.add_pile_button)) },
             )
         },
         floatingActionButtonPosition = FabPosition.End,
@@ -105,7 +105,7 @@ fun PileOverviewScreen(
         }
         if (createPileDialogOpen) {
             AlertDialog(
-                title = { Text("Create a Pile") },
+                title = { Text(stringResource(R.string.create_pile_dialog_title)) },
                 text = {
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),

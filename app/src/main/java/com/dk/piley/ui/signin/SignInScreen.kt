@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -105,7 +106,10 @@ private fun SignInScreen(
 ) {
     val isRegister =
         viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE
-    val signInText = if (isRegister) "Register" else "Sign In"
+    val signInText =
+        if (isRegister) {
+            stringResource(R.string.register_button_text)
+        } else stringResource(R.string.sign_in_button_text)
     var emailFocused by remember { mutableStateOf(false) }
     val emailError =
         !viewState.email.isValidEmail() && viewState.email.isNotBlank() && !emailFocused
@@ -140,7 +144,7 @@ private fun SignInScreen(
                     .onFocusChanged { emailFocused = it.isFocused },
                 value = viewState.email,
                 onValueChange = onEmailChange,
-                placeholder = { Text("Email") },
+                placeholder = { Text(stringResource(R.string.user_email_placeholder)) },
                 shape = RoundedCornerShape(16.dp),
                 isError = emailError,
                 supportingText = if (emailError) {
@@ -148,7 +152,7 @@ private fun SignInScreen(
                     {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "Not a valid email",
+                            text = stringResource(R.string.invalid_email_hint),
                             color = MaterialTheme.colorScheme.error
                         )
                     }
@@ -169,7 +173,7 @@ private fun SignInScreen(
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     value = viewState.username,
                     onValueChange = onUsernameChange,
-                    placeholder = { Text("Username") },
+                    placeholder = { Text(stringResource(R.string.username_placeholder)) },
                     shape = RoundedCornerShape(16.dp),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -181,7 +185,7 @@ private fun SignInScreen(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = viewState.password,
                 onValueChange = onPasswordChange,
-                placeholder = { Text("Password") },
+                placeholder = { Text(stringResource(R.string.password_placeholder)) },
                 visualTransformation = PasswordVisualTransformation(),
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,
@@ -198,7 +202,7 @@ private fun SignInScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 32.dp, vertical = 8.dp),
-                    description = "Make user offline",
+                    description = stringResource(R.string.user_offline_checkbox_label),
                     checked = viewState.signInState == SignInState.REGISTER_OFFLINE,
                     onChecked = onChangeOfflineRegister
                 )
@@ -211,7 +215,13 @@ private fun SignInScreen(
                 Text(signInText)
             }
             TextButton(onClick = onChangeRegister) {
-                Text(if (isRegister) "Sign In instead" else "No account? Click here to register")
+                Text(
+                    if (isRegister) {
+                        stringResource(R.string.navigate_to_sign_in_button_text)
+                    } else stringResource(
+                        R.string.navigate_to_register_button_text
+                    )
+                )
             }
         }
     }

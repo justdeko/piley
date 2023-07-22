@@ -1,5 +1,7 @@
 package com.dk.piley.util
 
+import android.content.Context
+import com.dk.piley.R
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
@@ -41,10 +43,10 @@ fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Tas
             .map { Pair(pileWithTasks.pile.name, it) }
     }.sortedBy { it.second.reminder }.take(3)
 
-fun getBiggestPile(pilesWithTasks: List<PileWithTasks>): String =
+fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>, context: Context): String =
     pilesWithTasks.maxByOrNull { pileWithTasks ->
         pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }
-    }?.pile?.name ?: "None"
+    }?.pile?.name ?: context.getString(R.string.no_pile)
 
 fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
     val taskDurations = pilesWithTasks.flatMap { pileWithTasks ->

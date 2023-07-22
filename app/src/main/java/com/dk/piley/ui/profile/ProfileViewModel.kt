@@ -1,7 +1,6 @@
 package com.dk.piley.ui.profile
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
@@ -26,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    application: Application,
+    private val application: Application,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val backupManager: BackupManager
@@ -93,11 +92,10 @@ class ProfileViewModel @Inject constructor(
             setShowProgressbar(true)
             val successful = backupManager.doBackup()
             setShowProgressbar(false)
-            val context: Context = getApplication()
             if (successful) {
-                setToastMessage(context.getString(R.string.backup_upload_successful_message))
+                setToastMessage(application.getString(R.string.backup_upload_successful_message))
             } else {
-                setToastMessage(context.getString(R.string.backup_upload_error_message))
+                setToastMessage(application.getString(R.string.backup_upload_error_message))
             }
         }
     }
@@ -110,7 +108,7 @@ class ProfileViewModel @Inject constructor(
         userRepository.deleteUserTable()
         _state.update {
             it.copy(
-                toastMessage = "Signed out!",
+                toastMessage = application.getString(R.string.sign_out_successful_message),
                 signedOutState = SignOutState.SIGNED_OUT
             )
         }

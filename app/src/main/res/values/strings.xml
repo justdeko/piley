@@ -67,12 +67,14 @@
     <string name="backup_section_title">Backup</string>
     <string name="backup_upload_successful_message">Backup upload successful</string>
     <string name="backup_upload_error_message">Failed to upload backup</string>
+    <string name="sign_out_successful_message">Signed out!</string>
     <string name="done_tasks_label">Done</string>
     <string name="current_tasks_label">Current</string>
     <string name="deleted_tasks_label">Deleted</string>
     <string name="average_task_completion_duration_label">Average time spent on a task:</string>
     <string name="biggest_pile_label">Biggest Pile right now:</string>
     <string name="no_upcoming_tasks_hint">No upcoming tasks</string>
+    <string name="average_task_completion_duration_value">%1$dh</string>
     <string name="no_pile">None</string>
 
     <!-- delete user dialog -->
@@ -181,6 +183,7 @@
     </string-array>
 
     <!--reminder frequency-->
+    <string name="reminder_repeat_frequency_value">Repeats: Every %1$s</string>
     <string-array name="time_range">
         <item>Day</item>
         <item>Week</item>

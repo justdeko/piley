@@ -43,7 +43,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = context.getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+            text = "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME}",
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center

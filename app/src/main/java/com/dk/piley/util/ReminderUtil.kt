@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.RecurringTimeRange.DAILY
@@ -34,7 +35,10 @@ fun getFrequencyString(
 ): String {
     val pluralS = pluralStringResource(id = R.plurals.plural_s, count = recurringFrequency)
     val frequency = if (recurringFrequency == 1) "" else recurringFrequency.toString()
-    return "Repeats: Every $frequency ${recurringTimeRange.toText()}$pluralS"
+    return stringResource(
+        R.string.reminder_repeat_frequency_value,
+        "$frequency ${recurringTimeRange.toText()}$pluralS"
+    )
 }
 
 @Composable

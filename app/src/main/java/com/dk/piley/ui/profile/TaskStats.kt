@@ -68,7 +68,7 @@ fun TaskStats(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "${averageTaskDuration}h", // TODO extract
+                    text = stringResource(R.string.average_task_completion_duration_value, averageTaskDuration),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.secondary
                 )

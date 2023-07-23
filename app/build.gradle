@@ -16,7 +16,7 @@ android {
         versionCode 1
         versionName "1.0"
         // default api base urls
-        buildConfigField("String", "LOCAL_API_BASE_URL", "\"http://10.0.2.2:8080/\"")
+        buildConfigField("String", "LOCAL_API_BASE_URL", "\"https://10.0.2.2/\"")
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

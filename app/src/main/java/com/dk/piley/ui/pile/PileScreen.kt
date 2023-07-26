@@ -1,7 +1,11 @@
 package com.dk.piley.ui.pile
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -74,16 +78,31 @@ private fun PileScreen(
             onPageChanged = onTitlePageChanged,
             selectedPageIndex = selectedPileIndex
         )
-        TaskPile(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f),
-            tasks = viewState.tasks,
-            pileMode = viewState.pile.pileMode,
-            onDone = onDone,
-            onDelete = onDelete,
-            onTaskClick = onClick
-        )
+                .weight(1f)
+        ) {
+            TaskPile(
+                modifier = Modifier.fillMaxSize(),
+                tasks = viewState.tasks,
+                pileMode = viewState.pile.pileMode,
+                onDone = onDone,
+                onDelete = onDelete,
+                onTaskClick = onClick
+            )
+            Column(Modifier.fillMaxSize()) {
+                AnimatedVisibility(
+                    visible = viewState.tasks.isEmpty(),
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    NoTasksView(
+                        Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
         AddTaskField(
             value = query,
             onChange = { v: TextFieldValue -> query = v },
@@ -116,6 +135,21 @@ fun ProfileScreenPreview() {
             val state = PileViewState(
                 pile = pile,
                 tasks = tasks,
+                pileIdTitleList = listOf(Pair(1, "Pile1"), Pair(2, "Pile2"))
+            )
+            PileScreen(viewState = state)
+        }
+    }
+}
+
+@PreviewMainScreen
+@Composable
+fun ProfileScreenNoTasksPreview() {
+    PileyTheme {
+        Surface {
+            val state = PileViewState(
+                pile = Pile(name = "Daily"),
+                tasks = emptyList(),
                 pileIdTitleList = listOf(Pair(1, "Pile1"), Pair(2, "Pile2"))
             )
             PileScreen(viewState = state)

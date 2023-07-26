@@ -11,6 +11,7 @@
     <string name="add_description_hint">Hier klicken, um Beschreibung hinzuzufügen</string>
     <string name="add_task_placeholder">Füge dein Task hier hinzu</string>
     <string name="task_empty_not_allowed_hint">Task kann nicht leer sein</string>
+    <string name="no_tasks_message">Sieht so aus als hättest du keine Tasks übrig.\nKlicke auf das Textfeld unten, um ein Task zu erstellen</string>
     <string name="delete_pile_button_text">Löschen</string>
     <string name="clear_statistics_dialog_title">Alle Pile-Statistiken zurücksetzen</string>
     <string name="clear_statistics_dialog_description">Dieser Schritt wird alle Statistiken zu diesem Pile zurücksetzen, indem alle abgeschlossenen Tasks gelöscht werden. Möchtest du fortfahren?</string>

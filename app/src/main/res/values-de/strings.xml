@@ -57,7 +57,7 @@
     <string name="user_current_password_hint">Aktuelles Passwort zur Bestätigung</string>
     <string name="edit_user_dialog_cancel_button">Abbrechen</string>
     <string name="edit_user_dialog_confirm_button">Aktualisieren</string>
-    <string name="settings_screen_title">\@string/settings</string>
+    <string name="settings_screen_title">@string/settings</string>
     <string name="settings_section_appearance_title">Aussehen</string>
     <string name="night_mode_enabled_setting_title">Nachtmodus aktiviert</string>
     <string name="night_mode_enabled_setting_description">Einstellen, ob Nachtmodus aktiviert ist.</string>

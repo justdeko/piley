@@ -26,9 +26,7 @@ import com.dk.piley.ui.theme.PileyTheme
 @Composable
 fun UserInfo(modifier: Modifier = Modifier, name: String) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -46,7 +44,7 @@ fun UserInfo(modifier: Modifier = Modifier, name: String) {
         Text(
             text = name,
             modifier = Modifier
-                .padding(top = 16.dp)
+                .padding(top = 8.dp)
                 .align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,

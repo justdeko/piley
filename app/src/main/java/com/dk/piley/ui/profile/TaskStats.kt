@@ -32,9 +32,7 @@ fun TaskStats(
     tasksOnly: Boolean = false
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -55,7 +53,7 @@ fun TaskStats(
             )
         }
         if (!tasksOnly) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,7 +67,7 @@ fun TaskStats(
                 )
                 Text(
                     text = stringResource(R.string.average_task_completion_duration_value, averageTaskDuration),
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
@@ -86,7 +84,7 @@ fun TaskStats(
                 )
                 Text(
                     text = biggestPile,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }

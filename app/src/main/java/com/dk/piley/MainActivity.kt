@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -39,6 +40,7 @@ import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
 import com.dk.piley.util.isDarkMode
+import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -131,6 +133,7 @@ fun Home(
 @Preview
 @Composable
 fun HomePreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         Home()
     }

@@ -43,7 +43,7 @@ fun NoTasksView(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(R.string.no_tasks_message),
                 color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
             )
         }

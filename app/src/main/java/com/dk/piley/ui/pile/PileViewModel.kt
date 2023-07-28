@@ -116,7 +116,7 @@ class PileViewModel @Inject constructor(
 
 data class PileViewState(
     val pile: Pile = Pile(),
-    val tasks: List<Task> = emptyList(),
+    val tasks: List<Task>? = null,
     val autoHideEnabled: Boolean = true,
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),
 )

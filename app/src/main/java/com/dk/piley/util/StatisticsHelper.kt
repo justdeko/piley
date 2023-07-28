@@ -39,7 +39,10 @@ fun getCompletedTasksForWeekValues(pileWithTasks: PileWithTasks): List<Int> =
 fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Task>> =
     pilesWithTasks.flatMap { pileWithTasks ->
         pileWithTasks.tasks
-            .filter { it.reminder != null }
+            .filter {
+                (it.reminder != null && it.status == TaskStatus.DEFAULT)
+                        || (it.reminder != null && it.isRecurring && it.status != TaskStatus.DELETED)
+            }
             .map { Pair(pileWithTasks.pile.name, it) }
     }.sortedBy { it.second.reminder }.take(3)
 

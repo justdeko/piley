@@ -85,7 +85,7 @@ private fun PileScreen(
         ) {
             TaskPile(
                 modifier = Modifier.fillMaxSize(),
-                tasks = viewState.tasks,
+                tasks = viewState.tasks ?: emptyList(),
                 pileMode = viewState.pile.pileMode,
                 onDone = onDone,
                 onDelete = onDelete,
@@ -93,7 +93,7 @@ private fun PileScreen(
             )
             Column(Modifier.fillMaxSize()) {
                 AnimatedVisibility(
-                    visible = viewState.tasks.isEmpty(),
+                    visible = viewState.tasks?.isEmpty() ?: false,
                     enter = fadeIn(),
                     exit = fadeOut()
                 ) {

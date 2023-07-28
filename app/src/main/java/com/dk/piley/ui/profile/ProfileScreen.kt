@@ -13,13 +13,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Upcoming
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,13 +31,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
@@ -64,7 +67,8 @@ fun ProfileScreen(
             viewModel.setToastMessage(null)
         }
     }
-    ProfileScreen(modifier = modifier,
+    ProfileScreen(
+        modifier = modifier,
         viewState = viewState,
         setSignOutState = { viewModel.setSignedOutState(it) },
         onClickSettings = { navController.navigate(Screen.Settings.route) },
@@ -108,7 +112,7 @@ private fun ProfileScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 IconButton(onClick = onClickSettings) {
@@ -131,12 +135,11 @@ private fun ProfileScreen(
                 }
             }
             UserInfo(name = viewState.userName)
-            Text(
-                text = stringResource(R.string.user_statistics_section_title),
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 16.dp),
-                textAlign = TextAlign.Start
+            Spacer(modifier = Modifier.size(16.dp))
+            TitleHeader(
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                title = stringResource(R.string.user_statistics_section_title),
+                icon = Icons.Default.BarChart
             )
             TaskStats(
                 doneCount = viewState.doneTasks,
@@ -145,28 +148,26 @@ private fun ProfileScreen(
                 averageTaskDuration = viewState.averageTaskDurationInHours,
                 biggestPile = viewState.biggestPileName,
             )
-            Text(
-                text = stringResource(R.string.upcoming_tasks_section_title),
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.padding(start = 16.dp),
-                textAlign = TextAlign.Start
+            Divider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
+            TitleHeader(
+                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                title = stringResource(R.string.upcoming_tasks_section_title),
+                icon = Icons.Default.Upcoming
             )
             UpcomingTasksList(
                 modifier = Modifier.fillMaxWidth(),
                 pileNameTaskList = viewState.upcomingTaskList
             )
             if (!viewState.userIsOffline) {
-                Text(
-                    text = stringResource(R.string.backup_section_title),
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp),
-                    textAlign = TextAlign.Start
+                Divider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
+                TitleHeader(
+                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                    title = stringResource(R.string.backup_section_title),
+                    icon = Icons.Default.Cloud
                 )
                 BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
             }
-            Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
+            Box(contentAlignment = Alignment.BottomCenter) { // TODO fix this, stick to bottom
                 AppInfo()
             }
         }
@@ -186,6 +187,26 @@ fun ProfileScreenPreview() {
                 deletedTasks = 2,
                 currentTasks = 3,
                 upcomingTaskList = previewUpcomingTasksList
+            )
+            ProfileScreen(viewState = state)
+        }
+    }
+}
+
+@PreviewMainScreen
+@Composable
+fun ProfileScreenUserOfflinePreview() {
+    AndroidThreeTen.init(LocalContext.current)
+    PileyTheme {
+        Surface {
+            val state = ProfileViewState(
+                userName = "Thomas",
+                lastBackup = LocalDateTime.now(),
+                doneTasks = 0,
+                deletedTasks = 2,
+                currentTasks = 3,
+                upcomingTaskList = previewUpcomingTasksList,
+                userIsOffline = true
             )
             ProfileScreen(viewState = state)
         }

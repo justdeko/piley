@@ -1,21 +1,17 @@
 package com.dk.piley.ui.piles
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.settings.DropdownSettingsItem
+import com.dk.piley.ui.settings.SettingsSection
 import com.dk.piley.ui.settings.SliderSettingsItem
 import com.dk.piley.ui.theme.PileyTheme
 
@@ -27,14 +23,11 @@ fun PileDetailSettings(
     onSetPileLimit: (Int) -> Unit = {},
 ) {
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
-    Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = stringResource(R.string.pile_settings_section_title),
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(start = 16.dp),
-            textAlign = TextAlign.Start
-        )
+    SettingsSection(
+        modifier = modifier,
+        title = stringResource(R.string.pile_settings_section_title),
+        icon = Icons.Default.Settings
+    ) {
         DropdownSettingsItem(
             title = stringResource(R.string.pile_mode_setting_title),
             description = stringResource(R.string.pile_mode_setting_description),

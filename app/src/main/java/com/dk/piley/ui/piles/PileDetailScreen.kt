@@ -115,7 +115,7 @@ fun PileDetailScreen(
                         imageVector = Icons.Default.ArrowBack,
                         "close the pile detail",
                         modifier = Modifier.scale(
-                            1.5F
+                            1.3F
                         ),
                         tint = MaterialTheme.colorScheme.secondary
                     )
@@ -123,11 +123,6 @@ fun PileDetailScreen(
             })
             EditDescriptionField(value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
-            )
-            PileDetailSettings(
-                viewState = viewState,
-                onSetPileMode = onSetPileMode,
-                onSetPileLimit = onSetPileLimit
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -155,6 +150,12 @@ fun PileDetailScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 weekDayFrequencies = viewState.completedTaskCounts,
                 currentDay = today
+            )
+            PileDetailSettings(
+                modifier = Modifier.padding(top = 8.dp),
+                viewState = viewState,
+                onSetPileMode = onSetPileMode,
+                onSetPileLimit = onSetPileLimit
             )
         }
         Button(

@@ -38,7 +38,7 @@ fun FrequencyChart(
     modifier: Modifier = Modifier
 ) {
     val max = weekDayFrequencies.maxOrNull() ?: 0
-    val barHeight = 200.dp
+    val barHeight = 150.dp
     val barWidth = 50.dp
 
     Column(

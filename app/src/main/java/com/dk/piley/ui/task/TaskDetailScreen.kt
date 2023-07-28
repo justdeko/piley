@@ -154,7 +154,7 @@ fun TaskDetailScreen(
                             imageVector = Icons.Default.ArrowBack,
                             "close the task detail",
                             modifier = Modifier.scale(
-                                1.5F
+                                1.3F
                             ),
                             tint = MaterialTheme.colorScheme.secondary
                         )

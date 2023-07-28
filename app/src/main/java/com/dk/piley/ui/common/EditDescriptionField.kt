@@ -22,7 +22,7 @@ fun EditDescriptionField(
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(8.dp),
         value = value,
         shape = CutCornerShape(16.dp),
         onValueChange = onChange,

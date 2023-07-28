@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,6 +36,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -153,7 +156,7 @@ private fun SettingsScreen(
                         imageVector = Icons.Default.ArrowBack,
                         "close the task detail",
                         modifier = Modifier.scale(
-                            1.5F
+                            1.3F
                         ),
                         tint = MaterialTheme.colorScheme.secondary
                     )
@@ -180,6 +183,7 @@ private fun SettingsScreen(
                     onValueChange = onDynamicColorChange
                 )
             }
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
             SettingsSection(
                 title = stringResource(R.string.settings_section_piles_title),
                 icon = Icons.Filled.ViewAgenda
@@ -206,6 +210,7 @@ private fun SettingsScreen(
                     onValueChange = onAutoHideKeyboardChange
                 )
             }
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
             SettingsSection(title = stringResource(R.string.settings_section_notifications_title), icon = Icons.Filled.Notifications) {
                 SliderSettingsItem(
                     title = stringResource(R.string.reminder_delay_duration_setting_title),
@@ -217,6 +222,7 @@ private fun SettingsScreen(
                 )
             }
             if (!viewState.user.isOffline) {
+                Divider(modifier = Modifier.padding(vertical = 4.dp))
                 SettingsSection(title = stringResource(R.string.settings_section_backup_title), icon = Icons.Filled.Backup) {
                     SliderSettingsItem(
                         title = stringResource(R.string.backup_frequency_setting_title),
@@ -228,6 +234,7 @@ private fun SettingsScreen(
                     )
                 }
             }
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
             SettingsSection(title = stringResource(R.string.settings_section_user_title), icon = Icons.Filled.Person) {
                 SettingsItem(
                     title = stringResource(R.string.update_user_setting_title),

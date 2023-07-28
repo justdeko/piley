@@ -4,6 +4,7 @@ import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.util.getNextReminderTime
 import kotlinx.coroutines.flow.Flow
+import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
 class TaskRepository @Inject constructor(
@@ -20,7 +21,9 @@ class TaskRepository @Inject constructor(
         if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) {
             dismissAlarmAndNotification(task)
         }
-        return taskDao.insertTask(task)
+        // update modification time
+        val updatedTask = task.copy(modifiedAt = LocalDateTime.now())
+        return taskDao.insertTask(updatedTask)
     }
 
     suspend fun deleteTask(task: Task): Void {
@@ -43,7 +46,12 @@ class TaskRepository @Inject constructor(
                     taskId = task.id
                 )
                 // set new reminder time inside task
-                taskDao.insertTask(task.copy(reminder = it))
+                taskDao.insertTask(
+                    task.copy(
+                        reminder = it,
+                        modifiedAt = LocalDateTime.now()
+                    )
+                )
             }
         }
     }

@@ -27,7 +27,12 @@ class ReminderActionHandler @Inject constructor(
                 notificationManager.showNotification(it)
                 // set status to default if task is recurring so the task shows up again
                 if (it.isRecurring && it.status == TaskStatus.DONE) {
-                    taskDao.insertTask(it.copy(status = TaskStatus.DEFAULT))
+                    taskDao.insertTask(
+                        it.copy(
+                            status = TaskStatus.DEFAULT,
+                            modifiedAt = LocalDateTime.now()
+                        )
+                    )
                 }
             }
     }
@@ -68,10 +73,21 @@ class ReminderActionHandler @Inject constructor(
                         taskId = taskId
                     )
                     // set new reminder time inside task
-                    taskDao.insertTask(it.copy(status = TaskStatus.DONE, reminder = reminderTime))
+                    taskDao.insertTask(
+                        it.copy(
+                            status = TaskStatus.DONE,
+                            reminder = reminderTime,
+                            modifiedAt = LocalDateTime.now()
+                        )
+                    )
                 }
             } else {
-                taskDao.insertTask(it.copy(status = TaskStatus.DONE))
+                taskDao.insertTask(
+                    it.copy(
+                        status = TaskStatus.DONE,
+                        modifiedAt = LocalDateTime.now()
+                    )
+                )
             }
             notificationManager.dismiss(taskId)
         }

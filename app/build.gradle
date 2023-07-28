@@ -36,7 +36,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '17'
-        kotlin.sourceSets.all {
+        kotlin.sourceSets.configureEach {
             languageSettings.optIn("kotlin.RequiresOptIn") // experimental (material 3)
         }
     }

@@ -149,4 +149,8 @@
         <item quantity="one" />
         <item quantity="other" />
     </plurals>
+
+    <string name="delete_pile_dialog_title">Pile löschen</string>
+    <string name="delete_pile_dialog_description">Bist du dir sicher, dass du diesen Pile löschen möchtest?</string>
+    <string name="delete_pile_dialog_confirm_button">Ja</string>
 </resources>

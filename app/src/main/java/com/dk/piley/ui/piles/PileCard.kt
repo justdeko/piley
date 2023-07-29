@@ -30,7 +30,6 @@ import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,18 +52,10 @@ fun PileCard(
     canDelete: Boolean = true,
     onSelectPile: (Long) -> Unit = {},
     onDeletePile: () -> Unit = {},
-    onClick: (pile: Pile) -> Unit = {}
+    onClick: (pile: Pile) -> Unit = {},
+    transitionState: MutableTransitionState<Boolean> = MutableTransitionState(true)
 ) {
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
-    val transitionState = remember {
-        MutableTransitionState(false).apply {
-            targetState = true
-        }
-    }
-    if (!transitionState.targetState && !transitionState.currentState) {
-        onDeletePile()
-        return
-    }
     val density = LocalDensity.current
 
     Box {
@@ -89,7 +80,7 @@ fun PileCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         if (canDelete) {
-                            IconButton(onClick = { transitionState.targetState = false }) {
+                            IconButton(onClick = { onDeletePile() }) {
                                 Icon(
                                     Icons.Filled.Delete,
                                     tint = Color.Red,

@@ -56,6 +56,10 @@
     <string name="pile_title_hint">Pile Title</string>
     <string name="pile_create_dialog_confirm_button_text">Create Pile</string>
     <string name="pile_create_dialog_dismiss_button_text">Cancel</string>
+    <!-- delete pile dialog -->
+    <string name="delete_pile_dialog_title">Delete Pile</string>
+    <string name="delete_pile_dialog_description">Are you sure you want to delete this pile?</string>
+    <string name="delete_pile_dialog_confirm_button">Yes</string>
 
     <!-- profile screen -->
     <string name="last_backup_label">Last backup</string>

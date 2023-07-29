@@ -1,5 +1,6 @@
 package com.dk.piley.ui.piles
 
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,6 +31,7 @@ import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.AlertDialogHelper
 
 @Composable
 fun PileOverviewScreen(
@@ -59,13 +61,42 @@ fun PileOverviewScreen(
     onPileClick: (Pile) -> Unit = {},
 ) {
     val gridState = rememberLazyGridState()
-    val dailyPileName = stringResource(R.string.daily_pile_name)
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
     var pileTitle by rememberSaveable { mutableStateOf("") }
     val expandedFab by remember {
         derivedStateOf {
             gridState.firstVisibleItemIndex == 0
         }
+    }
+    var deletePileDialogOpen by remember { mutableStateOf(false) }
+    var pileToDeleteIndex: Int? by remember { mutableStateOf(null) }
+    // animation transition states for pile visibility
+    val pileTransitionStates = viewState.piles.map {
+        remember {
+            MutableTransitionState(false).apply {
+                targetState = true
+            }
+        }
+    }
+    // delete pile only after animation is finished
+    pileTransitionStates.forEachIndexed { index, transition ->
+        if (!transition.targetState && !transition.currentState) {
+            onDeletePile(viewState.piles[index].pile)
+        }
+    }
+
+    if (deletePileDialogOpen) {
+        AlertDialogHelper(
+            title = stringResource(R.string.delete_pile_dialog_title),
+            description = stringResource(R.string.delete_pile_dialog_description),
+            confirmText = stringResource(R.string.delete_pile_dialog_confirm_button),
+            onDismiss = { deletePileDialogOpen = false },
+            onConfirm = {
+                // play pile delete animation and close dialog
+                pileToDeleteIndex?.let { index -> pileTransitionStates[index].targetState = false }
+                deletePileDialogOpen = false
+            }
+        )
     }
     Scaffold(
         modifier = modifier,
@@ -89,16 +120,23 @@ fun PileOverviewScreen(
                 state = gridState,
                 columns = GridCells.Adaptive(150.dp),
             ) {
-                items(viewState.piles, key = { it.pile.pileId }) { pileWithTasks ->
+                itemsIndexed(
+                    viewState.piles,
+                    key = { _, pileWithTasks -> pileWithTasks.pile.pileId }
+                ) { index, pileWithTasks ->
                     PileCard(
                         modifier = Modifier.animateItemPlacement(),
                         pileWithTasks = pileWithTasks,
-                        // default pile with name "Daily" cannot be deleted
-                        canDelete = pileWithTasks.pile.name != dailyPileName,
+                        // default pile with id 1 cannot be deleted
+                        canDelete = pileWithTasks.pile.pileId != 1L,
                         onSelectPile = onSelectPile,
-                        onDeletePile = { onDeletePile(pileWithTasks.pile) },
+                        onDeletePile = {
+                            pileToDeleteIndex = index
+                            deletePileDialogOpen = true
+                        },
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
-                        onClick = onPileClick
+                        onClick = onPileClick,
+                        transitionState = pileTransitionStates[index]
                     )
                 }
             }
@@ -125,7 +163,8 @@ fun PileOverviewScreen(
                             createPileDialogOpen = false
                             pileTitle = ""
                         },
-                        enabled = pileTitle.isNotBlank() && pileTitle != dailyPileName
+                        // pile name can't exist yet
+                        enabled = !viewState.piles.map { it.pile.name }.contains(pileTitle)
                     ) {
                         Text(stringResource(R.string.pile_create_dialog_confirm_button_text))
                     }

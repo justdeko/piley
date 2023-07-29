@@ -29,7 +29,7 @@ fun TitleHeader(
     titleColor: Color = MaterialTheme.colorScheme.secondary
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {

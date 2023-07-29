@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -31,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -42,6 +42,8 @@ import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.charts.FrequencyChart
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.EditableTitleText
+import com.dk.piley.ui.common.OutlineCard
+import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.profile.TaskStats
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
@@ -124,33 +126,33 @@ fun PileDetailScreen(
             EditDescriptionField(value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
             )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.statistics_section_title),
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.headlineSmall,
-                    modifier = Modifier.padding(start = 16.dp),
-                    textAlign = TextAlign.Start
-                )
-                TextButton(onClick = { dialogOpen = true }) {
-                    Text(stringResource(R.string.clear_statistics_button_text))
+            OutlineCard(Modifier.padding(8.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TitleHeader(
+                        modifier = Modifier.padding(horizontal = 16.dp).weight(1f),
+                        title = stringResource(R.string.statistics_section_title),
+                        icon = Icons.Default.BarChart
+                    )
+                    TextButton(onClick = { dialogOpen = true }) {
+                        Text(stringResource(R.string.clear_statistics_button_text))
+                    }
                 }
+                TaskStats(
+                    doneCount = viewState.doneCount,
+                    deletedCount = viewState.deletedCount,
+                    currentCount = viewState.currentCount,
+                    tasksOnly = true
+                )
+                FrequencyChart(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    weekDayFrequencies = viewState.completedTaskCounts,
+                    currentDay = today
+                )
             }
-            TaskStats(
-                doneCount = viewState.doneCount,
-                deletedCount = viewState.deletedCount,
-                currentCount = viewState.currentCount,
-                tasksOnly = true
-            )
-            FrequencyChart(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                weekDayFrequencies = viewState.completedTaskCounts,
-                currentDay = today
-            )
             PileDetailSettings(
                 modifier = Modifier.padding(top = 8.dp),
                 viewState = viewState,

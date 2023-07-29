@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -39,7 +38,6 @@ fun FrequencyChart(
 ) {
     val max = weekDayFrequencies.maxOrNull() ?: 0
     val barHeight = 150.dp
-    val barWidth = 50.dp
 
     Column(
         verticalArrangement = Arrangement.Bottom,
@@ -109,7 +107,8 @@ fun FrequencyChart(
                     text = stringResource(R.string.no_pile_completed_hint),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
+                    modifier = Modifier
+                        .padding(start = 32.dp, end = 32.dp, bottom = 48.dp),
                     textAlign = TextAlign.Center
                 )
             }
@@ -124,7 +123,7 @@ fun FrequencyChart(
                 Text(
                     text = day,
                     style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.width(barWidth),
+                    modifier = Modifier.weight(1f),
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = if (index == 6) FontWeight.Bold else null,
                     textAlign = TextAlign.Center,
@@ -160,6 +159,21 @@ fun FrequencyChartPreviewLargeContrast() {
     PileyTheme(useDarkTheme = true) {
         val last7Days = listOf(0, 0, 0, 20, 0, 0, 1)
         FrequencyChart(last7Days, LocalDate.of(2023, 4, 29))
+    }
+}
+
+@Preview
+@Composable
+fun FrequencyChartPreviewLargeContrastSmallWidth() {
+    PileyTheme(useDarkTheme = true) {
+        val last7Days = listOf(0, 0, 0, 20, 0, 0, 1)
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(40.dp)
+        ) {
+            FrequencyChart(last7Days, LocalDate.of(2023, 4, 29))
+        }
     }
 }
 

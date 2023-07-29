@@ -36,7 +36,10 @@ class TaskDetailViewModel @Inject constructor(
             val id = savedStateHandle.get<Long>(taskScreen.identifier)
             id?.let { repository.getTaskById(it) }?.collect { task ->
                 _state.value = TaskDetailViewState(
-                    task, task.description, task.reminder?.dateTimeString()
+                    task = task,
+                    titleTextValue = task.title,
+                    descriptionTextValue = task.description,
+                    reminderDateTimeText = task.reminder?.dateTimeString()
                 )
             }
         }
@@ -105,10 +108,20 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    fun editTitle(title: String) {
+        _state.update {
+            it.copy(titleTextValue = title)
+        }
+        viewModelScope.launch {
+            repository.insertTask(state.value.task.copy(title = title))
+        }
+    }
+
 }
 
 data class TaskDetailViewState(
     val task: Task = Task(),
+    val titleTextValue: String = "",
     val descriptionTextValue: String = "",
     val reminderDateTimeText: String? = null
 )

@@ -35,13 +35,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -50,6 +48,7 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.EditDescriptionField
+import com.dk.piley.ui.common.EditableTitleText
 import com.dk.piley.ui.theme.PileyTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -76,7 +75,8 @@ fun TaskDetailScreen(
         onAddReminder = { viewModel.addReminder(it) },
         onCancelReminder = { viewModel.cancelReminder() },
         onClose = { navController.popBackStack() },
-        onEditDesc = { viewModel.editDescription(it) }
+        onEditDesc = { viewModel.editDescription(it) },
+        onEditTitle = { viewModel.editTitle(it) }
     )
 }
 
@@ -93,6 +93,7 @@ fun TaskDetailScreen(
     onCompleteTask: () -> Unit = {},
     onClose: () -> Unit = {},
     onEditDesc: (String) -> Unit = {},
+    onEditTitle: (String) -> Unit = {},
     onAddReminder: (ReminderState) -> Unit = {},
     onCancelReminder: () -> Unit = {},
     permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -140,26 +141,26 @@ fun TaskDetailScreen(
                     .fillMaxWidth()
                     .verticalScroll(scrollState)
             ) {
-                CenterAlignedTopAppBar(title = {
-                    Text(
-                        text = viewState.task.title,
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }, navigationIcon = {
-                    IconButton(onClick = onClose) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            "close the task detail",
-                            modifier = Modifier.scale(
-                                1.3F
-                            ),
-                            tint = MaterialTheme.colorScheme.secondary
+                CenterAlignedTopAppBar(
+                    title = {
+                        EditableTitleText(
+                            value = viewState.titleTextValue,
+                            onValueChange = onEditTitle
                         )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onClose) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBack,
+                                "close the task detail",
+                                modifier = Modifier.scale(
+                                    1.3F
+                                ),
+                                tint = MaterialTheme.colorScheme.secondary
+                            )
+                        }
                     }
-                })
+                )
                 EditDescriptionField(
                     value = viewState.descriptionTextValue,
                     onChange = {

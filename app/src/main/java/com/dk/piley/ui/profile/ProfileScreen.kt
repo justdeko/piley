@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Upcoming
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +36,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
@@ -136,36 +136,42 @@ private fun ProfileScreen(
             }
             UserInfo(name = viewState.userName)
             Spacer(modifier = Modifier.size(16.dp))
-            TitleHeader(
-                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
-                title = stringResource(R.string.user_statistics_section_title),
-                icon = Icons.Default.BarChart
-            )
-            TaskStats(
-                doneCount = viewState.doneTasks,
-                deletedCount = viewState.deletedTasks,
-                currentCount = viewState.currentTasks,
-                averageTaskDuration = viewState.averageTaskDurationInHours,
-                biggestPile = viewState.biggestPileName,
-            )
-            Divider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
-            TitleHeader(
-                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
-                title = stringResource(R.string.upcoming_tasks_section_title),
-                icon = Icons.Default.Upcoming
-            )
-            UpcomingTasksList(
-                modifier = Modifier.fillMaxWidth(),
-                pileNameTaskList = viewState.upcomingTaskList
-            )
-            if (!viewState.userIsOffline) {
-                Divider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp))
+            OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
                 TitleHeader(
                     modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
-                    title = stringResource(R.string.backup_section_title),
-                    icon = Icons.Default.Cloud
+                    title = stringResource(R.string.user_statistics_section_title),
+                    icon = Icons.Default.BarChart
                 )
-                BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
+                TaskStats(
+                    doneCount = viewState.doneTasks,
+                    deletedCount = viewState.deletedTasks,
+                    currentCount = viewState.currentTasks,
+                    averageTaskDuration = viewState.averageTaskDurationInHours,
+                    biggestPile = viewState.biggestPileName,
+                )
+            }
+            Spacer(modifier = Modifier.size(16.dp))
+            OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
+                TitleHeader(
+                    modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                    title = stringResource(R.string.upcoming_tasks_section_title),
+                    icon = Icons.Default.Upcoming
+                )
+                UpcomingTasksList(
+                    modifier = Modifier.fillMaxWidth(),
+                    pileNameTaskList = viewState.upcomingTaskList
+                )
+            }
+            if (!viewState.userIsOffline) {
+                Spacer(modifier = Modifier.size(16.dp))
+                OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
+                    TitleHeader(
+                        modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+                        title = stringResource(R.string.backup_section_title),
+                        icon = Icons.Default.Cloud
+                    )
+                    BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
+                }
             }
             Box(contentAlignment = Alignment.BottomCenter) { // TODO fix this, stick to bottom
                 AppInfo()

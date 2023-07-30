@@ -13,6 +13,7 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontVariation
+import androidx.compose.ui.text.font.FontWeight
 import com.dk.piley.R
 
 @OptIn(ExperimentalTextApi::class)
@@ -38,10 +39,13 @@ private val bold = Font(
 private val pileyFontFamily = FontFamily(fonts = listOf(regular, medium, semiBold, bold))
 
 private val pileyTypography = AppTypography.copy(
+    headlineLarge = AppTypography.headlineLarge.copy(fontFamily = pileyFontFamily),
+    headlineMedium = AppTypography.headlineMedium.copy(fontFamily = pileyFontFamily),
+    headlineSmall = AppTypography.headlineSmall.copy(fontFamily = pileyFontFamily),
     displayLarge = AppTypography.displayLarge.copy(fontFamily = pileyFontFamily),
     displayMedium = AppTypography.displayMedium.copy(fontFamily = pileyFontFamily),
     displaySmall = AppTypography.displaySmall.copy(fontFamily = pileyFontFamily),
-    titleLarge = AppTypography.titleLarge.copy(fontFamily = pileyFontFamily),
+    titleLarge = AppTypography.titleLarge.copy(fontFamily = pileyFontFamily, fontWeight = FontWeight(600)),
     titleMedium = AppTypography.titleMedium.copy(fontFamily = pileyFontFamily),
     titleSmall = AppTypography.titleSmall.copy(fontFamily = pileyFontFamily),
     bodyLarge = AppTypography.bodyLarge.copy(fontFamily = pileyFontFamily),

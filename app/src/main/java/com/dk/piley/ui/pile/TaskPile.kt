@@ -5,10 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissState
-import androidx.compose.material.DismissValue
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissState
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,7 +21,10 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.theme.PileyTheme
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun TaskPile(
     modifier: Modifier = Modifier,
@@ -40,14 +43,14 @@ fun TaskPile(
         itemsIndexed(tasks, key = { _, task -> task.id }) { index, task ->
             // recomposition key of tasks to recalculate possibility of dismiss for last/first item
             val dismissState = remember(tasks) {
-                DismissState(DismissValue.Default) {
+                DismissState(DismissValue.Default, confirmValueChange = {
                     if (cannotDismiss(pileMode, index, tasks.lastIndex)
                         && it == DismissValue.DismissedToEnd
                     ) {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         false
                     } else true
-                }
+                })
             }
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                 onDelete(task)
@@ -58,7 +61,7 @@ fun TaskPile(
                 Modifier
                     .animateItemPlacement()
                     .padding(vertical = 1.dp),
-                dismissState,
+                dismissState, // TODO proper threshold (more for delete)
                 task,
                 onClick = onTaskClick
             )

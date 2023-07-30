@@ -7,13 +7,18 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Card
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissState
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PileTask(
     modifier: Modifier,
@@ -46,9 +51,12 @@ fun PileTask(
 
     SwipeToDismiss(
         state = dismissState,
-        modifier = modifier.clickable { onClick(task) },
+        modifier = modifier.clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null, // TODO indication only when clicking, not when holding
+            onClick = { onClick(task) }
+        ),
         directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
-        dismissThresholds = { getThreshold(it) },
         background = {
             val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
             val color by animateColorAsState(
@@ -56,7 +64,7 @@ fun PileTask(
                     DismissValue.Default -> Color.LightGray
                     DismissValue.DismissedToEnd -> Color.Green
                     DismissValue.DismissedToStart -> Color.Red
-                }
+                }, label = "dismiss color"
             )
             val alignment = when (direction) {
                 DismissDirection.StartToEnd -> Alignment.CenterStart
@@ -67,7 +75,8 @@ fun PileTask(
                 DismissDirection.EndToStart -> Icons.Default.Delete
             }
             val scale by animateFloatAsState(
-                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f,
+                label = "dismiss icon scale"
             )
 
             Box(
@@ -114,11 +123,6 @@ fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
             textAlign = TextAlign.Center
         )
     }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-fun getThreshold(direction: DismissDirection): ThresholdConfig {
-    return FractionalThreshold(if (direction == DismissDirection.StartToEnd) 0.25f else 0.5f)
 }
 
 @Preview(showBackground = true)

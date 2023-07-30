@@ -63,11 +63,12 @@ fun TaskStats(
             ) {
                 Text(
                     text = stringResource(R.string.average_task_completion_duration_label),
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.labelLarge
+
                 )
                 Text(
                     text = stringResource(R.string.average_task_completion_duration_value, averageTaskDuration),
-                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
@@ -80,11 +81,12 @@ fun TaskStats(
             ) {
                 Text(
                     text = stringResource(R.string.biggest_pile_label),
-                    color = MaterialTheme.colorScheme.onBackground
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.labelLarge
                 )
                 Text(
                     text = biggestPile,
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.secondary
                 )
             }

@@ -45,7 +45,7 @@ fun SettingsItem(
                 )
             }
             if (contentEnd != null) {
-                Row(modifier = Modifier.widthIn(0.dp, 150.dp)) {
+                Row(modifier = Modifier.widthIn(0.dp, 160.dp)) {
                     Spacer(modifier = Modifier.width(16.dp))
                     contentEnd()
                 }

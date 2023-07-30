@@ -47,7 +47,7 @@ class SignInViewModel @Inject constructor(
             userRepository.registerUserFlow(user).collectLatest {
                 when (it) {
                     is Resource.Loading -> setLoading(true)
-                    is Resource.Success -> onRegisterSuccess(user)
+                    is Resource.Success -> onRemoteRegisterOrSignInSuccess(user)
                     is Resource.Failure -> {
                         setLoading(false)
                         setToastMessage(application.getString(R.string.user_register_error_message))
@@ -57,7 +57,7 @@ class SignInViewModel @Inject constructor(
         }
     }
 
-    private suspend fun onRegisterSuccess(user: User, isSignIn: Boolean = false) {
+    private suspend fun onRemoteRegisterOrSignInSuccess(user: User, isSignIn: Boolean = false) {
         // create user and set as signed in
         userRepository.insertUser(user)
         userRepository.setSignedInUser(user.email)
@@ -87,11 +87,13 @@ class SignInViewModel @Inject constructor(
                 }
             }
         } else {
-            createAndSetUserPile()
+            // set user as first time since it is a register process
+            _state.update { it.copy(firstTime = true) }
+            createAndSetUserPile(false)
         }
     }
 
-    private suspend fun createAndSetUserPile() {
+    private suspend fun createAndSetUserPile(isSignIn: Boolean = true) {
         // create default pile
         val pile = Pile(
             name = application.getString(R.string.daily_pile_name),
@@ -107,15 +109,17 @@ class SignInViewModel @Inject constructor(
             )
         }
         // signal loading process has finished to user and set state to signed in
-        updateUIOnSignInSuccess()
+        updateUIOnSignInSuccess(isSignIn)
     }
 
-    private fun updateUIOnSignInSuccess() {
+    private fun updateUIOnSignInSuccess(isSignIn: Boolean = true) {
         setLoading(false)
         setToastMessage(application.getString(R.string.sign_in_success_message))
         setSignInState(SignInState.SIGNED_IN)
         // TODO remove intermediate solution when runtime db fixed
-        restartApplication(getApplication())
+        if (isSignIn) {
+            restartApplication(getApplication())
+        }
     }
 
     /**
@@ -162,9 +166,11 @@ class SignInViewModel @Inject constructor(
             isOffline = true
         )
         viewModelScope.launch {
+            // set user as first time since it is a register process
+            _state.update { it.copy(firstTime = true) }
             userRepository.insertUser(user)
             userRepository.setSignedInUser(user.email)
-            createAndSetUserPile()
+            createAndSetUserPile(false)
             setLoading(false)
         }
     }
@@ -173,7 +179,7 @@ class SignInViewModel @Inject constructor(
         userRepository.getUserFromRemoteFlow(email, password).collectLatest {
             when (it) {
                 is Resource.Loading -> setLoading(true)
-                is Resource.Success -> onRegisterSuccess(
+                is Resource.Success -> onRemoteRegisterOrSignInSuccess(
                     User(
                         name = it.data.name,
                         email = it.data.email,
@@ -205,6 +211,7 @@ data class SignInViewState(
     val email: String = "",
     val password: String = "",
     val signInState: SignInState = SignInState.SIGNED_OUT,
+    val firstTime: Boolean = false,
     val loading: Boolean = false,
     val toastMessage: String? = null,
 )

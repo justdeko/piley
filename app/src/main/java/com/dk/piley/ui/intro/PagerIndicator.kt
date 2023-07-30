@@ -39,7 +39,7 @@ fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
                     .padding(4.dp)
                     .clip(CircleShape)
                     .background(color)
-                    .size(16.dp)
+                    .size(8.dp)
 
             )
         }

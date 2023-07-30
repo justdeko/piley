@@ -23,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.dk.piley.ui.intro.IntroScreen
 import com.dk.piley.ui.nav.BottomNavigationBar
 import com.dk.piley.ui.nav.DEEPLINK_ROOT
 import com.dk.piley.ui.nav.Screen
@@ -89,6 +90,9 @@ fun Home(
             }
             composable(Screen.SignIn.route) {
                 SignInScreen(navController = navController)
+            }
+            composable(Screen.Intro.route) {
+                IntroScreen(navController = navController)
             }
             composable(Screen.Pile.route) {
                 PileScreen(

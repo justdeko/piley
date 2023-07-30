@@ -2,8 +2,20 @@ package com.dk.piley.ui.nav
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Login
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Square
+import androidx.compose.material.icons.filled.Start
+import androidx.compose.material.icons.filled.ViewAgenda
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Login
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.Square
+import androidx.compose.material.icons.outlined.Start
+import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.dk.piley.R
 
@@ -32,6 +44,10 @@ sealed class Screen(
 
     object Splash : Screen(
         "splash", R.string.splash_screen, Pair(Icons.Outlined.Square, Icons.Filled.Square)
+    )
+
+    object Intro : Screen(
+        "intro", R.string.introduction_screen, Pair(Icons.Outlined.Start, Icons.Filled.Start)
     )
 }
 

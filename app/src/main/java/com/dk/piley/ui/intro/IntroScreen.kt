@@ -52,7 +52,16 @@ fun IntroScreen(
             state = pagerState,
             verticalAlignment = Alignment.CenterVertically
         ) { position ->
-            IntroPageContent(introPage = pages[position])
+            if (position != pages.lastIndex) {
+                IntroPageContent(introPage = pages[position])
+            } else {
+                IntroPageContent(
+                    introPage = pages[position],
+                    showButton = true,
+                    buttonText = "Start Piling",
+                    onClickButton = onFinish
+                )
+            }
         }
         PagerIndicator(
             modifier = Modifier

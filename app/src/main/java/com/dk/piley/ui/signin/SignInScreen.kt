@@ -58,8 +58,15 @@ fun SignInScreen(
     val context = LocalContext.current
 
     if (viewState.signInState == SignInState.SIGNED_IN) {
-        LaunchedEffect(viewState.signInState) {
-            navController.navigateClearBackstack(Screen.Pile.route)
+        // navigate to register screen if it is the user's first time
+        if (viewState.firstTime) {
+            LaunchedEffect(viewState.signInState) {
+                navController.navigateClearBackstack(Screen.Intro.route)
+            }
+        } else {
+            LaunchedEffect(viewState.signInState) {
+                navController.navigateClearBackstack(Screen.Pile.route)
+            }
         }
     }
     if (viewState.toastMessage != null) {

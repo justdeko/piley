@@ -40,13 +40,9 @@ fun PileTask(
     modifier: Modifier,
     dismissState: DismissState,
     task: Task,
+    transitionState: MutableTransitionState<Boolean>,
     onClick: (task: Task) -> Unit = {}
 ) {
-    val transitionState = remember {
-        MutableTransitionState(false).apply {
-            targetState = true
-        }
-    }
     val density = LocalDensity.current
 
     SwipeToDismiss(
@@ -118,7 +114,7 @@ fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
         Text(
             text = taskText,
             modifier = modifier
-                .padding(all = 16.dp)
+                .padding(horizontal = 16.dp, vertical = 12.dp)
                 .align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center
         )

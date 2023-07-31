@@ -1,5 +1,6 @@
 package com.dk.piley.ui.pile
 
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.getPreviewTransitionStates
 
 @OptIn(
     ExperimentalFoundationApi::class,
@@ -30,6 +32,7 @@ fun TaskPile(
     modifier: Modifier = Modifier,
     tasks: List<Task> = emptyList(),
     pileMode: PileMode = PileMode.FREE,
+    taskTransitionStates: List<MutableTransitionState<Boolean>>,
     onDelete: (task: Task) -> Unit = {},
     onDone: (task: Task) -> Unit = {},
     onTaskClick: (task: Task) -> Unit = {}
@@ -38,7 +41,7 @@ fun TaskPile(
     LazyColumn(
         modifier = modifier.padding(8.dp),
         reverseLayout = true,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Bottom),
+        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Bottom),
     ) {
         itemsIndexed(tasks, key = { _, task -> task.id }) { index, task ->
             // recomposition key of tasks to recalculate possibility of dismiss for last/first item
@@ -58,11 +61,12 @@ fun TaskPile(
                 onDone(task)
             }
             PileTask(
-                Modifier
+                modifier = Modifier
                     .animateItemPlacement()
                     .padding(vertical = 1.dp),
-                dismissState, // TODO proper threshold (more for delete)
-                task,
+                dismissState = dismissState, // TODO proper threshold (more for delete)
+                transitionState = taskTransitionStates[index],
+                task = task,
                 onClick = onTaskClick
             )
         }
@@ -83,6 +87,6 @@ fun DefaultPreview() {
                 Task(title = "another task", id = 3),
                 Task(title = "fourth task", id = 4),
             )
-        TaskPile(tasks = taskList)
+        TaskPile(tasks = taskList, taskTransitionStates = taskList.getPreviewTransitionStates())
     }
 }

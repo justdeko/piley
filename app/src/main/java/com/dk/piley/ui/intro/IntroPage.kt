@@ -15,19 +15,19 @@ sealed class IntroPage(
     )
 
     object Pile : IntroPage(
-        R.drawable.cat,
+        R.drawable.pile_screen_demo,
         "Pile",
         "A pile is like the name says - a pile of your tasks. Click on the bottom to create a new task, or swipe tasks away to complete them."
     )
 
     object Piles : IntroPage(
-        R.drawable.pile_over_view_screen_demo,
+        R.drawable.pile_overview_screen_demo,
         "Piles",
         "Manage your piles by going to the piles section and creating, editing or deleting your piles. Only the daily Pile can't be deleted."
     )
 
     object Profile : IntroPage(
-        R.drawable.cat,
+        R.drawable.profile_screen_demo,
         "Profile",
         "You can also see general statistics and upcoming tasks by going to the profile section."
     )

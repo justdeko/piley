@@ -10,25 +10,29 @@ import com.dk.piley.model.user.User
 import org.threeten.bp.LocalDateTime
 
 val previewTaskList: List<Task> = listOf(
-    Task(title = "Buy groceries", description = "Milk, eggs, bread, and vegetables"),
-    Task(title = "Finish presentation slides"),
-    Task(title = "Call the plumber"),
-    Task(title = "Schedule dentist appointment"),
-    Task(title = "Exercise"),
-    Task(title = "Water the plants", status = TaskStatus.DONE),
-    Task(title = "Respond to emails and messages"),
-    Task(title = "Clean the house: vacuum, dust, and mop", status = TaskStatus.DONE),
-    Task(title = "Do the laundry", status = TaskStatus.DONE),
-    Task(title = "Pay credit card bills"),
-    Task(title = "Attend online class"),
-    Task(title = "Plan and prepare meals for the week"),
-    Task(title = "Send birthday or anniversary wishes to cousin", status = TaskStatus.DONE),
-    Task(title = "Review and update your budget or financial plan"),
-    Task(title = "Buy gift for Lisa", status = TaskStatus.DONE),
-    Task(title = "Call parents"),
-    Task(title = "Fix washing machine"),
-    Task(title = "Practice piano"),
-    Task(title = "Meditate", status = TaskStatus.DONE),
+    Task(id = 1, title = "Buy groceries", description = "Milk, eggs, bread, and vegetables"),
+    Task(id = 2, title = "Finish presentation slides"),
+    Task(id = 3, title = "Call the plumber"),
+    Task(id = 4, title = "Schedule dentist appointment"),
+    Task(id = 5, title = "Exercise"),
+    Task(id = 6, title = "Water the plants", status = TaskStatus.DONE),
+    Task(id = 7, title = "Respond to emails and messages"),
+    Task(id = 8, title = "Clean the house: vacuum, dust, and mop", status = TaskStatus.DONE),
+    Task(id = 9, title = "Do the laundry", status = TaskStatus.DONE),
+    Task(id = 10, title = "Pay credit card bills"),
+    Task(id = 11, title = "Attend online class"),
+    Task(id = 12, title = "Plan and prepare meals for the week"),
+    Task(
+        id = 13,
+        title = "Send birthday or anniversary wishes to cousin",
+        status = TaskStatus.DONE
+    ),
+    Task(id = 14, title = "Review and update your budget or financial plan"),
+    Task(id = 15, title = "Buy gift for Lisa", status = TaskStatus.DONE),
+    Task(id = 16, title = "Call parents"),
+    Task(id = 17, title = "Fix washing machine"),
+    Task(id = 18, title = "Practice piano"),
+    Task(id = 19, title = "Meditate", status = TaskStatus.DONE),
 )
 
 val previewPileWithTasksList: List<PileWithTasks> = listOf(
@@ -63,10 +67,22 @@ val previewUser: User = User(
 )
 
 val previewUpcomingTasksList = listOf(
-    Pair("Default", Task(title = "task 1", reminder = LocalDateTime.now().plusDays(1))),
     Pair(
-        "Some other Pile",
-        Task(title = "task 2", reminder = LocalDateTime.now().plusDays(2))
+        "Daily",
+        Task(
+            title = "Clean room",
+            reminder = LocalDateTime.parse("2023-08-04T09:36:24").plusDays(1)
+        )
     ),
-    Pair("Default", Task(title = "task 3", reminder = LocalDateTime.now().plusDays(3)))
+    Pair(
+        "Shopping List",
+        Task(
+            title = "Buy bananas",
+            reminder = LocalDateTime.parse("2023-08-04T18:02:24").plusDays(2)
+        )
+    ),
+    Pair(
+        "Daily",
+        Task(title = "Call Dentist", reminder = LocalDateTime.parse("2023-08-04T14:01:24").plusDays(3))
+    )
 )

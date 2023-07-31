@@ -30,6 +30,7 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
+import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
 
 @Composable
@@ -185,8 +186,7 @@ fun PileOverviewScreenPreview() {
     PileyTheme {
         Surface {
             val pilesViewState = PilesViewState(previewPileWithTasksList)
-            val transitionStates =
-                List(previewPileWithTasksList.size) { MutableTransitionState(true) }
+            val transitionStates = previewPileWithTasksList.getPreviewTransitionStates()
             PileOverviewScreen(viewState = pilesViewState, pileTransitionStates = transitionStates)
         }
     }

@@ -193,7 +193,9 @@ fun ProfileScreenPreview() {
                 doneTasks = 0,
                 deletedTasks = 2,
                 currentTasks = 3,
-                upcomingTaskList = previewUpcomingTasksList
+                biggestPileName = "Daily",
+                upcomingTaskList = previewUpcomingTasksList,
+                averageTaskDurationInHours = 9
             )
             ProfileScreen(viewState = state)
         }

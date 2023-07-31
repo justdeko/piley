@@ -1,6 +1,7 @@
 package com.dk.piley.util
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.LinearProgressIndicator
@@ -39,3 +40,7 @@ fun IndefiniteProgressBar(modifier: Modifier = Modifier, visible: Boolean = fals
         LinearProgressIndicator(modifier = modifier.fillMaxWidth())
     }
 }
+
+fun <T> List<T>.getPreviewTransitionStates(initial: Boolean = true) =
+    List(this.size) { MutableTransitionState(initial) }
+

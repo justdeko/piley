@@ -2,6 +2,7 @@ package com.dk.piley.ui.pile
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -29,6 +31,9 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.getPreviewTransitionStates
+import com.dk.piley.util.previewPileWithTasksList
+import com.jakewharton.threetenabp.AndroidThreeTen
 
 @Composable
 fun PileScreen(
@@ -38,9 +43,17 @@ fun PileScreen(
 ) {
     val viewState by viewModel.state.collectAsState()
     val selectedPileViewState by viewModel.selectedPileIndex.collectAsState()
+    val taskTransitionStates = viewState.tasks?.map {
+        remember {
+            MutableTransitionState(false).apply {
+                targetState = true
+            }
+        }
+    } ?: emptyList()
     PileScreen(
         modifier = modifier,
         viewState = viewState,
+        taskTransitionStates = taskTransitionStates,
         selectedPileIndex = selectedPileViewState,
         onDone = { viewModel.done(it) },
         onDelete = { viewModel.delete(it) },
@@ -54,6 +67,7 @@ fun PileScreen(
 private fun PileScreen(
     modifier: Modifier = Modifier,
     viewState: PileViewState,
+    taskTransitionStates: List<MutableTransitionState<Boolean>>,
     selectedPileIndex: Int = 0,
     onTitlePageChanged: (Int) -> Unit = {},
     onDone: (Task) -> Unit = {},
@@ -87,6 +101,7 @@ private fun PileScreen(
                 modifier = Modifier.fillMaxSize(),
                 tasks = viewState.tasks ?: emptyList(),
                 pileMode = viewState.pile.pileMode,
+                taskTransitionStates = taskTransitionStates,
                 onDone = onDone,
                 onDelete = onDelete,
                 onTaskClick = onClick
@@ -128,16 +143,19 @@ private fun PileScreen(
 @PreviewMainScreen
 @Composable
 fun ProfileScreenPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
-            val tasks = listOf(Task(id = 1, title = "Hi there"), Task(id = 2, title = "Sup"))
-            val pile = Pile(name = "Daily")
+            val pilesWithTasks = previewPileWithTasksList
             val state = PileViewState(
-                pile = pile,
-                tasks = tasks,
-                pileIdTitleList = listOf(Pair(1, "Pile1"), Pair(2, "Pile2"))
+                pile = pilesWithTasks[0].pile,
+                tasks = pilesWithTasks[0].tasks,
+                pileIdTitleList = pilesWithTasks.map { Pair(it.pile.pileId, it.pile.name) }
             )
-            PileScreen(viewState = state)
+            PileScreen(
+                viewState = state,
+                taskTransitionStates = pilesWithTasks[0].tasks.getPreviewTransitionStates()
+            )
         }
     }
 }
@@ -145,6 +163,7 @@ fun ProfileScreenPreview() {
 @PreviewMainScreen
 @Composable
 fun ProfileScreenNoTasksPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val state = PileViewState(
@@ -152,7 +171,7 @@ fun ProfileScreenNoTasksPreview() {
                 tasks = emptyList(),
                 pileIdTitleList = listOf(Pair(1, "Pile1"), Pair(2, "Pile2"))
             )
-            PileScreen(viewState = state)
+            PileScreen(viewState = state, taskTransitionStates = emptyList())
         }
     }
 }

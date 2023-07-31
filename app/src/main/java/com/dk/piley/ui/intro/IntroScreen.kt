@@ -9,8 +9,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
@@ -40,6 +42,7 @@ fun IntroScreen(
         IntroPage.Welcome,
         IntroPage.Pile,
         IntroPage.Piles,
+        IntroPage.Profile,
         IntroPage.End
     )
     val pagerState = rememberPagerState(
@@ -58,7 +61,7 @@ fun IntroScreen(
                 IntroPageContent(
                     introPage = pages[position],
                     showButton = true,
-                    buttonText = "Start Piling",
+                    buttonText = stringResource(R.string.finish_intro_button),
                     onClickButton = onFinish
                 )
             }

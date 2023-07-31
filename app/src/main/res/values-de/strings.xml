@@ -153,4 +153,5 @@
     <string name="delete_pile_dialog_title">Pile löschen</string>
     <string name="delete_pile_dialog_description">Bist du dir sicher, dass du diesen Pile löschen möchtest?</string>
     <string name="delete_pile_dialog_confirm_button">Ja</string>
+    <string name="finish_intro_button">Fang mit piley an</string>
 </resources>

@@ -8,9 +8,34 @@ sealed class IntroPage(
     val title: String,
     val description: String,
 ) {
-    object Welcome : IntroPage(R.drawable.cat, "Welcome", "Lorem ipsum")
-    object Pile : IntroPage(R.drawable.cat, "Pile", "Manage tasks in your pile by...")
-    object Piles : IntroPage(R.drawable.cat, "Piles", "Manage your piles by...")
-    object End : IntroPage(R.drawable.cat, "Piles", "Manage your piles by...")
+    object Welcome : IntroPage(
+        R.drawable.tasks,
+        "Hi there",
+        "Welcome to piley! This app allows you to manage regular and one-time tasks by displaying them in piles."
+    )
+
+    object Pile : IntroPage(
+        R.drawable.cat,
+        "Pile",
+        "A pile is like the name says - a pile of your tasks. Click on the bottom to create a new task, or swipe tasks away to complete them."
+    )
+
+    object Piles : IntroPage(
+        R.drawable.pile_over_view_screen_demo,
+        "Piles",
+        "Manage your piles by going to the piles section and creating, editing or deleting your piles. Only the daily Pile can't be deleted."
+    )
+
+    object Profile : IntroPage(
+        R.drawable.cat,
+        "Profile",
+        "You can also see general statistics and upcoming tasks by going to the profile section."
+    )
+
+    object End : IntroPage(
+        R.drawable.door,
+        "Almost there",
+        "That's it! Click on the button to start using the app, and have fun with piley!"
+    )
 
 }

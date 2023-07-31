@@ -27,11 +27,10 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
-import com.dk.piley.model.pile.PileWithTasks
-import com.dk.piley.model.task.Task
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
+import com.dk.piley.util.previewPileWithTasksList
 
 @Composable
 fun PileOverviewScreen(
@@ -40,9 +39,18 @@ fun PileOverviewScreen(
     viewModel: PilesViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
+    // animation transition states for pile visibility
+    val pileTransitionStates = viewState.piles.map {
+        remember {
+            MutableTransitionState(false).apply {
+                targetState = true
+            }
+        }
+    }
     PileOverviewScreen(
         modifier = modifier,
         viewState = viewState,
+        pileTransitionStates = pileTransitionStates,
         onCreatePile = { viewModel.createPile(it) },
         onDeletePile = { viewModel.deletePile(it) },
         onSelectPile = { viewModel.setSelectedPile(it) },
@@ -55,10 +63,11 @@ fun PileOverviewScreen(
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
     viewState: PilesViewState,
+    pileTransitionStates: List<MutableTransitionState<Boolean>>,
     onCreatePile: (String) -> Unit = {},
     onDeletePile: (Pile) -> Unit = {},
     onSelectPile: (Long) -> Unit = {},
-    onPileClick: (Pile) -> Unit = {},
+    onPileClick: (Pile) -> Unit = {}
 ) {
     val gridState = rememberLazyGridState()
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
@@ -70,14 +79,7 @@ fun PileOverviewScreen(
     }
     var deletePileDialogOpen by remember { mutableStateOf(false) }
     var pileToDeleteIndex: Int? by remember { mutableStateOf(null) }
-    // animation transition states for pile visibility
-    val pileTransitionStates = viewState.piles.map {
-        remember {
-            MutableTransitionState(false).apply {
-                targetState = true
-            }
-        }
-    }
+
     // delete pile only after animation is finished
     pileTransitionStates.forEachIndexed { index, transition ->
         if (!transition.targetState && !transition.currentState) {
@@ -182,14 +184,10 @@ fun PileOverviewScreen(
 fun PileOverviewScreenPreview() {
     PileyTheme {
         Surface {
-            val tasks = listOf(Task(id = 1, title = "Hi there"), Task(id = 2, title = "Sup"))
-            val piles = listOf(Pile(name = "Daily"), Pile(pileId = 2, name = "Custom1"))
-            val pilesWithTasks = listOf(
-                PileWithTasks(pile = piles[0], tasks = tasks),
-                PileWithTasks(pile = piles[1], tasks = tasks.map { it.copy(pileId = 2) })
-            )
-            val pilesViewState = PilesViewState(pilesWithTasks)
-            PileOverviewScreen(viewState = pilesViewState)
+            val pilesViewState = PilesViewState(previewPileWithTasksList)
+            val transitionStates =
+                List(previewPileWithTasksList.size) { MutableTransitionState(true) }
+            PileOverviewScreen(viewState = pilesViewState, pileTransitionStates = transitionStates)
         }
     }
 }

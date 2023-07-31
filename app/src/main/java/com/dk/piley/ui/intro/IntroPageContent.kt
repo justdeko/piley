@@ -38,16 +38,15 @@ fun IntroPageContent(
     ) {
         Image(
             modifier = Modifier
-                .fillMaxHeight(0.7f)
-                .fillMaxWidth(0.7f),
+                .fillMaxHeight(0.65f)
+                .fillMaxWidth(0.8f),
             painter = painterResource(id = introPage.imageResource),
             contentDescription = "intro page image"
         )
-
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 32.dp),
+                .padding(vertical = 16.dp, horizontal = 32.dp),
             text = introPage.title,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onBackground,
@@ -92,7 +91,12 @@ fun IntroPageContentPreview() {
 @Preview
 fun IntroPageContentWithButtonPreview() {
     PileyTheme(useDarkTheme = true) {
-        IntroPageContent(modifier = Modifier.fillMaxSize(), introPage = IntroPage.Welcome, showButton = true, "Start Piling")
+        IntroPageContent(
+            modifier = Modifier.fillMaxSize(),
+            introPage = IntroPage.Welcome,
+            showButton = true,
+            "Start Piling"
+        )
     }
 }
 

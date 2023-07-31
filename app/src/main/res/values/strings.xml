@@ -204,4 +204,7 @@
         <item quantity="other">s</item>
     </plurals>
 
+    <!-- intro screen -->
+    <string name="finish_intro_button">Start Piling</string>
+
 </resources>

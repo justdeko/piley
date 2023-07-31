@@ -19,8 +19,8 @@ import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
+import com.dk.piley.util.previewUpcomingTasksList
 import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.LocalDateTime
 
 @Composable
 fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair<String, Task>>) {
@@ -92,12 +92,3 @@ fun UpcomingTasksListEmptyPreview() {
         )
     }
 }
-
-val previewUpcomingTasksList = listOf(
-    Pair("Default", Task(title = "task 1", reminder = LocalDateTime.now().plusDays(1))),
-    Pair(
-        "Some other Pile",
-        Task(title = "task 2", reminder = LocalDateTime.now().plusDays(2))
-    ),
-    Pair("Default", Task(title = "task 3", reminder = LocalDateTime.now().plusDays(3)))
-)

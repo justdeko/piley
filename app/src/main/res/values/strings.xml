@@ -206,5 +206,16 @@
 
     <!-- intro screen -->
     <string name="finish_intro_button">Start Piling</string>
+    <!-- intro screen pages -->
+    <string name="welcome_page_title">Hi there</string>
+    <string name="welcome_page_description">Welcome to piley! This app allows you to manage regular and one-time tasks by displaying them in piles.</string>
+    <string name="pile_page_title">Pile</string>
+    <string name="pile_page_description">A pile is like the name says - a pile of your tasks. Click on the bottom to create a new task, or swipe tasks away to complete them.</string>
+    <string name="piles_page_title">Piles</string>
+    <string name="piles_page_description">Manage your piles by going to the piles section and creating, editing or deleting your piles. Only the daily Pile can\'t be deleted.</string>
+    <string name="profile_page_title">Profile</string>
+    <string name="profile_page_description">You can also see general statistics and upcoming tasks by going to the profile section.</string>
+    <string name="end_page_title">Almost there</string>
+    <string name="end_page_description">That\'s it! Click on the button to start using the app, and have fun with piley!</string>
 
 </resources>

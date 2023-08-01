@@ -52,7 +52,7 @@ fun TaskInfo(
             )
             Text(
                 text = task.createdAt.dateTimeString(),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.secondary
             )
         }
@@ -71,7 +71,7 @@ fun TaskInfo(
             )
             Text(
                 text = task.modifiedAt.dateTimeString(),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.secondary
             )
         }

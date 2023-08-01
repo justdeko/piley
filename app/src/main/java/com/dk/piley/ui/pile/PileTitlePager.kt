@@ -9,7 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -60,7 +60,7 @@ fun PileTitlePager(
                 titleSlideAnimation(leftToRight = targetState > initialState).using(
                     SizeTransform(clip = false)
                 )
-            }
+            }, label = "pile slide animation"
         ) { index ->
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -85,11 +85,15 @@ fun PileTitlePager(
 
 @ExperimentalAnimationApi
 fun titleSlideAnimation(duration: Int = 500, leftToRight: Boolean = true): ContentTransform =
-    slideInHorizontally(animationSpec = tween(durationMillis = duration)) { width -> if (leftToRight) width else -width } + fadeIn(
+    (slideInHorizontally(animationSpec = tween(durationMillis = duration)) { width ->
+        if (leftToRight) width else -width
+    } + fadeIn(
         animationSpec = tween(durationMillis = duration)
-    ) with slideOutHorizontally(animationSpec = tween(durationMillis = duration)) { width -> if (leftToRight) -width else width } + fadeOut(
+    )).togetherWith(slideOutHorizontally(animationSpec = tween(durationMillis = duration)) { width ->
+        if (leftToRight) -width else width
+    } + fadeOut(
         animationSpec = tween(durationMillis = duration)
-    )
+    ))
 
 
 @Preview(showBackground = false)

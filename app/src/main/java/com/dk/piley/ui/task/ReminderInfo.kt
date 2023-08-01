@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,63 +45,66 @@ fun ReminderInfo(
             text = stringResource(R.string.reminder_info_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(start = 16.dp),
+            modifier = Modifier.padding(start = 8.dp),
             textAlign = TextAlign.Start
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+        Column(
+            Modifier
+                .padding(8.dp)
                 .border(
                     BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     shape = RoundedCornerShape(16.dp)
-                ),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = reminderDateTimeText ?: stringResource(R.string.no_reminder_set_placeholder),
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(start = 16.dp),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            IconButton(
-                onClick = onAddReminder,
-                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-            ) {
-                Icon(
-                    imageVector = if (reminderSet) Icons.Default.Edit else Icons.Default.AddAlert,
-                    "set or delete a task reminder",
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .scale(1.1F),
-                    tint = if (reminderSet) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
                 )
-            }
-        }
-        TextWithCheckbox(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            description = stringResource(R.string.reminder_recurring_label),
-            checked = isRecurring
-        )
-        Spacer(Modifier.size(8.dp))
-        if (isRecurring) {
+        ) {
             Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = getFrequencyString(recurringTimeRange, recurringFrequency),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    text = reminderDateTimeText
+                        ?: stringResource(R.string.no_reminder_set_placeholder),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(start = 16.dp),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
+                IconButton(
+                    onClick = onAddReminder,
+                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = if (reminderSet) Icons.Default.Edit else Icons.Default.AddAlert,
+                        "set or delete a task reminder",
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
+                        tint = if (reminderSet) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                    )
+                }
             }
+            TextWithCheckbox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                description = stringResource(R.string.reminder_recurring_label),
+                checked = isRecurring
+            )
+            if (isRecurring) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = getFrequencyString(recurringTimeRange, recurringFrequency),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+                }
+            }
+            Spacer(Modifier.size(8.dp))
         }
     }
 }

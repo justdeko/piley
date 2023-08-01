@@ -2,6 +2,7 @@ package com.dk.piley.util
 
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
+import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.NightMode
@@ -71,7 +72,10 @@ val previewUpcomingTasksList = listOf(
         "Daily",
         Task(
             title = "Clean room",
-            reminder = LocalDateTime.parse("2023-08-04T09:36:24").plusDays(1)
+            reminder = LocalDateTime.parse("2023-08-04T09:36:24").plusDays(1),
+            isRecurring = true,
+            recurringFrequency = 2,
+            recurringTimeRange = RecurringTimeRange.WEEKLY
         )
     ),
     Pair(

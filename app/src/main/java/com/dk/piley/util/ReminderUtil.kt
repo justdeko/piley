@@ -34,10 +34,10 @@ fun getFrequencyString(
     recurringFrequency: Int
 ): String {
     val pluralS = pluralStringResource(id = R.plurals.plural_s, count = recurringFrequency)
-    val frequency = if (recurringFrequency == 1) "" else recurringFrequency.toString()
+    val frequency = if (recurringFrequency == 1) "" else "$recurringFrequency "
     return stringResource(
         R.string.reminder_repeat_frequency_value,
-        "$frequency ${recurringTimeRange.toText()}$pluralS"
+        "$frequency${recurringTimeRange.toText()}$pluralS"
     )
 }
 

@@ -46,10 +46,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
-import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.EditableTitleText
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.previewUpcomingTasksList
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
@@ -167,6 +167,7 @@ fun TaskDetailScreen(
                         onEditDesc(it)
                     }
                 )
+                Spacer(Modifier.size(16.dp))
                 ReminderInfo(
                     reminderDateTimeText = viewState.reminderDateTimeText,
                     onAddReminder = { scope.launch { drawerState.open() } },
@@ -174,7 +175,6 @@ fun TaskDetailScreen(
                     recurringTimeRange = viewState.task.recurringTimeRange,
                     recurringFrequency = viewState.task.recurringFrequency
                 )
-                Spacer(Modifier.size(16.dp))
                 TaskInfo(
                     modifier = Modifier.fillMaxWidth(),
                     task = viewState.task
@@ -215,7 +215,25 @@ fun TaskDetailScreen(
 fun TaskDetailScreenPreview() {
     PileyTheme {
         Surface {
-            val state = TaskDetailViewState(task = Task(title = "Hello"))
+            val state = TaskDetailViewState(
+                task = previewUpcomingTasksList[1].second,
+                titleTextValue = "Hello"
+            )
+            TaskDetailScreen(viewState = state, permissionState = null)
+        }
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@PreviewMainScreen
+@Composable
+fun TaskDetailScreenPreviewRecurring() {
+    PileyTheme {
+        Surface {
+            val state = TaskDetailViewState(
+                task = previewUpcomingTasksList[0].second,
+                titleTextValue = "Hello"
+            )
             TaskDetailScreen(viewState = state, permissionState = null)
         }
     }

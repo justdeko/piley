@@ -37,7 +37,7 @@ fun SettingsSection(
                     titleColor = MaterialTheme.colorScheme.primary
                 )
             }) {
-            Column(modifier = modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.fillMaxWidth()) {
                 items()
             }
         }

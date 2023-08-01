@@ -113,7 +113,8 @@ private fun PileScreen(
                     exit = fadeOut()
                 ) {
                     NoTasksView(
-                        Modifier.fillMaxSize()
+                        Modifier.fillMaxSize(),
+                        viewState.noTasksYet
                     )
                 }
             }

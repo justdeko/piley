@@ -25,7 +25,10 @@ import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
-fun NoTasksView(modifier: Modifier = Modifier) {
+fun NoTasksView(
+    modifier: Modifier = Modifier,
+    noTasksYet: Boolean = false
+) {
     BoxWithConstraints(modifier) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -41,7 +44,7 @@ fun NoTasksView(modifier: Modifier = Modifier) {
             Spacer(Modifier.size(16.dp))
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = stringResource(R.string.no_tasks_message),
+                text = stringResource(if (noTasksYet) R.string.no_tasks_yet_message else R.string.no_tasks_left_message),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center
@@ -55,5 +58,13 @@ fun NoTasksView(modifier: Modifier = Modifier) {
 fun NoTasksViewPreview() {
     PileyTheme(useDarkTheme = true) {
         NoTasksView(modifier = Modifier.fillMaxWidth())
+    }
+}
+
+@Preview(showBackground = false)
+@Composable
+fun NoTasksYetViewPreview() {
+    PileyTheme(useDarkTheme = true) {
+        NoTasksView(modifier = Modifier.fillMaxWidth(), noTasksYet = true)
     }
 }

@@ -30,7 +30,8 @@
     <!-- pile screen -->
     <string name="add_task_placeholder">Add your task here</string>
     <string name="task_empty_not_allowed_hint">Task can\'t be empty</string>
-    <string name="no_tasks_message">Looks like there are no tasks left.\nClick on the field below to create a new one</string>
+    <string name="no_tasks_left_message">Looks like there are no tasks left.\nClick on the field below to create a new one</string>
+    <string name="no_tasks_yet_message">Looks like there are no tasks yet.\nClick on the field below to create a new one</string>
 
     <!-- pile detail screen -->
     <string name="delete_pile_button_text">Delete</string>

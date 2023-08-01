@@ -71,6 +71,7 @@ class PileViewModel @Inject constructor(
                                     tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
                                     autoHideEnabled = user.autoHideKeyboard,
                                     pileIdTitleList = idTitleList,
+                                    noTasksYet = pileWithTasks.tasks.isEmpty()
                                 )
                             }
                     }
@@ -119,4 +120,5 @@ data class PileViewState(
     val tasks: List<Task>? = null,
     val autoHideEnabled: Boolean = true,
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),
+    val noTasksYet: Boolean = false,
 )

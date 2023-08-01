@@ -8,35 +8,41 @@ sealed class IntroPage(
     @DrawableRes val imageResource: Int,
     @StringRes val titleResource: Int,
     @StringRes val descriptionResource: Int,
+    val isScreenshot: Boolean
 ) {
     object Welcome : IntroPage(
-        R.drawable.tasks,
-        R.string.welcome_page_title,
-        R.string.welcome_page_description
+        imageResource = R.drawable.tasks,
+        titleResource = R.string.welcome_page_title,
+        descriptionResource = R.string.welcome_page_description,
+        isScreenshot = false
     )
 
     object Pile : IntroPage(
-        R.drawable.pile_screen_demo,
-        R.string.pile_page_title,
-        R.string.pile_page_description
+        imageResource = R.drawable.pile_screen_demo,
+        titleResource = R.string.pile_page_title,
+        descriptionResource = R.string.pile_page_description,
+        isScreenshot = true
     )
 
     object Piles : IntroPage(
-        R.drawable.pile_overview_screen_demo,
-        R.string.piles_page_title,
-        R.string.piles_page_description
+        imageResource = R.drawable.pile_overview_screen_demo,
+        titleResource = R.string.piles_page_title,
+        descriptionResource = R.string.piles_page_description,
+        isScreenshot = true
     )
 
     object Profile : IntroPage(
-        R.drawable.profile_screen_demo,
-        R.string.profile_page_title,
-        R.string.profile_page_description
+        imageResource = R.drawable.profile_screen_demo,
+        titleResource = R.string.profile_page_title,
+        descriptionResource = R.string.profile_page_description,
+        isScreenshot = true
     )
 
     object End : IntroPage(
-        R.drawable.door,
-        R.string.end_page_title,
-        R.string.end_page_description
+        imageResource = R.drawable.door,
+        titleResource = R.string.end_page_title,
+        descriptionResource = R.string.end_page_description,
+        isScreenshot = false
     )
 
 }

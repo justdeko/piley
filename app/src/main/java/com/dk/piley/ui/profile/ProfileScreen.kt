@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -151,7 +150,7 @@ private fun ProfileScreen(
                     biggestPile = viewState.biggestPileName,
                 )
             }
-            Spacer(modifier = Modifier.size(16.dp))
+            Spacer(modifier = Modifier.size(8.dp))
             OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
                 TitleHeader(
                     modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
@@ -164,7 +163,7 @@ private fun ProfileScreen(
                 )
             }
             if (!viewState.userIsOffline) {
-                Spacer(modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.size(8.dp))
                 OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
                     TitleHeader(
                         modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
@@ -174,9 +173,7 @@ private fun ProfileScreen(
                     BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
                 }
             }
-            Box(contentAlignment = Alignment.BottomCenter) { // TODO fix this, stick to bottom
-                AppInfo()
-            }
+            Spacer(modifier = Modifier.size(8.dp))
         }
     }
 }

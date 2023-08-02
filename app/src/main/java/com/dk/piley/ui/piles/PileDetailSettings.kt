@@ -42,8 +42,8 @@ fun PileDetailSettings(
             title = stringResource(R.string.pile_limit_setting_title),
             description = stringResource(R.string.pile_limit_setting_description),
             value = viewState.pile.pileLimit,
-            range = Pair(0, 50),
-            steps = 10,
+            range = Pair(0, 20),
+            steps = 20,
             onValueChange = onSetPileLimit
         )
     }

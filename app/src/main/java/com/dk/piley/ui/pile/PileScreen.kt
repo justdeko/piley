@@ -138,11 +138,23 @@ private fun PileScreen(
             },
             onDone = {
                 if (taskTextValue.text.isNotBlank()) {
-                    if (viewState.autoHideEnabled) {
-                        focusManager.clearFocus()
+                    // if pile limit is not 0 (infinite) and task count above pile limit, don't add
+                    if (
+                        viewState.pile.pileLimit > 0
+                        && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
+                    ) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.pile_full_warning),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        if (viewState.autoHideEnabled) {
+                            focusManager.clearFocus()
+                        }
+                        onAdd(taskTextValue.text.trim())
+                        taskTextValue = TextFieldValue()
                     }
-                    onAdd(taskTextValue.text.trim())
-                    taskTextValue = TextFieldValue()
                 } else {
                     Toast.makeText(
                         context,

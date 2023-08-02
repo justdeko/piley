@@ -165,4 +165,5 @@
     <string name="end_page_title">Fast geschafft</string>
     <string name="end_page_description">Das war\'s klicke auf den Button unten, die App zu nutzen. Viel Spaß beim stapeln!</string>
     <string name="no_tasks_yet_message">Sieht so aus als hättest du in diesem Pile noch keine Tasks.\nKlicke auf das Textfeld unten, um ein Task zu erstellen</string>
+    <string name="pile_full_warning">Dieser Pile ist schon voll!</string>
 </resources>

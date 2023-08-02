@@ -210,7 +210,7 @@ fun PileDetailScreenPreview() {
                     name = "Some Pile",
                     description = "Some description",
                     pileMode = PileMode.FIFO,
-                    pileLimit = 20
+                    pileLimit = 14
                 ),
                 titleTextValue = "some text",
                 descriptionTextValue = "some description",

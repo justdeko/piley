@@ -2,6 +2,7 @@ package com.dk.piley.ui.signin
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -111,6 +114,8 @@ private fun SignInScreen(
     onChangeRegister: () -> Unit = {},
     onChangeOfflineRegister: (Boolean) -> Unit = {}
 ) {
+    val focusManager = LocalFocusManager.current
+
     val isRegister =
         viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE
     val signInText =
@@ -122,7 +127,13 @@ private fun SignInScreen(
         !viewState.email.isValidEmail() && viewState.email.isNotBlank() && !emailFocused
 
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            },
         contentAlignment = Alignment.TopCenter
     ) {
         IndefiniteProgressBar(visible = viewState.loading)

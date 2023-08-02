@@ -205,7 +205,7 @@ fun TaskDetailScreen(
                     Text(text = stringResource(R.string.delete_task_button))
                 }
             }
-        } // TODO more elements
+        }
     }
 }
 

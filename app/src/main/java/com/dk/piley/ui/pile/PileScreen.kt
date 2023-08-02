@@ -35,6 +35,7 @@ import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
+import com.dk.piley.util.previewTaskList
 import com.dk.piley.util.titleCharacterLimit
 import com.jakewharton.threetenabp.AndroidThreeTen
 
@@ -186,6 +187,26 @@ fun ProfileScreenNoTasksPreview() {
                 pileIdTitleList = listOf(Pair(1, "Pile1"), Pair(2, "Pile2"))
             )
             PileScreen(viewState = state, taskTransitionStates = emptyList())
+        }
+    }
+}
+
+@PreviewMainScreen
+@Composable
+fun ProfileScreenManyTasksPreview() {
+    AndroidThreeTen.init(LocalContext.current)
+    PileyTheme {
+        Surface {
+            val pilesWithTasks = previewPileWithTasksList
+            val state = PileViewState(
+                pile = pilesWithTasks[0].pile,
+                tasks = previewTaskList,
+                pileIdTitleList = pilesWithTasks.map { Pair(it.pile.pileId, it.pile.name) }
+            )
+            PileScreen(
+                viewState = state,
+                taskTransitionStates = previewTaskList.getPreviewTransitionStates()
+            )
         }
     }
 }

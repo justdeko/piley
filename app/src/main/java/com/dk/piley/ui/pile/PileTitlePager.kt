@@ -39,7 +39,7 @@ fun PileTitlePager(
     onPageChanged: (Int) -> Unit = {},
 ) {
     Row(
-        modifier = modifier.padding(vertical = 16.dp, horizontal = 8.dp),
+        modifier = modifier.padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {

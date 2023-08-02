@@ -19,13 +19,19 @@ fun EditableTitleText(
     enabled: Boolean = true,
     onValueChange: (String) -> Unit = {}
 ) {
+    val sizeBasedTextStyle = when (value.length) {
+        in 0..20 -> MaterialTheme.typography.headlineSmall
+        in 21..40 -> MaterialTheme.typography.titleMedium
+        in 41..60 -> MaterialTheme.typography.bodyMedium
+        else -> MaterialTheme.typography.bodySmall
+    }
     TextField(
         value = value,
         enabled = enabled,
         onValueChange = onValueChange,
         modifier = Modifier.wrapContentSize(Alignment.Center),
         label = null,
-        textStyle = MaterialTheme.typography.headlineSmall
+        textStyle = sizeBasedTextStyle
             .copy(textDecoration = TextDecoration.None)
             .copy(textAlign = TextAlign.Center),
         singleLine = true,

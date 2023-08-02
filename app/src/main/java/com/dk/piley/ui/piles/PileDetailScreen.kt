@@ -121,22 +121,25 @@ fun PileDetailScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            CenterAlignedTopAppBar(title = {
-                EditableTitleText(
-                    viewState.titleTextValue, viewState.canDeleteOrEdit, onEditTitle
-                )
-            }, navigationIcon = {
-                IconButton(onClick = onClose) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        "close the pile detail",
-                        modifier = Modifier.scale(
-                            1.3F
-                        ),
-                        tint = MaterialTheme.colorScheme.secondary
+            CenterAlignedTopAppBar(
+                title = {
+                    EditableTitleText(
+                        viewState.titleTextValue, viewState.canDeleteOrEdit, onEditTitle
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onClose) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            "close the pile detail",
+                            modifier = Modifier.scale(
+                                1.3F
+                            ),
+                            tint = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                 }
-            })
+            )
             EditDescriptionField(value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
             )

@@ -141,7 +141,7 @@ class SettingsViewModel @Inject constructor(
                     userRepository.updateUserFlow(
                         oldUser = existingUser,
                         newPassword = result.newPassword,
-                        newName = result.name
+                        newName = result.name.trim()
                     ).collect { resource ->
                         when (resource) {
                             is Resource.Loading -> _state.update { it.copy(loading = true) }
@@ -174,7 +174,7 @@ class SettingsViewModel @Inject constructor(
     private suspend fun updateUserLocally(existingUser: User, result: EditUserResult) {
         userRepository.insertUser(
             existingUser.copy(
-                name = result.name,
+                name = result.name.trim(),
                 password = result.newPassword.ifBlank { result.oldPassword }
             )
         )

@@ -11,6 +11,7 @@ import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.util.dateTimeString
+import com.dk.piley.util.titleCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -109,6 +110,7 @@ class TaskDetailViewModel @Inject constructor(
     }
 
     fun editTitle(title: String) {
+        if (title.length > titleCharacterLimit) return
         _state.update {
             it.copy(titleTextValue = title)
         }

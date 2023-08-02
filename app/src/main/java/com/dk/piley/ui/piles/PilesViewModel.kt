@@ -44,7 +44,7 @@ class PilesViewModel @Inject constructor(
             signedInUserFlow.take(1).collect { user ->
                 pileRepository.insertPile(
                     Pile(
-                        name = name,
+                        name = name.trim(),
                         pileMode = user.pileMode
                     )
                 )

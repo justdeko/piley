@@ -8,10 +8,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.descriptionCharacterLimit
 
 @Composable
 fun EditDescriptionField(
@@ -24,6 +26,13 @@ fun EditDescriptionField(
             .fillMaxWidth()
             .padding(8.dp),
         value = value,
+        supportingText = {
+            Text(
+                text = "${value.length} / $descriptionCharacterLimit",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.End,
+            )
+        },
         shape = CutCornerShape(16.dp),
         onValueChange = onChange,
         singleLine = false,

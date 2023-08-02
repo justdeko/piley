@@ -31,6 +31,7 @@ import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.getPreviewTransitionStates
+import com.dk.piley.util.pileTitleCharacterLimit
 import com.dk.piley.util.previewPileWithTasksList
 
 @Composable
@@ -151,7 +152,11 @@ fun PileOverviewScreen(
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = pileTitle,
-                        onValueChange = { pileTitle = it },
+                        onValueChange = {
+                            if (it.length <= pileTitleCharacterLimit) {
+                                pileTitle = it
+                            }
+                        },
                         placeholder = { Text(stringResource(R.string.pile_title_hint)) },
                         shape = RoundedCornerShape(16.dp),
                         singleLine = true,
@@ -167,7 +172,8 @@ fun PileOverviewScreen(
                             pileTitle = ""
                         },
                         // pile name can't exist yet
-                        enabled = !viewState.piles.map { it.pile.name }.contains(pileTitle)
+                        enabled = !viewState.piles.map { it.pile.name }
+                            .contains(pileTitle) && pileTitle.isNotBlank()
                     ) {
                         Text(stringResource(R.string.pile_create_dialog_confirm_button_text))
                     }

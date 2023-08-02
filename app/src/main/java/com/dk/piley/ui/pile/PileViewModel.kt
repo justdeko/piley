@@ -88,7 +88,7 @@ class PileViewModel @Inject constructor(
         viewModelScope.launch {
             taskRepository.insertTask(
                 Task(
-                    title = text,
+                    title = text.trim(),
                     pileId = state.value.pile.pileId,
                     createdAt = LocalDateTime.now(),
                     modifiedAt = LocalDateTime.now()

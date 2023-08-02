@@ -12,3 +12,8 @@ fun Context.isDarkMode(): Boolean {
 
 fun CharSequence?.isValidEmail() =
     !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+const val descriptionCharacterLimit = 200
+const val titleCharacterLimit = 100
+const val pileTitleCharacterLimit = 20
+const val usernameCharacterLimit = 40

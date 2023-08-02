@@ -12,6 +12,7 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.util.usernameCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +40,7 @@ class SignInViewModel @Inject constructor(
     private fun attemptRegister() {
         val userData = state.value
         val user = User(
-            name = userData.username,
+            name = userData.username.trim(),
             email = userData.email,
             password = userData.password
         )
@@ -160,7 +161,7 @@ class SignInViewModel @Inject constructor(
         setLoading(true)
         val userData = state.value
         val user = User(
-            name = userData.username,
+            name = userData.username.trim(),
             email = userData.email,
             password = userData.password,
             isOffline = true
@@ -201,7 +202,11 @@ class SignInViewModel @Inject constructor(
 
     private fun setLoading(loading: Boolean) = _state.update { it.copy(loading = loading) }
     fun setEmail(input: String) = _state.update { it.copy(email = input) }
-    fun setUsername(input: String) = _state.update { it.copy(username = input) }
+    fun setUsername(input: String) {
+        if (input.length > usernameCharacterLimit) return
+        _state.update { it.copy(username = input) }
+    }
+
     fun setPassword(input: String) = _state.update { it.copy(password = input) }
     fun setToastMessage(message: String?) = _state.update { it.copy(toastMessage = message) }
 }

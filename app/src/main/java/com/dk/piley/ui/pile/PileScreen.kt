@@ -35,6 +35,7 @@ import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
+import com.dk.piley.util.titleCharacterLimit
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 @Composable
@@ -79,7 +80,7 @@ private fun PileScreen(
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
-    var query by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+    var taskTextValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
             TextFieldValue("")
         )
@@ -128,15 +129,19 @@ private fun PileScreen(
             }
         }
         AddTaskField(
-            value = query,
-            onChange = { v: TextFieldValue -> query = v },
+            value = taskTextValue,
+            onChange = {
+                if (taskTextValue.text.length < titleCharacterLimit) {
+                    taskTextValue = it
+                }
+            },
             onDone = {
-                if (query.text.isNotBlank()) {
+                if (taskTextValue.text.isNotBlank()) {
                     if (viewState.autoHideEnabled) {
                         focusManager.clearFocus()
                     }
-                    onAdd(query.text.trim())
-                    query = TextFieldValue()
+                    onAdd(taskTextValue.text.trim())
+                    taskTextValue = TextFieldValue()
                 } else {
                     Toast.makeText(
                         context,

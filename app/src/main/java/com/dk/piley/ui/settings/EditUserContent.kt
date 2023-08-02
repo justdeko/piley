@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.usernameCharacterLimit
 
 @Composable
 fun EditUserContent(
@@ -68,7 +69,11 @@ fun EditUserContent(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 value = name,
-                onValueChange = { name = it },
+                onValueChange = {
+                    if (name.length <= usernameCharacterLimit) {
+                        name = it
+                    }
+                },
                 placeholder = { Text(stringResource(R.string.user_name_hint)) },
                 shape = RoundedCornerShape(16.dp),
                 singleLine = true,

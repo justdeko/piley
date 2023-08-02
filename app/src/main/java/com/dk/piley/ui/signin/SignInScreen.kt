@@ -50,6 +50,7 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.isValidEmail
 import com.dk.piley.util.navigateClearBackstack
+import com.dk.piley.util.usernameCharacterLimit
 
 @Composable
 fun SignInScreen(
@@ -188,13 +189,22 @@ private fun SignInScreen(
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                     value = viewState.username,
                     onValueChange = onUsernameChange,
                     placeholder = { Text(stringResource(R.string.username_placeholder)) },
                     shape = RoundedCornerShape(16.dp),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    supportingText = {
+                        if (viewState.username.isNotEmpty()) {
+                            Text(
+                                text = "${viewState.username.length} / $usernameCharacterLimit",
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.End,
+                            )
+                        }
+                    }
                 )
             }
             OutlinedTextField(

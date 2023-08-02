@@ -10,7 +10,9 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.nav.pileScreen
+import com.dk.piley.util.descriptionCharacterLimit
 import com.dk.piley.util.getCompletedTasksForWeekValues
+import com.dk.piley.util.pileTitleCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,13 +65,12 @@ class PileDetailViewModel @Inject constructor(
     }
 
     fun editTitle(title: String) {
-        if (title.length <= 20) {
-            viewModelScope.launch {
-                _state.update {
-                    it.copy(titleTextValue = title)
-                }
-                pileRepository.insertPile(state.value.pile.copy(name = title))
+        if (title.length > pileTitleCharacterLimit) return
+        viewModelScope.launch {
+            _state.update {
+                it.copy(titleTextValue = title)
             }
+            pileRepository.insertPile(state.value.pile.copy(name = title))
         }
     }
 
@@ -80,6 +81,7 @@ class PileDetailViewModel @Inject constructor(
     }
 
     fun editDescription(description: String) {
+        if (description.length > descriptionCharacterLimit) return
         _state.update {
             it.copy(descriptionTextValue = description)
         }

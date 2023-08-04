@@ -19,18 +19,21 @@ import com.dk.piley.R
 @OptIn(ExperimentalTextApi::class)
 private val regular = Font(
     R.font.nunitosans_variable,
-    variationSettings = FontVariation.Settings(FontVariation.weight(400))
+    variationSettings = FontVariation.Settings(FontVariation.weight(500))
 )
+
 @OptIn(ExperimentalTextApi::class)
 private val medium = Font(
     R.font.nunitosans_variable,
     variationSettings = FontVariation.Settings(FontVariation.weight(500))
 )
+
 @OptIn(ExperimentalTextApi::class)
 private val semiBold = Font(
     R.font.nunitosans_variable,
     variationSettings = FontVariation.Settings(FontVariation.weight(600))
 )
+
 @OptIn(ExperimentalTextApi::class)
 private val bold = Font(
     R.font.nunitosans_variable,
@@ -41,11 +44,17 @@ private val pileyFontFamily = FontFamily(fonts = listOf(regular, medium, semiBol
 private val pileyTypography = AppTypography.copy(
     headlineLarge = AppTypography.headlineLarge.copy(fontFamily = pileyFontFamily),
     headlineMedium = AppTypography.headlineMedium.copy(fontFamily = pileyFontFamily),
-    headlineSmall = AppTypography.headlineSmall.copy(fontFamily = pileyFontFamily),
+    headlineSmall = AppTypography.headlineSmall.copy(
+        fontFamily = pileyFontFamily,
+        fontWeight = FontWeight(500)
+    ),
     displayLarge = AppTypography.displayLarge.copy(fontFamily = pileyFontFamily),
     displayMedium = AppTypography.displayMedium.copy(fontFamily = pileyFontFamily),
     displaySmall = AppTypography.displaySmall.copy(fontFamily = pileyFontFamily),
-    titleLarge = AppTypography.titleLarge.copy(fontFamily = pileyFontFamily, fontWeight = FontWeight(600)),
+    titleLarge = AppTypography.titleLarge.copy(
+        fontFamily = pileyFontFamily,
+        fontWeight = FontWeight(600)
+    ),
     titleMedium = AppTypography.titleMedium.copy(fontFamily = pileyFontFamily),
     titleSmall = AppTypography.titleSmall.copy(fontFamily = pileyFontFamily),
     bodyLarge = AppTypography.bodyLarge.copy(fontFamily = pileyFontFamily),

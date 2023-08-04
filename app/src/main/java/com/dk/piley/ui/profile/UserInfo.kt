@@ -32,7 +32,7 @@ fun UserInfo(modifier: Modifier = Modifier, name: String) {
             painterResource(id = R.drawable.cat),
             contentDescription = "avatar",
             contentScale = ContentScale.Fit,
-            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.onBackground),
+            colorFilter = ColorFilter.tint(color = MaterialTheme.colorScheme.tertiary),
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)

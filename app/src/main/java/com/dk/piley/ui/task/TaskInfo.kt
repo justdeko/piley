@@ -38,7 +38,6 @@ fun TaskInfo(
             modifier = Modifier.padding(start = 8.dp),
             textAlign = TextAlign.Start
         )
-        Spacer(Modifier.size(8.dp))
         OutlineCard(Modifier.padding(8.dp)) {
             Row(
                 modifier = Modifier

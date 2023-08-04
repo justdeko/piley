@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -98,7 +99,7 @@ fun SplashScreen(
                 .alpha(alphaFactor.value),
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary
+            tint = Color.Unspecified
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(

@@ -60,7 +60,7 @@ class NotificationManager @Inject constructor(
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_layers).setContentTitle(task.title)
+            .setSmallIcon(R.drawable.logo).setContentTitle(task.title)
             .setContentText(task.description).setStyle(
                 NotificationCompat.BigTextStyle().bigText(task.title + "\n" + task.description)
             ).setColor(ContextCompat.getColor(context, R.color.md_theme_light_primary))

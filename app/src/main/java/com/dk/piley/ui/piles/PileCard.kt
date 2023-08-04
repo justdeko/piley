@@ -17,28 +17,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryAdd
-import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dk.piley.R
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
@@ -50,13 +45,10 @@ fun PileCard(
     modifier: Modifier = Modifier,
     pileWithTasks: PileWithTasks,
     selected: Boolean = false,
-    canDelete: Boolean = true,
     onSelectPile: (Long) -> Unit = {},
-    onDeletePile: () -> Unit = {},
     onClick: (pile: Pile) -> Unit = {},
     transitionState: MutableTransitionState<Boolean> = MutableTransitionState(true)
 ) {
-    val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     val density = LocalDensity.current
 
     Box {
@@ -68,7 +60,7 @@ fun PileCard(
             } + fadeIn(initialAlpha = 0.3f),
             exit = fadeOut()
         ) {
-            Card(
+            ElevatedCard(
                 modifier = modifier
                     .padding(8.dp)
                     .clickable { onClick(pileWithTasks.pile) }
@@ -78,19 +70,9 @@ fun PileCard(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
                     ) {
-                        if (canDelete) {
-                            IconButton(onClick = { onDeletePile() }) {
-                                Icon(
-                                    Icons.Filled.Delete,
-                                    tint = Color.Red,
-                                    contentDescription = "delete the pile"
-                                )
-                            }
-                        } else {
-                            Spacer(modifier = Modifier.size(16.dp))
-                        }
                         IconToggleButton(
                             checked = selected,
                             onCheckedChange = { onSelectPile(pileWithTasks.pile.pileId) }
@@ -107,56 +89,43 @@ fun PileCard(
                                 )
                             }
                         }
+                        Column(Modifier.padding(8.dp), horizontalAlignment = Alignment.End) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    textAlign = TextAlign.End,
+                                    text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }}"
+                                )
+                                Spacer(modifier = Modifier.size(4.dp))
+                                Icon(
+                                    modifier = Modifier.scale(0.8f),
+                                    imageVector = Icons.Filled.AddCircle,
+                                    contentDescription = "open tasks",
+                                    tint = MaterialTheme.colorScheme.secondary
+                                )
+                            }
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    textAlign = TextAlign.End,
+                                    text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DONE }}"
+                                )
+                                Spacer(modifier = Modifier.size(4.dp))
+                                Icon(
+                                    modifier = Modifier.scale(0.8f),
+                                    imageVector = Icons.Filled.CheckCircle,
+                                    contentDescription = "completed tasks",
+                                    tint = MaterialTheme.colorScheme.tertiary
+                                )
+                            }
+                        }
                     }
                     Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(horizontal = 16.dp),
                         text = pileWithTasks.pile.name,
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.LibraryAdd,
-                            contentDescription = "open tasks",
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                        Text(text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }}")
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.DoneAll,
-                            contentDescription = "completed tasks",
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
-                        Text(text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DONE }}")
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Reorder,
-                            contentDescription = "pile mode",
-                            tint = MaterialTheme.colorScheme.tertiary
-                        )
-                        Text(text = pileModeValues[pileWithTasks.pile.pileMode.value])
-                    }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }

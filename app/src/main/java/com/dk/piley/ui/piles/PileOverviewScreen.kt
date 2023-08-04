@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -29,7 +29,6 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.pileTitleCharacterLimit
 import com.dk.piley.util.previewPileWithTasksList
@@ -71,7 +70,7 @@ fun PileOverviewScreen(
     onSelectPile: (Long) -> Unit = {},
     onPileClick: (Pile) -> Unit = {}
 ) {
-    val gridState = rememberLazyGridState()
+    val gridState = rememberLazyStaggeredGridState()
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
     var pileTitle by rememberSaveable { mutableStateOf("") }
     val expandedFab by remember {
@@ -79,8 +78,6 @@ fun PileOverviewScreen(
             gridState.firstVisibleItemIndex == 0
         }
     }
-    var deletePileDialogOpen by remember { mutableStateOf(false) }
-    var pileToDeleteIndex: Int? by remember { mutableStateOf(null) }
 
     // delete pile only after animation is finished
     pileTransitionStates.forEachIndexed { index, transition ->
@@ -89,19 +86,6 @@ fun PileOverviewScreen(
         }
     }
 
-    if (deletePileDialogOpen) {
-        AlertDialogHelper(
-            title = stringResource(R.string.delete_pile_dialog_title),
-            description = stringResource(R.string.delete_pile_dialog_description),
-            confirmText = stringResource(R.string.delete_pile_dialog_confirm_button),
-            onDismiss = { deletePileDialogOpen = false },
-            onConfirm = {
-                // play pile delete animation and close dialog
-                pileToDeleteIndex?.let { index -> pileTransitionStates[index].targetState = false }
-                deletePileDialogOpen = false
-            }
-        )
-    }
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
@@ -119,10 +103,10 @@ fun PileOverviewScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            LazyVerticalGrid(
+            LazyVerticalStaggeredGrid(
                 modifier = Modifier.fillMaxSize(),
                 state = gridState,
-                columns = GridCells.Adaptive(150.dp),
+                columns = StaggeredGridCells.Adaptive(150.dp),
             ) {
                 itemsIndexed(
                     viewState.piles,
@@ -131,13 +115,7 @@ fun PileOverviewScreen(
                     PileCard(
                         modifier = Modifier.animateItemPlacement(),
                         pileWithTasks = pileWithTasks,
-                        // default pile with id 1 cannot be deleted
-                        canDelete = pileWithTasks.pile.pileId != 1L,
                         onSelectPile = onSelectPile,
-                        onDeletePile = {
-                            pileToDeleteIndex = index
-                            deletePileDialogOpen = true
-                        },
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
                         onClick = onPileClick,
                         transitionState = pileTransitionStates[index]

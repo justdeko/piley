@@ -95,6 +95,20 @@ fun PileDetailScreen(
     var dialogOpen by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
+    var deletePileDialogOpen by remember { mutableStateOf(false) }
+
+    if (deletePileDialogOpen) {
+        AlertDialogHelper(
+            title = stringResource(R.string.delete_pile_dialog_title),
+            description = stringResource(R.string.delete_pile_dialog_description),
+            confirmText = stringResource(R.string.delete_pile_dialog_confirm_button),
+            onDismiss = { deletePileDialogOpen = false },
+            onConfirm = {
+                onDeletePile()
+                deletePileDialogOpen = false
+            }
+        )
+    }
 
     if (dialogOpen) {
         AlertDialogHelper(
@@ -186,7 +200,7 @@ fun PileDetailScreen(
             )
         }
         Button(
-            onClick = onDeletePile,
+            onClick = { deletePileDialogOpen = true },
             enabled = viewState.canDeleteOrEdit,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(

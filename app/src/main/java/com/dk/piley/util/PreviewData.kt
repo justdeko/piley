@@ -38,11 +38,11 @@ val previewTaskList: List<Task> = listOf(
 
 val previewPileWithTasksList: List<PileWithTasks> = listOf(
     PileWithTasks(Pile(pileId = 1, name = "Daily"), previewTaskList.subList(0, 5)),
+    PileWithTasks(Pile(pileId = 3, name = "School & Education"), previewTaskList.subList(8, 13)),
     PileWithTasks(
         Pile(pileId = 2, name = "Shopping list", pileMode = PileMode.FIFO),
         previewTaskList.subList(5, 8)
     ),
-    PileWithTasks(Pile(pileId = 3, name = "School"), previewTaskList.subList(8, 13)),
     PileWithTasks(
         Pile(pileId = 4, name = "Work", pileMode = PileMode.FIFO),
         previewTaskList.subList(13, 17)

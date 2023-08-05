@@ -16,6 +16,7 @@ import com.dk.piley.util.pileTitleCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,18 +39,28 @@ class PileDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val id = savedStateHandle.get<Long>(pileScreen.identifier)
+            // set initial values for text fields
+            id?.let { pileId ->
+                pileRepository.getPileById(pileId).firstOrNull()?.let {
+                    _state.value = state.value.copy(
+                        titleTextValue = it.pile.name,
+                        descriptionTextValue = it.pile.description
+                    )
+                }
+            }
+            // observe changed values and update state accordingly
             id?.let { pileRepository.getPileById(it) }?.collect { pileWithTasks ->
                 signedInUserFlow.take(1).collect { user ->
-                    _state.value = PileDetailViewState(
-                        pile = pileWithTasks.pile,
-                        completedTaskCounts = getCompletedTasksForWeekValues(pileWithTasks),
-                        doneCount = pileWithTasks.tasks.count { it.status == TaskStatus.DONE },
-                        deletedCount = pileWithTasks.tasks.count { it.status == TaskStatus.DELETED },
-                        currentCount = pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT },
-                        titleTextValue = pileWithTasks.pile.name,
-                        descriptionTextValue = pileWithTasks.pile.description,
-                        canDeleteOrEdit = id != user.defaultPileId
-                    )
+                    _state.update { pileDetailViewState ->
+                        pileDetailViewState.copy(
+                            pile = pileWithTasks.pile,
+                            completedTaskCounts = getCompletedTasksForWeekValues(pileWithTasks),
+                            doneCount = pileWithTasks.tasks.count { it.status == TaskStatus.DONE },
+                            deletedCount = pileWithTasks.tasks.count { it.status == TaskStatus.DELETED },
+                            currentCount = pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT },
+                            canDeleteOrEdit = id != user.defaultPileId
+                        )
+                    }
                 }
             }
         }

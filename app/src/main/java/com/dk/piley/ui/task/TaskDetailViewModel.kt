@@ -15,6 +15,7 @@ import com.dk.piley.util.titleCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -35,13 +36,23 @@ class TaskDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val id = savedStateHandle.get<Long>(taskScreen.identifier)
+            // set initial values for text fields
+            id?.let { taskId ->
+                repository.getTaskById(taskId).firstOrNull()?.let {
+                    _state.value = state.value.copy(
+                        titleTextValue = it.title,
+                        descriptionTextValue = it.description
+                    )
+                }
+            }
+            // observe changed values and update state accordingly
             id?.let { repository.getTaskById(it) }?.collect { task ->
-                _state.value = TaskDetailViewState(
-                    task = task,
-                    titleTextValue = task.title,
-                    descriptionTextValue = task.description,
-                    reminderDateTimeText = task.reminder?.dateTimeString()
-                )
+                _state.update {
+                    it.copy(
+                        task = task,
+                        reminderDateTimeText = task.reminder?.dateTimeString()
+                    )
+                }
             }
         }
     }

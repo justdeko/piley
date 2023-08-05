@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -53,6 +54,7 @@ import com.dk.piley.util.previewUpcomingTasksList
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
+import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -213,6 +215,7 @@ fun TaskDetailScreen(
 @PreviewMainScreen
 @Composable
 fun TaskDetailScreenPreview() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val state = TaskDetailViewState(
@@ -228,6 +231,7 @@ fun TaskDetailScreenPreview() {
 @PreviewMainScreen
 @Composable
 fun TaskDetailScreenPreviewRecurring() {
+    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val state = TaskDetailViewState(

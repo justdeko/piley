@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.user.PileMode
+import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -86,35 +87,18 @@ fun DropdownSettingsItem(
 ) {
     var expanded by remember { mutableStateOf(false) }
     SettingsItem(modifier = modifier, title = title, description = description, contentEnd = {
-        ExposedDropdownMenuBox(
+        DropDown(
+            value = selectedValue,
+            dropdownValues = values,
             expanded = expanded,
+            label = optionLabel,
             onExpandedChange = { expanded = !expanded },
-        ) {
-            TextField(
-                modifier = Modifier.menuAnchor(),
-                readOnly = true,
-                value = selectedValue,
-                onValueChange = {},
-                label = { Text(optionLabel) },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                values.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption) },
-                        onClick = {
-                            onValueChange(selectionOption)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
-            }
-        }
+            onValueClick = {
+                onValueChange(it)
+                expanded = false
+            },
+            onDismiss = { expanded = false }
+        )
     })
 }
 

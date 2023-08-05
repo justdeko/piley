@@ -7,7 +7,9 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalTextInputService
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,15 +28,20 @@ fun DropDown(
         expanded = expanded,
         onExpandedChange = onExpandedChange,
     ) {
-        TextField(
-            modifier = Modifier.menuAnchor(),
-            readOnly = true,
-            value = value,
-            onValueChange = {},
-            label = { Text(label) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
-        )
+        // disable text input provider due to bug where keyboard pops up despite readOnly = true
+        CompositionLocalProvider(
+            LocalTextInputService provides null
+        ) {
+            TextField(
+                modifier = Modifier.menuAnchor(),
+                readOnly = true,
+                value = value,
+                onValueChange = {},
+                label = { Text(label) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+            )
+        }
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = onDismiss,

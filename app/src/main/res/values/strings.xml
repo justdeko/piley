@@ -164,6 +164,13 @@
     <string name="update_reminder_button">Update</string>
     <string name="delete_reminder_button">Delete</string>
     <string name="reminder_time_range_label">Time Range</string>
+    <string-array name="time_of_day">
+        <item>Morning</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
+    </string-array>
+    <string name="tomorrow_prefix">Tomorrow</string>
+    <string name="time_suggestion">%1$s%2$s (%3$s)</string>
 
 
     <!-- task detail screen -->
@@ -219,5 +226,4 @@
     <string name="profile_page_description">You can also see general statistics and upcoming tasks by going to the profile section.</string>
     <string name="end_page_title">Almost there</string>
     <string name="end_page_description">That\'s it! Click on the button to start using the app, and have fun with piley!</string>
-
 </resources>

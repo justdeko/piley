@@ -39,7 +39,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(id = R.drawable.github),
                 "github link",
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
         Text(
@@ -52,7 +52,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
             Icon(
                 Icons.Filled.Info,
                 "website link",
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.tertiary
             )
         }
     }

@@ -53,7 +53,7 @@ private val pileyTypography = AppTypography.copy(
     displaySmall = AppTypography.displaySmall.copy(fontFamily = pileyFontFamily),
     titleLarge = AppTypography.titleLarge.copy(
         fontFamily = pileyFontFamily,
-        fontWeight = FontWeight(600)
+        fontWeight = FontWeight(500)
     ),
     titleMedium = AppTypography.titleMedium.copy(fontFamily = pileyFontFamily),
     titleSmall = AppTypography.titleSmall.copy(fontFamily = pileyFontFamily),

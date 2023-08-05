@@ -261,6 +261,7 @@ private fun SettingsScreen(
                         description = stringResource(R.string.delete_user_setting_description),
                         onClick = { deleteUserDialogOpen = true }
                     )
+                    // TODO open tutorial again setting
                 }
                 Box(
                     modifier = Modifier.weight(1f),

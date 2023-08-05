@@ -166,4 +166,12 @@
     <string name="end_page_description">Das war\'s klicke auf den Button unten, die App zu nutzen. Viel Spaß beim stapeln!</string>
     <string name="no_tasks_yet_message">Sieht so aus als hättest du in diesem Pile noch keine Tasks.\nKlicke auf das Textfeld unten, um ein Task zu erstellen</string>
     <string name="pile_full_warning">Dieser Pile ist schon voll!</string>
+    <string name="tomorrow_prefix">Morgen</string>
+    <string name="time_suggestion">%1$s%2$s (%3$s)</string>
+
+    <string-array name="time_of_day">
+        <item>Vormittag</item>
+        <item>Nachmittag</item>
+        <item>Abend</item>
+    </string-array>
 </resources>

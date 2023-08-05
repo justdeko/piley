@@ -170,7 +170,7 @@ fun TaskDetailScreen(
                 Spacer(Modifier.size(16.dp))
                 ReminderInfo(
                     reminderDateTimeText = viewState.reminderDateTimeText,
-                    onAddReminder = { scope.launch { drawerState.open() } },
+                    onAddReminder = { scope.launch { drawerState.expand() } },
                     isRecurring = viewState.task.isRecurring,
                     recurringTimeRange = viewState.task.recurringTimeRange,
                     recurringFrequency = viewState.task.recurringFrequency

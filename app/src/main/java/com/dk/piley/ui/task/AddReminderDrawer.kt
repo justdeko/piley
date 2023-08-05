@@ -106,7 +106,9 @@ fun AddReminderDrawer(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
+@OptIn(
+    ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class
+)
 @Composable
 fun AddReminderContent(
     modifier: Modifier = Modifier,
@@ -196,6 +198,12 @@ fun AddReminderContent(
                 )
             }
         }
+        ReminderTimeSuggestions(
+            onSelectTimeSuggestion = {
+                localDate = it.toLocalDate()
+                localTime = it.toLocalTime()
+            }
+        )
         TextWithCheckbox(
             modifier = Modifier
                 .fillMaxWidth()
@@ -252,8 +260,6 @@ fun AddReminderContent(
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            val noPermissionWarningText =
-                stringResource(R.string.no_notification_permission_reminder_warning)
             Button(
                 enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
                 onClick = {
@@ -261,7 +267,7 @@ fun AddReminderContent(
                     if (permissionState != null && !permissionState.status.isGranted) {
                         Toast.makeText(
                             context,
-                            noPermissionWarningText,
+                            context.getString(R.string.no_notification_permission_reminder_warning),
                             Toast.LENGTH_LONG
                         ).show()
                         return@Button
@@ -338,13 +344,13 @@ fun AddReminderDrawerPreview() {
     AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         Surface {
-            val drawerState = BottomDrawerState(BottomDrawerValue.Open)
+            val drawerState = BottomDrawerState(BottomDrawerValue.Expanded)
             AddReminderDrawer(
                 content = {
                     Column(modifier = Modifier.fillMaxSize()) {
                         Text("some text here")
                     }
-                }, modifier = Modifier, drawerState = drawerState, permissionState = null
+                }, drawerState = drawerState, permissionState = null
             )
         }
     }
@@ -358,13 +364,13 @@ fun EditReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
-            val drawerState = BottomDrawerState(BottomDrawerValue.Open)
+            val drawerState = BottomDrawerState(BottomDrawerValue.Expanded)
             AddReminderDrawer(
                 initialDate = initialDateTime, content = {
                     Column(modifier = Modifier.fillMaxSize()) {
                         Text("some text here")
                     }
-                }, modifier = Modifier, drawerState = drawerState, permissionState = null
+                }, drawerState = drawerState, permissionState = null
             )
         }
     }
@@ -378,7 +384,7 @@ fun EditReminderDrawerRecurringPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
-            val drawerState = BottomDrawerState(BottomDrawerValue.Open)
+            val drawerState = BottomDrawerState(BottomDrawerValue.Expanded)
             AddReminderDrawer(
                 initialDate = initialDateTime,
                 content = {
@@ -387,7 +393,6 @@ fun EditReminderDrawerRecurringPreview() {
                     }
                 },
                 isRecurring = true,
-                modifier = Modifier,
                 drawerState = drawerState,
                 permissionState = null
             )

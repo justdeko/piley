@@ -1,10 +1,6 @@
 package com.dk.piley.ui.profile
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -47,6 +42,8 @@ import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.IndefiniteProgressBar
+import com.dk.piley.util.InitialSlideIn
+import com.dk.piley.util.SlideDirection
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.previewUpcomingTasksList
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -125,46 +122,52 @@ private fun ProfileScreen(
                     .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(onClick = onClickSettings) {
-                    Icon(
-                        Icons.Filled.Settings,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        contentDescription = "go to settings"
-                    )
+                InitialSlideIn(
+                    direction = SlideDirection.RIGHT,
+                    pathLengthInDp = 40,
+                    density = density,
+                    initialTransitionStateValue = initialTransitionStateValue
+                ) {
+                    IconButton(onClick = onClickSettings) {
+                        Icon(
+                            Icons.Filled.Settings,
+                            tint = MaterialTheme.colorScheme.secondary,
+                            contentDescription = "go to settings"
+                        )
+                    }
                 }
                 if (viewState.userIsOffline) {
                     Spacer(modifier = Modifier.size(0.dp))
                 } else {
-                    IconButton(onClick = onSignOut) {
-                        Icon(
-                            Icons.Filled.Logout,
-                            tint = MaterialTheme.colorScheme.secondary,
-                            contentDescription = "sign out"
-                        )
+                    InitialSlideIn(
+                        direction = SlideDirection.LEFT,
+                        pathLengthInDp = 40,
+                        density = density,
+                        initialTransitionStateValue = initialTransitionStateValue
+                    ) {
+                        IconButton(onClick = onSignOut) {
+                            Icon(
+                                Icons.Filled.Logout,
+                                tint = MaterialTheme.colorScheme.secondary,
+                                contentDescription = "sign out"
+                            )
+                        }
                     }
                 }
             }
-            AnimatedVisibility(
-                visibleState = remember {
-                    MutableTransitionState(initialTransitionStateValue).apply {
-                        targetState = true
-                    }
-                },
-                enter = slideInVertically {
-                    // 40dp slide in from top
-                    with(density) { -40.dp.roundToPx() }
-                } + fadeIn(initialAlpha = 0f)
-            ) { UserInfo(name = viewState.userName) }
-            AnimatedVisibility(
-                visibleState = remember {
-                    MutableTransitionState(initialTransitionStateValue).apply {
-                        targetState = true
-                    }
-                },
-                enter = slideInVertically {
-                    // 40dp slide in from top
-                    with(density) { 10.dp.roundToPx() }
-                } + fadeIn(initialAlpha = 0f)
+            InitialSlideIn(
+                direction = SlideDirection.DOWN,
+                pathLengthInDp = 40,
+                density = density,
+                initialTransitionStateValue = initialTransitionStateValue
+            ) {
+                UserInfo(name = viewState.userName)
+            }
+            InitialSlideIn(
+                direction = SlideDirection.UP,
+                pathLengthInDp = 20,
+                density = density,
+                initialTransitionStateValue = initialTransitionStateValue
             ) {
                 Column {
                     Spacer(modifier = Modifier.size(16.dp))

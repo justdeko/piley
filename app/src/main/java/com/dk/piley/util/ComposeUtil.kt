@@ -2,14 +2,20 @@ package com.dk.piley.util
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 
 @Composable
@@ -38,6 +44,36 @@ fun AlertDialogHelper(
 fun IndefiniteProgressBar(modifier: Modifier = Modifier, visible: Boolean = false) {
     AnimatedVisibility(visible) {
         LinearProgressIndicator(modifier = modifier.fillMaxWidth())
+    }
+}
+
+enum class SlideDirection { UP, DOWN, LEFT, RIGHT }
+
+@Composable
+fun InitialSlideIn(
+    direction: SlideDirection,
+    pathLengthInDp: Int,
+    density: Density,
+    initialAlpha: Float = 0f,
+    initialTransitionStateValue: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    // create horizontal or vertical slide transition depending on direction and path length
+    val slideTransition = when (direction) {
+        SlideDirection.UP -> slideInVertically { with(density) { pathLengthInDp.dp.roundToPx() } }
+        SlideDirection.DOWN -> slideInVertically { with(density) { -pathLengthInDp.dp.roundToPx() } }
+        SlideDirection.LEFT -> slideInHorizontally { with(density) { pathLengthInDp.dp.roundToPx() } }
+        SlideDirection.RIGHT -> slideInHorizontally { with(density) { -pathLengthInDp.dp.roundToPx() } }
+    }
+    AnimatedVisibility(
+        visibleState = remember {
+            MutableTransitionState(initialTransitionStateValue).apply {
+                targetState = true
+            }
+        },
+        enter = slideTransition + fadeIn(initialAlpha = initialAlpha)
+    ) {
+        content()
     }
 }
 

@@ -18,7 +18,7 @@ class TaskRepository @Inject constructor(
 
     suspend fun insertTask(task: Task): Long {
         // remove notification or scheduled alarms if task is set to done/deleted
-        if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) {
+        if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) { // TODO maybe it makes sense to do this if reminder frequency changes
             dismissAlarmAndNotification(task)
         }
         // update modification time
@@ -39,8 +39,7 @@ class TaskRepository @Inject constructor(
         notificationManager.dismiss(task.id)
         // set next reminder if task is recurring
         if (task.status != TaskStatus.DELETED && task.isRecurring && task.reminder != null) {
-            val newReminderTime = task.getNextReminderTime()
-            newReminderTime?.let {
+            task.getNextReminderTime().let {
                 reminderManager.startReminder(
                     reminderDateTime = it,
                     taskId = task.id

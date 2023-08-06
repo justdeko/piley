@@ -25,8 +25,8 @@ fun getNextReminderTime(
     YEARLY -> lastReminder.plusYears(recurringFrequency.toLong())
 }
 
-fun Task.getNextReminderTime(): LocalDateTime? =
-    reminder?.let { getNextReminderTime(it, recurringTimeRange, recurringFrequency) }
+fun Task.getNextReminderTime(): LocalDateTime =
+    getNextReminderTime(LocalDateTime.now(), recurringTimeRange, recurringFrequency)
 
 @Composable
 fun getFrequencyString(

@@ -7,6 +7,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.temporal.ChronoUnit
 import kotlin.math.roundToLong
 
@@ -55,9 +56,17 @@ fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
     val taskDurations = pilesWithTasks.flatMap { pileWithTasks ->
         pileWithTasks.tasks
             .filter { it.status == TaskStatus.DONE }
-            .map { ChronoUnit.HOURS.between(it.createdAt, it.modifiedAt) }
+            .map(Task::getTaskAverageCompletionDurationInHours)
     }
     return if (taskDurations.isNotEmpty()) {
         taskDurations.average().roundToLong()
     } else 0
+}
+
+fun Task.getTaskAverageCompletionDurationInHours(): Long {
+    return (
+            listOf(createdAt.atZone(ZoneId.systemDefault()).toInstant()) + completionTimes)
+        .zipWithNext { a, b ->
+            ChronoUnit.HOURS.between(a, b)
+        }.average().roundToLong()
 }

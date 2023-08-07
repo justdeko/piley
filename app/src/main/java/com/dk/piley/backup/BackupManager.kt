@@ -60,7 +60,12 @@ class BackupManager @Inject constructor(
             return flowOf(Resource.Success(null))
         }
         // if backup fetch wasn't too long ago (<1 day), do nothing and return successful flow
-        if (user.lastBackupQuery?.isAfter(Instant.now().minus(Duration.ofDays(1))) == true) {
+        val backupPullDuration = user.loadBackupAfterDays
+        if (backupPullDuration > 0
+            && user.lastBackupQuery?.isAfter(
+                Instant.now().minus(Duration.ofDays(backupPullDuration.toLong()))
+            ) == true
+        ) {
             Timber.i("last backup not too long ago, aborting backup sync")
             return flowOf(Resource.Success(null))
         }

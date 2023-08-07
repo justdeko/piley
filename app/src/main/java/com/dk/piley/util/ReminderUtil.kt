@@ -6,6 +6,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.dk.piley.R
+import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.RecurringTimeRange.DAILY
 import com.dk.piley.model.task.RecurringTimeRange.MONTHLY
@@ -62,3 +63,13 @@ fun String.toRecurringTimeRange(context: Context): RecurringTimeRange {
         else -> DAILY
     }
 }
+
+fun getPileNameForTaskId(taskId: Long, pilesWithTasks: List<PileWithTasks>) =
+    pilesWithTasks.flatMap { pileWithTasks ->
+        pileWithTasks.tasks.map {
+            Pair(
+                pileWithTasks.pile.name,
+                it.id
+            )
+        }
+    }.find { (_, id) -> id == taskId }?.first

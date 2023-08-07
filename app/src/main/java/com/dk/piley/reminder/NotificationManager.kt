@@ -48,7 +48,7 @@ class NotificationManager @Inject constructor(
         }
     }
 
-    fun showNotification(task: Task) {
+    fun showNotification(task: Task, pileName: String?) {
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         val taskDetailIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
@@ -61,9 +61,19 @@ class NotificationManager @Inject constructor(
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.logo).setContentTitle(task.title)
-            .setContentText(task.description).setStyle(
-                NotificationCompat.BigTextStyle().bigText(task.title + "\n" + task.description)
-            ).setColor(ContextCompat.getColor(context, R.color.md_theme_light_primary))
+            .apply {
+                // set content of second row and content of expanded notification
+                if (pileName != null) {
+                    setContentText(pileName)
+                }
+                if (task.description.isNotBlank()) {
+                    setStyle(
+                        NotificationCompat.BigTextStyle()
+                            .bigText(task.description)
+                    )
+                }
+            }
+            .setColor(ContextCompat.getColor(context, R.color.md_theme_light_primary))
             .setContentIntent(taskDetailIntent).setAutoCancel(true).setColorized(true)
             .setShowWhen(false).addAction(getNotificationAction(task.id))
             .addAction(getNotificationAction(task.id, true)).build()

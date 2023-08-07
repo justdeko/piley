@@ -83,6 +83,7 @@ fun SettingsScreen(
         onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) },
         onReminderDelayChange = { viewModel.updateReminderDelay(it) },
         onBackupFrequencyChange = { viewModel.updateBackupFrequency(it) },
+        onPullBackupPeriodChange = { viewModel.updatePullBackupPeriod(it) },
         onEditUser = { result -> viewModel.updateUser(result) },
         onDeleteUser = { password -> viewModel.deleteUser(password) },
         onCloseSettings = { navController.popBackStack() }
@@ -101,6 +102,7 @@ private fun SettingsScreen(
     onAutoHideKeyboardChange: (Boolean) -> Unit = {},
     onReminderDelayChange: (Int) -> Unit = {},
     onBackupFrequencyChange: (Int) -> Unit = {},
+    onPullBackupPeriodChange: (Int) -> Unit = {},
     onEditUser: (EditUserResult) -> Unit = {},
     onDeleteUser: (String) -> Unit = {},
     onCloseSettings: () -> Unit = {},
@@ -243,6 +245,14 @@ private fun SettingsScreen(
                             range = Pair(1, 14),
                             steps = 14,
                             onValueChange = onBackupFrequencyChange
+                        )
+                        SliderSettingsItem(
+                            title = stringResource(R.string.backup_pull_after_title),
+                            description = stringResource(R.string.backup_pull_after_description),
+                            value = viewState.user.loadBackupAfterDays,
+                            range = Pair(0, 14),
+                            steps = 15,
+                            onValueChange = onPullBackupPeriodChange
                         )
                     }
                 }

@@ -185,6 +185,12 @@ class SettingsViewModel @Inject constructor(
             )
         }
     }
+
+    fun updatePullBackupPeriod(days: Int) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(loadBackupAfterDays = days))
+        }
+    }
 }
 
 data class SettingsViewState(

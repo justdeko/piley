@@ -127,6 +127,8 @@
     <string name="settings_section_backup_title">Backup</string>
     <string name="backup_frequency_setting_title">Backup Frequency</string>
     <string name="backup_frequency_setting_description">Set the frequency of backups in days.</string>
+    <string name="backup_pull_after_title">Download Backup after…</string>
+    <string name="backup_pull_after_description">Set after how many days the remote backup should be fetched on app start again. 0 Means always</string>
     <!-- user settings section-->
     <string name="settings_section_user_title">User</string>
     <string name="update_user_setting_title">Update User</string>

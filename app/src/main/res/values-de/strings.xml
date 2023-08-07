@@ -174,4 +174,6 @@
         <item>Nachmittag</item>
         <item>Abend</item>
     </string-array>
+    <string name="backup_pull_after_title">Backup herunterladen nach…</string>
+    <string name="backup_pull_after_description">Einstellen, nach wie vielen Tagen das hochgeladene Backup beim App-Start wieder heruntergeladen werden soll. 0 bedeutet immer</string>
 </resources>

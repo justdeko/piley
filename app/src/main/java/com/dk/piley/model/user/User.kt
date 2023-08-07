@@ -21,5 +21,6 @@ data class User(
     val defaultReminderDelay: Int = 15,
     val defaultBackupFrequency: Int = 2,
     val autoHideKeyboard: Boolean = true,
-    val isOffline: Boolean = false
+    val isOffline: Boolean = false,
+    val loadBackupAfterDays: Int = 1,
 )

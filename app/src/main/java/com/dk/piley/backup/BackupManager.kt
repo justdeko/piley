@@ -151,6 +151,8 @@ class BackupManager @Inject constructor(
             // if local file was modified more recently than remote file
             // then emit success but with false representing no update of local backup
             if (fileResponse.lastModified.isBefore(localLastModified)) {
+                Timber.i("Last modification date of local file: $localLastModified")
+                Timber.i("Last modification date of local file: ${fileResponse.lastModified}")
                 Timber.i("Remote backup file is outdated, no overwrite needed")
                 emit(Resource.Success(null))
                 return@flow

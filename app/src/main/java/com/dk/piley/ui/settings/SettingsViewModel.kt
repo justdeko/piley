@@ -33,7 +33,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             val userFlow = userRepository.getSignedInUserNotNullFlow()
             combine(userFlow) { (user) ->
-                SettingsViewState(user)
+                state.value.copy(user = user)
             }.collect { _state.value = it }
         }
     }

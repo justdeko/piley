@@ -40,10 +40,11 @@ class ReminderActionHandler @Inject constructor(
 
     override fun restartAll(): Flow<List<Task>> {
         return taskRepository.getTasks().take(1).onEach { taskList ->
-            taskList.take(1).filter {
-                // only tasks that are either recurring or not completed yet
-                (it.status == TaskStatus.DEFAULT && it.reminder != null)
+            taskList.filter {
+                // only tasks that are either recurring or not completed yet, and reminder in the future
+                ((it.status == TaskStatus.DEFAULT && it.reminder != null)
                         || (it.status != TaskStatus.DELETED && it.reminder != null && it.isRecurring)
+                        ) && it.reminder.isAfter(LocalDateTime.now())
             }.forEach { task ->
                 // start a reminder if task recurring or not done yet
                 task.reminder?.let { reminder ->

@@ -29,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.EditableTitleText
 import com.dk.piley.ui.theme.PileyTheme
@@ -64,16 +66,18 @@ fun TaskDetailScreen(
     viewModel: TaskDetailViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
+
+    // navigate out of view if task completed or deleted
+    if (viewState.task.status == TaskStatus.DONE || viewState.task.status == TaskStatus.DELETED) {
+        LaunchedEffect(true) {
+            navController.popBackStack()
+        }
+    }
+
     TaskDetailScreen(
         viewState = viewState,
-        onDeleteTask = {
-            navController.popBackStack()
-            viewModel.deleteTask()
-        },
-        onCompleteTask = {
-            navController.popBackStack()
-            viewModel.completeTask()
-        },
+        onDeleteTask = { viewModel.deleteTask() },
+        onCompleteTask = { viewModel.completeTask() },
         onAddReminder = { viewModel.addReminder(it) },
         onCancelReminder = { viewModel.cancelReminder() },
         onClose = { navController.popBackStack() },

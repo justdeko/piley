@@ -66,7 +66,7 @@ class PileViewModel @Inject constructor(
                         pilesWithTasks
                             .find { it.pile.pileId == selectedPileId }
                             ?.let { pileWithTasks ->
-                                PileViewState(
+                                state.value.copy(
                                     pile = pileWithTasks.pile,
                                     tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
                                     autoHideEnabled = user.autoHideKeyboard,

@@ -82,10 +82,10 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun setShowProgressbar(visible: Boolean) =
-        _state.update { it.copy(showProgressBar = visible) }
+        _state.update { it.copy(isLoading = visible) }
 
     fun setSignedOutState(state: SignOutState) = _state.update { it.copy(signedOutState = state) }
-    fun setToastMessage(message: String?) = _state.update { it.copy(toastMessage = message) }
+    fun setMessage(message: String?) = _state.update { it.copy(message = message) }
 
     fun attemptBackup() {
         viewModelScope.launch {
@@ -93,9 +93,9 @@ class ProfileViewModel @Inject constructor(
             val successful = backupManager.doBackup()
             setShowProgressbar(false)
             if (successful) {
-                setToastMessage(application.getString(R.string.backup_upload_successful_message))
+                setMessage(application.getString(R.string.backup_upload_successful_message))
             } else {
-                setToastMessage(application.getString(R.string.backup_upload_error_message))
+                setMessage(application.getString(R.string.backup_upload_error_message))
             }
         }
     }
@@ -108,7 +108,7 @@ class ProfileViewModel @Inject constructor(
         userRepository.deleteUserTable()
         _state.update {
             it.copy(
-                toastMessage = application.getString(R.string.sign_out_successful_message),
+                message = application.getString(R.string.sign_out_successful_message),
                 signedOutState = SignOutState.SIGNED_OUT
             )
         }
@@ -126,8 +126,8 @@ data class ProfileViewState(
     val averageTaskDurationInHours: Long = 0,
     val biggestPileName: String = "None",
     val signedOutState: SignOutState = SignOutState.SIGNED_IN,
-    val showProgressBar: Boolean = false,
-    val toastMessage: String? = null,
+    val isLoading: Boolean = false,
+    val message: String? = null,
     val userIsOffline: Boolean = false
 )
 

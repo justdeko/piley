@@ -1,6 +1,5 @@
 package com.dk.piley.ui.profile
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,11 +20,13 @@ import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -54,20 +55,22 @@ import org.threeten.bp.LocalDateTime
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
-    val context = LocalContext.current
-
+    // sign out handler
     if (viewState.signedOutState == SignOutState.SIGNED_OUT) {
         LaunchedEffect(true) {
             navController.navigateClearBackstack(Screen.SignIn.route)
         }
     }
-    if (viewState.toastMessage != null) {
-        LaunchedEffect(key1 = viewState.toastMessage) {
-            Toast.makeText(context, viewState.toastMessage, Toast.LENGTH_LONG).show()
-            viewModel.setToastMessage(null)
+    // snackbar handler
+    viewState.message?.let { message ->
+        LaunchedEffect(message, snackbarHostState) {
+            snackbarHostState.showSnackbar(message)
+            // reset message
+            viewModel.setMessage(null)
         }
     }
     ProfileScreen(
@@ -110,7 +113,7 @@ private fun ProfileScreen(
         )
     }
     Box(modifier = modifier.fillMaxSize()) {
-        IndefiniteProgressBar(visible = viewState.signedOutState == SignOutState.SIGNING_OUT || viewState.showProgressBar)
+        IndefiniteProgressBar(visible = viewState.signedOutState == SignOutState.SIGNING_OUT || viewState.isLoading)
         Column(
             Modifier
                 .fillMaxSize()

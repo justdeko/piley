@@ -1,6 +1,5 @@
 package com.dk.piley.ui.pile
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -11,8 +10,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +44,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 fun PileScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: PileViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.state.collectAsState()
@@ -54,6 +56,16 @@ fun PileScreen(
             }
         }
     } ?: emptyList()
+
+    // snackbar handler
+    viewState.message?.let { message ->
+        LaunchedEffect(message, snackbarHostState) {
+            snackbarHostState.showSnackbar(message)
+            // reset message
+            viewModel.setMessage(null)
+        }
+    }
+
     PileScreen(
         modifier = modifier,
         viewState = viewState,
@@ -64,6 +76,7 @@ fun PileScreen(
         onAdd = { viewModel.add(it) },
         onClick = { navController.navigate(taskScreen.root + "/" + it.id) },
         onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
+        onSetMessage = { viewModel.setMessage(it) }
     )
 }
 
@@ -78,6 +91,7 @@ private fun PileScreen(
     onDelete: (Task) -> Unit = {},
     onAdd: (String) -> Unit = {},
     onClick: (Task) -> Unit = {},
+    onSetMessage: (String) -> Unit = {},
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -143,11 +157,7 @@ private fun PileScreen(
                         viewState.pile.pileLimit > 0
                         && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
                     ) {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.pile_full_warning),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        onSetMessage(context.getString(R.string.pile_full_warning))
                     } else {
                         if (viewState.autoHideEnabled) {
                             focusManager.clearFocus()
@@ -156,11 +166,7 @@ private fun PileScreen(
                         taskTextValue = TextFieldValue()
                     }
                 } else {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.task_empty_not_allowed_hint),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    onSetMessage(context.getString(R.string.task_empty_not_allowed_hint))
                 }
             }
         )

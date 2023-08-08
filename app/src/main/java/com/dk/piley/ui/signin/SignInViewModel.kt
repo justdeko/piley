@@ -51,7 +51,7 @@ class SignInViewModel @Inject constructor(
                     is Resource.Success -> onRemoteRegisterOrSignInSuccess(user)
                     is Resource.Failure -> {
                         setLoading(false)
-                        setToastMessage(application.getString(R.string.user_register_error_message))
+                        setMessage(application.getString(R.string.user_register_error_message))
                     }
                 }
             }
@@ -115,7 +115,7 @@ class SignInViewModel @Inject constructor(
 
     private fun updateUIOnSignInSuccess(isSignIn: Boolean = true) {
         setLoading(false)
-        setToastMessage(application.getString(R.string.sign_in_success_message))
+        setMessage(application.getString(R.string.sign_in_success_message))
         setSignInState(SignInState.SIGNED_IN)
         // TODO remove intermediate solution when runtime db fixed
         if (isSignIn) {
@@ -191,7 +191,7 @@ class SignInViewModel @Inject constructor(
 
                 is Resource.Failure -> {
                     setLoading(false)
-                    setToastMessage(application.getString(R.string.sign_in_error_message))
+                    setMessage(application.getString(R.string.sign_in_error_message))
                 }
             }
         }
@@ -208,7 +208,7 @@ class SignInViewModel @Inject constructor(
     }
 
     fun setPassword(input: String) = _state.update { it.copy(password = input) }
-    fun setToastMessage(message: String?) = _state.update { it.copy(toastMessage = message) }
+    fun setMessage(message: String?) = _state.update { it.copy(message = message) }
 }
 
 data class SignInViewState(
@@ -218,6 +218,6 @@ data class SignInViewState(
     val signInState: SignInState = SignInState.SIGNED_OUT,
     val firstTime: Boolean = false,
     val loading: Boolean = false,
-    val toastMessage: String? = null,
+    val message: String? = null,
 )
 

@@ -113,6 +113,10 @@ class PileViewModel @Inject constructor(
         differsFromSelected = setDiffersFromSelected
         _selectedPileIndex.update { index }
     }
+
+    fun setMessage(message: String?) {
+        _state.update { it.copy(message = message) }
+    }
 }
 
 data class PileViewState(
@@ -121,4 +125,5 @@ data class PileViewState(
     val autoHideEnabled: Boolean = true,
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),
     val noTasksYet: Boolean = false,
+    val message: String? = null
 )

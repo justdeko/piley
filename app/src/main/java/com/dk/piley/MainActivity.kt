@@ -83,20 +83,23 @@ fun Home(
                 isVisible = navigationBarShown.value, navController = navController
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
         NavHost(navController, startDestination = Screen.Splash.route) {
             composable(Screen.Splash.route) {
                 SplashScreen(navController = navController)
             }
             composable(Screen.SignIn.route) {
-                SignInScreen(navController = navController)
+                SignInScreen(navController = navController, snackbarHostState = snackbarHostState)
             }
             composable(Screen.Intro.route) {
                 IntroScreen(navController = navController)
             }
             composable(Screen.Pile.route) {
                 PileScreen(
-                    Modifier.padding(padding), navController
+                    modifier = Modifier.padding(padding),
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
                 )
             }
             composable(Screen.Piles.route) {
@@ -106,11 +109,16 @@ fun Home(
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(
-                    Modifier.padding(padding), navController
+                    modifier = Modifier.padding(padding),
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
                 )
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(navController = navController)
+                SettingsScreen(
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
+                )
             }
             composable(
                 taskScreen.route,

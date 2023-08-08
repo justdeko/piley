@@ -1,6 +1,5 @@
 package com.dk.piley.ui.signin
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +14,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,10 +55,10 @@ import com.dk.piley.util.usernameCharacterLimit
 fun SignInScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: SignInViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.state.collectAsState()
-    val context = LocalContext.current
 
     if (viewState.signInState == SignInState.SIGNED_IN) {
         // navigate to register screen if it is the user's first time
@@ -73,10 +72,12 @@ fun SignInScreen(
             }
         }
     }
-    if (viewState.toastMessage != null) {
-        LaunchedEffect(key1 = viewState.toastMessage) {
-            Toast.makeText(context, viewState.toastMessage, Toast.LENGTH_SHORT).show()
-            viewModel.setToastMessage(null)
+    // snackbar handler
+    viewState.message?.let { message ->
+        LaunchedEffect(message, snackbarHostState) {
+            snackbarHostState.showSnackbar(message)
+            // reset message
+            viewModel.setMessage(null)
         }
     }
 

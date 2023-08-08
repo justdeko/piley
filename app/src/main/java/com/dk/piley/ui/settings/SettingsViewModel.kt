@@ -127,7 +127,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun resetToastMessage() {
+    fun resetMessage() {
         _state.update { it.copy(message = null) }
     }
 

@@ -115,10 +115,10 @@ class SignInViewModel @Inject constructor(
 
     private fun updateUIOnSignInSuccess(isSignIn: Boolean = true) {
         setLoading(false)
-        setMessage(application.getString(R.string.sign_in_success_message))
         setSignInState(SignInState.SIGNED_IN)
         // TODO remove intermediate solution when runtime db fixed
         if (isSignIn) {
+            setMessage(application.getString(R.string.sign_in_success_message))
             restartApplication(getApplication())
         }
     }

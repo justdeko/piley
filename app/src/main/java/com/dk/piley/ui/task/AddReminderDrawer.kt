@@ -48,9 +48,9 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.DropDown
+import com.dk.piley.ui.common.ReminderDatePicker
+import com.dk.piley.ui.common.ReminderTimePicker
 import com.dk.piley.ui.common.TextWithCheckbox
-import com.dk.piley.ui.common.showDatePicker
-import com.dk.piley.ui.common.showTimePicker
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.toRecurringTimeRange
@@ -136,6 +136,30 @@ fun AddReminderContent(
     var recurring by remember(isRecurring) { (mutableStateOf(isRecurring)) }
     var timeRange by remember(recurringTimeRange) { (mutableStateOf(recurringTimeRange)) }
     var frequency by remember(recurringFrequency) { (mutableIntStateOf(recurringFrequency)) }
+    var datePickerVisible by remember { mutableStateOf(false) }
+    var timePickerVisible by remember { mutableStateOf(false) }
+
+    if (datePickerVisible) {
+        ReminderDatePicker(
+            initialDate = localDate ?: initialDateTime?.toLocalDate(),
+            onDismiss = { datePickerVisible = false },
+            onConfirm = {
+                localDate = it
+                datePickerVisible = false
+            }
+        )
+    }
+
+    if (timePickerVisible) {
+        ReminderTimePicker(
+            initialTime = localTime ?: initialDateTime?.toLocalTime(),
+            onDismiss = { timePickerVisible = false },
+            onConfirm = {
+                localTime = it
+                timePickerVisible = false
+            }
+        )
+    }
 
     Column(
         modifier = modifier
@@ -158,11 +182,7 @@ fun AddReminderContent(
             text = localDate?.toString() ?: (initialDateTime?.toLocalDate()?.toString()
                 ?: stringResource(R.string.date_selection_placeholder)),
             icon = Icons.Default.Event,
-            onIconClick = {
-                context.showDatePicker(localDate ?: initialDateTime?.toLocalDate()) {
-                    localDate = it
-                }
-            },
+            onIconClick = { datePickerVisible = true },
             iconContentDescription = "set the date for a reminder"
         )
         Spacer(modifier = Modifier.size(16.dp))
@@ -171,11 +191,7 @@ fun AddReminderContent(
             text = localTime?.toString() ?: (initialDateTime?.toLocalTime()?.withNano(0)?.toString()
                 ?: stringResource(R.string.time_selection_placeholder)),
             icon = Icons.Default.Schedule,
-            onIconClick = {
-                context.showTimePicker(localTime ?: initialDateTime?.toLocalTime()) {
-                    localTime = it
-                }
-            },
+            onIconClick = { timePickerVisible = true },
             iconContentDescription = "set the time for a reminder"
         )
         Spacer(modifier = Modifier.size(8.dp))

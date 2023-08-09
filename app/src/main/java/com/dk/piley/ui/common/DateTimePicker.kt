@@ -1,6 +1,9 @@
 package com.dk.piley.ui.common
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -10,6 +13,7 @@ import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,8 +35,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.utcZoneId
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -48,11 +54,9 @@ fun ReminderDatePicker(
     onDismiss: () -> Unit,
     onConfirm: (LocalDate) -> Unit
 ) {
-    val datePickerState = rememberDatePickerState(
-        initialDate?.atStartOfDay(utcZoneId)?.toInstant()?.toEpochMilli()
-    )
-    val confirmEnabled =
-        remember { derivedStateOf { datePickerState.selectedDateMillis != null } }
+    val datePickerState =
+        rememberDatePickerState(initialDate?.atStartOfDay(utcZoneId)?.toInstant()?.toEpochMilli())
+    val confirmEnabled = remember { derivedStateOf { datePickerState.selectedDateMillis != null } }
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -64,12 +68,12 @@ fun ReminderDatePicker(
                 },
                 enabled = confirmEnabled.value
             ) {
-                Text("Confirm")
+                Text(stringResource(R.string.confirm_date_time_picker_button))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel_date_time_picker_button))
             }
         }
     ) { DatePicker(state = datePickerState) }
@@ -79,7 +83,7 @@ fun ReminderDatePicker(
 @Composable
 fun ReminderTimePicker(
     initialTime: LocalTime?,
-    is24hFormat: Boolean = true,
+    is24hFormat: Boolean = true, // TODO use locale
     onDismiss: () -> Unit,
     onConfirm: (LocalTime) -> Unit
 ) {
@@ -93,7 +97,7 @@ fun ReminderTimePicker(
     val showingPicker = remember { mutableStateOf(true) }
     val configuration = LocalConfiguration.current
 
-    AlertDialog(
+    AlertDialog(  // TODO make common
         onDismissRequest = onDismiss,
     ) {
         Surface(
@@ -129,8 +133,26 @@ fun ReminderTimePicker(
                         )
                     }
                 }
-                Button(onClick = { onConfirm(LocalTime.of(state.hour, state.minute)) }) {
-                    Text(text = "Confirm")
+                Row( // TODO extract to common element with edit/delete user content (and maybe task/pile/reminder drawer)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    Button(
+                        onClick = onDismiss,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    ) {
+                        Text(stringResource(R.string.cancel_date_time_picker_button))
+                    }
+                    Button(
+                        onClick = { onConfirm(LocalTime.of(state.hour, state.minute)) }
+                    ) {
+                        Text(stringResource(R.string.confirm_date_time_picker_button))
+                    }
                 }
             }
         }

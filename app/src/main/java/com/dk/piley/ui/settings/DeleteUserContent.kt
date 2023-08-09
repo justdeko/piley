@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -81,7 +81,7 @@ fun DeleteUserContent(
                     .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                ElevatedButton(
+                Button(
                     onClick = onCancel,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -90,7 +90,7 @@ fun DeleteUserContent(
                 ) {
                     Text(stringResource(R.string.delete_user_dialog_cancel_button))
                 }
-                ElevatedButton(
+                Button(
                     onClick = { onConfirm(password) },
                     enabled = password.isNotBlank(),
                     colors = ButtonDefaults.buttonColors(

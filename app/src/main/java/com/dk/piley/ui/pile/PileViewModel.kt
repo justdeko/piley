@@ -1,8 +1,8 @@
 package com.dk.piley.ui.pile
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.backup.BackupManager
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
@@ -27,10 +27,7 @@ class PileViewModel @Inject constructor(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val backupManager: BackupManager,
-) : ViewModel() {
-    private val _state = MutableStateFlow(PileViewState())
-    val state: StateFlow<PileViewState>
-        get() = _state
+) : StatefulViewModel<PileViewState>(PileViewState()) {
 
     private val _selectedPileIndex = MutableStateFlow(-1)
     val selectedPileIndex: StateFlow<Int>
@@ -78,7 +75,7 @@ class PileViewModel @Inject constructor(
                 }
             }.collect { viewState ->
                 if (viewState != null) {
-                    _state.value = viewState
+                    state.value = viewState
                 }
             }
         }
@@ -115,7 +112,7 @@ class PileViewModel @Inject constructor(
     }
 
     fun setMessage(message: String?) {
-        _state.update { it.copy(message = message) }
+        state.update { it.copy(message = message) }
     }
 }
 

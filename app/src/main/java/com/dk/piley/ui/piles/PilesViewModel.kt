@@ -1,14 +1,12 @@
 package com.dk.piley.ui.piles
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
@@ -19,23 +17,20 @@ import javax.inject.Inject
 class PilesViewModel @Inject constructor(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
-) : ViewModel() {
-    private val _state = MutableStateFlow(PilesViewState())
-
-    val state: StateFlow<PilesViewState>
-        get() = _state
+) : StatefulViewModel<PilesViewState>(PilesViewState()) {
 
     private val signedInUserFlow = userRepository.getSignedInUserNotNullFlow()
 
     init {
         viewModelScope.launch {
-            val pilesFlow = pileRepository.getPilesWithTasks()
-            signedInUserFlow.combine(pilesFlow) { user, piles ->
-                state.value.copy(
-                    piles = piles,
-                    selectedPileId = user.selectedPileId
-                )
-            }.collect { _state.value = it }
+            collectState(
+                signedInUserFlow.combine(pileRepository.getPilesWithTasks()) { user, piles ->
+                    state.value.copy(
+                        piles = piles,
+                        selectedPileId = user.selectedPileId
+                    )
+                }
+            )
         }
     }
 
@@ -62,7 +57,7 @@ class PilesViewModel @Inject constructor(
     }
 
     fun setSelectedPile(id: Long) {
-        _state.update {
+        state.update {
             it.copy(selectedPileId = id)
         }
         viewModelScope.launch {

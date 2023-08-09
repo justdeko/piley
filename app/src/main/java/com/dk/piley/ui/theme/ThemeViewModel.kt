@@ -1,12 +1,10 @@
 package com.dk.piley.ui.theme
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,18 +12,16 @@ import javax.inject.Inject
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
     private val userRepository: UserRepository
-) : ViewModel() {
-    private val _state = MutableStateFlow(ThemeViewState())
-
-    val state: StateFlow<ThemeViewState>
-        get() = _state
+) : StatefulViewModel<ThemeViewState>(ThemeViewState()) {
 
     init {
         viewModelScope.launch {
             val userFlow = userRepository.getSignedInUserNotNullFlow()
-            combine(userFlow) { (user) ->
-                ThemeViewState(user.nightMode, user.dynamicColorOn)
-            }.collect { _state.value = it }
+            collectState(
+                combine(userFlow) { (user) ->
+                    ThemeViewState(user.nightMode, user.dynamicColorOn)
+                }
+            )
         }
     }
 }

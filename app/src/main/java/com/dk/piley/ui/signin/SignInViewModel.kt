@@ -3,10 +3,10 @@ package com.dk.piley.ui.signin
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
 import com.dk.piley.backup.BackupManager
+import com.dk.piley.common.StatefulAndroidViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
@@ -14,8 +14,6 @@ import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.util.usernameCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -31,11 +29,7 @@ class SignInViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,
     private val backupManager: BackupManager,
-) : AndroidViewModel(application) {
-    private val _state = MutableStateFlow(SignInViewState())
-
-    val state: StateFlow<SignInViewState>
-        get() = _state
+) : StatefulAndroidViewModel<SignInViewState>(application, SignInViewState()) {
 
     private fun attemptRegister() {
         val userData = state.value
@@ -89,7 +83,7 @@ class SignInViewModel @Inject constructor(
             }
         } else {
             // set user as first time since it is a register process
-            _state.update { it.copy(firstTime = true) }
+            state.update { it.copy(firstTime = true) }
             createAndSetUserPile(false)
         }
     }
@@ -168,7 +162,7 @@ class SignInViewModel @Inject constructor(
         )
         viewModelScope.launch {
             // set user as first time since it is a register process
-            _state.update { it.copy(firstTime = true) }
+            state.update { it.copy(firstTime = true) }
             userRepository.insertUser(user)
             userRepository.setSignedInUser(user.email)
             createAndSetUserPile(false)
@@ -198,17 +192,17 @@ class SignInViewModel @Inject constructor(
     }
 
     fun setSignInState(signInState: SignInState) =
-        _state.update { it.copy(signInState = signInState) }
+        state.update { it.copy(signInState = signInState) }
 
-    private fun setLoading(loading: Boolean) = _state.update { it.copy(loading = loading) }
-    fun setEmail(input: String) = _state.update { it.copy(email = input) }
+    private fun setLoading(loading: Boolean) = state.update { it.copy(loading = loading) }
+    fun setEmail(input: String) = state.update { it.copy(email = input) }
     fun setUsername(input: String) {
         if (input.length > usernameCharacterLimit) return
-        _state.update { it.copy(username = input) }
+        state.update { it.copy(username = input) }
     }
 
-    fun setPassword(input: String) = _state.update { it.copy(password = input) }
-    fun setMessage(message: String?) = _state.update { it.copy(message = message) }
+    fun setPassword(input: String) = state.update { it.copy(password = input) }
+    fun setMessage(message: String?) = state.update { it.copy(message = message) }
 }
 
 data class SignInViewState(

@@ -1,9 +1,9 @@
 package com.dk.piley.ui.settings
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
+import com.dk.piley.common.StatefulAndroidViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.NightMode
@@ -11,8 +11,6 @@ import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,21 +21,17 @@ class SettingsViewModel @Inject constructor(
     private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository
-) : AndroidViewModel(application) {
-    private val _state = MutableStateFlow(SettingsViewState())
-
-    val state: StateFlow<SettingsViewState>
-        get() = _state
+) : StatefulAndroidViewModel<SettingsViewState>(application, SettingsViewState()) {
 
     init {
         viewModelScope.launch {
-            val userFlow = userRepository.getSignedInUserNotNullFlow()
-            combine(userFlow) { (user) ->
-                state.value.copy(user = user)
-            }.collect { _state.value = it }
+            collectState(
+                combine(userRepository.getSignedInUserNotNullFlow()) { (user) ->
+                    state.value.copy(user = user)
+                }
+            )
         }
     }
-
 
     fun updateNightMode(nightMode: NightMode) {
         viewModelScope.launch {
@@ -91,9 +85,9 @@ class SettingsViewModel @Inject constructor(
                     userRepository.deleteUserFlow(existingUser.email, password)
                         .collect { resource ->
                             when (resource) {
-                                is Resource.Loading -> _state.update { it.copy(loading = true) }
+                                is Resource.Loading -> state.update { it.copy(loading = true) }
                                 is Resource.Failure -> {
-                                    _state.update {
+                                    state.update {
                                         it.copy(
                                             loading = false,
                                             message = resource.exception.message
@@ -109,7 +103,7 @@ class SettingsViewModel @Inject constructor(
                         }
                 }
             } else {
-                _state.update { it.copy(message = application.getString(R.string.delete_user_error_wrong_password)) }
+                state.update { it.copy(message = application.getString(R.string.delete_user_error_wrong_password)) }
             }
         }
     }
@@ -118,7 +112,7 @@ class SettingsViewModel @Inject constructor(
         pileRepository.deletePileData()
         userRepository.setSignedInUser("")
         userRepository.deleteUserTable()
-        _state.update {
+        state.update {
             it.copy(
                 loading = false,
                 userDeleted = true,
@@ -128,7 +122,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun resetMessage() {
-        _state.update { it.copy(message = null) }
+        state.update { it.copy(message = null) }
     }
 
     fun updateUser(result: EditUserResult) {
@@ -144,9 +138,9 @@ class SettingsViewModel @Inject constructor(
                         newName = result.name.trim()
                     ).collect { resource ->
                         when (resource) {
-                            is Resource.Loading -> _state.update { it.copy(loading = true) }
+                            is Resource.Loading -> state.update { it.copy(loading = true) }
                             is Resource.Failure -> {
-                                _state.update {
+                                state.update {
                                     it.copy(
                                         loading = false,
                                         message = resource.exception.message
@@ -161,7 +155,7 @@ class SettingsViewModel @Inject constructor(
                     }
                 }
             } else {
-                _state.update {
+                state.update {
                     it.copy(
                         loading = false,
                         message = application.getString(R.string.update_user_error_wrong_password)
@@ -178,7 +172,7 @@ class SettingsViewModel @Inject constructor(
                 password = result.newPassword.ifBlank { result.oldPassword }
             )
         )
-        _state.update {
+        state.update {
             it.copy(
                 loading = false,
                 message = application.getString(R.string.user_update_success_info)

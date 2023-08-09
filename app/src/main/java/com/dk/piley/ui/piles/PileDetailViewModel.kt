@@ -1,8 +1,8 @@
 package com.dk.piley.ui.piles
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskRepository
@@ -14,8 +14,6 @@ import com.dk.piley.util.descriptionCharacterLimit
 import com.dk.piley.util.getCompletedTasksForWeekValues
 import com.dk.piley.util.pileTitleCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
@@ -28,11 +26,7 @@ class PileDetailViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
-    private val _state = MutableStateFlow(PileDetailViewState())
-
-    val state: StateFlow<PileDetailViewState>
-        get() = _state
+) : StatefulViewModel<PileDetailViewState>(PileDetailViewState()) {
 
     private val signedInUserFlow = userRepository.getSignedInUserNotNullFlow()
 
@@ -42,7 +36,7 @@ class PileDetailViewModel @Inject constructor(
             // set initial values for text fields
             id?.let { pileId ->
                 pileRepository.getPileById(pileId).firstOrNull()?.let {
-                    _state.value = state.value.copy(
+                    state.value = state.value.copy(
                         titleTextValue = it.pile.name,
                         descriptionTextValue = it.pile.description
                     )
@@ -51,7 +45,7 @@ class PileDetailViewModel @Inject constructor(
             // observe changed values and update state accordingly
             id?.let { pileRepository.getPileById(it) }?.collect { pileWithTasks ->
                 signedInUserFlow.take(1).collect { user ->
-                    _state.update { pileDetailViewState ->
+                    state.update { pileDetailViewState ->
                         pileDetailViewState.copy(
                             pile = pileWithTasks.pile,
                             completedTaskCounts = getCompletedTasksForWeekValues(pileWithTasks),
@@ -78,7 +72,7 @@ class PileDetailViewModel @Inject constructor(
     fun editTitle(title: String) {
         if (title.length > pileTitleCharacterLimit) return
         viewModelScope.launch {
-            _state.update {
+            state.update {
                 it.copy(titleTextValue = title)
             }
             pileRepository.insertPile(state.value.pile.copy(name = title))
@@ -93,7 +87,7 @@ class PileDetailViewModel @Inject constructor(
 
     fun editDescription(description: String) {
         if (description.length > descriptionCharacterLimit) return
-        _state.update {
+        state.update {
             it.copy(descriptionTextValue = description)
         }
         viewModelScope.launch {

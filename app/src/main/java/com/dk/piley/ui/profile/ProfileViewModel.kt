@@ -1,10 +1,10 @@
 package com.dk.piley.ui.profile
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
 import com.dk.piley.backup.BackupManager
+import com.dk.piley.common.StatefulAndroidViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
@@ -14,8 +14,6 @@ import com.dk.piley.util.getAverageTaskCompletionInHours
 import com.dk.piley.util.getBiggestPileName
 import com.dk.piley.util.getUpcomingTasks
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -29,11 +27,7 @@ class ProfileViewModel @Inject constructor(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val backupManager: BackupManager
-) : AndroidViewModel(application) {
-    private val _state = MutableStateFlow(ProfileViewState())
-
-    val state: StateFlow<ProfileViewState>
-        get() = _state
+) : StatefulAndroidViewModel<ProfileViewState>(application, ProfileViewState()) {
 
     init {
         viewModelScope.launch {
@@ -56,7 +50,7 @@ class ProfileViewModel @Inject constructor(
                     averageTaskDurationInHours = getAverageTaskCompletionInHours(pilesWithTasks),
                     userIsOffline = user.isOffline
                 )
-            }.collect { _state.value = it }
+            }.collect { state.value = it }
         }
     }
 
@@ -82,10 +76,12 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun setShowProgressbar(visible: Boolean) =
-        _state.update { it.copy(isLoading = visible) }
+        state.update { it.copy(isLoading = visible) }
 
-    fun setSignedOutState(state: SignOutState) = _state.update { it.copy(signedOutState = state) }
-    fun setMessage(message: String?) = _state.update { it.copy(message = message) }
+    fun setSignedOutState(signOutState: SignOutState) =
+        state.update { it.copy(signedOutState = signOutState) }
+
+    fun setMessage(message: String?) = state.update { it.copy(message = message) }
 
     fun attemptBackup() {
         viewModelScope.launch {
@@ -106,7 +102,7 @@ class ProfileViewModel @Inject constructor(
         pileRepository.deletePileData()
         userRepository.setSignedInUser("")
         userRepository.deleteUserTable()
-        _state.update {
+        state.update {
             it.copy(
                 message = application.getString(R.string.sign_out_successful_message),
                 signedOutState = SignOutState.SIGNED_OUT

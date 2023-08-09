@@ -1,14 +1,12 @@
 package com.dk.piley.ui.splash
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.backup.BackupManager
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -19,27 +17,25 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val backupManager: BackupManager
-) : ViewModel() {
-    private val _state = MutableStateFlow(SplashViewState())
-
-    val state: StateFlow<SplashViewState>
-        get() = _state
+) : StatefulViewModel<SplashViewState>(SplashViewState()) {
 
     init {
         viewModelScope.launch {
             val userEmail = userRepository.getSignedInUserEmail()
             if (userEmail.isNotBlank()) {
-                combine(loadingBackupFlow()) { (loadingBackup) ->
-                    if (loadingBackup) {
-                        Timber.d("loading backup..")
-                        SplashViewState(InitState.LOADING_BACKUP)
-                    } else {
-                        Timber.d("backup loading attempt finished...")
-                        SplashViewState(InitState.BACKUP_LOADED_SIGNED_IN)
+                collectState(
+                    combine(loadingBackupFlow()) { (loadingBackup) ->
+                        if (loadingBackup) {
+                            Timber.d("loading backup..")
+                            SplashViewState(InitState.LOADING_BACKUP)
+                        } else {
+                            Timber.d("backup loading attempt finished...")
+                            SplashViewState(InitState.BACKUP_LOADED_SIGNED_IN)
+                        }
                     }
-                }.collect { _state.value = it }
+                )
             } else {
-                _state.value = SplashViewState(InitState.NOT_SIGNED_IN)
+                state.value = SplashViewState(InitState.NOT_SIGNED_IN)
             }
         }
     }

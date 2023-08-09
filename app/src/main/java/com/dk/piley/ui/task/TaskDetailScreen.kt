@@ -16,15 +16,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomDrawerValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.rememberBottomDrawerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -50,7 +44,7 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.EditDescriptionField
-import com.dk.piley.ui.common.EditableTitleText
+import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.previewUpcomingTasksList
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -147,25 +141,12 @@ fun TaskDetailScreen(
                     .fillMaxWidth()
                     .verticalScroll(scrollState)
             ) {
-                CenterAlignedTopAppBar(
-                    title = {
-                        EditableTitleText(
-                            value = viewState.titleTextValue,
-                            onValueChange = onEditTitle
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onClose) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                "close the task detail",
-                                modifier = Modifier.scale(
-                                    1.3F
-                                ),
-                                tint = MaterialTheme.colorScheme.secondary
-                            )
-                        }
-                    }
+                TitleTopAppBar(
+                    textValue = viewState.titleTextValue,
+                    canDeleteOrEdit = true,
+                    onEdit = onEditTitle,
+                    contentDescription = "close the task detail",
+                    onButtonClick = onClose
                 )
                 EditDescriptionField(
                     value = viewState.descriptionTextValue,

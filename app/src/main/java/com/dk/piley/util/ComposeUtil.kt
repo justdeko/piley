@@ -5,14 +5,20 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -80,3 +86,10 @@ fun InitialSlideIn(
 fun <T> List<T>.getPreviewTransitionStates(initial: Boolean = true) =
     List(this.size) { MutableTransitionState(initial) }
 
+fun Modifier.roundedOutline() = composed {
+    clip(RoundedCornerShape(16.dp))
+        .border(
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+            shape = RoundedCornerShape(16.dp)
+        )
+}

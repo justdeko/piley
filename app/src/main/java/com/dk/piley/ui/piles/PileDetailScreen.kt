@@ -1,30 +1,19 @@
 package com.dk.piley.ui.piles
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,8 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -46,14 +33,11 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
-import com.dk.piley.ui.charts.FrequencyChart
 import com.dk.piley.ui.common.EditDescriptionField
-import com.dk.piley.ui.common.EditableTitleText
-import com.dk.piley.ui.common.OutlineCard
-import com.dk.piley.ui.common.TitleHeader
-import com.dk.piley.ui.profile.TaskStats
+import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
+import com.dk.piley.util.roundedOutline
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDateTime
 
@@ -135,65 +119,28 @@ fun PileDetailScreen(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            CenterAlignedTopAppBar(
-                title = {
-                    EditableTitleText(
-                        viewState.titleTextValue, viewState.canDeleteOrEdit, onEditTitle
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onClose) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            "close the pile detail",
-                            modifier = Modifier.scale(
-                                1.3F
-                            ),
-                            tint = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-                }
+            TitleTopAppBar(
+                textValue = viewState.titleTextValue,
+                onEdit = onEditTitle,
+                canDeleteOrEdit = viewState.canDeleteOrEdit,
+                contentDescription = "close the pile detail",
+                onButtonClick = onClose
             )
             EditDescriptionField(value = viewState.descriptionTextValue,
                 onChange = { onEditDescription(it) }
             )
-            OutlineCard(Modifier.padding(8.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TitleHeader(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .weight(1f),
-                        title = stringResource(R.string.statistics_section_title),
-                        icon = Icons.Default.BarChart
-                    )
-                    TextButton(onClick = { dialogOpen = true }) {
-                        Text(stringResource(R.string.clear_statistics_button_text))
-                    }
-                }
-                TaskStats(
-                    doneCount = viewState.doneCount,
-                    deletedCount = viewState.deletedCount,
-                    currentCount = viewState.currentCount,
-                    tasksOnly = true
-                )
-                FrequencyChart(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    weekDayFrequencies = viewState.completedTaskCounts,
-                    currentDay = today
-                )
-            }
+            PileStatistics(
+                doneCount = viewState.doneCount,
+                deletedCount = viewState.deletedCount,
+                currentCount = viewState.currentCount,
+                completedTaskCounts = viewState.completedTaskCounts,
+                currentDay = today,
+                onClearStatistics = { dialogOpen = true }
+            )
             PileDetailSettings(
                 modifier = Modifier
                     .padding(8.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .border(
-                        BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                        shape = RoundedCornerShape(16.dp)
-                    ),
+                    .roundedOutline(),
                 viewState = viewState,
                 onSetPileMode = onSetPileMode,
                 onSetPileLimit = onSetPileLimit

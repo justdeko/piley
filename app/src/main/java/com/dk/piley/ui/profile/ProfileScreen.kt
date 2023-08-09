@@ -37,8 +37,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
-import com.dk.piley.ui.common.OutlineCard
-import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
@@ -174,12 +172,10 @@ private fun ProfileScreen(
             ) {
                 Column {
                     Spacer(modifier = Modifier.size(16.dp))
-                    OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        TitleHeader(
-                            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
-                            title = stringResource(R.string.user_statistics_section_title),
-                            icon = Icons.Default.BarChart
-                        )
+                    ProfileSection(
+                        title = stringResource(R.string.user_statistics_section_title),
+                        icon = Icons.Default.BarChart
+                    ) {
                         TaskStats(
                             doneCount = viewState.doneTasks,
                             deletedCount = viewState.deletedTasks,
@@ -189,12 +185,10 @@ private fun ProfileScreen(
                         )
                     }
                     Spacer(modifier = Modifier.size(8.dp))
-                    OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
-                        TitleHeader(
-                            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
-                            title = stringResource(R.string.upcoming_tasks_section_title),
-                            icon = Icons.Default.Upcoming
-                        )
+                    ProfileSection(
+                        title = stringResource(R.string.upcoming_tasks_section_title),
+                        icon = Icons.Default.Upcoming
+                    ) {
                         UpcomingTasksList(
                             modifier = Modifier.fillMaxWidth(),
                             pileNameTaskList = viewState.upcomingTaskList
@@ -202,12 +196,10 @@ private fun ProfileScreen(
                     }
                     if (!viewState.userIsOffline) {
                         Spacer(modifier = Modifier.size(8.dp))
-                        OutlineCard(modifier = Modifier.padding(horizontal = 16.dp)) {
-                            TitleHeader(
-                                modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
-                                title = stringResource(R.string.backup_section_title),
-                                icon = Icons.Default.Cloud
-                            )
+                        ProfileSection(
+                            title = stringResource(R.string.backup_section_title),
+                            icon = Icons.Default.Cloud
+                        ) {
                             BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
                         }
                     }

@@ -1,8 +1,6 @@
 package com.dk.piley.ui.task
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -18,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
+import com.dk.piley.common.FullWidthInfo
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.theme.PileyTheme
@@ -39,43 +37,15 @@ fun TaskInfo(
             textAlign = TextAlign.Start
         )
         OutlineCard(Modifier.padding(8.dp)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.task_created_at_label),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelLarge
-                )
-                Text(
-                    text = task.createdAt.dateTimeString(),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-            Spacer(Modifier.size(8.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.task_modified_at_label),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelLarge
-                )
-                Text(
-                    text = task.modifiedAt.dateTimeString(),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+            FullWidthInfo(
+                label = stringResource(R.string.task_created_at_label),
+                value = task.createdAt.dateTimeString()
+            )
+            Spacer(Modifier.size(16.dp))
+            FullWidthInfo(
+                label = stringResource(R.string.task_modified_at_label),
+                value = task.modifiedAt.dateTimeString()
+            )
         }
     }
 }

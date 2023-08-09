@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
+import com.dk.piley.common.FullWidthInfo
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -54,42 +54,17 @@ fun TaskStats(
         }
         if (!tasksOnly) {
             Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.average_task_completion_duration_label),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelLarge
-
+            FullWidthInfo(
+                label = stringResource(R.string.average_task_completion_duration_label),
+                value = stringResource(
+                    R.string.average_task_completion_duration_value,
+                    averageTaskDuration
                 )
-                Text(
-                    text = stringResource(R.string.average_task_completion_duration_value, averageTaskDuration),
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.biggest_pile_label),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.labelLarge
-                )
-                Text(
-                    text = biggestPile,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            }
+            )
+            FullWidthInfo(
+                label = stringResource(R.string.biggest_pile_label),
+                value = biggestPile
+            )
         }
     }
 }

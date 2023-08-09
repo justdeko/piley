@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -151,53 +152,33 @@ fun AddReminderContent(
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                localDate?.toString() ?: (initialDateTime?.toLocalDate()?.toString()
-                    ?: stringResource(R.string.date_selection_placeholder))
-            )
-            IconButton(onClick = {
+        Spacer(modifier = Modifier.size(16.dp))
+        PickerSection(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = localDate?.toString() ?: (initialDateTime?.toLocalDate()?.toString()
+                ?: stringResource(R.string.date_selection_placeholder)),
+            icon = Icons.Default.Event,
+            onIconClick = {
                 context.showDatePicker(localDate ?: initialDateTime?.toLocalDate()) {
                     localDate = it
                 }
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Event,
-                    "set the date for a reminder",
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                localTime?.toString() ?: (initialDateTime?.toLocalTime()?.withNano(0)
-                    ?.toString()
-                    ?: stringResource(R.string.time_selection_placeholder))
-            )
-            IconButton(onClick = {
+            },
+            iconContentDescription = "set the date for a reminder"
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        PickerSection(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = localTime?.toString() ?: (initialDateTime?.toLocalTime()?.withNano(0)?.toString()
+                ?: stringResource(R.string.time_selection_placeholder)),
+            icon = Icons.Default.Schedule,
+            onIconClick = {
                 context.showTimePicker(localTime ?: initialDateTime?.toLocalTime()) {
                     localTime = it
                 }
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Schedule,
-                    "set the date for a reminder",
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-            }
-        }
+            },
+            iconContentDescription = "set the time for a reminder"
+        )
+        Spacer(modifier = Modifier.size(8.dp))
         ReminderTimeSuggestions(
             onSelectTimeSuggestion = {
                 localDate = it.toLocalDate()
@@ -326,6 +307,30 @@ fun AddReminderContent(
                     Text(stringResource(R.string.delete_reminder_button))
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun PickerSection(
+    modifier: Modifier = Modifier,
+    text: String,
+    icon: ImageVector,
+    onIconClick: () -> Unit,
+    iconContentDescription: String? = null
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text)
+        IconButton(onClick = onIconClick) {
+            Icon(
+                imageVector = icon,
+                iconContentDescription,
+                tint = MaterialTheme.colorScheme.secondary
+            )
         }
     }
 }

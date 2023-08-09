@@ -4,14 +4,11 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -19,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -30,7 +26,6 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
-import com.dk.piley.util.pileTitleCharacterLimit
 import com.dk.piley.util.previewPileWithTasksList
 
 @Composable
@@ -124,42 +119,19 @@ fun PileOverviewScreen(
             }
         }
         if (createPileDialogOpen) {
-            AlertDialog(
-                title = { Text(stringResource(R.string.create_pile_dialog_title)) },
-                text = {
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = pileTitle,
-                        onValueChange = {
-                            if (it.length <= pileTitleCharacterLimit) {
-                                pileTitle = it
-                            }
-                        },
-                        placeholder = { Text(stringResource(R.string.pile_title_hint)) },
-                        shape = RoundedCornerShape(16.dp),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    )
+            CreatePileAlertDialog(
+                pileTitleValue = pileTitle,
+                onTitleValueChange = { pileTitle = it },
+                onDismiss = { createPileDialogOpen = false },
+                onConfirm = {
+                    onCreatePile(pileTitle)
+                    createPileDialogOpen = false
+                    pileTitle = ""
                 },
-                onDismissRequest = { createPileDialogOpen = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            onCreatePile(pileTitle)
-                            createPileDialogOpen = false
-                            pileTitle = ""
-                        },
-                        // pile name can't exist yet
-                        enabled = !viewState.piles.map { it.pile.name }
-                            .contains(pileTitle) && pileTitle.isNotBlank()
-                    ) {
-                        Text(stringResource(R.string.pile_create_dialog_confirm_button_text))
-                    }
-                }, dismissButton = {
-                    TextButton(onClick = { createPileDialogOpen = false }) {
-                        Text(stringResource(R.string.pile_create_dialog_dismiss_button_text))
-                    }
-                })
+                // pile name can't exist yet
+                confirmEnabled = !viewState.piles.map { it.pile.name }
+                    .contains(pileTitle) && pileTitle.isNotBlank()
+            )
         }
     }
 }

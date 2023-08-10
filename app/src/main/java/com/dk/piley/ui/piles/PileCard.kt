@@ -10,11 +10,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,6 +38,7 @@ import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.TinySpacer
 
 @Composable
 fun PileCard(
@@ -98,7 +96,7 @@ fun PileCard(
                                     textAlign = TextAlign.End,
                                     text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }}"
                                 )
-                                Spacer(modifier = Modifier.size(4.dp))
+                                TinySpacer()
                                 Icon(
                                     modifier = Modifier.scale(0.8f),
                                     imageVector = Icons.Filled.AddCircle,
@@ -111,7 +109,7 @@ fun PileCard(
                                     textAlign = TextAlign.End,
                                     text = "${pileWithTasks.tasks.count { it.status == TaskStatus.DONE }}"
                                 )
-                                Spacer(modifier = Modifier.size(4.dp))
+                                TinySpacer()
                                 Icon(
                                     modifier = Modifier.scale(0.8f),
                                     imageVector = Icons.Filled.CheckCircle,
@@ -121,7 +119,7 @@ fun PileCard(
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(4.dp))
+                    TinySpacer()
                     Text(
                         modifier = Modifier
                             .align(Alignment.Start)

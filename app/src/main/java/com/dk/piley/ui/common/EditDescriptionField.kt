@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.descriptionCharacterLimit
@@ -24,7 +23,7 @@ fun EditDescriptionField(
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(LocalDim.current.medium),
         value = value,
         supportingText = {
             Text(
@@ -33,7 +32,7 @@ fun EditDescriptionField(
                 textAlign = TextAlign.End,
             )
         },
-        shape = CutCornerShape(16.dp),
+        shape = CutCornerShape(LocalDim.current.large),
         onValueChange = onChange,
         singleLine = false,
         maxLines = 4,

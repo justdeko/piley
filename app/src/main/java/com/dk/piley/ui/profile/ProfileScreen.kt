@@ -40,8 +40,10 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
+import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.InitialSlideIn
+import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.SlideDirection
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.previewUpcomingTasksList
@@ -171,7 +173,7 @@ private fun ProfileScreen(
                 initialTransitionStateValue = initialTransitionStateValue
             ) {
                 Column {
-                    Spacer(modifier = Modifier.size(16.dp))
+                    BigSpacer()
                     ProfileSection(
                         title = stringResource(R.string.user_statistics_section_title),
                         icon = Icons.Default.BarChart
@@ -184,7 +186,7 @@ private fun ProfileScreen(
                             biggestPile = viewState.biggestPileName,
                         )
                     }
-                    Spacer(modifier = Modifier.size(8.dp))
+                    MediumSpacer()
                     ProfileSection(
                         title = stringResource(R.string.upcoming_tasks_section_title),
                         icon = Icons.Default.Upcoming
@@ -195,7 +197,7 @@ private fun ProfileScreen(
                         )
                     }
                     if (!viewState.userIsOffline) {
-                        Spacer(modifier = Modifier.size(8.dp))
+                        MediumSpacer()
                         ProfileSection(
                             title = stringResource(R.string.backup_section_title),
                             icon = Icons.Default.Cloud
@@ -203,7 +205,7 @@ private fun ProfileScreen(
                             BackupInfo(lastBackup = viewState.lastBackup, onClickBackup = onBackup)
                         }
                     }
-                    Spacer(modifier = Modifier.size(8.dp))
+                    MediumSpacer()
                 }
             }
         }

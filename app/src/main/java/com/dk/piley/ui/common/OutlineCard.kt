@@ -22,7 +22,7 @@ fun OutlineCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
-        Column(Modifier.padding(8.dp)) {
+        Column(Modifier.padding(LocalDim.current.medium)) {
             content()
         }
     }

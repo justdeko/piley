@@ -1,7 +1,6 @@
 package com.dk.piley.ui.pile
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActionScope
 import androidx.compose.foundation.text.KeyboardActions
@@ -17,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.defaultPadding
 
 @Composable
 fun AddTaskField(
@@ -28,7 +28,7 @@ fun AddTaskField(
     OutlinedTextField(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .defaultPadding(),
         value = value,
         onValueChange = onChange,
         placeholder = { Text(stringResource(R.string.add_task_placeholder)) },

@@ -8,9 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +37,7 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.navigateClearBackstack
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -101,7 +100,7 @@ fun SplashScreen(
             contentDescription = null,
             tint = Color.Unspecified
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        BigSpacer()
         Text(
             text = stringResource(R.string.app_name),
             color = MaterialTheme.colorScheme.secondary,

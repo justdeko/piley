@@ -37,9 +37,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.utcZoneId
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.Instant
@@ -108,7 +108,7 @@ fun ReminderTimePicker(
             tonalElevation = AlertDialogDefaults.TonalElevation
         ) {
             Column(
-                Modifier.padding(16.dp),
+                Modifier.defaultPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (showingPicker.value && configuration.screenHeightDp > 400) {
@@ -136,7 +136,7 @@ fun ReminderTimePicker(
                 Row( // TODO extract to common element with edit/delete user content (and maybe task/pile/reminder drawer)
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .padding(top = LocalDim.current.medium),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Button(

@@ -37,6 +37,7 @@ import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
+import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.roundedOutline
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDateTime
@@ -109,7 +110,7 @@ fun PileDetailScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .defaultPadding()
             .verticalScroll(scrollState)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {

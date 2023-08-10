@@ -1,10 +1,8 @@
 package com.dk.piley.ui.task
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +17,7 @@ import com.dk.piley.common.FullWidthInfo
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.toLocalDateTime
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -42,7 +41,7 @@ fun TaskInfo(
                 label = stringResource(R.string.task_created_at_label),
                 value = task.createdAt.toLocalDateTime().dateTimeString()
             )
-            Spacer(Modifier.size(16.dp))
+            BigSpacer()
             FullWidthInfo(
                 label = stringResource(R.string.task_modified_at_label),
                 value = task.modifiedAt.toLocalDateTime().dateTimeString()

@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.common.FullWidthInfo
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.MediumSpacer
 
 @Composable
 fun TaskStats(
@@ -53,7 +52,7 @@ fun TaskStats(
             )
         }
         if (!tasksOnly) {
-            Spacer(modifier = Modifier.height(8.dp))
+            MediumSpacer()
             FullWidthInfo(
                 label = stringResource(R.string.average_task_completion_duration_label),
                 value = stringResource(

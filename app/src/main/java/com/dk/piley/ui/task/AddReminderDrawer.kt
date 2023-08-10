@@ -9,11 +9,9 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomDrawer
 import androidx.compose.material.BottomDrawerState
@@ -53,6 +51,8 @@ import com.dk.piley.ui.common.ReminderDatePicker
 import com.dk.piley.ui.common.ReminderTimePicker
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.BigSpacer
+import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateString
 import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.timeString
@@ -180,7 +180,7 @@ fun AddReminderContent(
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        BigSpacer()
         PickerSection(
             modifier = Modifier.padding(horizontal = 16.dp),
             text = localDate?.dateString() ?: (initialDateTime?.toLocalDate()?.dateString()
@@ -189,7 +189,7 @@ fun AddReminderContent(
             onIconClick = { datePickerVisible = true },
             iconContentDescription = "set the date for a reminder"
         )
-        Spacer(modifier = Modifier.size(16.dp))
+        BigSpacer()
         PickerSection(
             modifier = Modifier.padding(horizontal = 16.dp),
             text = localTime?.timeString() ?: (
@@ -200,7 +200,7 @@ fun AddReminderContent(
             onIconClick = { timePickerVisible = true },
             iconContentDescription = "set the time for a reminder"
         )
-        Spacer(modifier = Modifier.size(8.dp))
+        MediumSpacer()
         ReminderTimeSuggestions(
             onSelectTimeSuggestion = {
                 localDate = it.toLocalDate()
@@ -234,7 +234,7 @@ fun AddReminderContent(
                         },
                         onDismiss = { expandedTimeRange = false }
                     )
-                    Spacer(Modifier.size(16.dp))
+                    BigSpacer()
                     DropDown(
                         modifier = Modifier.weight(1f),
                         value = frequency.toString(),

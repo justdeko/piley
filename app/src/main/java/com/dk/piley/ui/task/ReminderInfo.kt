@@ -5,10 +5,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAlert
@@ -28,6 +26,7 @@ import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
 
 @Composable
@@ -104,7 +103,7 @@ fun ReminderInfo(
                     )
                 }
             }
-            Spacer(Modifier.size(8.dp))
+            MediumSpacer()
         }
     }
 }

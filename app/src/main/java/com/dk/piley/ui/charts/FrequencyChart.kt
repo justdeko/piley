@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.dk.piley.R
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.lastSevenDays
 import org.threeten.bp.LocalDate
@@ -37,7 +38,8 @@ fun FrequencyChart(
     modifier: Modifier = Modifier
 ) {
     val max = weekDayFrequencies.maxOrNull() ?: 0
-    val barHeight = 150.dp
+    val dim = LocalDim.current
+    val barHeight = 144.dp
 
     Column(
         verticalArrangement = Arrangement.Bottom,
@@ -59,10 +61,10 @@ fun FrequencyChart(
                         contentAlignment = Alignment.BottomCenter
                     ) {
                         val boxHeight =
-                            if (value == 0) 50.dp else (value / max.toFloat()) * barHeight
+                            if (value == 0) dim.extraLarge else (value / max.toFloat()) * barHeight
                         Box(
                             modifier = Modifier
-                                .padding(vertical = 8.dp, horizontal = 2.dp)
+                                .padding(vertical = dim.medium, horizontal = dim.extraSmall)
                                 .height(boxHeight)
                         ) {
                             Box(
@@ -73,17 +75,18 @@ fun FrequencyChart(
                                             index == 6 -> MaterialTheme.colorScheme.primary
                                             else -> MaterialTheme.colorScheme.secondary
                                         },
-                                        RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)
+                                        RoundedCornerShape(
+                                            topStart = dim.medium,
+                                            topEnd = dim.medium
+                                        )
                                     )
                                     .fillMaxSize()
-                            ) {
-
-                            }
+                            )
                         }
                         Box(
                             modifier = Modifier
-                                .padding(vertical = 8.dp, horizontal = 2.dp)
-                                .height(if (boxHeight < 20.dp) 50.dp else boxHeight)
+                                .padding(vertical = dim.medium, horizontal = dim.extraSmall)
+                                .height(if (boxHeight < 20.dp) dim.extraLarge else boxHeight)
                                 .background(color = Color.Transparent)
                                 .fillMaxWidth()
                         ) {
@@ -108,7 +111,11 @@ fun FrequencyChart(
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
-                        .padding(start = 32.dp, end = 32.dp, bottom = 48.dp),
+                        .padding(
+                            start = dim.veryLarge,
+                            end = dim.veryLarge,
+                            bottom = dim.extraLarge
+                        ),
                     textAlign = TextAlign.Center
                 )
             }
@@ -117,7 +124,7 @@ fun FrequencyChart(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp)
+                .padding(vertical = dim.medium)
         ) {
             lastSevenDays(currentDay).forEachIndexed { index, day ->
                 Text(

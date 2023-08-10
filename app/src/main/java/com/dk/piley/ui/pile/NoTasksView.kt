@@ -4,11 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.BigSpacer
 
 @Composable
 fun NoTasksView(
@@ -41,7 +40,7 @@ fun NoTasksView(
                 painter = painterResource(id = R.drawable.tasks_completed),
                 contentDescription = "no tasks found"
             )
-            Spacer(Modifier.size(16.dp))
+            BigSpacer()
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = stringResource(if (noTasksYet) R.string.no_tasks_yet_message else R.string.no_tasks_left_message),

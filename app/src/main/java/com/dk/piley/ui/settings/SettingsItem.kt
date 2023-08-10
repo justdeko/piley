@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.BigSpacer
+import com.dk.piley.util.MediumSpacer
 
 @Composable
 fun SettingsItem(
@@ -47,13 +49,13 @@ fun SettingsItem(
             }
             if (contentEnd != null) {
                 Row(modifier = Modifier.widthIn(0.dp, 160.dp)) {
-                    Spacer(modifier = Modifier.width(16.dp))
+                    BigSpacer()
                     contentEnd()
                 }
             }
         }
         if (contentBottom != null) {
-            Spacer(modifier = Modifier.height(8.dp))
+            MediumSpacer()
             contentBottom()
         }
     }

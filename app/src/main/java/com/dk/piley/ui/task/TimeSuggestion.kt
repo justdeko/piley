@@ -2,6 +2,7 @@ package com.dk.piley.ui.task
 
 import android.content.Context
 import com.dk.piley.R
+import com.dk.piley.util.timeString
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
@@ -36,7 +37,7 @@ fun TimeSuggestion.getLabelAndDate(
             R.string.time_suggestion,
             tomorrowPrefix,
             timeOfDayString,
-            timeOfDay
+            timeOfDay.timeString()
         ), dateTime
     )
 }

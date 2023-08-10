@@ -40,13 +40,12 @@ fun TaskInfo(
         OutlineCard(Modifier.padding(8.dp)) {
             FullWidthInfo(
                 label = stringResource(R.string.task_created_at_label),
-                value = task.createdAt.toLocalDateTime().dateTimeString() // TODO proper time format
+                value = task.createdAt.toLocalDateTime().dateTimeString()
             )
             Spacer(Modifier.size(16.dp))
             FullWidthInfo(
                 label = stringResource(R.string.task_modified_at_label),
-                value = task.modifiedAt.toLocalDateTime()
-                    .dateTimeString() // TODO proper time format
+                value = task.modifiedAt.toLocalDateTime().dateTimeString()
             )
         }
     }

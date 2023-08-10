@@ -46,8 +46,7 @@ class TaskDetailViewModel @Inject constructor(
                 state.update {
                     it.copy(
                         task = task,
-                        reminderDateTimeText = task.reminder?.toLocalDateTime()
-                            ?.dateTimeString() // TODO proper time formatting
+                        reminderDateTimeText = task.reminder?.toLocalDateTime()?.dateTimeString()
                     )
                 }
             }

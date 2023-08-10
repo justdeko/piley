@@ -3,9 +3,11 @@ package com.dk.piley.util
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.format.FormatStyle
 import org.threeten.bp.format.TextStyle
 import java.util.Locale
 
@@ -29,7 +31,17 @@ fun LocalDateTime.toTimestamp(): Long {
 }
 
 fun LocalDateTime.dateTimeString(): String {
-    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm") // TODO: locale specific
+    val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+    return this.format(formatter)
+}
+
+fun LocalTime.timeString(): String {
+    val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+    return this.format(formatter)
+}
+
+fun LocalDate.dateString(): String {
+    val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     return this.format(formatter)
 }
 

@@ -51,7 +51,7 @@ fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair
                     }
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = task.reminder?.toLocalDateTime()?.dateTimeString() ?: "", // TODO proper formatting
+                        text = task.reminder?.toLocalDateTime()?.dateTimeString() ?: "",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.labelLarge,
                         textAlign = TextAlign.Start

@@ -83,7 +83,7 @@ fun ReminderDatePicker(
 @Composable
 fun ReminderTimePicker(
     initialTime: LocalTime?,
-    is24hFormat: Boolean = true, // TODO use locale
+    is24hFormat: Boolean = true,
     onDismiss: () -> Unit,
     onConfirm: (LocalTime) -> Unit
 ) {

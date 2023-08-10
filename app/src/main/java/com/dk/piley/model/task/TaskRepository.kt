@@ -4,8 +4,7 @@ import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.util.getNextReminderTime
 import kotlinx.coroutines.flow.Flow
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 class TaskRepository @Inject constructor(
@@ -18,14 +17,13 @@ class TaskRepository @Inject constructor(
     fun getTaskById(taskId: Long): Flow<Task> = taskDao.getTaskById(taskId)
 
     suspend fun insertTask(task: Task): Long {
-        val now = LocalDateTime.now()
+        val now = Instant.now()
         // update modification time
         var tempTask = task.copy(modifiedAt = now)
         // add new completion time
         if (task.status == TaskStatus.DONE) {
             tempTask = tempTask.copy(
-                completionTimes = tempTask.completionTimes
-                        + now.atZone(ZoneId.systemDefault()).toInstant()
+                completionTimes = tempTask.completionTimes + now
             )
         }
         // remove notification or scheduled alarms if task is set to done/deleted
@@ -50,14 +48,14 @@ class TaskRepository @Inject constructor(
         if (task.status != TaskStatus.DELETED && task.isRecurring && task.reminder != null) {
             task.getNextReminderTime().let {
                 reminderManager.startReminder(
-                    reminderDateTime = it,
+                    reminderTime = it,
                     taskId = task.id
                 )
                 // set new reminder time inside task
                 taskDao.insertTask(
                     task.copy(
                         reminder = it,
-                        modifiedAt = LocalDateTime.now()
+                        modifiedAt = Instant.now()
                     )
                 )
             }

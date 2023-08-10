@@ -29,7 +29,7 @@ class Converters {
 
     @TypeConverter
     fun instantListToString(instantList: List<Instant>?): String? {
-        return instantList?.toString()
+        return instantList?.toString() // TODO maybe use timestamps instead
     }
 
     @TypeConverter

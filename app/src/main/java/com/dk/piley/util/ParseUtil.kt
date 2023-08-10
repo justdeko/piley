@@ -14,6 +14,15 @@ fun Long.toLocalDateTime(): LocalDateTime {
     return LocalDateTime.ofInstant(Instant.ofEpochMilli(this), zoneId)
 }
 
+fun Instant.toLocalDateTime(): LocalDateTime {
+    return LocalDateTime.ofInstant(this, ZoneId.systemDefault())
+}
+
+fun LocalDateTime.toInstant(): Instant {
+    val offset = ZoneId.systemDefault().rules.getOffset(this)
+    return this.toInstant(offset)
+}
+
 fun LocalDateTime.toTimestamp(): Long {
     val zoneId = ZoneId.systemDefault()
     return atZone(zoneId).toInstant().toEpochMilli()

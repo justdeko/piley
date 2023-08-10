@@ -13,6 +13,7 @@ import com.dk.piley.model.user.UserRepository
 import com.dk.piley.util.getAverageTaskCompletionInHours
 import com.dk.piley.util.getBiggestPileName
 import com.dk.piley.util.getUpcomingTasks
+import com.dk.piley.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -41,7 +42,7 @@ class ProfileViewModel @Inject constructor(
 
                 state.value.copy(
                     userName = user.name,
-                    lastBackup = user.lastBackup,
+                    lastBackup = user.lastBackup?.toLocalDateTime(),
                     doneTasks = done,
                     deletedTasks = deleted,
                     currentTasks = current,

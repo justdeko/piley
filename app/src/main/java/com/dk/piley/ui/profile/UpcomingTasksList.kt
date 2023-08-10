@@ -20,6 +20,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.previewUpcomingTasksList
+import com.dk.piley.util.toLocalDateTime
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 @Composable
@@ -50,7 +51,7 @@ fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair
                     }
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = task.reminder?.dateTimeString() ?: "",
+                        text = task.reminder?.toLocalDateTime()?.dateTimeString() ?: "", // TODO proper formatting
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.labelLarge,
                         textAlign = TextAlign.Start

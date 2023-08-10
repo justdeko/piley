@@ -15,9 +15,9 @@ fun pileFrequenciesForDates(pileWithTasks: PileWithTasks): Map<LocalDate, Int> =
     pileWithTasks.tasks
         .filter {
             it.status == TaskStatus.DONE && LocalDateTime.now().minusWeeks(1)
-                .isBefore(it.modifiedAt)
+                .isBefore(it.modifiedAt.toLocalDateTime())
         }
-        .groupingBy { it.modifiedAt.toLocalDate() }
+        .groupingBy { it.modifiedAt.toLocalDateTime().toLocalDate() }
         .eachCount()
 
 fun pileFrequenciesForDatesWithZeros(frequencyMap: Map<LocalDate, Int>): Map<LocalDate, Int> {

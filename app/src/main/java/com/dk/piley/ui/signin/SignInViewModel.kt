@@ -17,8 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -65,10 +63,7 @@ class SignInViewModel @Inject constructor(
                             // set user backup date
                             userRepository.insertUser(
                                 user.copy(
-                                    lastBackup = LocalDateTime.ofInstant(
-                                        it.data,
-                                        ZoneId.systemDefault()
-                                    )
+                                    lastBackup = it.data
                                 )
                             )
                             Timber.i("Backup loaded, going into main view")

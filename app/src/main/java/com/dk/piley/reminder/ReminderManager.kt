@@ -6,9 +6,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.receiver.ReminderAlarmReceiver
-import com.dk.piley.util.toTimestamp
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Instant
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,9 +20,9 @@ class ReminderManager @Inject constructor(
     private val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 
     fun startReminder(
-        reminderDateTime: LocalDateTime, taskId: Long
+        reminderTime: Instant, taskId: Long
     ) {
-        Timber.i("starting reminder with datetime $reminderDateTime for task id $taskId")
+        Timber.i("starting reminder with datetime $reminderTime for task id $taskId")
         val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW
             putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)
@@ -35,7 +34,7 @@ class ReminderManager @Inject constructor(
 
         alarmManager?.let {
             AlarmManagerCompat.setAndAllowWhileIdle(
-                it, AlarmManager.RTC_WAKEUP, reminderDateTime.toTimestamp(), intent
+                it, AlarmManager.RTC_WAKEUP, reminderTime.toEpochMilli(), intent
             )
         }
     }

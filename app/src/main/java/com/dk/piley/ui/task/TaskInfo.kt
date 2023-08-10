@@ -20,8 +20,9 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
+import com.dk.piley.util.toLocalDateTime
 import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Instant
 
 @Composable
 fun TaskInfo(
@@ -39,12 +40,13 @@ fun TaskInfo(
         OutlineCard(Modifier.padding(8.dp)) {
             FullWidthInfo(
                 label = stringResource(R.string.task_created_at_label),
-                value = task.createdAt.dateTimeString()
+                value = task.createdAt.toLocalDateTime().dateTimeString() // TODO proper time format
             )
             Spacer(Modifier.size(16.dp))
             FullWidthInfo(
                 label = stringResource(R.string.task_modified_at_label),
-                value = task.modifiedAt.dateTimeString()
+                value = task.modifiedAt.toLocalDateTime()
+                    .dateTimeString() // TODO proper time format
             )
         }
     }
@@ -58,8 +60,8 @@ fun TaskInfoPreview() {
         TaskInfo(
             Modifier.fillMaxWidth(),
             task = Task(
-                createdAt = LocalDateTime.now().minusDays(1).minusHours(1),
-                modifiedAt = LocalDateTime.now()
+                createdAt = Instant.now().minusMillis(1000 * 60 * 60 * 3), // 3 hours
+                modifiedAt = Instant.now()
             )
         )
     }

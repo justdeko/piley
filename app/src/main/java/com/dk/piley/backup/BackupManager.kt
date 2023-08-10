@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
 import timber.log.Timber
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -59,7 +58,7 @@ class BackupManager @Inject constructor(
         if (user.isOffline) {
             return flowOf(Resource.Success(null))
         }
-        // if backup fetch wasn't too long ago (<1 day), do nothing and return successful flow
+        // if backup fetch wasn't longer than x days ago, do nothing and return successful flow
         val backupPullDuration = user.loadBackupAfterDays
         if (backupPullDuration > 0
             && user.lastBackupQuery?.isAfter(
@@ -114,7 +113,8 @@ class BackupManager @Inject constructor(
             if (it.isOffline) return
             // get date of last backup and perform new backup if date was too long ago
             val lastBackup = it.lastBackup
-            val latestBackupDate = LocalDateTime.now().minusDays(it.defaultBackupFrequency.toLong())
+            val latestBackupDate =
+                Instant.now().minus(Duration.ofDays(it.defaultBackupFrequency.toLong()))
             if (lastBackup != null && lastBackup.isBefore(latestBackupDate)) {
                 doBackup()
             }
@@ -132,7 +132,7 @@ class BackupManager @Inject constructor(
             is Resource.Loading -> Timber.i("Syncing local backup to remote")
             is Resource.Success -> {
                 val user = userRepository.getSignedInUserEntity()
-                user?.let { userRepository.insertUser(user.copy(lastBackup = LocalDateTime.now())) }
+                user?.let { userRepository.insertUser(user.copy(lastBackup = Instant.now())) }
                 Timber.i("Backup successfully synced")
                 return true
             }

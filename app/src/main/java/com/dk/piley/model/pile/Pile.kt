@@ -3,8 +3,7 @@ package com.dk.piley.model.pile
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dk.piley.model.user.PileMode
-import com.dk.piley.util.utcZoneId
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Instant
 
 @Entity
 data class Pile(
@@ -13,6 +12,6 @@ data class Pile(
     val description: String = "",
     val pileMode: PileMode = PileMode.FREE,
     val pileLimit: Int = 0,
-    val createdAt: LocalDateTime = LocalDateTime.now(utcZoneId),
-    val modifiedAt: LocalDateTime = LocalDateTime.now(utcZoneId),
+    val createdAt: Instant = Instant.now(),
+    val modifiedAt: Instant = Instant.now(),
 )

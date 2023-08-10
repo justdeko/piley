@@ -12,7 +12,8 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 class ReminderActionHandler @Inject constructor(
@@ -44,7 +45,7 @@ class ReminderActionHandler @Inject constructor(
                 // only tasks that are either recurring or not completed yet, and reminder in the future
                 ((it.status == TaskStatus.DEFAULT && it.reminder != null)
                         || (it.status != TaskStatus.DELETED && it.reminder != null && it.isRecurring)
-                        ) && it.reminder.isAfter(LocalDateTime.now())
+                        ) && it.reminder.isAfter(Instant.now())
             }.forEach { task ->
                 // start a reminder if task recurring or not done yet
                 task.reminder?.let { reminder ->
@@ -73,8 +74,9 @@ class ReminderActionHandler @Inject constructor(
         if (taskId.toInt() == -1) return emptyFlow()
         return taskRepository.getTaskById(taskId).onEach { task ->
             userRepository.getSignedInUser().first()?.let { user ->
+                // delay by n minutes
                 val newReminderTime =
-                    LocalDateTime.now().plusMinutes(user.defaultReminderDelay.toLong())
+                    Instant.now().plus(Duration.ofMinutes(user.defaultReminderDelay.toLong()))
                 // update reminder time in db
                 taskRepository.insertTask(task.copy(reminder = newReminderTime))
                 // start new reminder

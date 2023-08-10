@@ -46,6 +46,7 @@ import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.previewUpcomingTasksList
+import com.dk.piley.util.toLocalDateTime
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
@@ -117,7 +118,7 @@ fun TaskDetailScreen(
         drawerState = drawerState,
         onAddReminder = onAddReminder,
         onDeleteReminder = onCancelReminder,
-        initialDate = viewState.task.reminder,
+        initialDate = viewState.task.reminder?.toLocalDateTime(),
         isRecurring = viewState.task.isRecurring,
         recurringFrequency = viewState.task.recurringFrequency,
         recurringTimeRange = viewState.task.recurringTimeRange,

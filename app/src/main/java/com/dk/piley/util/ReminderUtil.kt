@@ -13,7 +13,9 @@ import com.dk.piley.model.task.RecurringTimeRange.MONTHLY
 import com.dk.piley.model.task.RecurringTimeRange.WEEKLY
 import com.dk.piley.model.task.RecurringTimeRange.YEARLY
 import com.dk.piley.model.task.Task
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 
 fun getNextReminderTime(
     lastReminder: LocalDateTime,
@@ -26,8 +28,13 @@ fun getNextReminderTime(
     YEARLY -> lastReminder.plusYears(recurringFrequency.toLong())
 }
 
-fun Task.getNextReminderTime(): LocalDateTime =
-    getNextReminderTime(LocalDateTime.now(), recurringTimeRange, recurringFrequency)
+fun Task.getNextReminderTime(): Instant =
+    getNextReminderTime(
+        LocalDateTime.ofInstant(
+            Instant.now(),
+            ZoneId.systemDefault()
+        ), recurringTimeRange, recurringFrequency
+    ).toInstant()
 
 @Composable
 fun getFrequencyString(

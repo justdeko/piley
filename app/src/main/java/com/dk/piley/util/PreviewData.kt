@@ -72,7 +72,7 @@ val previewUpcomingTasksList = listOf(
         "Daily",
         Task(
             title = "Clean room",
-            reminder = LocalDateTime.parse("2023-08-04T09:36:24").plusDays(1),
+            reminder = LocalDateTime.parse("2023-08-04T09:36:24").plusDays(1).toInstant(),
             isRecurring = true,
             recurringFrequency = 2,
             recurringTimeRange = RecurringTimeRange.WEEKLY
@@ -82,11 +82,14 @@ val previewUpcomingTasksList = listOf(
         "Shopping List",
         Task(
             title = "Buy bananas",
-            reminder = LocalDateTime.parse("2023-08-04T18:02:24").plusDays(2)
+            reminder = LocalDateTime.parse("2023-08-04T18:02:24").plusDays(2).toInstant()
         )
     ),
     Pair(
         "Daily",
-        Task(title = "Call Dentist", reminder = LocalDateTime.parse("2023-08-04T14:01:24").plusDays(3))
+        Task(
+            title = "Call Dentist",
+            reminder = LocalDateTime.parse("2023-08-04T14:01:24").plusDays(3).toInstant()
+        )
     )
 )

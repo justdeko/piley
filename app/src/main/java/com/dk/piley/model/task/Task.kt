@@ -2,9 +2,7 @@ package com.dk.piley.model.task
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dk.piley.util.utcZoneId
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
 
 @Entity
 data class Task(
@@ -12,10 +10,10 @@ data class Task(
     val title: String = "",
     val pileId: Long = 1,
     val description: String = "",
-    val createdAt: LocalDateTime = LocalDateTime.now(utcZoneId),
-    val modifiedAt: LocalDateTime = LocalDateTime.now(utcZoneId),
+    val createdAt: Instant = Instant.now(),
+    val modifiedAt: Instant = Instant.now(),
     val completionTimes: List<Instant> = emptyList(),
-    val reminder: LocalDateTime? = null,
+    val reminder: Instant? = null,
     val isRecurring: Boolean = false,
     val recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     val recurringFrequency: Int = 1,

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -87,8 +87,8 @@ class PileViewModel @Inject constructor(
                 Task(
                     title = text.trim(),
                     pileId = state.value.pile.pileId,
-                    createdAt = LocalDateTime.now(),
-                    modifiedAt = LocalDateTime.now()
+                    createdAt = Instant.now(),
+                    modifiedAt = Instant.now()
                 )
             )
         }

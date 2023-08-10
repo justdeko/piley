@@ -37,6 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
@@ -122,7 +123,11 @@ private fun ProfileScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    .padding(
+                        start = LocalDim.current.large,
+                        end = LocalDim.current.large,
+                        top = LocalDim.current.large
+                    ),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 InitialSlideIn(

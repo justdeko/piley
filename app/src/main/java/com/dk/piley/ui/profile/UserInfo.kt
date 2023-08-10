@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
@@ -36,12 +37,16 @@ fun UserInfo(modifier: Modifier = Modifier, name: String) {
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
-                .border(4.dp, MaterialTheme.colorScheme.inversePrimary, CircleShape)
+                .border(
+                    LocalDim.current.small,
+                    MaterialTheme.colorScheme.inversePrimary,
+                    CircleShape
+                )
         )
         Text(
             text = name,
             modifier = Modifier
-                .padding(top = 8.dp)
+                .padding(top = LocalDim.current.medium)
                 .align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineSmall,

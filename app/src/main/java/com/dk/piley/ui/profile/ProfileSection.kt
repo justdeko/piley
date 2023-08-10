@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.common.TitleHeader
 
@@ -15,9 +15,12 @@ fun ProfileSection(
     icon: ImageVector,
     content: @Composable () -> Unit
 ) {
-    OutlineCard(modifier = modifier.padding(horizontal = 16.dp)) {
+    OutlineCard(modifier = modifier.padding(horizontal = LocalDim.current.large)) {
         TitleHeader(
-            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp),
+            modifier = Modifier.padding(
+                start = LocalDim.current.large,
+                bottom = LocalDim.current.medium
+            ),
             title = title,
             icon = icon
         )

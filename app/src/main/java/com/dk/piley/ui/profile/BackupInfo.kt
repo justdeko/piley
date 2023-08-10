@@ -18,8 +18,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -33,7 +33,7 @@ fun BackupInfo(
 ) {
     Row(
         modifier = modifier
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = LocalDim.current.large)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

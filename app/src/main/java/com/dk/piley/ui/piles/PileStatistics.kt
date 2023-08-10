@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.charts.FrequencyChart
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.profile.TaskStats
@@ -34,7 +34,8 @@ fun PileStatistics(
     currentDay: LocalDate = LocalDate.now(),
     onClearStatistics: () -> Unit = {}
 ) {
-    OutlineCard(modifier.padding(8.dp)) {
+    val dim = LocalDim.current
+    OutlineCard(modifier.padding(dim.medium)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -42,7 +43,7 @@ fun PileStatistics(
         ) {
             TitleHeader(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = dim.medium)
                     .weight(1f),
                 title = stringResource(R.string.statistics_section_title),
                 icon = Icons.Default.BarChart
@@ -58,7 +59,7 @@ fun PileStatistics(
             tasksOnly = true
         )
         FrequencyChart(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = dim.large),
             weekDayFrequencies = completedTaskCounts,
             currentDay = currentDay
         )

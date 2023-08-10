@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -26,7 +25,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.dk.piley.R
@@ -38,7 +36,6 @@ import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
-import com.dk.piley.util.roundedOutline
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDateTime
 
@@ -139,9 +136,6 @@ fun PileDetailScreen(
                 onClearStatistics = { dialogOpen = true }
             )
             PileDetailSettings(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .roundedOutline(),
                 viewState = viewState,
                 onSetPileMode = onSetPileMode,
                 onSetPileLimit = onSetPileLimit

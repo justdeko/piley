@@ -36,8 +36,10 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.TinySpacer
+import com.dk.piley.util.defaultPadding
 
 @Composable
 fun PileCard(
@@ -49,19 +51,20 @@ fun PileCard(
     transitionState: MutableTransitionState<Boolean> = MutableTransitionState(true)
 ) {
     val density = LocalDensity.current
+    val dim = LocalDim.current
 
     Box {
         AnimatedVisibility(
             visibleState = transitionState,
             enter = slideInHorizontally {
-                // 40dp slide in from left
-                with(density) { -40.dp.roundToPx() }
+                // slide in from left
+                with(density) { -dim.extraLarge.roundToPx() }
             } + fadeIn(initialAlpha = 0.3f),
             exit = fadeOut()
         ) {
             ElevatedCard(
                 modifier = modifier
-                    .padding(8.dp)
+                    .padding(dim.medium)
                     .clip(MaterialTheme.shapes.large)
                     .clickable { onClick(pileWithTasks.pile) }
             ) {
@@ -89,7 +92,7 @@ fun PileCard(
                                 )
                             }
                         }
-                        Column(Modifier.padding(8.dp), horizontalAlignment = Alignment.End) {
+                        Column(Modifier.padding(dim.medium), horizontalAlignment = Alignment.End) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
                                     textAlign = TextAlign.End,
@@ -122,7 +125,7 @@ fun PileCard(
                     Text(
                         modifier = Modifier
                             .align(Alignment.Start)
-                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                            .defaultPadding(),
                         text = pileWithTasks.pile.name,
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onBackground,

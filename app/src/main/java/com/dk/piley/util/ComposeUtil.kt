@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -91,10 +90,10 @@ fun <T> List<T>.getPreviewTransitionStates(initial: Boolean = true) =
     List(this.size) { MutableTransitionState(initial) }
 
 fun Modifier.roundedOutline() = composed {
-    clip(RoundedCornerShape(16.dp))
+    clip(MaterialTheme.shapes.large)
         .border(
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-            shape = RoundedCornerShape(16.dp)
+            border = BorderStroke(LocalDim.current.mini, MaterialTheme.colorScheme.outline),
+            shape = MaterialTheme.shapes.large
         )
 }
 

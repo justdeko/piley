@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.roundedOutline
@@ -32,6 +32,7 @@ fun IntroPageContent(
     buttonText: String = "",
     onClickButton: () -> Unit = {}
 ) {
+    val dim = LocalDim.current
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,7 +41,7 @@ fun IntroPageContent(
         Image(
             modifier = Modifier
                 .fillMaxHeight(0.65f)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = dim.large)
                 .then(
                     if (introPage.isScreenshot) Modifier.roundedOutline() else Modifier
                 ),
@@ -50,7 +51,7 @@ fun IntroPageContent(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 32.dp),
+                .padding(vertical = dim.large, horizontal = dim.veryLarge),
             text = stringResource(introPage.titleResource),
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onBackground,
@@ -60,8 +61,7 @@ fun IntroPageContent(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 40.dp)
-                .padding(top = 16.dp),
+                .padding(horizontal = dim.extraLarge),
             text = stringResource(introPage.descriptionResource),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,

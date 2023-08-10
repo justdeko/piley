@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
 
@@ -38,10 +38,11 @@ fun TaskPile(
     onTaskClick: (task: Task) -> Unit = {}
 ) {
     val haptic = LocalHapticFeedback.current
+    val dim = LocalDim.current
     LazyColumn(
-        modifier = modifier.padding(8.dp),
+        modifier = modifier.padding(dim.medium),
         reverseLayout = true,
-        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Bottom),
+        verticalArrangement = Arrangement.spacedBy(dim.small, Alignment.Bottom),
     ) {
         itemsIndexed(tasks, key = { _, task -> task.id }) { index, task ->
             // recomposition key of tasks to recalculate possibility of dismiss for last/first item
@@ -63,7 +64,7 @@ fun TaskPile(
             PileTask(
                 modifier = Modifier
                     .animateItemPlacement()
-                    .padding(vertical = 1.dp),
+                    .padding(vertical = dim.mini),
                 dismissState = dismissState, // TODO proper threshold (more for delete)
                 transitionState = taskTransitionStates[index],
                 task = task,

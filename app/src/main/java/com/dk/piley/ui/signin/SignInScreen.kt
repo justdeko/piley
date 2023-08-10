@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -164,7 +163,7 @@ private fun SignInScreen(
                 value = viewState.email,
                 onValueChange = onEmailChange,
                 placeholder = { Text(stringResource(R.string.user_email_placeholder)) },
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.large,
                 isError = emailError,
                 supportingText = if (emailError) {
                     @Composable
@@ -193,7 +192,7 @@ private fun SignInScreen(
                     value = viewState.username,
                     onValueChange = onUsernameChange,
                     placeholder = { Text(stringResource(R.string.username_placeholder)) },
-                    shape = RoundedCornerShape(16.dp),
+                    shape = MaterialTheme.shapes.large,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                     supportingText = {
@@ -215,7 +214,7 @@ private fun SignInScreen(
                 onValueChange = onPasswordChange,
                 placeholder = { Text(stringResource(R.string.password_placeholder)) },
                 visualTransformation = PasswordVisualTransformation(),
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.large,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,

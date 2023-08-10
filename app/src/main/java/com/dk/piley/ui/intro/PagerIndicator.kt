@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -26,7 +26,7 @@ import com.dk.piley.ui.theme.PileyTheme
 fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
     Row(
         modifier
-            .height(50.dp)
+            .height(LocalDim.current.extraLarge)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -36,10 +36,10 @@ fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
                 if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
             Box(
                 modifier = Modifier
-                    .padding(4.dp)
+                    .padding(LocalDim.current.small)
                     .clip(CircleShape)
                     .background(color)
-                    .size(8.dp)
+                    .size(LocalDim.current.medium)
 
             )
         }

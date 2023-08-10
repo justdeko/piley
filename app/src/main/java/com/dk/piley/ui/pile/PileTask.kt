@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.confirm_green
 
@@ -46,6 +47,7 @@ fun PileTask(
     onClick: (task: Task) -> Unit = {}
 ) {
     val density = LocalDensity.current
+    val dim = LocalDim.current
 
     SwipeToDismiss(
         state = dismissState,
@@ -80,7 +82,7 @@ fun PileTask(
             Box(
                 Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 20.dp),
+                    .padding(horizontal = dim.large),
                 contentAlignment = alignment
             ) {
                 Icon(
@@ -96,12 +98,12 @@ fun PileTask(
                 visibleState = transitionState,
                 enter = slideInVertically {
                     // 40dp slide in from top
-                    with(density) { -40.dp.roundToPx() }
+                    with(density) { -dim.extraLarge.roundToPx() }
                 } + fadeIn(initialAlpha = 0.3f)
             ) {
                 PileEntry(
                     modifier = Modifier
-                        .defaultMinSize(minHeight = 20.dp)
+                        .defaultMinSize(minHeight = dim.large)
                         .fillMaxWidth(),
                     taskText = task.title
                 )

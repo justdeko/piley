@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.Button
@@ -74,7 +73,7 @@ fun EditUserContent(
                     }
                 },
                 placeholder = { Text(stringResource(R.string.user_name_hint)) },
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.large,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             )
@@ -86,7 +85,7 @@ fun EditUserContent(
                 onValueChange = { newPassword = it },
                 visualTransformation = PasswordVisualTransformation(),
                 placeholder = { Text(stringResource(R.string.user_new_password_hint)) },
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.large,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next,
@@ -101,7 +100,7 @@ fun EditUserContent(
                 visualTransformation = PasswordVisualTransformation(),
                 onValueChange = { oldPassword = it },
                 placeholder = { Text(stringResource(R.string.user_current_password_hint)) },
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.large,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done,

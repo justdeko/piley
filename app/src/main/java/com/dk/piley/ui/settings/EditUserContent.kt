@@ -28,10 +28,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.usernameCharacterLimit
 
 @Composable
@@ -52,8 +51,12 @@ fun EditUserContent(
         tonalElevation = AlertDialogDefaults.TonalElevation
     ) {
         Column(
-            modifier.padding(horizontal = 8.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier.padding(
+                horizontal = LocalDim.current.veryLarge,
+                vertical = LocalDim.current.large
+            ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
         ) {
             Text(
                 text = stringResource(R.string.edit_user_dialog_title),
@@ -61,11 +64,8 @@ fun EditUserContent(
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center
             )
-            MediumSpacer()
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 value = name,
                 onValueChange = {
                     if (name.length <= usernameCharacterLimit) {
@@ -78,9 +78,7 @@ fun EditUserContent(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             )
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 value = newPassword,
                 onValueChange = { newPassword = it },
                 visualTransformation = PasswordVisualTransformation(),
@@ -93,9 +91,7 @@ fun EditUserContent(
                 ),
             )
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 value = oldPassword,
                 visualTransformation = PasswordVisualTransformation(),
                 onValueChange = { oldPassword = it },
@@ -108,9 +104,7 @@ fun EditUserContent(
                 ),
             )
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Button(

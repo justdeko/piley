@@ -1,9 +1,9 @@
 package com.dk.piley.ui.settings
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -38,6 +37,7 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.profile.AppInfo
@@ -103,6 +103,7 @@ private fun SettingsScreen(
     onDeleteUser: (String) -> Unit = {},
     onCloseSettings: () -> Unit = {},
 ) {
+    val dim = LocalDim.current
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     val scrollState = rememberScrollState()
@@ -153,7 +154,8 @@ private fun SettingsScreen(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .verticalScroll(scrollState)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(dim.medium)
             ) {
                 SettingsSection(
                     title = stringResource(R.string.settings_section_appearance_title),
@@ -176,7 +178,7 @@ private fun SettingsScreen(
                         onValueChange = onDynamicColorChange
                     )
                 }
-                Divider(modifier = Modifier.padding(vertical = 4.dp))
+                Divider()
                 SettingsSection(
                     title = stringResource(R.string.settings_section_piles_title),
                     icon = Icons.Filled.ViewAgenda
@@ -203,7 +205,7 @@ private fun SettingsScreen(
                         onValueChange = onAutoHideKeyboardChange
                     )
                 }
-                Divider(modifier = Modifier.padding(vertical = 4.dp))
+                Divider()
                 SettingsSection(
                     title = stringResource(R.string.settings_section_notifications_title),
                     icon = Icons.Filled.Notifications
@@ -218,7 +220,7 @@ private fun SettingsScreen(
                     )
                 }
                 if (!viewState.user.isOffline) {
-                    Divider(modifier = Modifier.padding(vertical = 4.dp))
+                    Divider()
                     SettingsSection(
                         title = stringResource(R.string.settings_section_backup_title),
                         icon = Icons.Filled.Backup
@@ -241,7 +243,7 @@ private fun SettingsScreen(
                         )
                     }
                 }
-                Divider(modifier = Modifier.padding(vertical = 4.dp))
+                Divider()
                 SettingsSection(
                     title = stringResource(R.string.settings_section_user_title),
                     icon = Icons.Filled.Person

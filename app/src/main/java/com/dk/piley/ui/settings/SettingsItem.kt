@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.DropDown
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
@@ -28,7 +29,7 @@ fun SettingsItem(
         modifier = modifier
             .clickable(enabled = onClick != null, onClick = onClick ?: {})
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = LocalDim.current.large, vertical = LocalDim.current.medium),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -127,8 +128,8 @@ fun SliderSettingsItem(
                 onValueChange = { onValueChange(it.toInt()) },
                 valueRange = range.first.toFloat()..range.second.toFloat()
             )
+            MediumSpacer()
             Text(
-                modifier = Modifier.padding(start = 8.dp),
                 text = value.toString(),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyLarge

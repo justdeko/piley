@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,10 +27,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.util.MediumSpacer
+import com.dk.piley.util.defaultPadding
 
 @Composable
 fun DeleteUserContent(
@@ -48,8 +47,9 @@ fun DeleteUserContent(
         tonalElevation = AlertDialogDefaults.TonalElevation
     ) {
         Column(
-            modifier.padding(horizontal = 8.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier.defaultPadding(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
         ) {
             Text(
                 text = stringResource(R.string.delete_user_dialog_title),
@@ -57,11 +57,8 @@ fun DeleteUserContent(
                 style = MaterialTheme.typography.headlineSmall,
                 textAlign = TextAlign.Center
             )
-            MediumSpacer()
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = { password = it },
                 placeholder = { Text(stringResource(R.string.user_password_confirm_hint)) },
@@ -74,9 +71,7 @@ fun DeleteUserContent(
                 visualTransformation = PasswordVisualTransformation(),
             )
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Button(

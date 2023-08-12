@@ -29,12 +29,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
@@ -106,7 +106,7 @@ fun SplashScreen(
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.displayMedium,
             modifier = Modifier
-                .padding(bottom = 32.dp)
+                .padding(bottom = LocalDim.current.veryLarge)
                 .alpha(alphaFactor.value),
             textAlign = TextAlign.Center
         )

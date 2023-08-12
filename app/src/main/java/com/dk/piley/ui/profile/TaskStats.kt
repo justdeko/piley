@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
-import com.dk.piley.common.FullWidthInfo
+import com.dk.piley.ui.common.FullWidthInfo
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer

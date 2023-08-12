@@ -13,8 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
-import com.dk.piley.common.FullWidthInfo
 import com.dk.piley.model.task.Task
+import com.dk.piley.ui.common.FullWidthInfo
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer

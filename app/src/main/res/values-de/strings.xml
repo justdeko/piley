@@ -139,10 +139,10 @@
 
     <!--reminder frequency-->
     <string-array name="time_range">
-        <item>Tag(e)</item>
-        <item>Woche(n)</item>
-        <item>Monat(e)</item>
-        <item>Jahr(e)</item>
+        <item>Tage</item>
+        <item>Wochen</item>
+        <item>Monate</item>
+        <item>Jahre</item>
     </string-array>
 
     <plurals name="plural_s">
@@ -163,7 +163,7 @@
     <string name="profile_page_title">Profil</string>
     <string name="profile_page_description">Du kannst auch Statistiken und anstehende Tasks einsehen, indem du zum Profil-Abschnitt navigierst.</string>
     <string name="end_page_title">Fast geschafft</string>
-    <string name="end_page_description">Das war\'s klicke auf den Button unten, die App zu nutzen. Viel Spaß beim stapeln!</string>
+    <string name="end_page_description">Das war\'s! Klicke auf den Button unten, die App zu nutzen. Viel Spaß beim stapeln!</string>
     <string name="no_tasks_yet_message">Sieht so aus als hättest du in diesem Pile noch keine Tasks.\nKlicke auf das Textfeld unten, um ein Task zu erstellen</string>
     <string name="pile_full_warning">Dieser Pile ist schon voll!</string>
     <string name="tomorrow_prefix">Morgen</string>

@@ -11,10 +11,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.FullWidthInfo
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
@@ -33,10 +33,10 @@ fun TaskInfo(
             text = stringResource(R.string.task_info_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = LocalDim.current.medium),
             textAlign = TextAlign.Start
         )
-        OutlineCard(Modifier.padding(8.dp)) {
+        OutlineCard(Modifier.padding(LocalDim.current.medium)) {
             FullWidthInfo(
                 label = stringResource(R.string.task_created_at_label),
                 value = task.createdAt.toLocalDateTime().dateTimeString()

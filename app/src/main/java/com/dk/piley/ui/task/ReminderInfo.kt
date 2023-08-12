@@ -1,7 +1,5 @@
 package com.dk.piley.ui.task
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,13 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
+import com.dk.piley.util.roundedOutline
 
 @Composable
 fun ReminderInfo(
@@ -38,21 +37,19 @@ fun ReminderInfo(
     onAddReminder: () -> Unit = {},
 ) {
     val reminderSet = reminderDateTimeText != null
+    val dim = LocalDim.current
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.reminder_info_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = dim.medium),
             textAlign = TextAlign.Start
         )
         Column(
             Modifier
-                .padding(8.dp)
-                .border(
-                    BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                    shape = MaterialTheme.shapes.large
-                )
+                .padding(dim.medium)
+                .roundedOutline()
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -63,13 +60,13 @@ fun ReminderInfo(
                     text = reminderDateTimeText
                         ?: stringResource(R.string.no_reminder_set_placeholder),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(start = 16.dp),
+                    modifier = Modifier.padding(start = dim.large),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 IconButton(
                     onClick = onAddReminder,
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
+                    modifier = Modifier.padding(vertical = dim.medium, horizontal = dim.small)
                 ) {
                     Icon(
                         imageVector = if (reminderSet) Icons.Default.Edit else Icons.Default.AddAlert,
@@ -83,7 +80,7 @@ fun ReminderInfo(
             TextWithCheckbox(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(horizontal = dim.large, vertical = dim.medium),
                 description = stringResource(R.string.reminder_recurring_label),
                 checked = isRecurring
             )
@@ -91,7 +88,7 @@ fun ReminderInfo(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                        .padding(horizontal = dim.large, vertical = dim.small),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {

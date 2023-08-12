@@ -43,10 +43,10 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.DropDown
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.ReminderDatePicker
 import com.dk.piley.ui.common.ReminderTimePicker
 import com.dk.piley.ui.common.TextWithCheckbox
@@ -54,6 +54,7 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateString
+import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.timeString
 import com.dk.piley.util.toRecurringTimeRange
@@ -104,7 +105,10 @@ fun AddReminderDrawer(
         gesturesEnabled = !drawerState.isClosed,
         drawerState = drawerState,
         drawerBackgroundColor = MaterialTheme.colorScheme.surface,
-        drawerShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
+        drawerShape = RoundedCornerShape(
+            topStart = LocalDim.current.veryLarge,
+            topEnd = LocalDim.current.veryLarge
+        ),
     ) {
         content()
     }
@@ -130,6 +134,7 @@ fun AddReminderContent(
     },
 ) {
     val context = LocalContext.current
+    val dim = LocalDim.current
     val coroutineScope = rememberCoroutineScope()
     var localDate: LocalDate? by remember { mutableStateOf(null) }
     var localTime: LocalTime? by remember { mutableStateOf(null) }
@@ -168,21 +173,22 @@ fun AddReminderContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(32.dp)
+            .defaultPadding()
     ) {
         Text(
+            modifier = Modifier.align(CenterHorizontally),
             text = if (initialDateTime != null) {
                 stringResource(R.string.edit_reminder_title)
             } else stringResource(
                 R.string.add_reminder_title
             ),
             color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Start
         )
         BigSpacer()
         PickerSection(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = dim.large),
             text = localDate?.dateString() ?: (initialDateTime?.toLocalDate()?.dateString()
                 ?: stringResource(R.string.date_selection_placeholder)),
             icon = Icons.Default.Event,
@@ -191,7 +197,7 @@ fun AddReminderContent(
         )
         BigSpacer()
         PickerSection(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = dim.large),
             text = localTime?.timeString() ?: (
                     initialDateTime?.toLocalTime()?.withNano(0)
                         ?.timeString() ?: stringResource(R.string.time_selection_placeholder)
@@ -210,7 +216,7 @@ fun AddReminderContent(
         TextWithCheckbox(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = dim.large),
             description = stringResource(R.string.reminder_recurring_label),
             checked = recurring
         ) { recurring = it }
@@ -249,10 +255,9 @@ fun AddReminderContent(
                         onDismiss = { expandedFrequency = false }
                     )
                 }
+                MediumSpacer()
                 Text(
-                    modifier = Modifier
-                        .align(CenterHorizontally)
-                        .padding(top = 8.dp),
+                    modifier = Modifier.align(CenterHorizontally),
                     text = getFrequencyString(timeRange, frequency)
                 )
             }
@@ -260,7 +265,7 @@ fun AddReminderContent(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = dim.large),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(

@@ -1,10 +1,21 @@
 package com.dk.piley.model.task
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.dk.piley.model.pile.Pile
 import org.threeten.bp.Instant
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Pile::class,
+            parentColumns = arrayOf("pileId"),
+            childColumns = arrayOf("pileId"),
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class Task(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String = "",

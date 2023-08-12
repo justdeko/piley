@@ -1,6 +1,5 @@
 package com.dk.piley.ui.task
 
-import RequestNotificationPermissionDialog
 import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -42,6 +41,7 @@ import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
+import com.dk.piley.util.RequestNotificationPermissionDialog
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime

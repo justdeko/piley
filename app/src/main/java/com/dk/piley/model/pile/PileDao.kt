@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PileDao {
+    @Transaction
     @Query("SELECT * FROM Pile")
     fun getPilesWithTasks(): Flow<List<PileWithTasks>>
 

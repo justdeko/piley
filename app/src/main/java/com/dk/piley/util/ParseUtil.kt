@@ -11,11 +11,6 @@ import org.threeten.bp.format.FormatStyle
 import org.threeten.bp.format.TextStyle
 import java.util.Locale
 
-fun Long.toLocalDateTime(): LocalDateTime {
-    val zoneId = ZoneId.systemDefault()
-    return LocalDateTime.ofInstant(Instant.ofEpochMilli(this), zoneId)
-}
-
 fun Instant.toLocalDateTime(): LocalDateTime {
     return LocalDateTime.ofInstant(this, ZoneId.systemDefault())
 }
@@ -23,11 +18,6 @@ fun Instant.toLocalDateTime(): LocalDateTime {
 fun LocalDateTime.toInstant(): Instant {
     val offset = ZoneId.systemDefault().rules.getOffset(this)
     return this.toInstant(offset)
-}
-
-fun LocalDateTime.toTimestamp(): Long {
-    val zoneId = ZoneId.systemDefault()
-    return atZone(zoneId).toInstant().toEpochMilli()
 }
 
 fun LocalDateTime.dateTimeString(): String {

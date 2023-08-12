@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="profile">Profil</string>
-    <string name="task_details">Task-Details</string>
     <string name="settings">Einstellungen</string>
     <string name="sign_in">Anmelden</string>
     <string name="daily_pile_name">Täglich</string>
@@ -151,7 +150,7 @@
     </plurals>
 
     <string name="delete_pile_dialog_title">Pile löschen</string>
-    <string name="delete_pile_dialog_description">Bist du dir sicher, dass du diesen Pile löschen möchtest?</string>
+    <string name="delete_pile_dialog_description">Bist du dir sicher, dass du diesen Pile löschen möchtest? Allgemeine Statistiken werden auch betroffen sein, da alle Tasks in diesem pile gelöscht werden.</string>
     <string name="delete_pile_dialog_confirm_button">Ja</string>
     <string name="finish_intro_button">Fang mit piley an</string>
     <string name="welcome_page_title">Hallöchen</string>

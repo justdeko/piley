@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 //Replace with your font locations
 val Roboto = FontFamily.Default
 
-
+// TODO use this properly
 val AppTypography = Typography(
   labelLarge = TextStyle(
       fontFamily = Roboto,
@@ -77,7 +77,7 @@ val AppTypography = Typography(
   displayLarge = TextStyle(
       fontFamily = Roboto,
       fontWeight = FontWeight.W400,
-      letterSpacing = -0.25.sp,
+      letterSpacing = (-0.25).sp,
       lineHeight = 64.sp,
       fontSize = 57.sp
   ),

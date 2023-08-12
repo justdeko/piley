@@ -27,7 +27,7 @@ class TaskRepository @Inject constructor(
             )
         }
         // remove notification or scheduled alarms if task is set to done/deleted
-        if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) { // TODO maybe it makes sense to do this if reminder frequency changes
+        if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) {
             dismissAlarmAndNotification(task)
         }
         return taskDao.insertTask(tempTask)

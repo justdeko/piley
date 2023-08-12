@@ -8,7 +8,7 @@ import org.threeten.bp.Instant
 data class User(
     @PrimaryKey val email: String = "",
     val name: String = "",
-    val password: String = "", // TODO: no password or encrypt password in db
+    val password: String = "",
     val selectedPileId: Long = 1,
     val defaultPileId: Long = 1,
     val lastBackup: Instant? = null,

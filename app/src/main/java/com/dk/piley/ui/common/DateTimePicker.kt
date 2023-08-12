@@ -1,26 +1,15 @@
 package com.dk.piley.ui.common
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Keyboard
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
@@ -97,64 +86,40 @@ fun ReminderTimePicker(
     val showingPicker = remember { mutableStateOf(true) }
     val configuration = LocalConfiguration.current
 
-    AlertDialog(  // TODO make common
-        onDismissRequest = onDismiss,
-    ) {
-        Surface(
-            modifier = Modifier
-                .wrapContentHeight()
-                .wrapContentWidth(),
-            shape = MaterialTheme.shapes.large,
-            tonalElevation = AlertDialogDefaults.TonalElevation
+    ContentAlertDialog(onDismiss = onDismiss) {
+        Column(
+            Modifier.defaultPadding(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                Modifier.defaultPadding(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (showingPicker.value && configuration.screenHeightDp > 400) {
-                    TimePicker(state = state)
-                } else {
-                    TimeInput(state = state)
-                }
-                if (configuration.screenHeightDp > 400) {
-                    IconButton(onClick = { showingPicker.value = !showingPicker.value }) {
-                        val icon = if (showingPicker.value) {
-                            Icons.Outlined.Keyboard
+            if (showingPicker.value && configuration.screenHeightDp > 400) {
+                TimePicker(state = state)
+            } else {
+                TimeInput(state = state)
+            }
+            if (configuration.screenHeightDp > 400) {
+                IconButton(onClick = { showingPicker.value = !showingPicker.value }) {
+                    val icon = if (showingPicker.value) {
+                        Icons.Outlined.Keyboard
+                    } else {
+                        Icons.Outlined.Schedule
+                    }
+                    Icon(
+                        icon,
+                        contentDescription = if (showingPicker.value) {
+                            "Switch to Text Input"
                         } else {
-                            Icons.Outlined.Schedule
+                            "Switch to Touch Input"
                         }
-                        Icon(
-                            icon,
-                            contentDescription = if (showingPicker.value) {
-                                "Switch to Text Input"
-                            } else {
-                                "Switch to Touch Input"
-                            }
-                        )
-                    }
-                }
-                Row( // TODO extract to common element with edit/delete user content (and maybe task/pile/reminder drawer)
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = LocalDim.current.medium),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    Button(
-                        onClick = onDismiss,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
-                    ) {
-                        Text(stringResource(R.string.cancel_date_time_picker_button))
-                    }
-                    Button(
-                        onClick = { onConfirm(LocalTime.of(state.hour, state.minute)) }
-                    ) {
-                        Text(stringResource(R.string.confirm_date_time_picker_button))
-                    }
+                    )
                 }
             }
+            TwoButtonRow(
+                modifier = Modifier.padding(top = LocalDim.current.medium),
+                onRightClick = { onConfirm(LocalTime.of(state.hour, state.minute)) },
+                onLeftClick = onDismiss,
+                rightText = stringResource(R.string.confirm_date_time_picker_button),
+                leftText = stringResource(R.string.cancel_date_time_picker_button)
+            )
         }
     }
 }

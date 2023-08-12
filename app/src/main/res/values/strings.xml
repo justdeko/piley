@@ -138,6 +138,8 @@
     <string name="delete_user_success_info">User deleted, signing out</string>
     <string name="update_user_error_wrong_password">Error updating user: Your password is incorrect</string>
     <string name="user_update_success_info">User updated successfully!</string>
+    <string name="start_tutorial_setting_title">Start the Tutorial again</string>
+    <string name="start_tutorial_setting_description">Click here if you want to see the tutorial again.</string>
 
     <!-- sign in screen -->
     <string name="register_button_text">Register</string>

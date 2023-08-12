@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ViewAgenda
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
@@ -37,6 +36,7 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
+import com.dk.piley.ui.common.ContentAlertDialog
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
@@ -82,7 +82,8 @@ fun SettingsScreen(
         onPullBackupPeriodChange = { viewModel.updatePullBackupPeriod(it) },
         onEditUser = { result -> viewModel.updateUser(result) },
         onDeleteUser = { password -> viewModel.deleteUser(password) },
-        onCloseSettings = { navController.popBackStack() }
+        onCloseSettings = { navController.popBackStack() },
+        onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) }
     )
 }
 
@@ -102,6 +103,7 @@ private fun SettingsScreen(
     onEditUser: (EditUserResult) -> Unit = {},
     onDeleteUser: (String) -> Unit = {},
     onCloseSettings: () -> Unit = {},
+    onStartTutorial: () -> Unit = {}
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
@@ -111,9 +113,7 @@ private fun SettingsScreen(
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
 
     if (editUserDialogOpen) {
-        AlertDialog(
-            onDismissRequest = { editUserDialogOpen = false },
-        ) {
+        ContentAlertDialog(onDismiss = { editUserDialogOpen = false }) {
             EditUserContent(
                 existingName = viewState.user.name,
                 onConfirm = { result ->
@@ -126,7 +126,7 @@ private fun SettingsScreen(
     }
 
     if (deleteUserDialogOpen) {
-        AlertDialog(onDismissRequest = { deleteUserDialogOpen = false }) {
+        ContentAlertDialog(onDismiss = { deleteUserDialogOpen = false }) {
             DeleteUserContent(
                 onConfirm = { password ->
                     deleteUserDialogOpen = false
@@ -258,7 +258,11 @@ private fun SettingsScreen(
                         description = stringResource(R.string.delete_user_setting_description),
                         onClick = { deleteUserDialogOpen = true }
                     )
-                    // TODO open tutorial again setting
+                    SettingsItem(
+                        title = stringResource(R.string.start_tutorial_setting_title),
+                        description = stringResource(R.string.start_tutorial_setting_description),
+                        onClick = { onStartTutorial() }
+                    )
                 }
                 Box(
                     modifier = Modifier.weight(1f),

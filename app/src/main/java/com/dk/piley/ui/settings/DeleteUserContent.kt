@@ -2,17 +2,11 @@ package com.dk.piley.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.AlertDialogDefaults
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
+import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
 
@@ -39,62 +34,41 @@ fun DeleteUserContent(
     onCancel: () -> Unit = {}
 ) {
     var password by rememberSaveable { mutableStateOf("") }
-    Surface(
-        modifier = Modifier
-            .wrapContentWidth()
-            .wrapContentHeight(),
-        shape = MaterialTheme.shapes.large,
-        tonalElevation = AlertDialogDefaults.TonalElevation
+    Column(
+        modifier.defaultPadding(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
     ) {
-        Column(
-            modifier.defaultPadding(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
-        ) {
-            Text(
-                text = stringResource(R.string.delete_user_dialog_title),
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.headlineSmall,
-                textAlign = TextAlign.Center
+        Text(
+            text = stringResource(R.string.delete_user_dialog_title),
+            color = MaterialTheme.colorScheme.secondary,
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = password,
+            onValueChange = { password = it },
+            placeholder = { Text(stringResource(R.string.user_password_confirm_hint)) },
+            shape = MaterialTheme.shapes.large,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
+            visualTransformation = PasswordVisualTransformation(),
+        )
+        TwoButtonRow(
+            onRightClick = { onConfirm(password) },
+            onLeftClick = onCancel,
+            rightText = stringResource(R.string.delete_user_dialog_confirm_button),
+            leftText = stringResource(R.string.delete_user_dialog_cancel_button),
+            rightEnabled = password.isNotBlank(),
+            rightColors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
             )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
-                placeholder = { Text(stringResource(R.string.user_password_confirm_hint)) },
-                shape = MaterialTheme.shapes.large,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password
-                ),
-                visualTransformation = PasswordVisualTransformation(),
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Button(
-                    onClick = onCancel,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                ) {
-                    Text(stringResource(R.string.delete_user_dialog_cancel_button))
-                }
-                Button(
-                    onClick = { onConfirm(password) },
-                    enabled = password.isNotBlank(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                ) {
-                    Text(stringResource(R.string.delete_user_dialog_confirm_button))
-                }
-            }
-        }
+        )
     }
 }
 

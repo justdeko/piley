@@ -177,4 +177,6 @@
     <string name="backup_pull_after_description">Einstellen, nach wie vielen Tagen das hochgeladene Backup beim App-Start wieder heruntergeladen werden soll. 0 bedeutet immer</string>
     <string name="confirm_date_time_picker_button">Auswählen</string>
     <string name="cancel_date_time_picker_button">Abbrechen</string>
+    <string name="start_tutorial_setting_title">Tutorial Neustarten</string>
+    <string name="start_tutorial_setting_description">Klicke hier, wenn du dir nochmal das Tutorial anschauen möchtest.</string>
 </resources>

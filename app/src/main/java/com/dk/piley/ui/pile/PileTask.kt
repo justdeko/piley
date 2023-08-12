@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
@@ -114,11 +113,11 @@ fun PileTask(
 
 @Composable
 fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
-    Card(modifier = modifier.padding(horizontal = 8.dp)) {
+    Card(modifier = modifier.padding(horizontal = LocalDim.current.medium)) {
         Text(
             text = taskText,
             modifier = modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .padding(horizontal = LocalDim.current.large, vertical = LocalDim.current.medium)
                 .align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center
         )

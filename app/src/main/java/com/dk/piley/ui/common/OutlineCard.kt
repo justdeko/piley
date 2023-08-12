@@ -12,14 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.dk.piley.ui.theme.PileyTheme
 
 @Composable
 fun OutlineCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Card(
         modifier = modifier,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        border = BorderStroke(LocalDim.current.mini, MaterialTheme.colorScheme.outline),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Column(Modifier.padding(LocalDim.current.medium)) {

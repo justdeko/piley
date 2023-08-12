@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -145,7 +144,7 @@ private fun ProfileScreen(
                     }
                 }
                 if (viewState.userIsOffline) {
-                    Spacer(modifier = Modifier.size(0.dp))
+                    Spacer(modifier = Modifier.size(LocalDim.current.default))
                 } else {
                     InitialSlideIn(
                         direction = SlideDirection.LEFT,

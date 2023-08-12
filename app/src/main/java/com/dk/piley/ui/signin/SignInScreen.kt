@@ -36,12 +36,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
@@ -116,6 +116,7 @@ private fun SignInScreen(
     onChangeOfflineRegister: (Boolean) -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
+    val dim = LocalDim.current
 
     val isRegister =
         viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE
@@ -139,7 +140,7 @@ private fun SignInScreen(
     ) {
         IndefiniteProgressBar(visible = viewState.loading)
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(horizontal = dim.veryLarge),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -152,13 +153,13 @@ private fun SignInScreen(
                 text = signInText,
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 32.dp),
+                modifier = Modifier.padding(bottom = dim.large),
                 textAlign = TextAlign.Center
             )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .padding(vertical = dim.medium)
                     .onFocusChanged { emailFocused = it.isFocused },
                 value = viewState.email,
                 onValueChange = onEmailChange,
@@ -188,7 +189,7 @@ private fun SignInScreen(
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                        .padding(top = dim.large),
                     value = viewState.username,
                     onValueChange = onUsernameChange,
                     placeholder = { Text(stringResource(R.string.username_placeholder)) },
@@ -209,7 +210,7 @@ private fun SignInScreen(
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                    .padding(vertical = dim.medium),
                 value = viewState.password,
                 onValueChange = onPasswordChange,
                 placeholder = { Text(stringResource(R.string.password_placeholder)) },
@@ -228,14 +229,14 @@ private fun SignInScreen(
                 TextWithCheckbox(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 8.dp),
+                        .padding(horizontal = dim.large, vertical = dim.medium),
                     description = stringResource(R.string.user_offline_checkbox_label),
                     checked = viewState.signInState == SignInState.REGISTER_OFFLINE,
                     onChecked = onChangeOfflineRegister
                 )
             }
             ElevatedButton(
-                modifier = Modifier.padding(top = 16.dp, bottom = 32.dp),
+                modifier = Modifier.padding(top = dim.large, bottom = dim.veryLarge),
                 onClick = onAttemptSignIn,
                 enabled = signInButtonEnabled(isRegister, viewState)
             ) {

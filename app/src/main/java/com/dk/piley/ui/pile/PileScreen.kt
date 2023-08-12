@@ -1,7 +1,11 @@
 package com.dk.piley.ui.pile
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -10,6 +14,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -18,13 +23,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -39,6 +48,7 @@ import com.dk.piley.util.previewPileWithTasksList
 import com.dk.piley.util.previewTaskList
 import com.dk.piley.util.titleCharacterLimit
 import com.jakewharton.threetenabp.AndroidThreeTen
+import kotlinx.coroutines.launch
 
 @Composable
 fun PileScreen(
@@ -94,6 +104,10 @@ private fun PileScreen(
     onSetMessage: (String) -> Unit = {},
 ) {
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val coroutineScope = rememberCoroutineScope()
+    val pileOffset = remember { Animatable(0f) }
+
     val focusManager = LocalFocusManager.current
     var taskTextValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(
@@ -122,7 +136,9 @@ private fun PileScreen(
                 .weight(1f)
         ) {
             TaskPile(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .offset(pileOffset.value.dp, 0.dp),
                 tasks = viewState.tasks ?: emptyList(),
                 pileMode = viewState.pile.pileMode,
                 taskTransitionStates = taskTransitionStates,
@@ -158,6 +174,13 @@ private fun PileScreen(
                         && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
                     ) {
                         onSetMessage(context.getString(R.string.pile_full_warning))
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        coroutineScope.launch {
+                            pileOffset.animateTo(
+                                targetValue = 0f,
+                                animationSpec = shakeAnimationSpec,
+                            )
+                        }
                     } else {
                         if (viewState.autoHideEnabled) {
                             focusManager.clearFocus()
@@ -190,6 +213,16 @@ fun ProfileScreenPreview() {
                 taskTransitionStates = pilesWithTasks[0].tasks.getPreviewTransitionStates()
             )
         }
+    }
+}
+
+private val shakeAnimationSpec: AnimationSpec<Float> = keyframes {
+    (1..8).forEach { i ->
+        when (i % 3) {
+            0 -> 8f
+            1 -> -8f
+            else -> 0f
+        } at 500 / 10 * i with FastOutLinearInEasing
     }
 }
 

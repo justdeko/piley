@@ -17,6 +17,10 @@ class PileRepository @Inject constructor(
         return pileDao.insertPile(pile)
     }
 
+    suspend fun updatePile(pile: Pile) {
+        pileDao.updatePile(pile)
+    }
+
     suspend fun deletePile(pile: Pile): Void {
         return pileDao.deletePile(pile)
     }

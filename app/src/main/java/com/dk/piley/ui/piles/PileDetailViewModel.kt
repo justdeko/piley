@@ -75,13 +75,13 @@ class PileDetailViewModel @Inject constructor(
             state.update {
                 it.copy(titleTextValue = title)
             }
-            pileRepository.insertPile(state.value.pile.copy(name = title))
+            pileRepository.updatePile(state.value.pile.copy(name = title))
         }
     }
 
     fun setPileMode(pileMode: PileMode) {
         viewModelScope.launch {
-            pileRepository.insertPile(state.value.pile.copy(pileMode = pileMode))
+            pileRepository.updatePile(state.value.pile.copy(pileMode = pileMode))
         }
     }
 
@@ -91,13 +91,13 @@ class PileDetailViewModel @Inject constructor(
             it.copy(descriptionTextValue = description)
         }
         viewModelScope.launch {
-            pileRepository.insertPile(state.value.pile.copy(description = description))
+            pileRepository.updatePile(state.value.pile.copy(description = description))
         }
     }
 
     fun setPileLimit(limit: Int) {
         viewModelScope.launch {
-            pileRepository.insertPile(state.value.pile.copy(pileLimit = limit))
+            pileRepository.updatePile(state.value.pile.copy(pileLimit = limit))
         }
     }
 

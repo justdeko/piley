@@ -18,6 +18,9 @@ interface PileDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPile(pile: Pile): Long
 
+    @Update
+    suspend fun updatePile(pile: Pile)
+
     @Query("UPDATE Pile SET pileMode=:pileMode")
     suspend fun updateAllPileModes(pileMode: PileMode): Int
 

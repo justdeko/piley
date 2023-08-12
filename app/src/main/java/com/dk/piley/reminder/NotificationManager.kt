@@ -78,9 +78,12 @@ class NotificationManager @Inject constructor(
                 }
             }
             .setColor(ContextCompat.getColor(context, R.color.md_theme_light_primary))
-            .setContentIntent(taskDetailIntent).setAutoCancel(true).setColorized(true)
-            .setShowWhen(false).addAction(getNotificationAction(task.id))
-            .addAction(getNotificationAction(task.id, true)).build()
+            .setContentIntent(taskDetailIntent)
+            .setAutoCancel(true)
+            .setShowWhen(false)
+            .addAction(getNotificationAction(task.id))
+            .addAction(getNotificationAction(task.id, true))
+            .build()
         notificationManager?.notify(task.id.toInt(), notification)
     }
 

@@ -53,7 +53,7 @@ fun PileTask(
         state = dismissState,
         modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
-            indication = null, // TODO indication only when clicking, not when holding
+            indication = null,
             onClick = { onClick(task) }
         ),
         directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),

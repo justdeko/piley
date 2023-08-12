@@ -9,61 +9,6 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontVariation
-import androidx.compose.ui.text.font.FontWeight
-import com.dk.piley.R
-
-@OptIn(ExperimentalTextApi::class)
-private val regular = Font(
-    R.font.nunitosans_variable,
-    variationSettings = FontVariation.Settings(FontVariation.weight(500))
-)
-
-@OptIn(ExperimentalTextApi::class)
-private val medium = Font(
-    R.font.nunitosans_variable,
-    variationSettings = FontVariation.Settings(FontVariation.weight(500))
-)
-
-@OptIn(ExperimentalTextApi::class)
-private val semiBold = Font(
-    R.font.nunitosans_variable,
-    variationSettings = FontVariation.Settings(FontVariation.weight(600))
-)
-
-@OptIn(ExperimentalTextApi::class)
-private val bold = Font(
-    R.font.nunitosans_variable,
-    variationSettings = FontVariation.Settings(FontVariation.weight(700))
-)
-private val pileyFontFamily = FontFamily(fonts = listOf(regular, medium, semiBold, bold))
-
-private val pileyTypography = AppTypography.copy(
-    headlineLarge = AppTypography.headlineLarge.copy(fontFamily = pileyFontFamily),
-    headlineMedium = AppTypography.headlineMedium.copy(fontFamily = pileyFontFamily),
-    headlineSmall = AppTypography.headlineSmall.copy(
-        fontFamily = pileyFontFamily,
-        fontWeight = FontWeight(500)
-    ),
-    displayLarge = AppTypography.displayLarge.copy(fontFamily = pileyFontFamily),
-    displayMedium = AppTypography.displayMedium.copy(fontFamily = pileyFontFamily),
-    displaySmall = AppTypography.displaySmall.copy(fontFamily = pileyFontFamily),
-    titleLarge = AppTypography.titleLarge.copy(
-        fontFamily = pileyFontFamily,
-        fontWeight = FontWeight(500)
-    ),
-    titleMedium = AppTypography.titleMedium.copy(fontFamily = pileyFontFamily),
-    titleSmall = AppTypography.titleSmall.copy(fontFamily = pileyFontFamily),
-    bodyLarge = AppTypography.bodyLarge.copy(fontFamily = pileyFontFamily),
-    bodyMedium = AppTypography.bodyMedium.copy(fontFamily = pileyFontFamily),
-    bodySmall = AppTypography.bodySmall.copy(fontFamily = pileyFontFamily),
-    labelLarge = AppTypography.labelLarge.copy(fontFamily = pileyFontFamily),
-    labelMedium = AppTypography.labelMedium.copy(fontFamily = pileyFontFamily),
-    labelSmall = AppTypography.labelSmall.copy(fontFamily = pileyFontFamily),
-)
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -149,7 +94,7 @@ fun PileyTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = pileyTypography,
+        typography = AppTypography,
         content = content
     )
 }

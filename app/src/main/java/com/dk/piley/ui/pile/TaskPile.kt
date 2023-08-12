@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.LocalDim
@@ -47,14 +48,18 @@ fun TaskPile(
         itemsIndexed(tasks, key = { _, task -> task.id }) { index, task ->
             // recomposition key of tasks to recalculate possibility of dismiss for last/first item
             val dismissState = remember(tasks) {
-                DismissState(DismissValue.Default, confirmValueChange = {
-                    if (cannotDismiss(pileMode, index, tasks.lastIndex)
-                        && it == DismissValue.DismissedToEnd
-                    ) {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        false
-                    } else true
-                })
+                DismissState(
+                    initialValue = DismissValue.Default,
+                    confirmValueChange = {
+                        if (cannotDismiss(pileMode, index, tasks.lastIndex)
+                            && it == DismissValue.DismissedToEnd
+                        ) {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            false
+                        } else true
+                    },
+                    positionalThreshold = { 300.dp.toPx() }
+                )
             }
             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                 onDelete(task)
@@ -65,7 +70,7 @@ fun TaskPile(
                 modifier = Modifier
                     .animateItemPlacement()
                     .padding(vertical = dim.mini),
-                dismissState = dismissState, // TODO proper threshold (more for delete)
+                dismissState = dismissState,
                 transitionState = taskTransitionStates[index],
                 task = task,
                 onClick = onTaskClick

@@ -64,7 +64,7 @@ class NotificationManager @Inject constructor(
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.logo).setContentTitle(task.title)
+            .setSmallIcon(R.drawable.ic_notification).setContentTitle(task.title)
             .apply {
                 // set content of second row and content of expanded notification
                 if (pileName != null) {

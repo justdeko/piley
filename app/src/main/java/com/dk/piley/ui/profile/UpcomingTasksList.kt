@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +19,8 @@ import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.util.dateTimeString
+import com.dk.piley.util.MediumSpacer
+import com.dk.piley.util.dateTimeStringNewLine
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -28,7 +30,7 @@ fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair
     val dim = LocalDim.current
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         if (pileNameTaskList.isNotEmpty()) {
-            pileNameTaskList.forEach { (pileName, task) ->
+            pileNameTaskList.forEachIndexed { index, (pileName, task) ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -50,13 +52,17 @@ fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair
                             textAlign = TextAlign.Start
                         )
                     }
+                    MediumSpacer()
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = task.reminder?.toLocalDateTime()?.dateTimeString() ?: "",
+                        text = task.reminder?.toLocalDateTime()?.dateTimeStringNewLine() ?: "",
                         color = MaterialTheme.colorScheme.onBackground,
                         style = MaterialTheme.typography.labelLarge,
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.End
                     )
+                }
+                if (index < pileNameTaskList.lastIndex) {
+                    Divider(Modifier.padding(horizontal = dim.large))
                 }
             }
         } else {

@@ -81,7 +81,7 @@ val previewUpcomingTasksList = listOf(
     Pair(
         "Shopping List",
         Task(
-            title = "Buy bananas",
+            title = "Buy bananas with a very long task title that has a lot of symbols",
             reminder = LocalDateTime.parse("2023-08-04T18:02:24").plusDays(2).toInstant()
         )
     ),

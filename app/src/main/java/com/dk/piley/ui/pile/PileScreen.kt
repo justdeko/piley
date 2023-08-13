@@ -162,7 +162,7 @@ private fun PileScreen(
         AddTaskField(
             value = taskTextValue,
             onChange = {
-                if (taskTextValue.text.length < titleCharacterLimit) {
+                if (taskTextValue.text.length <= titleCharacterLimit) {
                     taskTextValue = it
                 }
             },

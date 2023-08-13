@@ -25,6 +25,12 @@ fun LocalDateTime.dateTimeString(): String {
     return this.format(formatter)
 }
 
+fun LocalDateTime.dateTimeStringNewLine(): String {
+    val formatterDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+    val formatterTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+    return "${this.format(formatterDate)}\n${this.format(formatterTime)}"
+}
+
 fun LocalTime.timeString(): String {
     val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
     return this.format(formatter)

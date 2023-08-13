@@ -38,7 +38,6 @@ import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.RequestNotificationPermissionDialog
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.previewUpcomingTasksList
@@ -149,7 +148,6 @@ fun TaskDetailScreen(
                         onEditDesc(it)
                     }
                 )
-                BigSpacer()
                 ReminderInfo(
                     reminderDateTimeText = viewState.reminderDateTimeText,
                     onAddReminder = { scope.launch { drawerState.expand() } },

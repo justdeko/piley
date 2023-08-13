@@ -118,7 +118,7 @@ fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
         Text(
             text = taskText,
             modifier = modifier
-                .padding(horizontal = LocalDim.current.large, vertical = 12.dp)
+                .padding(horizontal = LocalDim.current.medium, vertical = 12.dp)
                 .align(Alignment.CenterHorizontally),
             textAlign = TextAlign.Center
         )
@@ -130,5 +130,13 @@ fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
 fun PileEntryPreview() {
     PileyTheme(useDarkTheme = true) {
         PileEntry(modifier = Modifier.fillMaxWidth(), taskText = "Hey there")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PileEntryLongTextPreview() {
+    PileyTheme(useDarkTheme = true) {
+        PileEntry(modifier = Modifier.fillMaxWidth(), taskText = "Hey there with some very long text that spans multiple lines")
     }
 }

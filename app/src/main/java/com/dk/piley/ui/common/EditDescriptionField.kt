@@ -2,7 +2,7 @@ package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,10 +32,10 @@ fun EditDescriptionField(
                 textAlign = TextAlign.End,
             )
         },
-        shape = CutCornerShape(LocalDim.current.large),
+        shape = MaterialTheme.shapes.large,
         onValueChange = onChange,
         singleLine = false,
-        maxLines = 4,
+        maxLines = 6,
         placeholder = { Text(stringResource(R.string.add_description_hint)) },
     )
 }
@@ -44,7 +44,7 @@ fun EditDescriptionField(
 @Composable
 fun EditDescriptionFieldPreview() {
     PileyTheme(useDarkTheme = true) {
-        val text = "hi there\nsdf\nsdf\nsdfiu\ndf"
+        val text = "hi there\nsdf\nsdf\nsdfiu\ndf\n6\n7 alsodo"
         EditDescriptionField(value = text, onChange = {})
     }
 }

@@ -4,10 +4,10 @@
     android:viewportWidth="114.95"
     android:viewportHeight="113.51"
     android:tint="#FFFFFF">
-  <group android:scaleX="1.6849817"
-      android:scaleY="1.6849817"
-      android:translateX="-39.369324"
-      android:translateY="-38.876137">
+  <group android:scaleX="1.84"
+      android:scaleY="1.84"
+      android:translateX="-48.279"
+      android:translateY="-47.6742">
     <group android:scaleX="0.47666666"
         android:scaleY="0.47069538"
         android:translateX="30.078583"

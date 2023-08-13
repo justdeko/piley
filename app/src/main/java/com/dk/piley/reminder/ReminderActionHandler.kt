@@ -8,8 +8,6 @@ import com.dk.piley.model.user.UserRepository
 import com.dk.piley.util.getPileNameForTaskId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
@@ -24,10 +22,11 @@ class ReminderActionHandler @Inject constructor(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
 ) : IReminderActionHandler {
-    override fun show(taskId: Long): Flow<Task> {
-        return taskRepository.getTaskById(taskId).filterNotNull().take(1)
-            .filter { it.reminder != null && it.status != TaskStatus.DELETED }
+    override fun show(taskId: Long): Flow<Task?> {
+        return taskRepository.getTaskById(taskId).take(1)
             .onEach { task ->
+                // don't show notification if already deleted or no reminder anymore
+                if (task?.reminder == null || task.status == TaskStatus.DELETED) return@onEach
                 val pileName =
                     getPileNameForTaskId(taskId, pileRepository.getPilesWithTasks().first())
                 notificationManager.showNotification(task, pileName)

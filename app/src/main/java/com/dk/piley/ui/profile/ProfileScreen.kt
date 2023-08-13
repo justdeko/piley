@@ -29,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -101,7 +100,6 @@ private fun ProfileScreen(
     onSignOutWithError: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
-    val density = LocalDensity.current
 
     if (viewState.signedOutState == SignOutState.SIGNED_OUT_ERROR) {
         AlertDialogHelper(
@@ -132,7 +130,6 @@ private fun ProfileScreen(
                 InitialSlideIn(
                     direction = SlideDirection.RIGHT,
                     pathLengthInDp = 40,
-                    density = density,
                     initialTransitionStateValue = initialTransitionStateValue
                 ) {
                     IconButton(onClick = onClickSettings) {
@@ -149,7 +146,6 @@ private fun ProfileScreen(
                     InitialSlideIn(
                         direction = SlideDirection.LEFT,
                         pathLengthInDp = 40,
-                        density = density,
                         initialTransitionStateValue = initialTransitionStateValue
                     ) {
                         IconButton(onClick = onSignOut) {
@@ -165,7 +161,6 @@ private fun ProfileScreen(
             InitialSlideIn(
                 direction = SlideDirection.DOWN,
                 pathLengthInDp = 40,
-                density = density,
                 initialTransitionStateValue = initialTransitionStateValue
             ) {
                 UserInfo(name = viewState.userName)
@@ -173,7 +168,6 @@ private fun ProfileScreen(
             InitialSlideIn(
                 direction = SlideDirection.UP,
                 pathLengthInDp = 20,
-                density = density,
                 initialTransitionStateValue = initialTransitionStateValue
             ) {
                 Column {

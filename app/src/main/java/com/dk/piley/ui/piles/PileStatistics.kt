@@ -34,7 +34,8 @@ fun PileStatistics(
     currentCount: Int = 0,
     completedTaskCounts: List<Int> = emptyList(),
     currentDay: LocalDate = LocalDate.now(),
-    onClearStatistics: () -> Unit = {}
+    onClearStatistics: () -> Unit = {},
+    initialGraphTransitionValue: Boolean = true
 ) {
     val dim = LocalDim.current
     OutlineCard(modifier.padding(dim.medium)) {
@@ -68,7 +69,8 @@ fun PileStatistics(
         FrequencyChart(
             modifier = Modifier.padding(horizontal = dim.large),
             weekDayFrequencies = completedTaskCounts,
-            currentDay = currentDay
+            currentDay = currentDay,
+            initialTransitionValue = initialGraphTransitionValue
         )
     }
 }

@@ -55,7 +55,8 @@ fun PileDetailScreen(
         onSetPileMode = { viewModel.setPileMode(it) },
         onSetPileLimit = { viewModel.setPileLimit(it) },
         onClose = { navController.popBackStack() },
-        onClearStatistics = { viewModel.clearStatistics() }
+        onClearStatistics = { viewModel.clearStatistics() },
+        initialStatisticsGraphTransitionValue = false
     )
 }
 
@@ -69,7 +70,8 @@ fun PileDetailScreen(
     onSetPileMode: (PileMode) -> Unit = {},
     onSetPileLimit: (Int) -> Unit = {},
     onClearStatistics: () -> Unit = {},
-    onClose: () -> Unit = {}
+    onClose: () -> Unit = {},
+    initialStatisticsGraphTransitionValue: Boolean = true
 ) {
     val today = LocalDateTime.now().toLocalDate()
     var dialogOpen by remember { mutableStateOf(false) }
@@ -131,7 +133,8 @@ fun PileDetailScreen(
                 currentCount = viewState.currentCount,
                 completedTaskCounts = viewState.completedTaskCounts,
                 currentDay = today,
-                onClearStatistics = { dialogOpen = true }
+                onClearStatistics = { dialogOpen = true },
+                initialGraphTransitionValue = initialStatisticsGraphTransitionValue
             )
             PileDetailSettings(
                 viewState = viewState,

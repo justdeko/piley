@@ -1,5 +1,9 @@
 package com.dk.piley.ui.charts
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +40,8 @@ import org.threeten.bp.LocalDate
 fun FrequencyChart(
     weekDayFrequencies: List<Int>,
     currentDay: LocalDate,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    initialTransitionValue: Boolean = true
 ) {
     val max = weekDayFrequencies.maxOrNull() ?: 0
     val dim = LocalDim.current
@@ -62,26 +68,35 @@ fun FrequencyChart(
                     ) {
                         val boxHeight =
                             if (value == 0) dim.extraLarge else (value / max.toFloat()) * barHeight
-                        Box(
-                            modifier = Modifier
-                                .padding(vertical = dim.medium, horizontal = dim.extraSmall)
-                                .height(boxHeight)
+                        this@Row.AnimatedVisibility(
+                            visibleState = remember {
+                                MutableTransitionState(initialTransitionValue).apply {
+                                    targetState = true
+                                }
+                            },
+                            enter = expandVertically(animationSpec = tween(delayMillis = index * 50))
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .background(
-                                        when {
-                                            value == 0 -> Color.Transparent
-                                            index == 6 -> MaterialTheme.colorScheme.primary
-                                            else -> MaterialTheme.colorScheme.secondary
-                                        },
-                                        RoundedCornerShape(
-                                            topStart = dim.medium,
-                                            topEnd = dim.medium
+                                    .padding(vertical = dim.medium, horizontal = dim.extraSmall)
+                                    .height(boxHeight)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            when {
+                                                value == 0 -> Color.Transparent
+                                                index == 6 -> MaterialTheme.colorScheme.primary
+                                                else -> MaterialTheme.colorScheme.secondary
+                                            },
+                                            RoundedCornerShape(
+                                                topStart = dim.medium,
+                                                topEnd = dim.medium
+                                            )
                                         )
-                                    )
-                                    .fillMaxSize()
-                            )
+                                        .fillMaxSize()
+                                )
+                            }
                         }
                         Box(
                             modifier = Modifier

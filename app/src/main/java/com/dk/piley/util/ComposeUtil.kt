@@ -21,8 +21,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
@@ -62,11 +62,11 @@ enum class SlideDirection { UP, DOWN, LEFT, RIGHT }
 fun InitialSlideIn(
     direction: SlideDirection,
     pathLengthInDp: Int,
-    density: Density,
     initialAlpha: Float = 0f,
     initialTransitionStateValue: Boolean = false,
     content: @Composable () -> Unit
 ) {
+    val density = LocalDensity.current
     // create horizontal or vertical slide transition depending on direction and path length
     val slideTransition = when (direction) {
         SlideDirection.UP -> slideInVertically { with(density) { pathLengthInDp.dp.roundToPx() } }

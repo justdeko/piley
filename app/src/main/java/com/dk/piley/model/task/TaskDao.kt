@@ -9,7 +9,7 @@ interface TaskDao {
     fun getTasks(): Flow<List<Task>>
 
     @Query("SELECT * FROM Task WHERE id=:taskId")
-    fun getTaskById(taskId: Long): Flow<Task>
+    fun getTaskById(taskId: Long): Flow<Task?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task): Long

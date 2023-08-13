@@ -9,6 +9,7 @@ import com.dk.piley.util.getPileNameForTaskId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
@@ -24,7 +25,7 @@ class ReminderActionHandler @Inject constructor(
     private val userRepository: UserRepository,
 ) : IReminderActionHandler {
     override fun show(taskId: Long): Flow<Task> {
-        return taskRepository.getTaskById(taskId).take(1)
+        return taskRepository.getTaskById(taskId).filterNotNull().take(1)
             .filter { it.reminder != null && it.status != TaskStatus.DELETED }
             .onEach { task ->
                 val pileName =
@@ -59,8 +60,13 @@ class ReminderActionHandler @Inject constructor(
         }
     }
 
-    override suspend fun complete(taskId: Long): Flow<Task> {
+    override suspend fun complete(taskId: Long): Flow<Task?> {
         return taskRepository.getTaskById(taskId).take(1).onEach {
+            // task already deleted
+            if (it == null) {
+                notificationManager.dismiss(taskId)
+                return@onEach
+            }
             // set task to done
             // cancelling notification and setting next reminder is handled in repository
             taskRepository.insertTask(
@@ -69,10 +75,15 @@ class ReminderActionHandler @Inject constructor(
         }
     }
 
-    override fun delay(taskId: Long): Flow<Task> {
+    override suspend fun delay(taskId: Long): Flow<Task?> {
         // no task found
         if (taskId.toInt() == -1) return emptyFlow()
-        return taskRepository.getTaskById(taskId).onEach { task ->
+        return taskRepository.getTaskById(taskId).take(1).onEach { task ->
+            // task already deleted
+            if (task == null) {
+                notificationManager.dismiss(taskId)
+                return@onEach
+            }
             userRepository.getSignedInUser().first()?.let { user ->
                 // delay by n minutes
                 val newReminderTime =

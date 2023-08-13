@@ -42,12 +42,15 @@ class TaskDetailViewModel @Inject constructor(
                 }
             }
             // observe changed values and update state accordingly
-            id?.let { repository.getTaskById(it) }?.collect { task ->
-                state.update {
-                    it.copy(
-                        task = task,
-                        reminderDateTimeText = task.reminder?.toLocalDateTime()?.dateTimeString()
-                    )
+            id?.let { repository.getTaskById(it) }?.collect { it ->
+                it?.let { task ->
+                    state.update {
+                        it.copy(
+                            task = task,
+                            reminderDateTimeText = task.reminder?.toLocalDateTime()
+                                ?.dateTimeString()
+                        )
+                    }
                 }
             }
         }

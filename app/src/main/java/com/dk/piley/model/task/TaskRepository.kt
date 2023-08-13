@@ -5,6 +5,7 @@ import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.util.getNextReminderTime
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.Instant
+import timber.log.Timber
 import javax.inject.Inject
 
 class TaskRepository @Inject constructor(
@@ -14,7 +15,7 @@ class TaskRepository @Inject constructor(
 ) {
     fun getTasks(): Flow<List<Task>> = taskDao.getTasks()
 
-    fun getTaskById(taskId: Long): Flow<Task> = taskDao.getTaskById(taskId)
+    fun getTaskById(taskId: Long): Flow<Task?> = taskDao.getTaskById(taskId)
 
     suspend fun insertTask(task: Task): Long {
         val now = Instant.now()
@@ -42,6 +43,7 @@ class TaskRepository @Inject constructor(
         taskDao.deleteCompletedDeletedForPile(pileId)
 
     private suspend fun dismissAlarmAndNotification(task: Task) {
+        Timber.d("dismiss and start reminder from repository")
         reminderManager.cancelReminder(task.id)
         notificationManager.dismiss(task.id)
         // set next reminder if task is recurring

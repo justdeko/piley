@@ -12,6 +12,7 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.usernameCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -108,18 +109,25 @@ class SignInViewModel @Inject constructor(
         // TODO remove intermediate solution when runtime db fixed
         if (isSignIn) {
             setMessage(application.getString(R.string.sign_in_success_message))
-            restartApplication(getApplication())
+            restartApplication(
+                getApplication(),
+                application.getString(R.string.sign_in_success_message)
+            )
         }
     }
 
     /**
-     * Programmatically restart application
+     * Restart application programmatically
+     *
+     * @param context generic context needed to get launch intent for app
+     * @param initialMessage initial message that is shown on app restart
      */
-    private fun restartApplication(context: Context) {
+    private fun restartApplication(context: Context, initialMessage: String?) {
         val packageManager = context.packageManager
         val intent = packageManager.getLaunchIntentForPackage(context.packageName)
         val componentName = intent!!.component
-        val mainIntent = Intent.makeRestartActivityTask(componentName)
+        val mainIntent =
+            Intent.makeRestartActivityTask(componentName).putExtra(INITIAL_MESSAGE, initialMessage)
         context.startActivity(mainIntent)
         Runtime.getRuntime().exit(0)
     }

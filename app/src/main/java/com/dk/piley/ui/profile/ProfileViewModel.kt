@@ -105,8 +105,8 @@ class ProfileViewModel @Inject constructor(
         userRepository.deleteUserTable()
         state.update {
             it.copy(
-                message = application.getString(R.string.sign_out_successful_message),
-                signedOutState = SignOutState.SIGNED_OUT
+                signedOutState = SignOutState.SIGNED_OUT,
+                message = application.getString(R.string.sign_out_successful_message)
             )
         }
     }

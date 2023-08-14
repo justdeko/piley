@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +41,7 @@ import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
+import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.isDarkMode
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,10 +55,12 @@ class MainActivity : AppCompatActivity() {
             setTheme(R.style.Theme_Piley_Dark)
         } else setTheme(R.style.Theme_Piley_Light)
 
+        val initialMessage = intent.extras?.getString(INITIAL_MESSAGE)
+
         super.onCreate(savedInstanceState)
         setContent {
             ThemeHostScreen {
-                Home()
+                Home(initialMessage = initialMessage)
             }
         }
     }
@@ -64,7 +68,8 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun Home(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    initialMessage: String? = null,
 ) {
     val navController = rememberNavController()
     val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
@@ -74,6 +79,10 @@ fun Home(
     // hide navigation bar on detail screen
     navigationBarShown.value =
         navItems.map { it.route }.contains(navBackStackEntry?.destination?.route)
+
+    if (initialMessage != null) {
+        LaunchedEffect(true) { snackbarHostState.showSnackbar(initialMessage) }
+    }
 
     Scaffold(
         modifier = modifier,

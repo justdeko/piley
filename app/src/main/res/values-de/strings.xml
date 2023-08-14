@@ -98,7 +98,7 @@
     <string name="navigate_to_register_button_text">Noch kein Konto? Hier klicken, um zu registrieren</string>
     <string name="user_register_error_message">Fehler beim registrieren</string>
     <string name="sign_in_success_message">Erfolgreich angemeldet!</string>
-    <string name="sign_in_error_message">Fehler beim anmelden</string>
+    <string name="sign_in_error_message">Fehler beim Anmelden</string>
     <string name="edit_reminder_title">Reminder bearbeiten</string>
     <string name="add_reminder_title">Reminder erstellen</string>
     <string name="date_selection_placeholder">Wähle ein Datum aus</string>

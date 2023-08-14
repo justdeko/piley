@@ -32,6 +32,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -182,10 +183,11 @@ private fun PileScreen(
                             )
                         }
                     } else {
+                        onAdd(taskTextValue.text.trim())
                         if (viewState.autoHideEnabled) {
                             focusManager.clearFocus()
+                            defaultKeyboardAction(ImeAction.Done)
                         }
-                        onAdd(taskTextValue.text.trim())
                         taskTextValue = TextFieldValue()
                     }
                 } else {

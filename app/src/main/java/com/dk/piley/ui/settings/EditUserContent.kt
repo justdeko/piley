@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -15,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,6 +39,7 @@ fun EditUserContent(
     var name by rememberSaveable { mutableStateOf(existingName) }
     var oldPassword by rememberSaveable { mutableStateOf("") }
     var newPassword by rememberSaveable { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
     Column(
         modifier.padding(
             horizontal = LocalDim.current.veryLarge,
@@ -89,6 +92,10 @@ fun EditUserContent(
                 imeAction = ImeAction.Done,
                 keyboardType = KeyboardType.Password
             ),
+            keyboardActions = KeyboardActions(onDone = {
+                focusManager.clearFocus()
+                defaultKeyboardAction(ImeAction.Done)
+            }),
         )
         TwoButtonRow(
             onRightClick = {

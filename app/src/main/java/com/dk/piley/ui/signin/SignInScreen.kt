@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
@@ -221,6 +222,10 @@ private fun SignInScreen(
                     imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Password
                 ),
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                    this.defaultKeyboardAction(ImeAction.Done)
+                })
             )
             AnimatedVisibility(
                 viewState.signInState == SignInState.REGISTER

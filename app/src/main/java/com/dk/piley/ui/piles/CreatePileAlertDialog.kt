@@ -1,6 +1,7 @@
 package com.dk.piley.ui.piles
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -9,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +31,7 @@ fun CreatePileAlertDialog(
         modifier = modifier,
         title = { Text(stringResource(R.string.create_pile_dialog_title)) },
         text = {
+            val focusManager = LocalFocusManager.current // dialog has own focus manager
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = pileTitleValue,
@@ -41,6 +44,10 @@ fun CreatePileAlertDialog(
                 shape = MaterialTheme.shapes.large,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                    defaultKeyboardAction(ImeAction.Done)
+                })
             )
         },
         onDismissRequest = onDismiss,

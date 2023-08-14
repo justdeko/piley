@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel

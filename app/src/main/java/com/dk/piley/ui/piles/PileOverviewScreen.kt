@@ -15,7 +15,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,7 +27,6 @@ import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
-import com.jakewharton.threetenabp.AndroidThreeTen
 
 @Composable
 fun PileOverviewScreen(
@@ -141,7 +139,6 @@ fun PileOverviewScreen(
 @PreviewMainScreen
 @Composable
 fun PileOverviewScreenPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val pilesViewState = PilesViewState(previewPileWithTasksList)

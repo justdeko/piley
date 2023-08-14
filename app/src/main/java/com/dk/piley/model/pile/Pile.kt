@@ -3,7 +3,7 @@ package com.dk.piley.model.pile
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dk.piley.model.user.PileMode
-import org.threeten.bp.Instant
+import java.time.Instant
 
 @Entity
 data class Pile(

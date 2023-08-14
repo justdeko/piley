@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +22,6 @@ import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateTimeStringNewLine
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
-import com.jakewharton.threetenabp.AndroidThreeTen
 
 @Composable
 fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair<String, Task>>) {
@@ -80,7 +78,6 @@ fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair
 @Preview
 @Composable
 fun UpcomingTasksListPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         UpcomingTasksList(
             modifier = Modifier.fillMaxWidth(),
@@ -92,7 +89,6 @@ fun UpcomingTasksListPreview() {
 @Preview
 @Composable
 fun UpcomingTasksListEmptyPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         UpcomingTasksList(
             modifier = Modifier.fillMaxWidth(),

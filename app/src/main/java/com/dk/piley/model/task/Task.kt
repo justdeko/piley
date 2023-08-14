@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.dk.piley.model.pile.Pile
-import org.threeten.bp.Instant
+import java.time.Instant
 
 @Entity(
     foreignKeys = [

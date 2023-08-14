@@ -7,8 +7,8 @@ import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.receiver.ReminderAlarmReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.threeten.bp.Instant
 import timber.log.Timber
+import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 

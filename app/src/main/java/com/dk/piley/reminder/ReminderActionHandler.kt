@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
+import java.time.Duration
+import java.time.Instant
 import javax.inject.Inject
 
 class ReminderActionHandler @Inject constructor(

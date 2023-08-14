@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,8 +21,7 @@ import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
-import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 @Composable
 fun BackupInfo(
@@ -67,7 +65,6 @@ fun BackupInfo(
 @Preview
 @Composable
 fun BackupInfoPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         BackupInfo(
             lastBackup = LocalDateTime.now()
@@ -78,7 +75,6 @@ fun BackupInfoPreview() {
 @Preview
 @Composable
 fun BackupInfoNoBackupPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         BackupInfo(
             lastBackup = null

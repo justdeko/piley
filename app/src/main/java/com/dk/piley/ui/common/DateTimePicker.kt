@@ -23,18 +23,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.utcZoneId
-import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.LocalTime
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -127,7 +125,6 @@ fun ReminderTimePicker(
 @Preview
 @Composable
 fun ReminderDatePickerPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         ReminderDatePicker(initialDate = LocalDate.now(), onDismiss = {}, onConfirm = {})
     }
@@ -136,7 +133,6 @@ fun ReminderDatePickerPreview() {
 @Preview
 @Composable
 fun ReminderTimePickerPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         ReminderTimePicker(initialTime = LocalTime.now(), onDismiss = {}, onConfirm = {})
     }

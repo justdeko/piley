@@ -3,9 +3,9 @@ package com.dk.piley.util
 import com.dk.piley.model.remote.backup.ContentDispositionHeaders
 import okhttp3.Credentials
 import okhttp3.Headers
-import org.threeten.bp.Instant
-import org.threeten.bp.format.DateTimeParseException
 import timber.log.Timber
+import java.time.Instant
+import java.time.format.DateTimeParseException
 
 fun credentials(username: String?, password: String?) =
     Credentials.basic(username ?: "", password ?: "")

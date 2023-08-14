@@ -4,8 +4,8 @@ import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.util.getNextReminderTime
 import kotlinx.coroutines.flow.Flow
-import org.threeten.bp.Instant
 import timber.log.Timber
+import java.time.Instant
 import javax.inject.Inject
 
 class TaskRepository @Inject constructor(

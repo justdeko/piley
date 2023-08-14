@@ -13,9 +13,9 @@ import com.dk.piley.model.task.RecurringTimeRange.MONTHLY
 import com.dk.piley.model.task.RecurringTimeRange.WEEKLY
 import com.dk.piley.model.task.RecurringTimeRange.YEARLY
 import com.dk.piley.model.task.Task
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 fun getNextReminderTime(
     lastReminder: LocalDateTime,

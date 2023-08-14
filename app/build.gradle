@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.dk.piley"
-        minSdk 25
+        minSdk 26
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -62,6 +62,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     // room
     implementation "androidx.room:room-runtime:$room_version"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     //noinspection KaptUsageInsteadOfKsp
@@ -89,8 +90,6 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
     // material design components
     implementation 'com.google.android.material:material:1.9.0'
-    // local time and date below API 26
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.6'
     // permissions
     implementation "com.google.accompanist:accompanist-permissions:0.31.5-beta"
     // logging

@@ -17,12 +17,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
-import org.threeten.bp.Duration
-import org.threeten.bp.Instant
 import timber.log.Timber
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.Duration
+import java.time.Instant
 import javax.inject.Inject
 
 /**

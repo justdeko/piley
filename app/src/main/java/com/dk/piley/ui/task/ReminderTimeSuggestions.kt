@@ -12,8 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
-import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -42,7 +41,6 @@ fun ReminderTimeSuggestions(
 @Preview
 @Composable
 fun ReminderTimeSuggestionsPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         ReminderTimeSuggestions()
     }

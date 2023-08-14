@@ -6,7 +6,6 @@ import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -33,19 +32,17 @@ class NotificationManager @Inject constructor(
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(
-                CHANNEL_ID,
-                context.getString(R.string.reminder_notification_channel_title),
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                this.description =
-                    context.getString(R.string.reminder_notification_channel_description)
-                enableLights(true)
-                lightColor = ContextCompat.getColor(context, R.color.md_theme_light_primary)
-                enableVibration(true)
-                notificationManager?.createNotificationChannel(this)
-            }
+        NotificationChannel(
+            CHANNEL_ID,
+            context.getString(R.string.reminder_notification_channel_title),
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            this.description =
+                context.getString(R.string.reminder_notification_channel_description)
+            enableLights(true)
+            lightColor = ContextCompat.getColor(context, R.color.md_theme_light_primary)
+            enableVibration(true)
+            notificationManager?.createNotificationChannel(this)
         }
     }
 

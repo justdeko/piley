@@ -1,6 +1,6 @@
 package com.dk.piley.model.remote.backup
 
-import org.threeten.bp.Instant
+import java.time.Instant
 
 data class ContentDispositionHeaders(
     val filename: String?,

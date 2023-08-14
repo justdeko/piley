@@ -3,9 +3,9 @@ package com.dk.piley.ui.task
 import android.content.Context
 import com.dk.piley.R
 import com.dk.piley.util.timeString
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.LocalTime
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 enum class TimeSuggestion {
     MORNING, AFTERNOON, EVENING

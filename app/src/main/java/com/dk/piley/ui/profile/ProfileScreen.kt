@@ -28,7 +28,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -46,8 +45,7 @@ import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.SlideDirection
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.previewUpcomingTasksList
-import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 
 @Composable
@@ -213,7 +211,6 @@ private fun ProfileScreen(
 @PreviewMainScreen
 @Composable
 fun ProfileScreenPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val state = ProfileViewState(
@@ -234,7 +231,6 @@ fun ProfileScreenPreview() {
 @PreviewMainScreen
 @Composable
 fun ProfileScreenUserOfflinePreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val state = ProfileViewState(

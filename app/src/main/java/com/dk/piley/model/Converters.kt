@@ -1,7 +1,7 @@
 package com.dk.piley.model
 
 import androidx.room.TypeConverter
-import org.threeten.bp.Instant
+import java.time.Instant
 
 class Converters {
     @TypeConverter

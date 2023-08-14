@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.Instant
+import java.time.Instant
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)

@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,8 +19,7 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.toLocalDateTime
-import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.Instant
+import java.time.Instant
 
 @Composable
 fun TaskInfo(
@@ -53,7 +51,6 @@ fun TaskInfo(
 @Preview
 @Composable
 fun TaskInfoPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         TaskInfo(
             Modifier.fillMaxWidth(),

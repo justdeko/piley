@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,8 +34,7 @@ import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
-import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 @Composable
 fun PileDetailScreen(
@@ -159,7 +157,6 @@ fun PileDetailScreen(
 @PreviewMainScreen
 @Composable
 fun PileDetailScreenPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val viewState = PileDetailViewState(

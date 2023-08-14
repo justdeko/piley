@@ -48,7 +48,6 @@ import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
 import com.dk.piley.util.previewTaskList
 import com.dk.piley.util.titleCharacterLimit
-import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -201,7 +200,6 @@ private fun PileScreen(
 @PreviewMainScreen
 @Composable
 fun ProfileScreenPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val pilesWithTasks = previewPileWithTasksList
@@ -231,7 +229,6 @@ private val shakeAnimationSpec: AnimationSpec<Float> = keyframes {
 @PreviewMainScreen
 @Composable
 fun ProfileScreenNoTasksPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val state = PileViewState(
@@ -247,7 +244,6 @@ fun ProfileScreenNoTasksPreview() {
 @PreviewMainScreen
 @Composable
 fun ProfileScreenManyTasksPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme {
         Surface {
             val pilesWithTasks = previewPileWithTasksList

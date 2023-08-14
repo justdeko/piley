@@ -13,7 +13,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
@@ -23,8 +22,7 @@ import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.profile.TaskStats
 import com.dk.piley.ui.theme.PileyTheme
-import com.jakewharton.threetenabp.AndroidThreeTen
-import org.threeten.bp.LocalDate
+import java.time.LocalDate
 
 @Composable
 fun PileStatistics(
@@ -78,7 +76,6 @@ fun PileStatistics(
 @Preview
 @Composable
 fun PileStatisticsEmptyPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         PileStatistics()
     }
@@ -87,7 +84,6 @@ fun PileStatisticsEmptyPreview() {
 @Preview
 @Composable
 fun PileStatisticsPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         PileStatistics(
             completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4),

@@ -64,11 +64,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.LocalTime
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -373,7 +372,6 @@ data class ReminderState(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AddReminderDrawerPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         Surface {
             val drawerState = BottomDrawerState(BottomDrawerValue.Expanded)
@@ -392,7 +390,6 @@ fun AddReminderDrawerPreview() {
 @Preview(showBackground = true)
 @Composable
 fun EditReminderDrawerPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
@@ -412,7 +409,6 @@ fun EditReminderDrawerPreview() {
 @Preview(showBackground = true)
 @Composable
 fun EditReminderDrawerRecurringPreview() {
-    AndroidThreeTen.init(LocalContext.current)
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)

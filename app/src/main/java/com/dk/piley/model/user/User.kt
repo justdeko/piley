@@ -2,7 +2,7 @@ package com.dk.piley.model.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.threeten.bp.Instant
+import java.time.Instant
 
 @Entity
 data class User(

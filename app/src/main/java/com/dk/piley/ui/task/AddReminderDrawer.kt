@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.DropDown
@@ -374,7 +375,11 @@ data class ReminderState(
 fun AddReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
-            val drawerState = BottomDrawerState(BottomDrawerValue.Expanded)
+            val drawerState = BottomDrawerState(
+                BottomDrawerValue.Expanded, density = Density(
+                    LocalContext.current
+                )
+            )
             AddReminderDrawer(
                 content = {
                     Column(modifier = Modifier.fillMaxSize()) {
@@ -393,7 +398,11 @@ fun EditReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
-            val drawerState = BottomDrawerState(BottomDrawerValue.Expanded)
+            val drawerState = BottomDrawerState(
+                BottomDrawerValue.Expanded, density = Density(
+                    LocalContext.current
+                )
+            )
             AddReminderDrawer(
                 initialDate = initialDateTime, content = {
                     Column(modifier = Modifier.fillMaxSize()) {
@@ -412,7 +421,11 @@ fun EditReminderDrawerRecurringPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
-            val drawerState = BottomDrawerState(BottomDrawerValue.Expanded)
+            val drawerState = BottomDrawerState(
+                BottomDrawerValue.Expanded, density = Density(
+                    LocalContext.current
+                )
+            )
             AddReminderDrawer(
                 initialDate = initialDateTime,
                 content = {

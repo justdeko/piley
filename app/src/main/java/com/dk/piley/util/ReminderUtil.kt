@@ -28,10 +28,10 @@ fun getNextReminderTime(
     YEARLY -> lastReminder.plusYears(recurringFrequency.toLong())
 }
 
-fun Task.getNextReminderTime(): Instant =
+fun Task.getNextReminderTime(startingTime: Instant = Instant.now()): Instant =
     getNextReminderTime(
         LocalDateTime.ofInstant(
-            Instant.now(),
+            startingTime,
             ZoneId.systemDefault()
         ), recurringTimeRange, recurringFrequency
     ).toInstantWithOffset()

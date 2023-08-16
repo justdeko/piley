@@ -4,6 +4,7 @@ import okhttp3.Credentials
 import okhttp3.Headers
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.Instant
 
 class ApiUtilTest {
 
@@ -18,8 +19,10 @@ class ApiUtilTest {
     fun testContentDispositionHeaders() {
         val headers = Headers.headersOf(
             "Content-Disposition",
-            "form-data; modification-date==\"fieldName\"; filename=\"filename.db\""
+            "attachment; filename=backupfilename.db; modification-date=\"2023-08-14T15:58:15Z\""
         )
         val contentHeaders = headers.contentDispositionHeaders()
+        assertEquals("backupfilename.db", contentHeaders?.filename)
+        assertEquals(Instant.parse("2023-08-14T15:58:15Z"), contentHeaders?.lastModified)
     }
 }

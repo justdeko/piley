@@ -12,7 +12,7 @@ import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.titleCharacterLimit
-import com.dk.piley.util.toInstant
+import com.dk.piley.util.toInstantWithOffset
 import com.dk.piley.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
@@ -76,7 +76,7 @@ class TaskDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.insertTask(
                 state.value.task.copy(
-                    reminder = reminderState.reminder.toInstant(),
+                    reminder = reminderState.reminder.toInstantWithOffset(),
                     isRecurring = reminderState.recurring,
                     recurringFrequency = reminderState.recurringFrequency,
                     recurringTimeRange = reminderState.recurringTimeRange,
@@ -84,7 +84,7 @@ class TaskDetailViewModel @Inject constructor(
             )
             dismissAlarmAndNotification()
             reminderManager.startReminder(
-                reminderState.reminder.toInstant(),
+                reminderState.reminder.toInstantWithOffset(),
                 state.value.task.id
             )
         }

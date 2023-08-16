@@ -11,12 +11,12 @@ import java.time.format.FormatStyle
 import java.time.format.TextStyle
 import java.util.Locale
 
-fun Instant.toLocalDateTime(): LocalDateTime {
-    return LocalDateTime.ofInstant(this, ZoneId.systemDefault())
+fun Instant.toLocalDateTime(zoneId: ZoneId = ZoneId.systemDefault()): LocalDateTime {
+    return LocalDateTime.ofInstant(this, zoneId)
 }
 
-fun LocalDateTime.toInstant(): Instant {
-    val offset = ZoneId.systemDefault().rules.getOffset(this)
+fun LocalDateTime.toInstantWithOffset(zoneId: ZoneId = ZoneId.systemDefault()): Instant {
+    val offset = zoneId.rules.getOffset(this)
     return this.toInstant(offset)
 }
 

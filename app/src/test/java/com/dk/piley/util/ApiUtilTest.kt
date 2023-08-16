@@ -11,7 +11,7 @@ class ApiUtilTest {
     fun testCredentials() {
         val credentials = credentials("username", "password")
         val expectedCredentials = Credentials.basic("username", "password")
-        assertEquals(credentials, expectedCredentials)
+        assertEquals(expectedCredentials, credentials)
     }
 
     @Test

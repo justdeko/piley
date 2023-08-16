@@ -22,7 +22,7 @@ fun pileFrequenciesForDates(pileWithTasks: PileWithTasks): Map<LocalDate, Int> =
         .groupingBy { it.toLocalDateTime().toLocalDate() } // group by completion date
         .eachCount()
 
-fun pileFrequenciesForDatesWithZeros(frequencyMap: Map<LocalDate, Int>): Map<LocalDate, Int> {
+fun pileFrequenciesForDatesWithZerosForLast7Days(frequencyMap: Map<LocalDate, Int>): Map<LocalDate, Int> {
     val finalMap = mutableMapOf<LocalDate, Int>()
     for (i in 0..6) {
         val date = LocalDateTime.now().minusDays(i.toLong()).toLocalDate()
@@ -34,7 +34,7 @@ fun pileFrequenciesForDatesWithZeros(frequencyMap: Map<LocalDate, Int>): Map<Loc
 }
 
 fun getCompletedTasksForWeekValues(pileWithTasks: PileWithTasks): List<Int> =
-    pileFrequenciesForDatesWithZeros(
+    pileFrequenciesForDatesWithZerosForLast7Days(
         pileFrequenciesForDates(pileWithTasks)
     ).values.toList().reversed()
 
@@ -58,17 +58,17 @@ fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
     val taskDurations = pilesWithTasks.flatMap { pileWithTasks ->
         pileWithTasks.tasks
             .filter { it.status == TaskStatus.DONE }
-            .map(Task::getTaskAverageCompletionDurationInHours)
-    }
+            .map(Task::completionDurationsInHours)
+    }.flatten()
     return if (taskDurations.isNotEmpty()) {
         taskDurations.average().roundToLong()
     } else 0
 }
 
-fun Task.getTaskAverageCompletionDurationInHours(): Long {
+fun Task.completionDurationsInHours(): List<Long> {
     return (
             listOf(createdAt.atZone(ZoneId.systemDefault()).toInstant()) + completionTimes)
         .zipWithNext { a, b ->
             ChronoUnit.HOURS.between(a, b)
-        }.average().roundToLong()
+        }
 }

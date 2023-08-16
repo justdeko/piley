@@ -34,7 +34,7 @@ fun Task.getNextReminderTime(): Instant =
             Instant.now(),
             ZoneId.systemDefault()
         ), recurringTimeRange, recurringFrequency
-    ).toInstant()
+    ).toInstantWithOffset()
 
 @Composable
 fun getFrequencyString(

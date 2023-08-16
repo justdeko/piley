@@ -1,0 +1,26 @@
+# flow.yaml
+
+appId: com.dk.piley
+---
+- launchApp
+- tapOn: "No account? Click here to register"
+- tapOn: "Email"
+- inputRandomEmail
+- pressKey: Enter
+- inputRandomPersonName
+- pressKey: Enter
+- inputText: "123456"
+- pressKey: Enter
+- tapOn:
+    text: "Register"
+    index: 1
+- swipe:
+    direction: LEFT
+- swipe:
+    direction: LEFT
+- swipe:
+    direction: LEFT
+- swipe:
+    direction: LEFT
+- tapOn: "Start Piling"
+- assertVisible: "Daily"

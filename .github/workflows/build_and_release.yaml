@@ -21,16 +21,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bundleRelease assembleRelease
 
-      - name: Upload release assets
-        uses: actions/upload-release-assets@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_paths: |
-            app/build/outputs/bundle/release/*.aab
-            app/build/outputs/apk/release/*.apk
-
   create_release:
     name: Create Release
     needs: build
@@ -38,11 +28,12 @@ jobs:
     steps:
       - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          files: |
+            app/build/outputs/bundle/release/*.aab
+            app/build/outputs/apk/release/*.apk
           tag_name: ${{ github.ref }}
-          release_name: piley ${{ github.ref }}
-          draft: false
-          prerelease: false
+          body: Release ${{ github.ref }} Body

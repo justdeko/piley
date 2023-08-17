@@ -1,4 +1,4 @@
-name: Build and Release piley to Github
+name: Build and Release Android App
 on:
   push:
     tags:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build App
+    name: Build Android App
     runs-on: ubuntu-latest
 
     steps:
@@ -16,6 +16,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Build with Gradle

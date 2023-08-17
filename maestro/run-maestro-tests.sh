@@ -11,7 +11,7 @@ for tool in "${required_tools[@]}"; do
 done
 
 # build debug apk
-(cd .. && ./gradlew assembleDebug -PsourceCompatibility=18 -PtargetCompatibility=18)
+(cd .. && ./gradlew assembleDebug)
 
 # start emulator and wait until online
 emulator -avd Pixel_2_API_33 &

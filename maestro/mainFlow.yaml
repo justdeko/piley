@@ -2,7 +2,7 @@ appId: com.dk.piley
 ---
 - runFlow: registerFlow.yaml
 - runFlow: createTasksAndPilesFlow.yaml
-- runFlow: editSettingsFlow.yaml
+- runFlow: inspectSettingsFlow.yaml
 - runFlow: createRecurringRemindersFlow.yaml
 - runFlow: saveAndLoadBackupFlow.yaml
 - runFlow: signInFlow.yaml

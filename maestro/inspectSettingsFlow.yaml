@@ -1,0 +1,33 @@
+appId: com.dk.piley
+---
+# night mode settings
+- tapOn: "Profile"
+- tapOn: "go to settings"
+- tapOn: "Appearance"
+- tapOn: "Dropdown menu"
+- assertVisible: "Enabled"
+- tapOn: "Dropdown menu"
+- tapOn: "Appearance"
+# pile settings
+- tapOn: "Piles"
+- tapOn: "Dropdown menu"
+- assertVisible: "FIFO"
+- tapOn: "Dropdown menu"
+- assertVisible: "Automatically hide keyboard"
+- tapOn: "Piles"
+# notification settings
+- tapOn: "Notifications"
+- assertVisible: "15"
+- tapOn: "Notifications"
+# backup settings
+- tapOn: "Backup"
+- assertVisible: "2"
+- assertVisible: "1"
+- tapOn: "Backup"
+# user settings
+- tapOn: "User"
+- assertVisible: "Update User"
+- assertVisible: "Start the Tutorial again"
+# end
+- assertVisible: "piley 1.0"
+- back

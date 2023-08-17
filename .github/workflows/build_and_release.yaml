@@ -22,6 +22,14 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bundleRelease assembleRelease
 
+      - name: Upload apk and aab
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release-artifacts
+          path: |
+            app/build/outputs/bundle/release/*.aab
+            app/build/outputs/apk/release/*.apk
+
   create_release:
     name: Create Release
     needs: build
@@ -30,11 +38,7 @@ jobs:
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            app/build/outputs/bundle/release/*.aab
-            app/build/outputs/apk/release/*.apk
-          tag_name: ${{ github.ref }}
-          body: Release ${{ github.ref }} Body
+            app-release-artifacts/*

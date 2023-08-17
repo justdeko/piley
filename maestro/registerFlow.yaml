@@ -1,6 +1,5 @@
 appId: com.dk.piley
 ---
-- launchApp
 - tapOn: "No account? Click here to register"
 - tapOn: "Email"
 - inputText: "john@doe.com"

@@ -1,3 +1,25 @@
 appId: com.dk.piley
 ---
-- tapOn: "No account? Click here to register"
+# edit username
+- tapOn: "Profile"
+- tapOn: "go to settings"
+- tapOn: "User"
+- tapOn: "Update User"
+- tapOn: "John Doe"
+- inputText: " 2"
+- pressKey: Enter
+- pressKey: Enter
+- inputText: "123456"
+- pressKey: Enter
+- tapOn: "Update"
+- back
+- assertVisible: "John Doe 2"
+# delete user
+- tapOn: "go to settings"
+- tapOn: "User"
+- tapOn: "Delete User"
+- tapOn: "Enter your password to confirm"
+- inputText: "123456"
+- pressKey: Enter
+- tapOn: "Delete"
+- assertVisible: "Sign In"

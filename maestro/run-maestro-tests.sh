@@ -1,13 +1,12 @@
 #!/bin/bash
 
-
 required_tools=("emulator" "adb" "docker-compose" "maestro")
 
 for tool in "${required_tools[@]}"; do
-    if ! command -v "$tool" > /dev/null 2>&1; then
-        echo "Error: $tool is not installed or not in the system's PATH."
-        exit 1
-    fi
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    echo "Error: $tool is not installed or not in the system's PATH."
+    exit 1
+  fi
 done
 
 # build debug apk
@@ -22,7 +21,6 @@ echo "Emulator running"
 adb uninstall com.dk.piley
 adb install -r ../app/build/outputs/apk/debug/app-debug.apk
 echo "Installed apk"
-
 
 # start docker desktop if on macos
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -43,7 +41,6 @@ fi
 echo "Starting tests..."
 maestro test mainFlow.yaml
 echo "Tests finished!..."
-
 
 adb emu kill
 

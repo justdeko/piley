@@ -1,3 +1,23 @@
 appId: com.dk.piley
 ---
-- tapOn: "No account? Click here to register"
+# create task
+- tapOn: "Pile"
+- tapOn: "Add your task here"
+- inputText: "task to backup"
+- pressKey: Enter
+# make backup
+- tapOn: "Profile"
+- tapOn: "create a new backup"
+- assertVisible: "Last backup"
+# sign out and sign in
+- tapOn: "sign out"
+- tapOn: "email"
+- inputText: "john@doe.com"
+- pressKey: Enter
+- inputText: "123456"
+- pressKey: Enter
+- tapOn:
+    text: "Sign In"
+    index: 1
+# check if backup up-to-date
+- assertVisible: "task to backup"

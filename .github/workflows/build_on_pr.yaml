@@ -38,6 +38,9 @@ jobs:
 
       - name: Upload test reports
         uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: test-results
           path: ./app/build/reports
+          if-no-files-found: error
+          retention-days: 90

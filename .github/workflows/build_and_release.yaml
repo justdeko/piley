@@ -55,7 +55,7 @@ jobs:
       - name: List files
         run: ls
       - name: Rename APK
-        run: mv ./home/runner/work/piley/piley/app-release.apk ./home/runner/work/piley/piley/piley_${{ github.ref_name }}.apk
+        run: mv app-release.apk piley_${{ github.ref_name }}.apk
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1

@@ -52,8 +52,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: piley
-      - name: List files
-        run: ls
       - name: Rename APK
         run: mv app-release.apk piley_${{ github.ref_name }}.apk
       - name: Create Release
@@ -63,6 +61,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: Release ${{ github.ref_name }}
-          draft: false
+          draft: true
           prerelease: false
-          files: piley/*.apk
+          files: piley_${{ github.ref_name }}.apk

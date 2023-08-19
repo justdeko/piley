@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         with:
           name: piley
-          path: app/build/outputs/apk/release/piley_$GITHUB_REF_NAME.apk
+          path: app/build/outputs/apk/release/piley_${{ github.ref_name }}.apk
 
   release:
     name: Create Release
@@ -55,7 +55,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Release $GITHUB_REF_NAME
+          name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-          files: piley/piley_$GITHUB_REF_NAME.apk
+          files: piley/piley_${{ github.ref_name }}.apk

@@ -5,6 +5,8 @@ import org.junit.Test
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 class ParseUtilTest {
 
@@ -27,25 +29,33 @@ class ParseUtilTest {
     @Test
     fun dateTimeString() {
         val dateTimeString = sampleDateTime.dateTimeString()
-        assertEquals("09/08/2023, 13:14", dateTimeString)
+        val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+        assertEquals(sampleDateTime.format(formatter), dateTimeString)
     }
 
     @Test
     fun dateTimeStringNewLine() {
         val dateTimeString = sampleDateTime.dateTimeStringNewLine()
-        assertEquals("09/08/2023\n13:14", dateTimeString)
+        val formatterDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        val formatterTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+        assertEquals(
+            "${sampleDateTime.format(formatterDate)}\n${sampleDateTime.format(formatterTime)}",
+            dateTimeString
+        )
     }
 
     @Test
     fun timeString() {
         val timeString = sampleDateTime.toLocalTime().timeString()
-        assertEquals("13:14", timeString)
+        val formatterTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
+        assertEquals(sampleDateTime.format(formatterTime), timeString)
     }
 
     @Test
     fun dateString() {
         val timeString = sampleDateTime.toLocalDate().dateString()
-        assertEquals("09/08/2023", timeString)
+        val formatterDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+        assertEquals(sampleDateTime.format(formatterDate), timeString)
     }
 
     @Test

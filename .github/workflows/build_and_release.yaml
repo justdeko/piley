@@ -52,10 +52,11 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: piley
+      - name: Rename APK
+        run: mv piley/app-release.apk piley/piley_${{ github.ref_name }}.apk
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
-        run: mv piley/app-release.apk piley/piley_${{ github.ref_name }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

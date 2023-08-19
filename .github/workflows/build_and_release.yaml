@@ -6,7 +6,7 @@ on:
 
 jobs:
   build_and_sign:
-    name: build and sign
+    name: Build and Sign APK
     runs-on: ubuntu-latest
 
     steps:
@@ -16,6 +16,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Build with Gradle

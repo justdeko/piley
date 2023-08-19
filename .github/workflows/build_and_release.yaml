@@ -35,13 +35,13 @@ jobs:
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
       - name: Verify Signature
-        run: $ANDROID_SDK_ROOT/build-tools/33.0.1/apksigner verify --print-certs app/build/outputs/apk/release/piley_${{ github.ref_name }}.apk
+        run: $ANDROID_SDK_ROOT/build-tools/33.0.1/apksigner verify --print-certs app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v3.1.2
         with:
           name: piley
-          path: app/build/outputs/apk/release/piley_${{ github.ref_name }}.apk
+          path: app/build/outputs/apk/release/app-release.apk
 
   release:
     name: Create Release
@@ -55,6 +55,7 @@ jobs:
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
+        run: mv piley/app-release.apk piley/piley_${{ github.ref_name }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

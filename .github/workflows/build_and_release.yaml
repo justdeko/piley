@@ -1,12 +1,12 @@
-name: Build and Release Android App
+name: Build, Sign, and Release Android App
 on:
   push:
     tags:
       - 'v*'
 
 jobs:
-  build:
-    name: Build Android App
+  build_and_release:
+    name: Build, sign, and release apk
     runs-on: ubuntu-latest
 
     steps:
@@ -22,34 +22,35 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew bundleRelease assembleRelease
 
-      - name: Upload Bundle
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-bundle
-          path: app/build/outputs/bundle/release/*.aab
+      - name: Sign APK
+        run: |
+          echo "${{ secrets.KEYSTORE }}" > keystore.jks
+          jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
+            -keystore keystore.jks \
+            -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+            -keypass ${{ secrets.KEY_PASSWORD }} \
+            path/to/unsigned.apk alias_name
 
-      - name: Upload APK
+
+      - name: Zipalign apk
+        run: zipalign -v 4 path/to/unsigned.apk path/to/signed-aligned.apk
+
+      - name: Upload Signed APK
         uses: actions/upload-artifact@v2
         with:
-          name: apk
-          path: app/build/outputs/apk/release/*.apk
+          name: signed-apk
+          path: path/to/signed-aligned.apk
 
   create_release:
     name: Create Release
-    needs: build
+    needs: build_and_release
     runs-on: ubuntu-latest
     steps:
-      - name: Download Bundle
+      - name: Download Signed APK
         uses: actions/download-artifact@v2
         with:
-          name: app-bundle
-          path: app-bundle
-
-      - name: Download APK
-        uses: actions/download-artifact@v2
-        with:
-          name: apk
-          path: apk
+          name: signed-apk
+          path: signed-apk
 
       - name: Create GitHub Release
         id: create_release
@@ -57,5 +58,4 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            app-bundle/*.aab
-            apk/*.apk
+            signed-apk/*.apk

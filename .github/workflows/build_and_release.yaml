@@ -6,41 +6,41 @@ on:
 
 jobs:
   build_and_sign:
-    name: Build and Sign APK
+    name: Build Signed APK
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
+      - uses: actions/checkout@v3
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew bundleRelease assembleRelease
-
-      - name: Sign APK
-        run: |
-          echo "${{ secrets.KEYSTORE }}" > keystore.jks
-          jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
-            -keystore keystore.jks \
-            -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
-            -keypass ${{ secrets.KEY_PASSWORD }} \
-            app/build/outputs/apk/release/app-release-unsigned.apk alias_name
-
-      - name: Zipalign apk
-        run: zipalign -v 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release-signed-aligned.apk
-
-      - name: Upload Signed APK
-        uses: actions/upload-artifact@v2
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1.2
         with:
-          name: signed-apk
-          path: app/build/outputs/apk/release/app-release-signed-aligned.apk
+          fileName: 'android_keystore.jks'
+          fileDir: '/home/runner/work/piley/piley/app/keystore/'
+          encodedString: ${{ secrets.KEYSTORE }}
 
-  create_release:
+      - name: Build APK
+        run: ./gradlew :app:assembleRelease -x test
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: piley
+          path: app/build/outputs/apk/release/piley_$GITHUB_REF_NAME.apk
+
+  release:
     name: Create Release
     needs: build_and_sign
     runs-on: ubuntu-latest
@@ -48,13 +48,15 @@ jobs:
       - name: Download Signed APK
         uses: actions/download-artifact@v2
         with:
-          name: signed-apk
-          path: signed-apk
-
-      - name: Create GitHub Release
+          name: piley
+      - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: |
-            signed-apk/*.apk
+          tag_name: v$GITHUB_REF_NAME
+          name: Release v$GITHUB_REF_NAME
+          draft: false
+          prerelease: false
+          files: piley/piley_$GITHUB_REF_NAME.apk

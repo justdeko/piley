@@ -34,6 +34,9 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
 
+      - name: Verify Signature
+        run: $ANDROID_SDK_ROOT/build-tools/33.0.1/apksigner verify --print-certs app/build/outputs/apk/release/piley_${{ github.ref_name }}.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v3.1.2
         with:

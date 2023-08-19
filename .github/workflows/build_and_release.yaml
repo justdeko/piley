@@ -55,8 +55,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v$GITHUB_REF_NAME
-          name: Release v$GITHUB_REF_NAME
+          name: Release $GITHUB_REF_NAME
           draft: false
           prerelease: false
           files: piley/piley_$GITHUB_REF_NAME.apk

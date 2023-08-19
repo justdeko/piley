@@ -52,8 +52,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: piley
+      - name: List files
+        run: ls
       - name: Rename APK
-        run: mv piley/app-release.apk piley/piley_${{ github.ref_name }}.apk
+        run: mv ./home/runner/work/piley/piley/app-release.apk ./home/runner/work/piley/piley/piley_${{ github.ref_name }}.apk
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -63,4 +65,4 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-          files: piley/piley_${{ github.ref_name }}.apk
+          files: piley/*.apk

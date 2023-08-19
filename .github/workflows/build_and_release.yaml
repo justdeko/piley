@@ -5,8 +5,8 @@ on:
       - 'v*'
 
 jobs:
-  build_and_release:
-    name: Build, sign, and release apk
+  build_and_sign:
+    name: build and sign
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,6 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
           java-version: '17'
 
       - name: Build with Gradle
@@ -29,17 +28,16 @@ jobs:
             -keystore keystore.jks \
             -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
             -keypass ${{ secrets.KEY_PASSWORD }} \
-            path/to/unsigned.apk alias_name
-
+            app/build/outputs/apk/release/app-release-unsigned.apk alias_name
 
       - name: Zipalign apk
-        run: zipalign -v 4 path/to/unsigned.apk path/to/signed-aligned.apk
+        run: zipalign -v 4 app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/app-release-signed-aligned.apk
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v2
         with:
           name: signed-apk
-          path: path/to/signed-aligned.apk
+          path: app/build/outputs/apk/release/app-release-signed-aligned.apk
 
   create_release:
     name: Create Release

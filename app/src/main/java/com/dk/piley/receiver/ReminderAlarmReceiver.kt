@@ -9,6 +9,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Reminder alarm receiver which receives alarm intents
+ *
+ */
 @AndroidEntryPoint
 class ReminderAlarmReceiver : BroadcastReceiver() {
 

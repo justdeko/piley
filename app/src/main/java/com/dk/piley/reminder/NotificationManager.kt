@@ -19,6 +19,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Notification manager for handling notification actions and interactions
+ *
+ * @property context generic context of the application
+ */
 @Singleton
 class NotificationManager @Inject constructor(
     @ApplicationContext private val context: Context
@@ -31,6 +36,10 @@ class NotificationManager @Inject constructor(
         createNotificationChannel()
     }
 
+    /**
+     * Create notification channel for sending reminder notifications
+     *
+     */
     private fun createNotificationChannel() {
         NotificationChannel(
             CHANNEL_ID,
@@ -46,6 +55,12 @@ class NotificationManager @Inject constructor(
         }
     }
 
+    /**
+     * Show notification for given task
+     *
+     * @param task the task to show the notification for
+     * @param pileName the name of the parent pile
+     */
     fun showNotification(task: Task, pileName: String?) {
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         val taskDetailIntent = TaskStackBuilder.create(context).run {
@@ -84,8 +99,16 @@ class NotificationManager @Inject constructor(
         notificationManager?.notify(task.id.toInt(), notification)
     }
 
+    /**
+     * Get notification action (done or delay) based on the task id and whether it is a done action
+     *
+     * @param taskId task id to perform the action
+     * @param isDoneAction whether the action is "complete task"
+     * @return notification action
+     */
     private fun getNotificationAction(
-        taskId: Long, isDoneAction: Boolean = false
+        taskId: Long,
+        isDoneAction: Boolean = false
     ): NotificationCompat.Action {
         val actionTitle =
             if (isDoneAction) {

@@ -8,6 +8,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Notification executor that executes actions regarding notifications
+ *
+ * @property actionHandler instance of the reminder action handler which is used to determine the notification action
+ */
 @Singleton
 @OptIn(DelicateCoroutinesApi::class)
 class NotificationExecutor @Inject constructor(

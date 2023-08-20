@@ -13,6 +13,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Editable title text element
+ *
+ * @param value text value
+ * @param enabled whether editing is enabled
+ * @param onValueChange on text value change
+ */
 @Composable
 fun EditableTitleText(
     value: String,

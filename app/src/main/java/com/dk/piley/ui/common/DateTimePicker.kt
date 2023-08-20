@@ -34,6 +34,13 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
+/**
+ * Reminder date picker
+ *
+ * @param initialDate initial date picker date
+ * @param onDismiss on dialog dismiss
+ * @param onConfirm on date confirm
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReminderDatePicker(
@@ -66,6 +73,14 @@ fun ReminderDatePicker(
     ) { DatePicker(state = datePickerState) }
 }
 
+/**
+ * Reminder time picker
+ *
+ * @param initialTime initial time picker time
+ * @param is24hFormat whether time picker is in 24h format
+ * @param onDismiss on dialog dismiss
+ * @param onConfirm on time confirm
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReminderTimePicker(

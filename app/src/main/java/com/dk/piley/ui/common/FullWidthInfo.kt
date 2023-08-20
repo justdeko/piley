@@ -10,6 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * Full width info section with label and value
+ *
+ * @param modifier default modifier
+ * @param label info label
+ * @param value info value
+ */
 @Composable
 fun FullWidthInfo(
     modifier: Modifier = Modifier,

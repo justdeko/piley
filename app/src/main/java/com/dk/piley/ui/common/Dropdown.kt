@@ -11,6 +11,18 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
 
+/**
+ * Generic drop down element
+ *
+ * @param modifier default modifier
+ * @param value current drop down value
+ * @param dropdownValues list of dropdown values
+ * @param expanded whether dropdown is expanded
+ * @param label dropdown label
+ * @param onExpandedChange on dropdown collapse/expand
+ * @param onValueClick on selecting a value from the dropdown
+ * @param onDismiss on dropdown dismiss
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDown(

@@ -13,6 +13,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 
 
+/**
+ * Text with checkbox
+ *
+ * @param modifier default modifier
+ * @param description checkbox description
+ * @param checked whether checkbox is checked
+ * @param onChecked on checkbox checked/unchecked
+ */
 @Composable
 fun TextWithCheckbox(
     modifier: Modifier = Modifier,

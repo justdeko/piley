@@ -5,7 +5,10 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
 
-
+/**
+ * Pile dao with interfaces for database operations regarding piles
+ *
+ */
 @Dao
 interface PileDao {
     @Transaction

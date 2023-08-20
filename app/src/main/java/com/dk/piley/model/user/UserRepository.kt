@@ -20,6 +20,13 @@ import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * User repository for performing database operations regarding users
+ *
+ * @property userDao the user dao providing an interface to the database
+ * @property userApi the api interface for performing remote user operations
+ * @property userPrefs data store entity for saving preferences
+ */
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val userApi: UserApi,

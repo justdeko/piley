@@ -4,6 +4,12 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+/**
+ * Stateful view model which contains a mutable state flow of the ui
+ *
+ *
+ * @param initialViewState the initial view state when instantiating the viewModel
+ */
 abstract class StatefulViewModel<T>(
     initialViewState: T,
 ) : ViewModel() {

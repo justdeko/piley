@@ -3,6 +3,10 @@ package com.dk.piley.model
 import androidx.room.TypeConverter
 import java.time.Instant
 
+/**
+ * Converters to convert complex entity types to primitive ones
+ *
+ */
 class Converters {
     @TypeConverter
     fun fromTimeStamp(value: Long?): Instant? {

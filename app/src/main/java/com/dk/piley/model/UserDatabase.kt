@@ -10,6 +10,10 @@ import com.dk.piley.model.user.UserDao
 
 const val USER_DATABASE_NAME = "piley-db-users"
 
+/**
+ * User database containing the user and its preferences
+ *
+ */
 @Database(entities = [User::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {

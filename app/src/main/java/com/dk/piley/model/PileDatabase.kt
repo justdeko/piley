@@ -12,6 +12,10 @@ import com.dk.piley.model.task.TaskDao
 
 const val DATABASE_NAME = "piley-db"
 
+/**
+ * Pile database containing user piles and tasks
+ *
+ */
 @Database(entities = [Pile::class, Task::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PileDatabase : RoomDatabase() {

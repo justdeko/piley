@@ -28,6 +28,12 @@ private const val USER_PREFERENCES = "user_preferences"
 @Module
 object DataStoreModule {
 
+    /**
+     * Provide preferences data store for DI
+     *
+     * @param appContext generic context of application
+     * @return [DataStore] instance
+     */
     @Singleton
     @Provides
     fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {

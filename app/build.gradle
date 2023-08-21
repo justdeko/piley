@@ -100,7 +100,7 @@ dependencies {
     // material design components
     implementation 'com.google.android.material:material:1.9.0'
     // permissions
-    implementation "com.google.accompanist:accompanist-permissions:0.31.5-beta"
+    implementation "com.google.accompanist:accompanist-permissions:0.32.0"
     // logging
     implementation 'com.jakewharton.timber:timber:5.0.1'
     // testing

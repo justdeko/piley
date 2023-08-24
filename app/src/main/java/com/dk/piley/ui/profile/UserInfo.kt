@@ -23,6 +23,12 @@ import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * User information
+ *
+ * @param modifier generic modifier
+ * @param name user name
+ */
 @Composable
 fun UserInfo(modifier: Modifier = Modifier, name: String) {
     Column(

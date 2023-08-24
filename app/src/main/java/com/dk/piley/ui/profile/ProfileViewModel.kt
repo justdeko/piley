@@ -22,6 +22,14 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
+/**
+ * Profile view model
+ *
+ * @property application generic application context
+ * @property pileRepository pile repository instance
+ * @property userRepository user repository instance
+ * @property backupManager user backup manager
+ */
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val application: Application,
@@ -55,6 +63,10 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Sign out user
+     *
+     */
     fun signOut() {
         viewModelScope.launch {
             backupManager.pushBackupToRemoteForUserFlow().collectLatest {
@@ -64,6 +76,7 @@ class ProfileViewModel @Inject constructor(
                     }
 
                     is Resource.Success -> {
+                        // on successful backup upload, sign out user locally
                         signOutLocally()
                     }
 
@@ -76,14 +89,34 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Set progressbar visibility
+     *
+     * @param visible whether the progress bar is visible
+     */
     private fun setShowProgressbar(visible: Boolean) =
         state.update { it.copy(isLoading = visible) }
 
+    /**
+     * Set signed out state
+     *
+     * @param signOutState new sign out state
+     */
     fun setSignedOutState(signOutState: SignOutState) =
         state.update { it.copy(signedOutState = signOutState) }
 
+    /**
+     * Set user message
+     *
+     * @param message message text
+     */
     fun setMessage(message: String?) = state.update { it.copy(message = message) }
 
+    /**
+     * Attempt a backup. Set the progressbar to visible and then perform a backup request.
+     * Based on the result show the corresponding message to the user
+     *
+     */
     fun attemptBackup() {
         viewModelScope.launch {
             setShowProgressbar(true)
@@ -97,8 +130,16 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Sign out after error by signing out locally
+     *
+     */
     fun signOutAfterError() = viewModelScope.launch { signOutLocally() }
 
+    /**
+     * Sign out locally by deleting all tables and setting the signed in user preference to null.
+     *
+     */
     private suspend fun signOutLocally() {
         pileRepository.deletePileData()
         userRepository.setSignedInUser("")

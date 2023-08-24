@@ -48,6 +48,14 @@ import com.dk.piley.util.previewUpcomingTasksList
 import java.time.LocalDateTime
 
 
+/**
+ * Profile screen
+ *
+ * @param modifier generic modifier
+ * @param navController generic navigation controller
+ * @param snackbarHostState host state for displaying snackbars
+ * @param viewModel profile view model
+ */
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
@@ -86,6 +94,18 @@ fun ProfileScreen(
     )
 }
 
+/**
+ * Profile screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState profile view state
+ * @param setSignOutState on set sign out state
+ * @param initialTransitionStateValue initial screen content animation transition value
+ * @param onClickSettings on click settings
+ * @param onBackup on click backup action
+ * @param onSignOut on click sign out
+ * @param onSignOutWithError on click sign out after showing sign out error
+ */
 @Composable
 private fun ProfileScreen(
     modifier: Modifier = Modifier,

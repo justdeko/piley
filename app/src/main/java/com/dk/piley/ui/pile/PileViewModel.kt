@@ -57,6 +57,7 @@ class PileViewModel @Inject constructor(
                                 it.pile.name
                             )
                         }
+                        // initial default pile selection
                         if (!differsFromSelected) {
                             val selectedPileIndex =
                                 idTitleList.indexOfFirst { it.first == user.selectedPileId }
@@ -89,6 +90,11 @@ class PileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Add a new task to the pile
+     *
+     * @param text task title
+     */
     fun add(text: String) {
         viewModelScope.launch {
             taskRepository.insertTask(
@@ -102,23 +108,44 @@ class PileViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Complete task
+     *
+     * @param task task entity
+     */
     fun done(task: Task) {
         viewModelScope.launch {
             taskRepository.insertTask(task.copy(status = TaskStatus.DONE))
         }
     }
 
+    /**
+     * Delete task
+     *
+     * @param task task entity
+     */
     fun delete(task: Task) {
         viewModelScope.launch {
             taskRepository.insertTask(task.copy(status = TaskStatus.DELETED))
         }
     }
 
+    /**
+     * On pile selection changed
+     *
+     * @param index selected pile index
+     * @param setDiffersFromSelected whether pile differs from currently selected pile
+     */
     fun onPileChanged(index: Int, setDiffersFromSelected: Boolean = true) {
         differsFromSelected = setDiffersFromSelected
         _selectedPileIndex.update { index }
     }
 
+    /**
+     * Set user message
+     *
+     * @param message message text
+     */
     fun setMessage(message: String?) {
         state.update { it.copy(message = message) }
     }

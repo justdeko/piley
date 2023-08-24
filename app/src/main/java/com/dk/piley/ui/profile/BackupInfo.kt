@@ -23,6 +23,13 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
 import java.time.LocalDateTime
 
+/**
+ * User backup info section
+ *
+ * @param modifier generic modifier
+ * @param lastBackup last backup timestamp
+ * @param onClickBackup on click backup action
+ */
 @Composable
 fun BackupInfo(
     modifier: Modifier = Modifier,

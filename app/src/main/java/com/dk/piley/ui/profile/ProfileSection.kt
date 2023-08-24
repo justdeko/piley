@@ -8,6 +8,14 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.common.TitleHeader
 
+/**
+ * User profile section
+ *
+ * @param modifier generic modifier
+ * @param title section title
+ * @param icon section icon
+ * @param content section content
+ */
 @Composable
 fun ProfileSection(
     modifier: Modifier = Modifier,

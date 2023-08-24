@@ -18,6 +18,14 @@ import com.dk.piley.ui.settings.SliderSettingsItem
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.roundedOutline
 
+/**
+ * Pile detail settings section
+ *
+ * @param modifier generic modifier
+ * @param viewState pile detail view state
+ * @param onSetPileMode on set pile completion mode
+ * @param onSetPileLimit on set pile task limit
+ */
 @Composable
 fun PileDetailSettings(
     modifier: Modifier = Modifier,

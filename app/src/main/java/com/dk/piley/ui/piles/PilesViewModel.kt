@@ -13,6 +13,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Piles view model
+ *
+ * @property pileRepository pile repository instance
+ * @property userRepository user repository instance
+ */
 @HiltViewModel
 class PilesViewModel @Inject constructor(
     private val pileRepository: PileRepository,
@@ -34,6 +40,11 @@ class PilesViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Create pile
+     *
+     * @param name pile name
+     */
     fun createPile(name: String) {
         viewModelScope.launch {
             signedInUserFlow.take(1).collect { user ->
@@ -47,6 +58,11 @@ class PilesViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Delete pile
+     *
+     * @param pile pile entity
+     */
     fun deletePile(pile: Pile) {
         viewModelScope.launch {
             signedInUserFlow.take(1).collect {
@@ -56,6 +72,11 @@ class PilesViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Set default selected pile
+     *
+     * @param id pile id
+     */
     fun setSelectedPile(id: Long) {
         state.update {
             it.copy(selectedPileId = id)

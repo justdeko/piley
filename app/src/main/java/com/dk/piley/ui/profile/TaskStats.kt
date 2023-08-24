@@ -20,6 +20,17 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer
 
+/**
+ * Task statistics
+ *
+ * @param modifier generic modifier
+ * @param doneCount completed task count
+ * @param deletedCount deleted task count
+ * @param currentCount current task count
+ * @param averageTaskDuration average task completion duration
+ * @param biggestPile name of the pile with the largest amount of tasks
+ * @param tasksOnly whether only statistics about the tasks themselves should be shown
+ */
 @Composable
 fun TaskStats(
     modifier: Modifier = Modifier,

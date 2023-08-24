@@ -20,6 +20,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Pile detail view model
+ *
+ * @property pileRepository pile repository instance
+ * @property taskRepository task repository instance
+ * @property userRepository user repository instance
+ *
+ * @param savedStateHandle saved state handle to receive pile id passed through navigation
+ */
 @HiltViewModel
 class PileDetailViewModel @Inject constructor(
     private val pileRepository: PileRepository,

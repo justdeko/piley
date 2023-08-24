@@ -41,6 +41,16 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.TinySpacer
 import com.dk.piley.util.defaultPadding
 
+/**
+ * Pile card
+ *
+ * @param modifier generic modifier
+ * @param pileWithTasks pile entity with tasks
+ * @param selected whether this pile is selected
+ * @param onSelectPile on pile selection
+ * @param onClick on card click
+ * @param transitionState card animation transition state
+ */
 @Composable
 fun PileCard(
     modifier: Modifier = Modifier,

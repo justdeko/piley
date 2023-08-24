@@ -24,6 +24,11 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 
 
+/**
+ * App info
+ *
+ * @param modifier generic modifier
+ */
 @Composable
 fun AppInfo(modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current

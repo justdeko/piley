@@ -28,6 +28,13 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
 
+/**
+ * Pile overview screen
+ *
+ * @param modifier generic modifier
+ * @param navController generic nav controller
+ * @param viewModel generic piles view model
+ */
 @Composable
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
@@ -54,6 +61,17 @@ fun PileOverviewScreen(
     )
 }
 
+/**
+ * Pile overview screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState piles view state
+ * @param pileTransitionStates pile animation transition states
+ * @param onCreatePile on create new pile
+ * @param onDeletePile on delete pile
+ * @param onSelectPile on select pile as default
+ * @param onPileClick on click pile
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileOverviewScreen(

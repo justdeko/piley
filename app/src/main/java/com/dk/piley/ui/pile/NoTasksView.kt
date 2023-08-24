@@ -23,6 +23,12 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 
+/**
+ * "No tasks" view
+ *
+ * @param modifier generic modifier
+ * @param noTasksYet whether the view is for when no tasks exist yet in the pile
+ */
 @Composable
 fun NoTasksView(
     modifier: Modifier = Modifier,

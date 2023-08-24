@@ -19,8 +19,15 @@ import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.dk.piley.R
 
+/**
+ * Represents a screen of the app in terms of destination
+ *
+ * @property route screen navigation route
+ * @property titleResource screen title resource id
+ * @property icon screen icon
+ */
 sealed class Screen(
-    val route: String, @StringRes val resourceId: Int, val icon: Pair<ImageVector, ImageVector>
+    val route: String, @StringRes val titleResource: Int, val icon: Pair<ImageVector, ImageVector>
 ) {
     object Pile : Screen(
         "pile", R.string.pile, Pair(Icons.Outlined.Home, Icons.Filled.Home)

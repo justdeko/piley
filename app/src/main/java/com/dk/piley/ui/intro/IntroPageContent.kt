@@ -24,6 +24,15 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.roundedOutline
 
+/**
+ * Intro page content
+ *
+ * @param modifier generic modifier
+ * @param introPage intro page object with title and image resource ids
+ * @param showButton whether the intro page has a button
+ * @param buttonText intro page button text
+ * @param onClickButton intro page button action
+ */
 @Composable
 fun IntroPageContent(
     modifier: Modifier = Modifier,

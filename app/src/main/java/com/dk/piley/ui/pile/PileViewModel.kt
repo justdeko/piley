@@ -20,6 +20,14 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import javax.inject.Inject
 
+/**
+ * Pile view model
+ *
+ * @property taskRepository task repository instance
+ * @property pileRepository pile repository instance
+ * @property userRepository user repository instance
+ * @property backupManager backup manager instance
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PileViewModel @Inject constructor(

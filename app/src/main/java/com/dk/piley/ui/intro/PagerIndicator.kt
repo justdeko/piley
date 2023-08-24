@@ -21,6 +21,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Pager indicator for intro screen
+ *
+ * @param modifier generic modifier
+ * @param pagerState pager indicator state
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {

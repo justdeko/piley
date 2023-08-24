@@ -37,6 +37,15 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.confirm_green
 
+/**
+ * Pile task within a pile
+ *
+ * @param modifier generic modifier
+ * @param dismissState dismiss state of task card
+ * @param task task entity
+ * @param transitionState animation transition state of task card
+ * @param onClick on task click
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PileTask(

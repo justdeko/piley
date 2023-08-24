@@ -4,6 +4,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.dk.piley.R
 
+/**
+ * Intro page representing pages for the welcome screen
+ *
+ * @property imageResource intro page image resource id
+ * @property titleResource intro page title resource id
+ * @property descriptionResource intro page description resource id
+ * @property isScreenshot whether the intro page is that of a screenshot
+ */
 sealed class IntroPage(
     @DrawableRes val imageResource: Int,
     @StringRes val titleResource: Int,

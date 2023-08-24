@@ -18,6 +18,14 @@ import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Text field for adding a new task
+ *
+ * @param modifier generic modifier
+ * @param value task title text field value
+ * @param onChange on task title change
+ * @param onDone on task title submit
+ */
 @Composable
 fun AddTaskField(
     modifier: Modifier = Modifier,

@@ -30,6 +30,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Pile title pager
+ *
+ * @param modifier generic modifier
+ * @param pileTitleList list of pile titles
+ * @param selectedPageIndex selected page index of pager
+ * @param onPageChanged on pile title pager page change
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PileTitlePager(

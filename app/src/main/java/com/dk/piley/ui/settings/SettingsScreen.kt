@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -45,6 +44,14 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.navigateClearBackstack
 
+/**
+ * Settings screen
+ *
+ * @param modifier generic modifier
+ * @param navController generic nav controller
+ * @param snackbarHostState host state for showing snackbars
+ * @param viewModel Settings view model
+ */
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
@@ -87,7 +94,24 @@ fun SettingsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/**
+ * Settings screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState settings view state
+ * @param onNightModeChange on change night mode setting
+ * @param onDynamicColorChange on change dynamic color enabled setting
+ * @param onPileModeChange on change default pile mode setting
+ * @param onResetPileModes on reset pile modes for all piles to free
+ * @param onAutoHideKeyboardChange on change auto hide keyboard enabled setting
+ * @param onReminderDelayChange on change default reminder delay setting
+ * @param onBackupFrequencyChange on change backup frequency setting
+ * @param onPullBackupPeriodChange on change query backup frequency setting
+ * @param onEditUser on edit user
+ * @param onDeleteUser on delete user
+ * @param onCloseSettings on close settings screen
+ * @param onStartTutorial on restart tutorial
+ */
 @Composable
 private fun SettingsScreen(
     modifier: Modifier = Modifier,

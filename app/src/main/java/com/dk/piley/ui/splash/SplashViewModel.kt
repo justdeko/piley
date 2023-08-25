@@ -13,6 +13,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Splash view model
+ *
+ * @property userRepository user repository instance
+ * @property backupManager user backup manager instance
+ */
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val userRepository: UserRepository,
@@ -25,6 +31,7 @@ class SplashViewModel @Inject constructor(
             if (userEmail.isNotBlank()) {
                 collectState(
                     combine(loadingBackupFlow()) { (loadingBackup) ->
+                        // while loading backup, set state to loading
                         if (loadingBackup) {
                             Timber.d("loading backup..")
                             SplashViewState(InitState.LOADING_BACKUP)
@@ -40,6 +47,11 @@ class SplashViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Loading backup flow that syncs the backup for the user and emits whether it is still loading
+     *
+     * @return true if the backup is still being loaded, false if the backup was loaded successfully or unsuccessfully
+     */
     private suspend fun loadingBackupFlow(): Flow<Boolean> = flow {
         backupManager.syncBackupToLocalForUserFlow().collect {
             when (it) {

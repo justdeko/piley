@@ -29,6 +29,13 @@ import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
 
+/**
+ * Delete user content
+ *
+ * @param modifier generic modifier
+ * @param onConfirm on delete confirm
+ * @param onCancel on delete cancel
+ */
 @Composable
 fun DeleteUserContent(
     modifier: Modifier = Modifier,

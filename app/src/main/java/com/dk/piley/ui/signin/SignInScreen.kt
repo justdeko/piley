@@ -51,6 +51,14 @@ import com.dk.piley.util.isValidEmail
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.usernameCharacterLimit
 
+/**
+ * Sign in screen
+ *
+ * @param modifier generic modifier
+ * @param navController generic nav controller
+ * @param snackbarHostState host state to show snackbars
+ * @param viewModel sign in view model
+ */
 @Composable
 fun SignInScreen(
     modifier: Modifier = Modifier,
@@ -105,6 +113,18 @@ fun SignInScreen(
     )
 }
 
+/**
+ * Sign in screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState sign in view state
+ * @param onEmailChange on input email change
+ * @param onUsernameChange on input name change
+ * @param onPasswordChange on input password change
+ * @param onAttemptSignIn on attempt sign in (sign in/register button clicked)
+ * @param onChangeRegister on set to register view
+ * @param onChangeOfflineRegister on set offline registration
+ */
 @Composable
 private fun SignInScreen(
     modifier: Modifier = Modifier,

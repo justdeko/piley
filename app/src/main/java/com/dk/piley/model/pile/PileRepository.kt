@@ -34,6 +34,12 @@ class PileRepository @Inject constructor(
         return pileDao.deleteAllPiles()
     }
 
+    /**
+     * Reset pile modes to a specific default pile mode
+     *
+     * @param defaultPileMode the default pile mode (free if not specified)
+     * @return query integer
+     */
     suspend fun resetPileModes(defaultPileMode: PileMode = PileMode.FREE): Int {
         return pileDao.updateAllPileModes(defaultPileMode)
     }

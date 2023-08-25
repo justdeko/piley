@@ -29,6 +29,14 @@ import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.usernameCharacterLimit
 
+/**
+ * Edit user dialog content
+ *
+ * @param modifier generic modifier
+ * @param existingName existing user name to set as initial value
+ * @param onConfirm on confirm user edit
+ * @param onCancel on cancel user edit
+ */
 @Composable
 fun EditUserContent(
     modifier: Modifier = Modifier,

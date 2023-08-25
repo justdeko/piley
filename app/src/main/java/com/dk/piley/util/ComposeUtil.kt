@@ -23,10 +23,21 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 
+/**
+ * Alert dialog helper to display and handle alert dialogs
+ *
+ * @param title dialog title
+ * @param description dialog description
+ * @param confirmText dialog confirm button text
+ * @param dismissText dialog dismiss button text
+ * @param onDismiss on dialog dismiss
+ * @param onConfirm on click dialog confirm button
+ */
 @Composable
 fun AlertDialogHelper(
     title: String,
@@ -49,6 +60,12 @@ fun AlertDialogHelper(
     )
 }
 
+/**
+ * Indefinite progress bar
+ *
+ * @param modifier generic modifier
+ * @param visible whether the progress bar is visible
+ */
 @Composable
 fun IndefiniteProgressBar(modifier: Modifier = Modifier, visible: Boolean = false) {
     AnimatedVisibility(visible) {
@@ -58,6 +75,15 @@ fun IndefiniteProgressBar(modifier: Modifier = Modifier, visible: Boolean = fals
 
 enum class SlideDirection { UP, DOWN, LEFT, RIGHT }
 
+/**
+ * Initial slide in animation
+ *
+ * @param direction direction into which the slide in happens
+ * @param pathLengthInDp slide in path length in [Dp] units
+ * @param initialAlpha initial alpha value of animated content
+ * @param initialTransitionStateValue initial animation transition state value
+ * @param content content to perform the animation for
+ */
 @Composable
 fun InitialSlideIn(
     direction: SlideDirection,
@@ -86,9 +112,20 @@ fun InitialSlideIn(
     }
 }
 
+/**
+ * Generate list of preview transition states
+ *
+ * @param T list of generic entities to get the preview transition states for
+ * @param initial initial value to set for each transition state
+ * @return a list of transition states of type [T] for with the specified initial value
+ */
 fun <T> List<T>.getPreviewTransitionStates(initial: Boolean = true) =
     List(this.size) { MutableTransitionState(initial) }
 
+/**
+ * Rounded outline modifier
+ *
+ */
 fun Modifier.roundedOutline() = composed {
     clip(MaterialTheme.shapes.large)
         .border(
@@ -97,20 +134,36 @@ fun Modifier.roundedOutline() = composed {
         )
 }
 
+/**
+ * Default padding modifier
+ *
+ */
 fun Modifier.defaultPadding() = composed {
     padding(LocalDim.current.large)
 }
 
+/**
+ * Big spacer with large dimen size
+ *
+ */
 @Composable
 fun BigSpacer() {
     Spacer(modifier = Modifier.size(LocalDim.current.large))
 }
 
+/**
+ * Medium spacer with medium dimen size
+ *
+ */
 @Composable
 fun MediumSpacer() {
     Spacer(modifier = Modifier.size(LocalDim.current.medium))
 }
 
+/**
+ * Tiny spacer with small dimen size
+ *
+ */
 @Composable
 fun TinySpacer() {
     Spacer(modifier = Modifier.size(LocalDim.current.small))

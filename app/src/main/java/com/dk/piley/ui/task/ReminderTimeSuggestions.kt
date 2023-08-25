@@ -14,6 +14,12 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import java.time.LocalDateTime
 
+/**
+ * Reminder time suggestions list
+ *
+ * @param modifier generic modifier
+ * @param onSelectTimeSuggestion on time suggestion item selected
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ReminderTimeSuggestions(

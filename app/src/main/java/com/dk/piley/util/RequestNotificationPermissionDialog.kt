@@ -12,6 +12,12 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 
+/**
+ * Request notification permission dialog
+ *
+ * @param rationaleOpen whether the permission rationale is open
+ * @param onDismiss on dialog dismiss
+ */
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable

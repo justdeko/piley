@@ -75,6 +75,13 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+/**
+ * Main piley theme
+ *
+ * @param useDarkTheme whether dark theme is enabled. uses system setting if not specified
+ * @param dynamicColorEnabled whether dynamic theming/coloring is enabled
+ * @param content theme content
+ */
 @Composable
 fun PileyTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),

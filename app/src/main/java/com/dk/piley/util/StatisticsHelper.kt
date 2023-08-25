@@ -11,6 +11,12 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.roundToLong
 
+/**
+ * Get frequencies of completed tasks for dates
+ *
+ * @param pileWithTasks pile with tasks to get the frequencies for
+ * @return map of date keys and completed task frequency values
+ */
 fun pileFrequenciesForDates(pileWithTasks: PileWithTasks): Map<LocalDate, Int> =
     pileWithTasks.tasks
         .filter {
@@ -22,6 +28,12 @@ fun pileFrequenciesForDates(pileWithTasks: PileWithTasks): Map<LocalDate, Int> =
         .groupingBy { it.toLocalDateTime().toLocalDate() } // group by completion date
         .eachCount()
 
+/**
+ * Get completed task frequencies for the last 7 days
+ *
+ * @param frequencyMap calculated frequency map of completed tasks using [pileFrequenciesForDates]
+ * @return map of date keys within the last 7 days and completed task counts as values
+ */
 fun pileFrequenciesForDatesWithZerosForLast7Days(frequencyMap: Map<LocalDate, Int>): Map<LocalDate, Int> {
     val finalMap = mutableMapOf<LocalDate, Int>()
     for (i in 0..6) {
@@ -33,12 +45,24 @@ fun pileFrequenciesForDatesWithZerosForLast7Days(frequencyMap: Map<LocalDate, In
     return finalMap
 }
 
+/**
+ * Get list of completed task counts for the past 7 days
+ *
+ * @param pileWithTasks pile with tasks to calculate the completion counts for
+ * @return a list of completion frequencies for each of the past 7 days in reverse (starting with today)
+ */
 fun getCompletedTasksForWeekValues(pileWithTasks: PileWithTasks): List<Int> =
     pileFrequenciesForDatesWithZerosForLast7Days(
         pileFrequenciesForDates(pileWithTasks)
     ).values.toList().reversed()
 
 
+/**
+ * Get list of 3 most upcoming/urgent tasks (nearest reminder times)
+ *
+ * @param pilesWithTasks list of piles with tasks to get the tasks from
+ * @return list of pairs containing the pile name and the task
+ */
 fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Task>> =
     pilesWithTasks.flatMap { pileWithTasks ->
         pileWithTasks.tasks
@@ -49,11 +73,24 @@ fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Tas
             .map { Pair(pileWithTasks.pile.name, it) }
     }.sortedBy { it.second.reminder }.take(3)
 
+/**
+ * Get the name of the pile with the most uncompleted tasks
+ *
+ * @param pilesWithTasks list of piles with tasks to find the biggest pile in
+ * @param context generic context to get string resources
+ * @return name of the biggest pile or "None" if no pile found or list is empty
+ */
 fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>, context: Context): String =
     pilesWithTasks.maxByOrNull { pileWithTasks ->
         pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }
     }?.pile?.name ?: context.getString(R.string.no_pile)
 
+/**
+ * Get average task completion time in hours
+ *
+ * @param pilesWithTasks list of piles with tasks to calculate the average task completion time for
+ * @return average completion time in hours or 0 if no completed tasks found
+ */
 fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
     val taskDurations = pilesWithTasks.flatMap { pileWithTasks ->
         pileWithTasks.tasks
@@ -65,6 +102,11 @@ fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
     } else 0
 }
 
+/**
+ * Get completion durations in hours for a specific task
+ *
+ * @return list of durations between completion times in hours
+ */
 fun Task.completionDurationsInHours(): List<Long> {
     return (
             listOf(createdAt.atZone(ZoneId.systemDefault()).toInstant()) + completionTimes)

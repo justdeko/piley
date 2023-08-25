@@ -7,10 +7,24 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
+/**
+ * Time suggestion enum representing the suggested reminder value,
+ * for example (tomorrow) morning, afternoon, etc.
+ *
+ */
 enum class TimeSuggestion {
     MORNING, AFTERNOON, EVENING
 }
 
+/**
+ * Get label and date given the time suggestion enum value
+ * Calculated using current time so no times in the past are shown,
+ * for example today morning despite it being afternoon
+ *
+ * @param context generic context
+ * @param currentDateTime current date time
+ * @return pair of the suggested time string (e.g. "Tomorrow Afternoon (13:00)") and its corresponding [LocalDateTime] value
+ */
 fun TimeSuggestion.getLabelAndDate(
     context: Context,
     currentDateTime: LocalDateTime

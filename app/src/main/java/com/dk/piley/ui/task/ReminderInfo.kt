@@ -27,6 +27,16 @@ import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.roundedOutline
 
+/**
+ * Reminder info section
+ *
+ * @param modifier generic modifier
+ * @param reminderDateTimeText formatted date and time text of reminder
+ * @param isRecurring whether reminder is recurring
+ * @param recurringTimeRange time range of recurring reminder
+ * @param recurringFrequency frequency of recurring reminder
+ * @param onAddReminder on add reminder click
+ */
 @Composable
 fun ReminderInfo(
     modifier: Modifier = Modifier,

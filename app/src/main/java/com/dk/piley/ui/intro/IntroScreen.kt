@@ -17,7 +17,12 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 
-
+/**
+ * Intro screen
+ *
+ * @param modifier generic modifier
+ * @param navController generic nav controller
+ */
 @Composable
 fun IntroScreen(
     modifier: Modifier = Modifier,
@@ -32,6 +37,12 @@ fun IntroScreen(
     )
 }
 
+/**
+ * Intro screen content
+ *
+ * @param modifier generic modifier
+ * @param onFinish on intro screen completion
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IntroScreen(

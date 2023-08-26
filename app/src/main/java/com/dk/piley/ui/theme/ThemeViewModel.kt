@@ -9,11 +9,17 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Theme view model
+ *
+ * @property userRepository user repository instance
+ */
 @HiltViewModel
 class ThemeViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : StatefulViewModel<ThemeViewState>(ThemeViewState()) {
 
+    // observe user and update theme accordingly if user settings change
     init {
         viewModelScope.launch {
             val userFlow = userRepository.getSignedInUserNotNullFlow()

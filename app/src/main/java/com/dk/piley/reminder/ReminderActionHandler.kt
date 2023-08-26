@@ -15,6 +15,15 @@ import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
 
+/**
+ * Reminder action handler that performs the necessary operations given the specific action
+ *
+ * @property reminderManager instance of reminder manager to set and dismiss alarms
+ * @property notificationManager instance of notification manager to set and dismiss notifications
+ * @property taskRepository instance of task repository to perform db operations regarding tasks
+ * @property pileRepository instance of pile repository to perform db operations regarding piles
+ * @property userRepository instance of user repository to perform db operations regarding user
+ */
 class ReminderActionHandler @Inject constructor(
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
@@ -22,6 +31,13 @@ class ReminderActionHandler @Inject constructor(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
 ) : IReminderActionHandler {
+
+    /**
+     * Show the notification for a specific task id
+     *
+     * @param taskId task id to show the notification for
+     * @return flow representing the show operation
+     */
     override fun show(taskId: Long): Flow<Task?> {
         return taskRepository.getTaskById(taskId).take(1)
             .onEach { task ->
@@ -39,6 +55,11 @@ class ReminderActionHandler @Inject constructor(
             }
     }
 
+    /**
+     * Restart all task reminders
+     *
+     * @return flow representing the restart operation
+     */
     override fun restartAll(): Flow<List<Task>> {
         return taskRepository.getTasks().take(1).onEach { taskList ->
             taskList.filter {
@@ -59,6 +80,12 @@ class ReminderActionHandler @Inject constructor(
         }
     }
 
+    /**
+     * Complete the task for a given id
+     *
+     * @param taskId task id to perform the completion for
+     * @return
+     */
     override suspend fun complete(taskId: Long): Flow<Task?> {
         return taskRepository.getTaskById(taskId).take(1).onEach {
             // task already deleted
@@ -74,6 +101,12 @@ class ReminderActionHandler @Inject constructor(
         }
     }
 
+    /**
+     * Delay reminder of a specific task
+     *
+     * @param taskId task id of the task to perform the delay for
+     * @return flow representing the delay operation
+     */
     override suspend fun delay(taskId: Long): Flow<Task?> {
         // no task found
         if (taskId.toInt() == -1) return emptyFlow()

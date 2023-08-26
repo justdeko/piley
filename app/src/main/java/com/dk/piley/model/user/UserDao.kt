@@ -3,6 +3,11 @@ package com.dk.piley.model.user
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * User dao with interfaces for database operations regarding users
+ *
+ * @constructor Create empty User dao
+ */
 @Dao
 interface UserDao {
     @Query("SELECT * FROM User")

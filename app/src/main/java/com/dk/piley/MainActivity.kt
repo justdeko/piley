@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             setTheme(R.style.Theme_Piley_Dark)
         } else setTheme(R.style.Theme_Piley_Light)
 
+        // set initial user message
         val initialMessage = intent.extras?.getString(INITIAL_MESSAGE)
 
         super.onCreate(savedInstanceState)
@@ -64,6 +65,12 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+/**
+ * Home representing main app view
+ *
+ * @param modifier generic modifier
+ * @param initialMessage initial user message
+ */
 @Composable
 fun Home(
     modifier: Modifier = Modifier,
@@ -74,10 +81,12 @@ fun Home(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    // hide navigation bar on detail screen
+
+    // hide navigation bar on screens that are not in the main view
     navigationBarShown.value =
         navItems.map { it.route }.contains(navBackStackEntry?.destination?.route)
 
+    // display initial message if not null
     if (initialMessage != null) {
         LaunchedEffect(true) { snackbarHostState.showSnackbar(initialMessage) }
     }

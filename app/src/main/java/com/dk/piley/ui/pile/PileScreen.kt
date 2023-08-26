@@ -50,6 +50,14 @@ import com.dk.piley.util.previewTaskList
 import com.dk.piley.util.titleCharacterLimit
 import kotlinx.coroutines.launch
 
+/**
+ * Pile screen
+ *
+ * @param modifier generic modifier
+ * @param navController generic nav controller
+ * @param snackbarHostState snackbar host state for displaying snackbars
+ * @param viewModel pile view model
+ */
 @Composable
 fun PileScreen(
     modifier: Modifier = Modifier,
@@ -90,6 +98,20 @@ fun PileScreen(
     )
 }
 
+/**
+ * Pile screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState pile screen view state
+ * @param taskTransitionStates animation transition states for pile tasks
+ * @param selectedPileIndex index of currently selected pile
+ * @param onTitlePageChanged action on pile title change (selection of different pile)
+ * @param onDone on task done
+ * @param onDelete on task deleted
+ * @param onAdd on new task added
+ * @param onClick on task click
+ * @param onSetMessage on set user message
+ */
 @Composable
 private fun PileScreen(
     modifier: Modifier = Modifier,
@@ -199,7 +221,7 @@ private fun PileScreen(
 
 @PreviewMainScreen
 @Composable
-fun ProfileScreenPreview() {
+fun PileScreenPreview() {
     PileyTheme {
         Surface {
             val pilesWithTasks = previewPileWithTasksList
@@ -228,7 +250,7 @@ private val shakeAnimationSpec: AnimationSpec<Float> = keyframes {
 
 @PreviewMainScreen
 @Composable
-fun ProfileScreenNoTasksPreview() {
+fun PileScreenNoTasksPreview() {
     PileyTheme {
         Surface {
             val state = PileViewState(
@@ -243,7 +265,7 @@ fun ProfileScreenNoTasksPreview() {
 
 @PreviewMainScreen
 @Composable
-fun ProfileScreenManyTasksPreview() {
+fun PileScreenManyTasksPreview() {
     PileyTheme {
         Surface {
             val pilesWithTasks = previewPileWithTasksList

@@ -6,6 +6,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import javax.inject.Inject
 
+/**
+ * Pile repository for performing database operations regarding piles
+ *
+ * @property pileDao the pile dao to use when performing operations
+ */
 class PileRepository @Inject constructor(
     private val pileDao: PileDao
 ) {
@@ -29,12 +34,23 @@ class PileRepository @Inject constructor(
         return pileDao.deleteAllPiles()
     }
 
+    /**
+     * Reset pile modes to a specific default pile mode
+     *
+     * @param defaultPileMode the default pile mode (free if not specified)
+     * @return query integer
+     */
     suspend fun resetPileModes(defaultPileMode: PileMode = PileMode.FREE): Int {
         return pileDao.updateAllPileModes(defaultPileMode)
     }
 
     suspend fun deletePileData() = pileDao.deletePileData()
 
+    /**
+     * Perform database checkpoint by forcing a write to the wal file and thus keeping the main
+     * database file up-to-date
+     *
+     */
     suspend fun performDatabaseCheckpoint() {
         // wal checkpoint with truncating wal file
         pileDao.checkpoint(SimpleSQLiteQuery("pragma wal_checkpoint(truncate)"))

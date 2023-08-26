@@ -8,6 +8,13 @@ import timber.log.Timber
 import java.time.Instant
 import javax.inject.Inject
 
+/**
+ * Task repository for performing database operations regarding tasks
+ *
+ * @property taskDao the task dao providing an interface to the database
+ * @property reminderManager entity of the reminder manager to set and cancel reminders
+ * @property notificationManager entity of the notification manager to set and cancel notifications
+ */
 class TaskRepository @Inject constructor(
     private val taskDao: TaskDao,
     private val reminderManager: ReminderManager,
@@ -42,6 +49,11 @@ class TaskRepository @Inject constructor(
     suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long): Void =
         taskDao.deleteCompletedDeletedForPile(pileId)
 
+    /**
+     * Dismiss alarm and notifications for a given task and create new ones if it is recurring
+     *
+     * @param task the task entity to dismiss and recreate reminders for
+     */
     private suspend fun dismissAlarmAndNotification(task: Task) {
         Timber.d("dismiss and start reminder from repository")
         reminderManager.cancelReminder(task.id)

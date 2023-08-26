@@ -14,6 +14,10 @@ import retrofit2.http.Streaming
 
 const val BACKUP_RESOURCE_PREFIX = "backup"
 
+/**
+ * Interface to the backup endpoint to perform remote backup operations
+ *
+ */
 interface BackupApi {
     @Multipart
     @POST("$BACKUP_RESOURCE_PREFIX/{email}")

@@ -45,6 +45,13 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/**
+ * Splash screen
+ *
+ * @param modifier generic modifier
+ * @param navController generic nav controller
+ * @param viewModel splash view model
+ */
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
@@ -66,7 +73,13 @@ fun SplashScreen(
     )
 }
 
-
+/**
+ * Splash screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState splash view state
+ * @param onAnimFinished on splash animation finished
+ */
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
@@ -113,6 +126,15 @@ fun SplashScreen(
     }
 }
 
+/**
+ * Splash animation inside a one-time launched effect
+ *
+ * @param coroutineScope generic coroutine scope
+ * @param scaleFactor animated icon scale factor
+ * @param alpha animated icon and text alpha factor
+ * @param viewState splash view state
+ * @param onFinished on animation finished
+ */
 @Composable
 private fun SplashAnimationLaunchedEffect(
     coroutineScope: CoroutineScope,

@@ -21,6 +21,12 @@ import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.toLocalDateTime
 import java.time.Instant
 
+/**
+ * Task info section
+ *
+ * @param modifier generic modifier
+ * @param task task entity to extract info from
+ */
 @Composable
 fun TaskInfo(
     modifier: Modifier = Modifier,

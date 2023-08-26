@@ -24,6 +24,18 @@ import com.dk.piley.ui.profile.TaskStats
 import com.dk.piley.ui.theme.PileyTheme
 import java.time.LocalDate
 
+/**
+ * Pile statistics section
+ *
+ * @param modifier generic modifier
+ * @param doneCount completed tasks in pile count
+ * @param deletedCount deleted tasks in pile count
+ * @param currentCount current tasks in pile count
+ * @param completedTaskCounts 7-day list of completed task frequencies
+ * @param currentDay current date of today
+ * @param onClearStatistics on clear pile statistics
+ * @param initialGraphTransitionValue initial graph animation transition value
+ */
 @Composable
 fun PileStatistics(
     modifier: Modifier = Modifier,

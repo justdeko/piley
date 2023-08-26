@@ -28,6 +28,16 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
 
+/**
+ * Base settings item
+ *
+ * @param modifier generic modifier
+ * @param title setting title
+ * @param description setting description
+ * @param onClick on settings click
+ * @param contentEnd content at the end of the settings title and description
+ * @param contentBottom content below the settings title and description
+ */
 @Composable
 fun SettingsItem(
     modifier: Modifier = Modifier,
@@ -74,6 +84,15 @@ fun SettingsItem(
     }
 }
 
+/**
+ * Settings item with a switch
+ *
+ * @param modifier generic modifier
+ * @param title setting title
+ * @param description setting description
+ * @param value switch value (true/false for on/off)
+ * @param onValueChange on switch value change
+ */
 @Composable
 fun SwitchSettingsItem(
     modifier: Modifier = Modifier,
@@ -89,6 +108,17 @@ fun SwitchSettingsItem(
         contentEnd = { Switch(checked = value, onCheckedChange = onValueChange) })
 }
 
+/**
+ * Settings item with a dropdown menu
+ *
+ * @param modifier generic modifier
+ * @param title setting title
+ * @param description setting description
+ * @param optionLabel dropdown menu option label
+ * @param selectedValue selected dropdown value
+ * @param values dropdown value list
+ * @param onValueChange on dropdown value change (item selection)
+ */
 @Composable
 fun DropdownSettingsItem(
     modifier: Modifier = Modifier,
@@ -116,6 +146,18 @@ fun DropdownSettingsItem(
     })
 }
 
+/**
+ * Settings item with a slider
+ *
+ * @param modifier generic modifier
+ * @param title setting title
+ * @param description setting description
+ * @param value slider value
+ * @param range slider range as a pair of [min, max] (inclusive)
+ * @param steps number of steps within the slider. the values for each step are calculated automatically
+ * @param onValueChange on slider value change
+ * @receiver
+ */
 @Composable
 fun SliderSettingsItem(
     modifier: Modifier = Modifier,

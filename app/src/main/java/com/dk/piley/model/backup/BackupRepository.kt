@@ -19,6 +19,12 @@ import java.io.FileOutputStream
 import java.time.Instant
 import javax.inject.Inject
 
+/**
+ * Backup repository for performing local and remote backup operations
+ *
+ * @property backupApi backup api interface
+ * @property userRepository local user repository
+ */
 class BackupRepository @Inject constructor(
     private val backupApi: BackupApi,
     private val userRepository: UserRepository,

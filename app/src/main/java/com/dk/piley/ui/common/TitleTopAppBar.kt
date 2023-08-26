@@ -15,6 +15,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Top app bar with title
+ *
+ * @param textValue title text
+ * @param canDeleteOrEdit if title should be displayed as editable (enabled vs. disabled)
+ * @param justTitle whether it is just the title or an editable title
+ * @param onEdit on title edit
+ * @param icon title icon
+ * @param contentDescription content description of the title icon
+ * @param onButtonClick on icon click
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TitleTopAppBar(

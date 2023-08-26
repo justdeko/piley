@@ -6,6 +6,7 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
+import com.dk.piley.model.task.toRecurringTimeRange
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

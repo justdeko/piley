@@ -19,6 +19,14 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Settings section
+ *
+ * @param modifier generic modifier
+ * @param title section title
+ * @param icon section icon
+ * @param items section items
+ */
 @Composable
 fun SettingsSection(
     modifier: Modifier = Modifier, title: String, icon: ImageVector, items: @Composable () -> Unit

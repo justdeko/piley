@@ -46,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
+import com.dk.piley.model.task.toRecurringTimeRange
+import com.dk.piley.model.task.toText
 import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.ReminderDatePicker
@@ -58,8 +60,6 @@ import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.timeString
-import com.dk.piley.util.toRecurringTimeRange
-import com.dk.piley.util.toText
 import com.dk.piley.util.utcZoneId
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -70,6 +70,20 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
+/**
+ * Bottom sheet drawer for adding or editing reminders
+ *
+ * @param modifier generic modifier
+ * @param drawerState bottom drawer state
+ * @param initialDate initial reminder date time
+ * @param isRecurring whether reminder is recurring
+ * @param recurringTimeRange time range for recurring reminders
+ * @param recurringFrequency frequency for recurring reminders
+ * @param onAddReminder on add or update reminder
+ * @param onDeleteReminder on delete reminder
+ * @param permissionState permission state for notifications
+ * @param content reminder drawer content
+ */
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun AddReminderDrawer(
@@ -114,6 +128,19 @@ fun AddReminderDrawer(
     }
 }
 
+/**
+ * Add/edit reminder content
+ *
+ * @param modifier generic modifier
+ * @param drawerState bottom drawer state
+ * @param onAddReminder on add or update reminder
+ * @param onDeleteReminder on delete reminder
+ * @param initialDateTime initial reminder date time
+ * @param isRecurring whether reminder is recurring
+ * @param recurringTimeRange time range for recurring reminders
+ * @param recurringFrequency frequency for recurring reminders
+ * @param permissionState permission state for notifications
+ */
 @OptIn(
     ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class
 )
@@ -338,6 +365,15 @@ fun AddReminderContent(
     }
 }
 
+/**
+ * Picker section of reminder, used for date and time picker
+ *
+ * @param modifier generic modifier
+ * @param text section text
+ * @param icon section icon
+ * @param onIconClick on section icon click
+ * @param iconContentDescription icon content description
+ */
 @Composable
 fun PickerSection(
     modifier: Modifier = Modifier,

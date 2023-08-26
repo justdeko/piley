@@ -11,6 +11,7 @@ import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.util.dateTimeString
+import com.dk.piley.util.descriptionCharacterLimit
 import com.dk.piley.util.titleCharacterLimit
 import com.dk.piley.util.toInstantWithOffset
 import com.dk.piley.util.toLocalDateTime
@@ -21,6 +22,15 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+/**
+ * Task detail view model
+ *
+ * @property repository task repository entity
+ * @property reminderManager user reminder manager entity
+ * @property notificationManager user notification manager entity
+ *
+ * @param savedStateHandle saved state handle to receive task id passed through navigation
+ */
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository,
@@ -56,18 +66,31 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Delete task
+     *
+     */
     fun deleteTask() {
         viewModelScope.launch {
             repository.insertTask(state.value.task.copy(status = TaskStatus.DELETED))
         }
     }
 
+    /**
+     * Complete task
+     *
+     */
     fun completeTask() {
         viewModelScope.launch {
             repository.insertTask(state.value.task.copy(status = TaskStatus.DONE))
         }
     }
 
+    /**
+     * Add reminder using state of user reminder selections
+     *
+     * @param reminderState reminder selection state containing parameters set by user when setting reminder
+     */
     fun addReminder(reminderState: ReminderState) {
         Timber.d("adding reminder for state $reminderState")
         state.update {
@@ -82,7 +105,9 @@ class TaskDetailViewModel @Inject constructor(
                     recurringTimeRange = reminderState.recurringTimeRange,
                 )
             )
+            // dismiss existing alarms and notification for this task
             dismissAlarmAndNotification()
+            // start new reminder
             reminderManager.startReminder(
                 reminderState.reminder.toInstantWithOffset(),
                 state.value.task.id
@@ -90,6 +115,10 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Cancel reminder
+     *
+     */
     fun cancelReminder() {
         state.update {
             it.copy(reminderDateTimeText = null)
@@ -104,16 +133,27 @@ class TaskDetailViewModel @Inject constructor(
                     isRecurring = false
                 )
             )
+            // dismiss alarms and notifications related to this task
             dismissAlarmAndNotification()
         }
     }
 
+    /**
+     * Cancels system alarm and dismisses notifications associated with this task
+     *
+     */
     private fun dismissAlarmAndNotification() {
         reminderManager.cancelReminder(state.value.task.id)
         notificationManager.dismiss(state.value.task.id)
     }
 
+    /**
+     * Edit task description if it does not exceed character limit
+     *
+     * @param desc description text value
+     */
     fun editDescription(desc: String) {
+        if (desc.length > descriptionCharacterLimit) return
         state.update {
             it.copy(descriptionTextValue = desc)
         }
@@ -122,6 +162,11 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Edit task title if it does not exceed character limit
+     *
+     * @param title title text value
+     */
     fun editTitle(title: String) {
         if (title.length > titleCharacterLimit) return
         state.update {

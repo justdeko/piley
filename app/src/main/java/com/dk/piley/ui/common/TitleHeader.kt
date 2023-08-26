@@ -19,6 +19,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 
+/**
+ * Title header with icon
+ *
+ * @param modifier default modifier
+ * @param title header title
+ * @param icon header icon
+ * @param titleColor text color of title
+ */
 @Composable
 fun TitleHeader(
     modifier: Modifier = Modifier,

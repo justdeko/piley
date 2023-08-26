@@ -11,6 +11,10 @@ import retrofit2.http.Path
 
 const val USER_RESOURCE_PREFIX = "users"
 
+/**
+ * Interface to the user endpoint to perform remote user operations
+ *
+ */
 interface UserApi {
     @POST(USER_RESOURCE_PREFIX)
     suspend fun createUser(@Body userRequest: UserRequest): Response<String>

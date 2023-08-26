@@ -16,6 +16,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Settings view model
+ *
+ * @property application generic application context
+ * @property userRepository user repository instance
+ * @property pileRepository pile repository instance
+ */
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val application: Application,
@@ -33,52 +40,93 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Update night mode enabled setting
+     *
+     * @param nightMode new night mode value
+     */
     fun updateNightMode(nightMode: NightMode) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(nightMode = nightMode))
         }
     }
 
+    /**
+     * Update dynamic color enabled setting
+     *
+     * @param enabled whether dynamic color is enabled
+     */
     fun updateDynamicColorEnabled(enabled: Boolean) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(dynamicColorOn = enabled))
         }
     }
 
+    /**
+     * Update default pile mode setting
+     *
+     * @param pileMode new pile mode value
+     */
     fun updateDefaultPileMode(pileMode: PileMode) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(pileMode = pileMode))
         }
     }
 
+    /**
+     * Reset all pile modes to free
+     *
+     */
     fun onResetPileModes() {
         viewModelScope.launch {
             pileRepository.resetPileModes()
         }
     }
 
+    /**
+     * Update hide keyboard automatically enabled setting
+     *
+     * @param hide whether the auto hide is enabled
+     */
     fun updateHideKeyboardEnabled(hide: Boolean) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(autoHideKeyboard = hide))
         }
     }
 
+    /**
+     * Update reminder delay setting
+     *
+     * @param delay new delay value
+     */
     fun updateReminderDelay(delay: Int) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(defaultReminderDelay = delay))
         }
     }
 
+    /**
+     * Update backup frequency setting
+     *
+     * @param frequency new frequency value
+     */
     fun updateBackupFrequency(frequency: Int) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(defaultBackupFrequency = frequency))
         }
     }
 
+    /**
+     * Delete user
+     *
+     * @param password user password
+     */
     fun deleteUser(password: String) {
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserEntity()
+            // only delete user if it still exists and matches stored password
             if (existingUser != null && existingUser.password == password) {
+                // if user is in offline mode, no api call necessary
                 if (existingUser.isOffline) {
                     deleteUserLocally()
                 } else {
@@ -87,6 +135,7 @@ class SettingsViewModel @Inject constructor(
                             when (resource) {
                                 is Resource.Loading -> state.update { it.copy(loading = true) }
                                 is Resource.Failure -> {
+                                    // show error message when remote delete unsuccessful
                                     state.update {
                                         it.copy(
                                             loading = false,
@@ -108,6 +157,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Delete user locally by deleting all tables and resetting preferences
+     *
+     */
     private suspend fun deleteUserLocally() {
         pileRepository.deletePileData()
         userRepository.setSignedInUser("")
@@ -121,14 +174,25 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Reset user message
+     *
+     */
     fun resetMessage() {
         state.update { it.copy(message = null) }
     }
 
+    /**
+     * Update user
+     *
+     * @param result new user data for the update
+     */
     fun updateUser(result: EditUserResult) {
         viewModelScope.launch {
             val existingUser = userRepository.getSignedInUserEntity()
+            // only update user if exists and old password is correct
             if (existingUser != null && result.oldPassword == existingUser.password) {
+                // if user is in offline mode, only update locally
                 if (existingUser.isOffline) {
                     updateUserLocally(existingUser, result)
                 } else {
@@ -139,6 +203,7 @@ class SettingsViewModel @Inject constructor(
                     ).collect { resource ->
                         when (resource) {
                             is Resource.Loading -> state.update { it.copy(loading = true) }
+                            // if remote update failed, show error message
                             is Resource.Failure -> {
                                 state.update {
                                     it.copy(
@@ -147,7 +212,7 @@ class SettingsViewModel @Inject constructor(
                                     )
                                 }
                             }
-
+                            // if remote update successful, also update locally
                             is Resource.Success -> {
                                 updateUserLocally(existingUser, result)
                             }
@@ -165,6 +230,12 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Update user locally by overwriting existing user properties
+     *
+     * @param existingUser existing user entity
+     * @param result new user data for the update
+     */
     private suspend fun updateUserLocally(existingUser: User, result: EditUserResult) {
         userRepository.insertUser(
             existingUser.copy(
@@ -180,6 +251,11 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Update pull backup frequency setting
+     *
+     * @param days after how many days the backup should be queried again
+     */
     fun updatePullBackupPeriod(days: Int) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(loadBackupAfterDays = days))

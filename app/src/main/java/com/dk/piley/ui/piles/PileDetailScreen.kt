@@ -36,6 +36,12 @@ import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
 import java.time.LocalDateTime
 
+/**
+ * Pile detail screen
+ *
+ * @param navController generic nav controller
+ * @param viewModel pile detail view model
+ */
 @Composable
 fun PileDetailScreen(
     navController: NavController,
@@ -58,6 +64,20 @@ fun PileDetailScreen(
     )
 }
 
+/**
+ * Pile detail screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState pile detail view state
+ * @param onDeletePile on pile deletion
+ * @param onEditTitle on edit pile title
+ * @param onEditDescription on edit pile description
+ * @param onSetPileMode on set pile completion mode
+ * @param onSetPileLimit on set pile task limit
+ * @param onClearStatistics on clear pile statistics
+ * @param onClose on close pile screen
+ * @param initialStatisticsGraphTransitionValue initial animation transition value of statistics graph
+ */
 @Composable
 fun PileDetailScreen(
     modifier: Modifier = Modifier,

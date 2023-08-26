@@ -35,7 +35,14 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.lastSevenDays
 import java.time.LocalDate
 
-
+/**
+ * Frequency chart of completed tasks
+ *
+ * @param weekDayFrequencies list of frequencies for the past 7 days
+ * @param currentDay date of the current day
+ * @param modifier generic modifier
+ * @param initialTransitionValue initial animation transition value
+ */
 @Composable
 fun FrequencyChart(
     weekDayFrequencies: List<Int>,

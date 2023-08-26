@@ -14,6 +14,13 @@ import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.descriptionCharacterLimit
 
+/**
+ * Edit description field
+ *
+ * @param modifier default modifier
+ * @param value description value
+ * @param onChange on description change
+ */
 @Composable
 fun EditDescriptionField(
     modifier: Modifier = Modifier,

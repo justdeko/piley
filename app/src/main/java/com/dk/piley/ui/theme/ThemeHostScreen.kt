@@ -11,6 +11,12 @@ import com.dk.piley.model.user.NightMode
 import com.dk.piley.util.isDarkMode
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
+/**
+ * Theme host screen for displaying themed content
+ *
+ * @param viewModel theme view model
+ * @param content themed to display
+ */
 @Composable
 fun ThemeHostScreen(viewModel: ThemeViewModel = hiltViewModel(), content: @Composable () -> Unit) {
     val viewState by viewModel.state.collectAsState()

@@ -27,6 +27,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
 
+/**
+ * Expandable content
+ *
+ * @param modifier default modifier
+ * @param expanded whether content is expanded
+ * @param onHeaderClick when clicking on the header
+ * @param onArrowClick when clicking on the expand arrow
+ * @param headerContent content of the header
+ * @param expandedContent content under the header that collapses
+ */
 @Composable
 fun ExpandableContent(
     modifier: Modifier = Modifier,

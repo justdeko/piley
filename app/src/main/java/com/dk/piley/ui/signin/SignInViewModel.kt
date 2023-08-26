@@ -22,6 +22,14 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
+/**
+ * Sign in view model
+ *
+ * @property application generic application context
+ * @property userRepository user repository instance
+ * @property pileRepository pile repository instance
+ * @property backupManager user backup manager instance
+ */
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val application: Application,
@@ -30,6 +38,10 @@ class SignInViewModel @Inject constructor(
     private val backupManager: BackupManager,
 ) : StatefulAndroidViewModel<SignInViewState>(application, SignInViewState()) {
 
+    /**
+     * Attempt register by performing remote registration call
+     *
+     */
     private fun attemptRegister() {
         val userData = state.value
         val user = User(
@@ -41,7 +53,9 @@ class SignInViewModel @Inject constructor(
             userRepository.registerUserFlow(user).collectLatest {
                 when (it) {
                     is Resource.Loading -> setLoading(true)
+                    // if registration successful, continue to local operations
                     is Resource.Success -> onRemoteRegisterOrSignInSuccess(user)
+                    // if registration failed, show error message
                     is Resource.Failure -> {
                         setLoading(false)
                         setMessage(application.getString(R.string.user_register_error_message))
@@ -51,14 +65,22 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Local actions after remote register or sign in success
+     *
+     * @param user user instance created from sign in/registration data
+     * @param isSignIn whether the previous action was a sign in
+     */
     private suspend fun onRemoteRegisterOrSignInSuccess(user: User, isSignIn: Boolean = false) {
         // create user and set as signed in
         userRepository.insertUser(user)
         userRepository.setSignedInUser(user.email)
+        // if it is a sign in, perform remote backup fetch
         if (isSignIn) {
             backupManager.syncBackupToLocalForUserFlow().collect {
                 when (it) {
                     is Resource.Loading -> Timber.i("attempting to load remote backup")
+                    // if backup successful, update ui and proceed to main screen
                     is Resource.Success -> {
                         if (it.data != null) {
                             // set user backup date
@@ -70,10 +92,12 @@ class SignInViewModel @Inject constructor(
                             Timber.i("Backup loaded, going into main view")
                             updateUIOnSignInSuccess()
                         } else {
+                            // if no backup returned, create new pile and set as default
                             createAndSetUserPile()
                         }
                     }
 
+                    // if loading backup unsuccessful, create new pile and set as default
                     is Resource.Failure -> createAndSetUserPile()
                 }
             }
@@ -84,6 +108,11 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Create new pile and set as user default
+     *
+     * @param isSignIn
+     */
     private suspend fun createAndSetUserPile(isSignIn: Boolean = true) {
         // create default pile
         val pile = Pile(
@@ -103,6 +132,12 @@ class SignInViewModel @Inject constructor(
         updateUIOnSignInSuccess(isSignIn)
     }
 
+    /**
+     * Update ui on sign in or register success by by stopping loading and showing success message
+     * if it is a sign in, also restart the application to properly load the database
+     *
+     * @param isSignIn whether the user performed a sign in
+     */
     private fun updateUIOnSignInSuccess(isSignIn: Boolean = true) {
         setLoading(false)
         setSignInState(SignInState.SIGNED_IN)
@@ -132,6 +167,10 @@ class SignInViewModel @Inject constructor(
         Runtime.getRuntime().exit(0)
     }
 
+    /**
+     * Attempt sign in or register
+     *
+     */
     fun attemptSignIn() {
         val userData = state.value
         viewModelScope.launch {
@@ -154,6 +193,11 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Perform offline user registration by creating user entity,
+     * setting as signed in user and creating default pile
+     *
+     */
     private fun doOfflineRegister() {
         setLoading(true)
         val userData = state.value
@@ -173,10 +217,17 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Attempt remote sign in to backend
+     *
+     * @param email user email
+     * @param password user password
+     */
     private suspend fun attemptRemoteSignIn(email: String, password: String) {
         userRepository.getUserFromRemoteFlow(email, password).collectLatest {
             when (it) {
                 is Resource.Loading -> setLoading(true)
+                // if successful, perform local actions for registration
                 is Resource.Success -> onRemoteRegisterOrSignInSuccess(
                     User(
                         name = it.data.name,
@@ -185,7 +236,7 @@ class SignInViewModel @Inject constructor(
                     ),
                     isSignIn = true
                 )
-
+                // if unsuccessful, show error message
                 is Resource.Failure -> {
                     setLoading(false)
                     setMessage(application.getString(R.string.sign_in_error_message))
@@ -194,17 +245,50 @@ class SignInViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Set current sign in state
+     *
+     * @param signInState sign in state
+     */
     fun setSignInState(signInState: SignInState) =
         state.update { it.copy(signInState = signInState) }
 
+    /**
+     * Set whether something is loading
+     *
+     * @param loading loading is true
+     */
     private fun setLoading(loading: Boolean) = state.update { it.copy(loading = loading) }
+
+    /**
+     * Set email input value
+     *
+     * @param input email string value
+     */
     fun setEmail(input: String) = state.update { it.copy(email = input) }
+
+    /**
+     * Set username input value, only if character limit not exceeded
+     *
+     * @param input user name string value
+     */
     fun setUsername(input: String) {
         if (input.length > usernameCharacterLimit) return
         state.update { it.copy(username = input) }
     }
 
+    /**
+     * Set password input value
+     *
+     * @param input password string value
+     */
     fun setPassword(input: String) = state.update { it.copy(password = input) }
+
+    /**
+     * Set user message
+     *
+     * @param message message value
+     */
     fun setMessage(message: String?) = state.update { it.copy(message = message) }
 }
 

@@ -10,6 +10,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+/**
+ * Alert dialog with custom content
+ *
+ * @param modifier default modifier
+ * @param onDismiss action on dialog dismiss
+ * @param content dialog content
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentAlertDialog(

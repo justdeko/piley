@@ -18,6 +18,16 @@ import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.pileTitleCharacterLimit
 
+/**
+ * Alert dialog for creating a new pile
+ *
+ * @param modifier generic modifier
+ * @param pileTitleValue title text value
+ * @param onTitleValueChange on title text change
+ * @param onDismiss on dialog dismiss
+ * @param onConfirm on confirm button click
+ * @param confirmEnabled whether  confirm button enabled
+ */
 @Composable
 fun CreatePileAlertDialog(
     modifier: Modifier = Modifier,

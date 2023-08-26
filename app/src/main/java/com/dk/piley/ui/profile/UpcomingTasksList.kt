@@ -23,6 +23,12 @@ import com.dk.piley.util.dateTimeStringNewLine
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
 
+/**
+ * List of tasks with upcoming reminders
+ *
+ * @param modifier generic modifier
+ * @param pileNameTaskList list of pile name-task pairs
+ */
 @Composable
 fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair<String, Task>>) {
     val dim = LocalDim.current

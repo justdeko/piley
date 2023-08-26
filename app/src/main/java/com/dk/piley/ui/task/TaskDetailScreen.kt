@@ -46,6 +46,12 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 
+/**
+ * Task detail screen
+ *
+ * @param navController generic nav controller
+ * @param viewModel task detail view model
+ */
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TaskDetailScreen(
@@ -73,6 +79,20 @@ fun TaskDetailScreen(
     )
 }
 
+/**
+ * Task detail screen content
+ *
+ * @param modifier generic modifier
+ * @param viewState task detail view state
+ * @param onDeleteTask on delete task click
+ * @param onCompleteTask on complete task click
+ * @param onClose on close task detail screen
+ * @param onEditDesc on edit task description
+ * @param onEditTitle on edit task title
+ * @param onAddReminder on add reminder click
+ * @param onCancelReminder on cancel reminder action
+ * @param permissionState notification permission state
+ */
 @OptIn(
     ExperimentalMaterialApi::class,
     ExperimentalPermissionsApi::class

@@ -12,6 +12,11 @@ import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Reminder manager that handles task reminders
+ *
+ * @property context generic application context
+ */
 @Singleton
 class ReminderManager @Inject constructor(
     @ApplicationContext private val context: Context
@@ -19,6 +24,12 @@ class ReminderManager @Inject constructor(
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
     private val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 
+    /**
+     * Start reminder for a task
+     *
+     * @param reminderTime timestamp representing the reminder time
+     * @param taskId task id of the task to show the reminder for
+     */
     fun startReminder(
         reminderTime: Instant, taskId: Long
     ) {
@@ -39,6 +50,11 @@ class ReminderManager @Inject constructor(
         }
     }
 
+    /**
+     * Cancel reminder for a task
+     *
+     * @param taskId task id of the task to cancel the reminder for
+     */
     fun cancelReminder(
         taskId: Long
     ) {

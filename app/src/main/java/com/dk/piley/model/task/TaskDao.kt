@@ -3,6 +3,10 @@ package com.dk.piley.model.task
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Task dao with interfaces for database operations regarding tasks
+ *
+ */
 @Dao
 interface TaskDao {
     @Query("SELECT * FROM Task")
@@ -17,6 +21,11 @@ interface TaskDao {
     @Delete
     suspend fun deleteTask(task: Task): Void
 
+    /**
+     * Delete completed and deleted tasks for its parent pile
+     *
+     * @param pileId the parent pile id
+     */
     @Query("DELETE FROM Task WHERE pileId=:pileId AND status IN ('DONE', 'DELETED')")
     suspend fun deleteCompletedDeletedForPile(pileId: Long): Void
 }

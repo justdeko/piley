@@ -14,6 +14,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Outline card
+ *
+ * @param modifier default modifier
+ * @param content card content
+ */
 @Composable
 fun OutlineCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Card(

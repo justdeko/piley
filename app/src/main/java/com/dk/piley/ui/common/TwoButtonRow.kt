@@ -13,6 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * Row with two buttons
+ *
+ * @param modifier default modifier
+ * @param onRightClick on right button click
+ * @param onLeftClick on left button click
+ * @param rightText right button text
+ * @param leftText left button text
+ * @param rightEnabled whether right button is enabled
+ * @param arrangement button horizontal arrangement
+ * @param rightColors right button colors
+ * @param leftColors left button colors
+ */
 @Composable
 fun TwoButtonRow(
     modifier: Modifier = Modifier,

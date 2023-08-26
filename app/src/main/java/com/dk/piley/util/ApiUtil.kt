@@ -7,9 +7,20 @@ import timber.log.Timber
 import java.time.Instant
 import java.time.format.DateTimeParseException
 
+/**
+ * Basic auth credentials for api requests
+ *
+ * @param username user name
+ * @param password user password
+ */
 fun credentials(username: String?, password: String?) =
     Credentials.basic(username ?: "", password ?: "")
 
+/**
+ * Extract content disposition header values from response headers
+ *
+ * @return [ContentDispositionHeaders] entity containing backup file name and last modification date
+ */
 fun Headers.contentDispositionHeaders(): ContentDispositionHeaders? {
     val contentDisposition = this["Content-Disposition"]
     if (contentDisposition != null) {

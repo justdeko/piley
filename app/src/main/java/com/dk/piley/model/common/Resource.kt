@@ -7,12 +7,24 @@ import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 import timber.log.Timber
 
+/**
+ * Resource representing anything with loading state resulting either in success or failure
+ *
+ * @param T generic data type which is returned on success
+ */
 sealed class Resource<out T> {
     class Loading<out T> : Resource<T>()
     data class Success<out T>(val data: T) : Resource<T>()
     data class Failure<out T>(val exception: Exception) : Resource<T>()
 }
 
+/**
+ * Represents a resource flow for remote calls. Starts with emitting a loading resource
+ *
+ * @param T a generic resource result type
+ * @param apiRequest suspend function that performs an api request and returns a response with the generic type
+ * @return a resource flow returning resulting in a success with the generic type or failure
+ */
 fun <T> resourceSuccessfulFlow(apiRequest: suspend () -> Response<T>): Flow<Resource<T>> = flow {
     emit(Resource.Loading())
     try {

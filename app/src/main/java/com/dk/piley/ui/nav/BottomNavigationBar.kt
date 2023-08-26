@@ -20,6 +20,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.ui.theme.PileyTheme
 
+/**
+ * App bottom navigation bar
+ *
+ * @param modifier generic modifier
+ * @param isVisible whether the navigation bar is visible
+ * @param navController generic nav controller
+ */
 @Composable
 fun BottomNavigationBar(
     modifier: Modifier = Modifier,
@@ -47,7 +54,7 @@ fun BottomNavigationBar(
                         },
                         label = {
                             Text(
-                                stringResource(screen.resourceId),
+                                stringResource(screen.titleResource),
                                 color = MaterialTheme.colorScheme.onBackground
                             )
                         },

@@ -24,6 +24,17 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
 
+/**
+ * Task pile view
+ *
+ * @param modifier generic modifier
+ * @param tasks task list
+ * @param pileMode pile mode of the pile
+ * @param taskTransitionStates task animation transition states
+ * @param onDelete on task delete
+ * @param onDone on task done
+ * @param onTaskClick on task click
+ */
 @OptIn(
     ExperimentalFoundationApi::class,
     ExperimentalMaterial3Api::class

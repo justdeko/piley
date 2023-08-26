@@ -221,7 +221,7 @@ private fun PileScreen(
 
 @PreviewMainScreen
 @Composable
-fun ProfileScreenPreview() {
+fun PileScreenPreview() {
     PileyTheme {
         Surface {
             val pilesWithTasks = previewPileWithTasksList
@@ -250,7 +250,7 @@ private val shakeAnimationSpec: AnimationSpec<Float> = keyframes {
 
 @PreviewMainScreen
 @Composable
-fun ProfileScreenNoTasksPreview() {
+fun PileScreenNoTasksPreview() {
     PileyTheme {
         Surface {
             val state = PileViewState(
@@ -265,7 +265,7 @@ fun ProfileScreenNoTasksPreview() {
 
 @PreviewMainScreen
 @Composable
-fun ProfileScreenManyTasksPreview() {
+fun PileScreenManyTasksPreview() {
     PileyTheme {
         Surface {
             val pilesWithTasks = previewPileWithTasksList

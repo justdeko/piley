@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
+import com.dk.piley.util.isDarkMode
 import com.dk.piley.util.roundedOutline
 
 /**
@@ -42,6 +44,9 @@ fun IntroPageContent(
     onClickButton: () -> Unit = {}
 ) {
     val dim = LocalDim.current
+    val context = LocalContext.current
+    val resourceId =
+        if (context.isDarkMode()) introPage.imageNightResource else introPage.imageResource
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,7 +59,7 @@ fun IntroPageContent(
                 .then(
                     if (introPage.isScreenshot) Modifier.roundedOutline() else Modifier
                 ),
-            painter = painterResource(id = introPage.imageResource),
+            painter = painterResource(id = resourceId),
             contentDescription = "intro page image"
         )
         Text(

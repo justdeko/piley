@@ -103,7 +103,7 @@ piley-server, [go here](https://github.com/justdeko/piley-server).
 piley is FOSS and was developed for free. You are welcome to contribute and support, here are a few
 ways:
 
-* [Report a but or suggest a new feature](https://github.com/justdeko/piley/issues)
+* [Report a bug or suggest a new feature](https://github.com/justdeko/piley/issues)
 * Translate the app into your language and open a new PR for it
 * Extend the app
 

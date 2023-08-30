@@ -33,10 +33,10 @@ class SplashViewModel @Inject constructor(
                     combine(loadingBackupFlow()) { (loadingBackup) ->
                         // while loading backup, set state to loading
                         if (loadingBackup) {
-                            Timber.d("loading backup..")
+                            Timber.d("Loading backup..")
                             SplashViewState(InitState.LOADING_BACKUP)
                         } else {
-                            Timber.d("backup loading attempt finished...")
+                            Timber.d("Backup loading attempt finished...")
                             SplashViewState(InitState.BACKUP_LOADED_SIGNED_IN)
                         }
                     }
@@ -57,11 +57,11 @@ class SplashViewModel @Inject constructor(
             when (it) {
                 is Resource.Loading -> {
                     emit(true)
-                    Timber.i("Loading backup")
+                    Timber.d("Loading backup")
                 }
 
                 is Resource.Success -> {
-                    Timber.i("Remote backup request completed, replaced local db: ${it.data != null}")
+                    Timber.d("Remote backup request completed, replaced local db: ${it.data != null}")
                     emit(false)
                 }
 

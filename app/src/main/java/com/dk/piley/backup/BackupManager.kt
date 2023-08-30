@@ -65,7 +65,7 @@ class BackupManager @Inject constructor(
                 Instant.now().minus(Duration.ofDays(backupPullDuration.toLong()))
             ) == true
         ) {
-            Timber.i("last backup not too long ago, aborting backup sync")
+            Timber.i("Last backup not too long ago, aborting backup sync")
             return flowOf(Resource.Success(null))
         }
         return backupRepository.getBackupFileFlow(
@@ -96,7 +96,7 @@ class BackupManager @Inject constructor(
             pileRepository.performDatabaseCheckpoint()
             // push db file to remote
             val dbPath = context.getDatabasePath(DATABASE_NAME)
-            Timber.i("pushing backup from file $dbPath with size ${dbPath.length()}b")
+            Timber.i("Pushing backup from file $dbPath with size ${dbPath.length()}b")
             backupRepository.createOrUpdateBackupFlow(email, dbPath).flowOn(Dispatchers.IO)
         } else {
             emptyFlow()
@@ -167,12 +167,12 @@ class BackupManager @Inject constructor(
             db.close()
             // delete old file
             if (dbFile.exists()) {
-                Timber.d("Deleting backup file at $dbPath")
+                Timber.i("Deleting backup file at $dbPath")
                 dbFile.delete()
             }
             // attempt to copy new file
             try {
-                Timber.d("Writing backup file at $dbPath")
+                Timber.i("Writing backup file at $dbPath")
                 val inputStream = FileInputStream(fileResponse.file)
                 val outputStream = FileOutputStream(dbPath)
                 inputStream.use { input ->
@@ -181,7 +181,7 @@ class BackupManager @Inject constructor(
                     }
                 }
                 // delete temp file
-                Timber.d("Deleting temp file at ${fileResponse.file.absolutePath}")
+                Timber.i("Deleting temp file at ${fileResponse.file.absolutePath}")
                 fileResponse.file.delete()
                 emit(Resource.Success(fileResponse.lastModified))
             } catch (ex: IOException) {

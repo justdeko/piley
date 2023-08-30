@@ -79,7 +79,7 @@ class SignInViewModel @Inject constructor(
         if (isSignIn) {
             backupManager.syncBackupToLocalForUserFlow().collect {
                 when (it) {
-                    is Resource.Loading -> Timber.i("attempting to load remote backup")
+                    is Resource.Loading -> Timber.i("Attempting to load remote backup")
                     // if backup successful, update ui and proceed to main screen
                     is Resource.Success -> {
                         if (it.data != null) {

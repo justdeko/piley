@@ -63,7 +63,7 @@ fun SplashScreen(
         modifier,
         viewState,
         onAnimFinished = {
-            Timber.d("anim finished")
+            Timber.d("splash anim finished")
             val destination =
                 if (viewModel.state.value.initState == InitState.NOT_SIGNED_IN) {
                     Screen.SignIn.route

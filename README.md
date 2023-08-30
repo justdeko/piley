@@ -82,7 +82,7 @@ checkbox when registering).
 The API url is by default `10.0.2.2`, which is used in emulators to connect to the localhost
 environment of the emulator host.
 
-### Connect to piley-server
+### Connect to [piley-server](https://github.com/justdeko/piley-server)
 
 If you want to connect your app to a self-hosted piley-server backend to upload backups, you need to
 run the `build-with-custom-url.sh`script which will result in a debug apk with the target URL you

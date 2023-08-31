@@ -36,7 +36,7 @@ else
   exit 1
 fi
 
-(cd ../../piley-server && docker-compose up -d) # todo change piley-server directory after monorepo
+(cd ../../piley-server && docker-compose up -d)
 
 echo "Starting tests..."
 maestro test mainFlow.yaml
@@ -44,4 +44,4 @@ echo "Tests finished!..."
 
 adb emu kill
 
-(cd ../../piley-server && docker-compose down) # todo change piley-server directory after monorepo
+(cd ../../piley-server && docker-compose down)

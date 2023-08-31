@@ -3,3 +3,4 @@ plugins:
   - jekyll-remote-theme
 title: piley
 description: Piley is a small To-Do app that uses piles to manage your tasks.
+show_downloads: true

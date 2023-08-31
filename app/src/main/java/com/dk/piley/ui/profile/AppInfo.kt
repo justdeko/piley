@@ -53,7 +53,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
-        IconButton(onClick = { uriHandler.openUri("https://piley.app") }) { // TODO set github page
+        IconButton(onClick = { uriHandler.openUri("https://justdeko.github.io/piley/") }) {
             Icon(
                 Icons.Filled.Info,
                 "website link",

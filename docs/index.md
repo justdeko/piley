@@ -2,23 +2,24 @@
 layout: default
 ---
 
-piley
+# piley
 
 
-Piley is a small Android To-Do app.
+**piley** is a small To-Do app that uses piles to manage your tasks.
 
-TODO add description here.
+You can stack up tasks within a pile, create and manage your piles and also set reminders and recurring tasks. If you set up a
+server, you can also back up your tasks and sync regularly to get the newest state.
 
-# How to use
+## How to use
 
-This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
+Just download the source code and compile the app, or get one of the released apks.
 
-# Screenshots
+## Screenshots
 
 <div align="center">
   <p>
-    <img src="../app/src/main/res/drawable/pile_screen_demo.png" width="200" />
-    <img src="../app/src/main/res/drawable/pile_overview_screen_demo.png" width="200" /> 
-    <img src="../app/src/main/res/drawable/profile_screen_demo.png" width="200" />
+    <img src="./assets/pile_screen_demo.png" width="200" />
+    <img src="./assets/pile_overview_screen_demo.png" width="200" /> 
+    <img src="./assets/profile_screen_demo.png" width="200" />
   </p>
 </div>

@@ -2,10 +2,6 @@
 layout: default
 ---
 
-<div align="center">
-    <img src="./assets/icon.png" alt="Logo" width="200" height="200" />
-</div>
-
 You can stack up tasks within a pile, create and manage your piles and also set reminders and
 recurring tasks. If you set up a
 server, you can also back up your tasks and sync regularly to get the newest state.

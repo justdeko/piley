@@ -1,7 +1,6 @@
 package com.dk.piley.ui.signin
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -176,7 +175,6 @@ private fun SignInScreen(
             },
         contentAlignment = Alignment.TopCenter
     ) {
-        IndefiniteProgressBar(visible = viewState.loading)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -185,7 +183,6 @@ private fun SignInScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                modifier = Modifier.clickable { dialogOpen = true }, // TODO improve usability
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = null,
                 tint = Color.Unspecified
@@ -281,7 +278,7 @@ private fun SignInScreen(
                 )
             }
             ElevatedButton(
-                modifier = Modifier.padding(top = dim.large, bottom = dim.veryLarge),
+                modifier = Modifier.padding(top = dim.medium, bottom = dim.extraLarge),
                 onClick = onAttemptSignIn,
                 enabled = signInButtonEnabled(isRegister, viewState)
             ) {
@@ -296,7 +293,13 @@ private fun SignInScreen(
                     )
                 )
             }
+            AnimatedVisibility(viewState.signInState != SignInState.REGISTER_OFFLINE) {
+                TextButton(onClick = { dialogOpen = true }) {
+                    Text(stringResource(R.string.base_url_dialog_title))
+                }
+            }
         }
+        IndefiniteProgressBar(visible = viewState.loading)
     }
 }
 

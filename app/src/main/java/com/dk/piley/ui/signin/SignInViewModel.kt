@@ -41,7 +41,7 @@ class SignInViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            collectState(combine(userRepository.getBaseUrl()) { (baseUrl) ->
+            collectState(combine(userRepository.getBaseUrlFlow()) { (baseUrl) ->
                 state.value.copy(baseUrlValue = baseUrl)
             })
         }

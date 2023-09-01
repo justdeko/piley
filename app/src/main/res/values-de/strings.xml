@@ -179,4 +179,11 @@
     <string name="cancel_date_time_picker_button">Abbrechen</string>
     <string name="start_tutorial_setting_title">Tutorial Neustarten</string>
     <string name="start_tutorial_setting_description">Klicke hier, wenn du dir nochmal das Tutorial anschauen möchtest.</string>
+    <string name="base_url_dialog_title">Request-URL einstellen</string>
+    <string name="base_url_dialog_hint">z.B. https://127.0.0.1/</string>
+    <string name="base_url_dialog_hint_2">Die URL sollte mit einem Schrägstrich / enden</string>
+    <string name="base_url_dialog_confirm">URL Einstellen</string>
+    <string name="base_url_dialog_cancel">Abbrechen</string>
+    <string name="set_base_url_setting_title">Request-Url einstellen</string>
+    <string name="set_base_url_setting_description">Stelle hier die URL ein, mit der die App sich verbindet und Backups hoch- und runterlädt.</string>
 </resources>

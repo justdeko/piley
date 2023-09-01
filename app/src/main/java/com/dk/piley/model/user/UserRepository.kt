@@ -100,5 +100,5 @@ class UserRepository @Inject constructor(
         userPrefsManager.setBaseUrl(url)
     }
 
-    fun getBaseUrl() = userPrefsManager.getBaseUrl()
+    fun getBaseUrlFlow() = userPrefsManager.getBaseUrl()
 }

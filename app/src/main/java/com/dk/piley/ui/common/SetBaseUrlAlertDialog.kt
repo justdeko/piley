@@ -17,8 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer
 
@@ -41,7 +43,7 @@ fun CreateBaseUrlAlertDialog(
 
     AlertDialog(
         modifier = modifier,
-        title = { Text("Set the request URL") }, // TODO extract string resources
+        title = { Text(stringResource(R.string.base_url_dialog_title)) },
         text = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 val focusManager = LocalFocusManager.current // dialog has own focus manager
@@ -49,7 +51,7 @@ fun CreateBaseUrlAlertDialog(
                     modifier = Modifier.fillMaxWidth(),
                     value = urlTextValue,
                     onValueChange = { urlTextValue = it },
-                    placeholder = { Text("e.g. https://127.0.0.1/") },
+                    placeholder = { Text(stringResource(R.string.base_url_dialog_hint)) },
                     shape = MaterialTheme.shapes.large,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -59,7 +61,7 @@ fun CreateBaseUrlAlertDialog(
                     })
                 )
                 MediumSpacer()
-                Text(text = "The url should end with a slash /")
+                Text(text = stringResource(R.string.base_url_dialog_hint_2))
             }
         },
         onDismissRequest = onDismiss,
@@ -68,11 +70,11 @@ fun CreateBaseUrlAlertDialog(
                 onClick = { onConfirm(urlTextValue) },
                 enabled = android.util.Patterns.WEB_URL.matcher(urlTextValue).matches()
             ) {
-                Text("Set Url")
+                Text(stringResource(R.string.base_url_dialog_confirm))
             }
         }, dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(R.string.base_url_dialog_cancel))
             }
         })
 }

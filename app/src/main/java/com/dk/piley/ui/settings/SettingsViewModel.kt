@@ -32,9 +32,11 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val userFlow = userRepository.getSignedInUserNotNullFlow()
+            val baseUrlFlow = userRepository.getBaseUrlFlow()
             collectState(
-                combine(userRepository.getSignedInUserNotNullFlow()) { (user) ->
-                    state.value.copy(user = user)
+                userFlow.combine(baseUrlFlow) { user, baseUrl ->
+                    state.value.copy(user = user, baseUrlValue = baseUrl)
                 }
             )
         }
@@ -278,5 +280,6 @@ data class SettingsViewState(
     val user: User = User(),
     val loading: Boolean = false,
     val message: String? = null,
-    val userDeleted: Boolean = false
+    val userDeleted: Boolean = false,
+    val baseUrlValue: String = "",
 )

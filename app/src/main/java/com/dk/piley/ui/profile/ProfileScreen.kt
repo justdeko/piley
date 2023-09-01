@@ -129,7 +129,6 @@ private fun ProfileScreen(
         )
     }
     Box(modifier = modifier.fillMaxSize()) {
-        IndefiniteProgressBar(visible = viewState.signedOutState == SignOutState.SIGNING_OUT || viewState.isLoading)
         Column(
             Modifier
                 .fillMaxSize()
@@ -225,6 +224,7 @@ private fun ProfileScreen(
                 }
             }
         }
+        IndefiniteProgressBar(visible = viewState.signedOutState == SignOutState.SIGNING_OUT || viewState.isLoading)
     }
 }
 
@@ -241,7 +241,8 @@ fun ProfileScreenPreview() {
                 currentTasks = 3,
                 biggestPileName = "Daily",
                 upcomingTaskList = previewUpcomingTasksList,
-                averageTaskDurationInHours = 9
+                averageTaskDurationInHours = 9,
+                isLoading = true
             )
             ProfileScreen(viewState = state)
         }

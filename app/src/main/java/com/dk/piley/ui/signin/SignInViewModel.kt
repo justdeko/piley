@@ -16,6 +16,7 @@ import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.usernameCharacterLimit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -37,6 +38,14 @@ class SignInViewModel @Inject constructor(
     private val pileRepository: PileRepository,
     private val backupManager: BackupManager,
 ) : StatefulAndroidViewModel<SignInViewState>(application, SignInViewState()) {
+
+    init {
+        viewModelScope.launch {
+            collectState(combine(userRepository.getBaseUrl()) { (baseUrl) ->
+                state.value.copy(baseUrlValue = baseUrl)
+            })
+        }
+    }
 
     /**
      * Attempt register by performing remote registration call
@@ -218,6 +227,18 @@ class SignInViewModel @Inject constructor(
     }
 
     /**
+     * Set base url to make requests with
+     *
+     * @param url the url string
+     */
+    fun setBaseUrl(url: String) {
+        viewModelScope.launch {
+            state.update { it.copy(baseUrlValue = url) }
+            userRepository.setBaseUrl(url)
+        }
+    }
+
+    /**
      * Attempt remote sign in to backend
      *
      * @param email user email
@@ -300,5 +321,6 @@ data class SignInViewState(
     val firstTime: Boolean = false,
     val loading: Boolean = false,
     val message: String? = null,
+    val baseUrlValue: String = ""
 )
 

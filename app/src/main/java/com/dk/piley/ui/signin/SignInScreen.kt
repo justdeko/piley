@@ -1,6 +1,7 @@
 package com.dk.piley.ui.signin
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
+import com.dk.piley.ui.common.CreateBaseUrlAlertDialog
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.nav.Screen
@@ -109,7 +111,8 @@ fun SignInScreen(
             } else {
                 viewModel.setSignInState(SignInState.REGISTER)
             }
-        }
+        },
+        onSetBaseUrlValue = { viewModel.setBaseUrl(it) }
     )
 }
 
@@ -123,6 +126,7 @@ fun SignInScreen(
  * @param onPasswordChange on input password change
  * @param onAttemptSignIn on attempt sign in (sign in/register button clicked)
  * @param onChangeRegister on set to register view
+ * @param onSetBaseUrlValue on set base url value
  * @param onChangeOfflineRegister on set offline registration
  */
 @Composable
@@ -134,6 +138,7 @@ private fun SignInScreen(
     onPasswordChange: (String) -> Unit = {},
     onAttemptSignIn: () -> Unit = {},
     onChangeRegister: () -> Unit = {},
+    onSetBaseUrlValue: (String) -> Unit = {},
     onChangeOfflineRegister: (Boolean) -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
@@ -149,6 +154,18 @@ private fun SignInScreen(
     val emailError =
         !viewState.email.isValidEmail() && viewState.email.isNotBlank() && !emailFocused
 
+    var dialogOpen by remember { mutableStateOf(false) }
+    if (dialogOpen) {
+        CreateBaseUrlAlertDialog(
+            initialUrlValue = viewState.baseUrlValue,
+            onDismiss = { dialogOpen = false },
+            onConfirm = {
+                onSetBaseUrlValue(it)
+                dialogOpen = false
+            },
+        )
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -161,11 +178,14 @@ private fun SignInScreen(
     ) {
         IndefiniteProgressBar(visible = viewState.loading)
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = dim.veryLarge),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = dim.veryLarge),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
+                modifier = Modifier.clickable { dialogOpen = true }, // TODO improve usability
                 painter = painterResource(id = R.drawable.logo),
                 contentDescription = null,
                 tint = Color.Unspecified

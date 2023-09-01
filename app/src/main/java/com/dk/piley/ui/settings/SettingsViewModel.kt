@@ -106,6 +106,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     /**
+     * Set base url to make requests with
+     *
+     * @param url the url string
+     */
+    fun setBaseUrl(url: String) {
+        viewModelScope.launch {
+            userRepository.setBaseUrl(url)
+        }
+    }
+
+    /**
      * Update backup frequency setting
      *
      * @param frequency new frequency value

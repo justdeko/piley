@@ -32,9 +32,11 @@ class SettingsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val userFlow = userRepository.getSignedInUserNotNullFlow()
+            val baseUrlFlow = userRepository.getBaseUrlFlow()
             collectState(
-                combine(userRepository.getSignedInUserNotNullFlow()) { (user) ->
-                    state.value.copy(user = user)
+                userFlow.combine(baseUrlFlow) { user, baseUrl ->
+                    state.value.copy(user = user, baseUrlValue = baseUrl)
                 }
             )
         }
@@ -102,6 +104,17 @@ class SettingsViewModel @Inject constructor(
     fun updateReminderDelay(delay: Int) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(defaultReminderDelay = delay))
+        }
+    }
+
+    /**
+     * Set base url to make requests with
+     *
+     * @param url the url string
+     */
+    fun setBaseUrl(url: String) {
+        viewModelScope.launch {
+            userRepository.setBaseUrl(url)
         }
     }
 
@@ -267,5 +280,6 @@ data class SettingsViewState(
     val user: User = User(),
     val loading: Boolean = false,
     val message: String? = null,
-    val userDeleted: Boolean = false
+    val userDeleted: Boolean = false,
+    val baseUrlValue: String = "",
 )

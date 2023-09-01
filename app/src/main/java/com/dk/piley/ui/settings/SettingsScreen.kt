@@ -36,6 +36,7 @@ import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.ui.common.ContentAlertDialog
+import com.dk.piley.ui.common.CreateBaseUrlAlertDialog
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
@@ -90,7 +91,8 @@ fun SettingsScreen(
         onEditUser = { result -> viewModel.updateUser(result) },
         onDeleteUser = { password -> viewModel.deleteUser(password) },
         onCloseSettings = { navController.popBackStack() },
-        onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) }
+        onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
+        onSetBaseUrlValue = { baseUrl -> viewModel.setBaseUrl(baseUrl) }
     )
 }
 
@@ -111,6 +113,7 @@ fun SettingsScreen(
  * @param onDeleteUser on delete user
  * @param onCloseSettings on close settings screen
  * @param onStartTutorial on restart tutorial
+ * @param onSetBaseUrlValue on set base url value
  */
 @Composable
 private fun SettingsScreen(
@@ -127,7 +130,8 @@ private fun SettingsScreen(
     onEditUser: (EditUserResult) -> Unit = {},
     onDeleteUser: (String) -> Unit = {},
     onCloseSettings: () -> Unit = {},
-    onStartTutorial: () -> Unit = {}
+    onStartTutorial: () -> Unit = {},
+    onSetBaseUrlValue: (String) -> Unit = {},
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
@@ -135,6 +139,18 @@ private fun SettingsScreen(
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
+    var baseUrlDialogOpen by remember { mutableStateOf(false) }
+
+    if (baseUrlDialogOpen) {
+        CreateBaseUrlAlertDialog(
+            initialUrlValue = viewState.baseUrlValue,
+            onDismiss = { baseUrlDialogOpen = false },
+            onConfirm = {
+                onSetBaseUrlValue(it)
+                baseUrlDialogOpen = false
+            },
+        )
+    }
 
     if (editUserDialogOpen) {
         ContentAlertDialog(onDismiss = { editUserDialogOpen = false }) {
@@ -164,7 +180,6 @@ private fun SettingsScreen(
     }
 
     Box(Modifier.fillMaxSize()) {
-        IndefiniteProgressBar(visible = viewState.loading)
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -287,6 +302,13 @@ private fun SettingsScreen(
                         description = stringResource(R.string.start_tutorial_setting_description),
                         onClick = { onStartTutorial() }
                     )
+                    if (!viewState.user.isOffline) {
+                        SettingsItem(
+                            title = stringResource(R.string.set_base_url_setting_title),
+                            description = stringResource(R.string.set_base_url_setting_description),
+                            onClick = { baseUrlDialogOpen = true }
+                        )
+                    }
                 }
                 Box(
                     modifier = Modifier.weight(1f),
@@ -296,6 +318,7 @@ private fun SettingsScreen(
                 }
             }
         }
+        IndefiniteProgressBar(visible = viewState.loading)
     }
 }
 
@@ -305,7 +328,7 @@ private fun SettingsScreen(
 fun SettingsScreenPreview() {
     PileyTheme {
         Surface {
-            val state = SettingsViewState(User())
+            val state = SettingsViewState(User(), loading = true)
             SettingsScreen(viewState = state)
         }
     }

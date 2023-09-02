@@ -35,7 +35,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            buildConfigField("String", "LOCAL_API_BASE_URL", "\"https://127.0.0.1/\"")
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }

@@ -50,7 +50,7 @@ fun TaskInfo(
                 label = stringResource(R.string.task_modified_at_label),
                 value = task.modifiedAt.toLocalDateTime().dateTimeString()
             )
-        }
+        } // TODO add last completed for recurring tasks
     }
 }
 

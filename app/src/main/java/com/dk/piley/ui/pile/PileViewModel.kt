@@ -74,10 +74,14 @@ class PileViewModel @Inject constructor(
                             ?.let { pileWithTasks ->
                                 state.value.copy(
                                     pile = pileWithTasks.pile,
-                                    tasks = pileWithTasks.tasks.filter { task -> task.status == TaskStatus.DEFAULT },
+                                    // only show non-completed tasks and non-deleted recurring tasks
+                                    tasks = pileWithTasks.tasks.filter { task ->
+                                        (task.status == TaskStatus.DEFAULT)
+                                                || (task.isRecurring && task.status != TaskStatus.DELETED)
+                                    },
                                     autoHideEnabled = user.autoHideKeyboard,
                                     pileIdTitleList = idTitleList,
-                                    noTasksYet = pileWithTasks.tasks.isEmpty()
+                                    noTasksYet = pileWithTasks.tasks.isEmpty(),
                                 )
                             }
                     }
@@ -149,6 +153,15 @@ class PileViewModel @Inject constructor(
     fun setMessage(message: String?) {
         state.update { it.copy(message = message) }
     }
+
+    /**
+     * Set whether recurring tasks should be shown
+     *
+     * @param shown the visibility value
+     */
+    fun setShowRecurring(shown: Boolean) {
+        state.update { it.copy(showRecurring = shown) }
+    }
 }
 
 data class PileViewState(
@@ -157,5 +170,6 @@ data class PileViewState(
     val autoHideEnabled: Boolean = true,
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),
     val noTasksYet: Boolean = false,
-    val message: String? = null
+    val message: String? = null,
+    val showRecurring: Boolean = false
 )

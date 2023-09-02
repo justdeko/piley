@@ -50,7 +50,7 @@ class ReminderActionHandler @Inject constructor(
                 if (task.isRecurring && task.status == TaskStatus.DONE) {
                     taskRepository.insertTask(
                         task.copy(status = TaskStatus.DEFAULT)
-                    )
+                    ) // TODO double check if that actually makes sense for recurring tasks
                 }
             }
     }

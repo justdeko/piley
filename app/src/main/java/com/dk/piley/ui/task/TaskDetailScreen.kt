@@ -65,7 +65,7 @@ fun TaskDetailScreen(
         LaunchedEffect(true) {
             navController.popBackStack()
         }
-    }
+    } // TODO don't do that for done recurring tasks
 
     TaskDetailScreen(
         viewState = viewState,

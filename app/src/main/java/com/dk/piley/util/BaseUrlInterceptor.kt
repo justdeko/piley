@@ -47,6 +47,7 @@ class BaseUrlInterceptor(private val userPrefsManager: UserPrefsManager) : Inter
                 request.url.newBuilder()
                     .scheme(it.scheme)
                     .host(it.toUrl().toURI().host)
+                    .port(it.port)
                     .build()
             }
         } catch (e: URISyntaxException) {

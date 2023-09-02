@@ -54,11 +54,14 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.dateTimeString
+import com.dk.piley.util.getNextReminderTime
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
 import com.dk.piley.util.previewTaskList
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.titleCharacterLimit
+import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.launch
 
 /**
@@ -188,7 +191,18 @@ private fun PileScreen(
                 tasks = shownTasks,
                 pileMode = viewState.pile.pileMode,
                 taskTransitionStates = taskTransitionStates,
-                onDone = onDone,
+                onDone = {
+                    // if task is recurring, display completion message and next due date
+                    if (it.isRecurring) {
+                        onSetMessage(
+                            context.getString(
+                                R.string.recurring_task_completed_info,
+                                it.getNextReminderTime().toLocalDateTime().dateTimeString()
+                            )
+                        )
+                    }
+                    onDone(it)
+                },
                 onDelete = onDelete,
                 onTaskClick = onClick
             )

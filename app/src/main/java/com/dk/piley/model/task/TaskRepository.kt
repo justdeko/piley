@@ -2,7 +2,9 @@ package com.dk.piley.model.task
 
 import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
+import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getNextReminderTime
+import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 import java.time.Instant
@@ -35,14 +37,13 @@ class TaskRepository @Inject constructor(
             )
         }
         // remove notification or scheduled alarms if task is set to done/deleted
-        if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) {
-            dismissAlarmAndNotification(task)
-        }
-        return taskDao.insertTask(tempTask)
+        return if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) {
+            dismissAlarmAndNotificationAndInsert(tempTask)
+        } else taskDao.insertTask(tempTask)
     }
 
     suspend fun deleteTask(task: Task): Void {
-        dismissAlarmAndNotification(task)
+        dismissAlarmAndNotificationAndInsert(task)
         return taskDao.deleteTask(task)
     }
 
@@ -51,28 +52,35 @@ class TaskRepository @Inject constructor(
 
     /**
      * Dismiss alarm and notifications for a given task and create new ones if it is recurring
+     * also insert the modified task
      *
-     * @param task the task entity to dismiss and recreate reminders for
+     * @param task the task entity to dismiss and recreate reminders for and insert
+     * @return long representing db operation success
      */
-    private suspend fun dismissAlarmAndNotification(task: Task) {
+    private suspend fun dismissAlarmAndNotificationAndInsert(task: Task): Long {
         Timber.d("dismiss and start reminder from repository")
         reminderManager.cancelReminder(task.id)
         notificationManager.dismiss(task.id)
         // set next reminder if task is recurring
         if (task.status != TaskStatus.DELETED && task.isRecurring && task.reminder != null) {
             task.getNextReminderTime().let {
+                Timber.d(
+                    "set next reminder time for recurring reminder: ${
+                        it.toLocalDateTime().dateTimeString()
+                    }"
+                )
                 reminderManager.startReminder(
                     reminderTime = it,
                     taskId = task.id
                 )
                 // set new reminder time inside task
-                taskDao.insertTask(
+                return taskDao.insertTask(
                     task.copy(
                         reminder = it,
-                        modifiedAt = Instant.now()
                     )
                 )
             }
         }
+        return taskDao.insertTask(task)
     }
 }

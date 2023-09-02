@@ -11,18 +11,28 @@ import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.AlertDialogHelper
+import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getPreviewTransitionStates
+import com.dk.piley.util.toLocalDateTime
+import java.time.Instant
 
 /**
  * Task pile view
@@ -51,6 +61,24 @@ fun TaskPile(
 ) {
     val haptic = LocalHapticFeedback.current
     val dim = LocalDim.current
+    var recurringTaskToComplete by rememberSaveable { mutableStateOf<Task?>(null) }
+    if (recurringTaskToComplete != null) {
+        AlertDialogHelper(
+            title = stringResource(R.string.complete_recurring_task_dialog_title),
+            description = stringResource(
+                R.string.complete_recurring_task_dialog_description,
+                recurringTaskToComplete?.reminder?.toLocalDateTime()?.dateTimeString() ?: ""
+            ),
+            confirmText = stringResource(R.string.complete_recurring_task_dialog_confirm),
+            onConfirm = {
+                recurringTaskToComplete?.let {
+                    onDone(it)
+                }
+                recurringTaskToComplete = null
+            },
+            onDismiss = { recurringTaskToComplete = null }
+        )
+    }
     LazyColumn(
         modifier = modifier.padding(dim.medium),
         reverseLayout = true,
@@ -66,6 +94,11 @@ fun TaskPile(
                             && it == DismissValue.DismissedToEnd
                         ) {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            false
+                        }
+                        // if task is recurring and reminder not shown yet, show premature completion dialog
+                        else if (task.isRecurring && task.reminder?.isAfter(Instant.now()) == true) {
+                            recurringTaskToComplete = task
                             false
                         } else true
                     },

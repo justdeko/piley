@@ -78,13 +78,19 @@ fun PileScreen(
 ) {
     val viewState by viewModel.state.collectAsState()
     val selectedPileViewState by viewModel.selectedPileIndex.collectAsState()
-    val taskTransitionStates = viewState.tasks?.map {
+    // filter out recurring tasks, show if recurring enabled
+    val shownTasks = if (viewState.showRecurring) {
+        viewState.tasks
+    } else {
+        viewState.tasks?.filter { !it.isRecurring }
+    } ?: emptyList()
+    val taskTransitionStates = shownTasks.map {
         remember {
             MutableTransitionState(false).apply {
                 targetState = true
             }
         }
-    } ?: emptyList() // TODO adapt animation when filtering for recurring tasks
+    } // TODO fix disappearance animation
 
     // snackbar handler
     viewState.message?.let { message ->
@@ -97,6 +103,7 @@ fun PileScreen(
 
     PileScreen(
         modifier = modifier,
+        shownTasks = shownTasks,
         viewState = viewState,
         taskTransitionStates = taskTransitionStates,
         selectedPileIndex = selectedPileViewState,
@@ -115,6 +122,7 @@ fun PileScreen(
  *
  * @param modifier generic modifier
  * @param viewState pile screen view state
+ * @param shownTasks the task list that will be shown inside the pile
  * @param taskTransitionStates animation transition states for pile tasks
  * @param selectedPileIndex index of currently selected pile
  * @param onTitlePageChanged action on pile title change (selection of different pile)
@@ -129,6 +137,7 @@ fun PileScreen(
 private fun PileScreen(
     modifier: Modifier = Modifier,
     viewState: PileViewState,
+    shownTasks: List<Task> = emptyList(),
     taskTransitionStates: List<MutableTransitionState<Boolean>>,
     selectedPileIndex: Int = 0,
     onTitlePageChanged: (Int) -> Unit = {},
@@ -176,9 +185,7 @@ private fun PileScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .offset(pileOffset.value.dp, 0.dp),
-                tasks = viewState.tasks
-                    ?.filter { it.isRecurring == viewState.showRecurring }
-                    ?: emptyList(),
+                tasks = shownTasks,
                 pileMode = viewState.pile.pileMode,
                 taskTransitionStates = taskTransitionStates,
                 onDone = onDone,
@@ -293,6 +300,7 @@ fun PileScreenPreview() {
             )
             PileScreen(
                 viewState = state,
+                shownTasks = pilesWithTasks[0].tasks,
                 taskTransitionStates = pilesWithTasks[0].tasks.getPreviewTransitionStates()
             )
         }
@@ -314,6 +322,7 @@ fun PileScreenRecurringPreview() {
             )
             PileScreen(
                 viewState = state,
+                shownTasks = upcomingTasks,
                 taskTransitionStates = upcomingTasks.getPreviewTransitionStates()
             )
         }
@@ -348,7 +357,8 @@ fun PileScreenManyTasksPreview() {
             )
             PileScreen(
                 viewState = state,
-                taskTransitionStates = previewTaskList.getPreviewTransitionStates()
+                taskTransitionStates = previewTaskList.getPreviewTransitionStates(),
+                shownTasks = previewTaskList
             )
         }
     }

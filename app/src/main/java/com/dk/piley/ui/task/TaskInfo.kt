@@ -45,12 +45,19 @@ fun TaskInfo(
                 label = stringResource(R.string.task_created_at_label),
                 value = task.createdAt.toLocalDateTime().dateTimeString()
             )
+            if (task.isRecurring && task.completionTimes.isNotEmpty()) {
+                BigSpacer()
+                FullWidthInfo(
+                    label = stringResource(R.string.task_last_completed_at_label),
+                    value = task.completionTimes.last().toLocalDateTime().dateTimeString()
+                )
+            }
             BigSpacer()
             FullWidthInfo(
                 label = stringResource(R.string.task_modified_at_label),
                 value = task.modifiedAt.toLocalDateTime().dateTimeString()
             )
-        } // TODO add last completed for recurring tasks
+        }
     }
 }
 
@@ -63,6 +70,22 @@ fun TaskInfoPreview() {
             task = Task(
                 createdAt = Instant.now().minusMillis(1000 * 60 * 60 * 3), // 3 hours
                 modifiedAt = Instant.now()
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun TaskInfoRecurringPreview() {
+    PileyTheme(useDarkTheme = true) {
+        TaskInfo(
+            Modifier.fillMaxWidth(),
+            task = Task(
+                createdAt = Instant.now().minusMillis(1000 * 60 * 60 * 3), // 3 hours
+                modifiedAt = Instant.now(),
+                isRecurring = true,
+                completionTimes = listOf(Instant.now().minusMillis(1000 * 60 * 60 * 3), Instant.now().minusMillis(1000 * 60 * 60 * 1))
             )
         )
     }

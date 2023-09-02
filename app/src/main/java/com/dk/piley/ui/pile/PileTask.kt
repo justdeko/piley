@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material3.Card
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissState
@@ -36,6 +37,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.confirm_green
+import com.dk.piley.util.MediumSpacer
 
 /**
  * Pile task within a pile
@@ -114,7 +116,8 @@ fun PileTask(
                     modifier = Modifier
                         .defaultMinSize(minHeight = dim.large)
                         .fillMaxWidth(),
-                    taskText = task.title
+                    taskText = task.title,
+                    isRecurring = task.isRecurring
                 )
             }
         }
@@ -122,15 +125,29 @@ fun PileTask(
 }
 
 @Composable
-fun PileEntry(modifier: Modifier = Modifier, taskText: String) {
+fun PileEntry(modifier: Modifier = Modifier, taskText: String, isRecurring: Boolean = false) {
     Card(modifier = modifier.padding(horizontal = LocalDim.current.medium)) {
-        Text(
-            text = taskText,
-            modifier = modifier
-                .padding(horizontal = LocalDim.current.medium, vertical = 12.dp)
-                .align(Alignment.CenterHorizontally),
-            textAlign = TextAlign.Center
-        )
+        Row(
+            modifier = modifier.padding(
+                horizontal = LocalDim.current.medium,
+                vertical = 12.dp
+            ),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (isRecurring) {
+                Icon(
+                    Icons.Outlined.AccessTime,
+                    tint = MaterialTheme.colorScheme.secondary,
+                    contentDescription = "recurring task"
+                )
+                MediumSpacer()
+            }
+            Text(
+                text = taskText,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -144,8 +161,19 @@ fun PileEntryPreview() {
 
 @Preview(showBackground = true)
 @Composable
+fun PileEntryRecurringPreview() {
+    PileyTheme(useDarkTheme = true) {
+        PileEntry(modifier = Modifier.fillMaxWidth(), taskText = "Hey there", isRecurring = true)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 fun PileEntryLongTextPreview() {
     PileyTheme(useDarkTheme = true) {
-        PileEntry(modifier = Modifier.fillMaxWidth(), taskText = "Hey there with some very long text that spans multiple lines")
+        PileEntry(
+            modifier = Modifier.fillMaxWidth(),
+            taskText = "Hey there with some very long text that spans multiple lines"
+        )
     }
 }

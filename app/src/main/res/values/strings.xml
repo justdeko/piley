@@ -195,6 +195,7 @@
     <string name="task_info_title">Other Information</string>
     <string name="task_created_at_label">Created at:</string>
     <string name="task_modified_at_label">Modified at:</string>
+    <string name="task_last_completed_at_label">Last completed at:</string>
 
     <!-- notification permission dialog -->
     <string name="notification_permission_dialog_title">Notification permission needed</string>

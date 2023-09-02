@@ -186,4 +186,5 @@
     <string name="base_url_dialog_cancel">Abbrechen</string>
     <string name="set_base_url_setting_title">Request-Url einstellen</string>
     <string name="set_base_url_setting_description">Stelle hier die URL ein, mit der die App sich verbindet und Backups hoch- und runterlädt.</string>
+    <string name="task_last_completed_at_label">Das letzte Mal abgeschlossen am:</string>
 </resources>

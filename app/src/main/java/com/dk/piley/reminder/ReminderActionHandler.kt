@@ -46,12 +46,6 @@ class ReminderActionHandler @Inject constructor(
                 val pileName =
                     getPileNameForTaskId(taskId, pileRepository.getPilesWithTasks().first())
                 notificationManager.showNotification(task, pileName)
-                // set status to default if task is recurring so the task shows up again
-                if (task.isRecurring && task.status == TaskStatus.DONE) {
-                    taskRepository.insertTask(
-                        task.copy(status = TaskStatus.DEFAULT)
-                    )
-                }
             }
     }
 

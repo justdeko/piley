@@ -13,9 +13,6 @@ class Piley : Application() {
         // init timber
         if (BuildConfig.DEBUG) {
             plant(DebugTree())
-        } else {
-            // TODO plant crash reporting
-            plant(DebugTree())
         }
     }
 }

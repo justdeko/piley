@@ -186,4 +186,9 @@
     <string name="base_url_dialog_cancel">Abbrechen</string>
     <string name="set_base_url_setting_title">Request-Url einstellen</string>
     <string name="set_base_url_setting_description">Stelle hier die URL ein, mit der die App sich verbindet und Backups hoch- und runterlädt.</string>
+    <string name="task_last_completed_at_label">Das letzte Mal abgeschlossen am:</string>
+    <string name="recurring_task_completed_info">Task abgeschlossen! Nächster Reminder: %1$s</string>
+    <string name="complete_recurring_task_dialog_title">Wiederholendes Task abschließen</string>
+    <string name="complete_recurring_task_dialog_description">Bist du dir sicher, dass du diesen Task vorzeitig abschließen möchtest? Der nächste Reminder ist am %1$s</string>
+    <string name="complete_recurring_task_dialog_confirm">Abschließen</string>
 </resources>

@@ -61,7 +61,7 @@ fun TaskDetailScreen(
     val viewState by viewModel.state.collectAsState()
 
     // navigate out of view if task completed or deleted
-    if (viewState.task.status == TaskStatus.DONE || viewState.task.status == TaskStatus.DELETED) {
+    if ((viewState.task.status == TaskStatus.DONE && !viewState.task.isRecurring) || viewState.task.status == TaskStatus.DELETED) {
         LaunchedEffect(true) {
             navController.popBackStack()
         }

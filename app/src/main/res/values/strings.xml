@@ -32,6 +32,10 @@
     <string name="pile_full_warning">This pile is already full!</string>
     <string name="no_tasks_left_message">Looks like there are no tasks left.\nClick on the field below to create a new one</string>
     <string name="no_tasks_yet_message">Looks like there are no tasks yet.\nClick on the field below to create a new one</string>
+    <string name="recurring_task_completed_info">Task completed! Next due date: %1$s</string>
+    <string name="complete_recurring_task_dialog_title">Complete recurring task</string>
+    <string name="complete_recurring_task_dialog_description">Are you sure you want to complete this recurring task ahead of its due date (%1$s)?</string>
+    <string name="complete_recurring_task_dialog_confirm">Complete</string>
 
     <!-- pile detail screen -->
     <string name="delete_pile_button_text">Delete</string>
@@ -195,6 +199,7 @@
     <string name="task_info_title">Other Information</string>
     <string name="task_created_at_label">Created at:</string>
     <string name="task_modified_at_label">Modified at:</string>
+    <string name="task_last_completed_at_label">Last completed at:</string>
 
     <!-- notification permission dialog -->
     <string name="notification_permission_dialog_title">Notification permission needed</string>

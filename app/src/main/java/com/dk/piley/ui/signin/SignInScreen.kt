@@ -69,7 +69,7 @@ fun SignInScreen(
 ) {
     val viewState by viewModel.state.collectAsState()
 
-    if (viewState.signInState == SignInState.SIGNED_IN) {
+    if (viewState.signInState == SignInState.SIGNED_IN || viewState.signInState == SignInState.REGISTERED) {
         // navigate to register screen if it is the user's first time
         if (viewState.firstTime) {
             LaunchedEffect(viewState.signInState) {
@@ -144,7 +144,7 @@ private fun SignInScreen(
     val dim = LocalDim.current
 
     val isRegister =
-        viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE
+        viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE || viewState.signInState == SignInState.REGISTERED
     val signInText =
         if (isRegister) {
             stringResource(R.string.register_button_text)

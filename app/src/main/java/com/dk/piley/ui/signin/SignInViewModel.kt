@@ -149,7 +149,8 @@ class SignInViewModel @Inject constructor(
      */
     private fun updateUIOnSignInSuccess(isSignIn: Boolean = true) {
         setLoading(false)
-        setSignInState(SignInState.SIGNED_IN)
+        val finalState = if (isSignIn) SignInState.SIGNED_IN else SignInState.REGISTERED
+        setSignInState(finalState)
         // TODO remove intermediate solution when runtime db fixed
         if (isSignIn) {
             setMessage(application.getString(R.string.sign_in_success_message))

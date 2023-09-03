@@ -1,4 +1,4 @@
-name: Build, Sign, and Release Android App
+name: Build Debug APK and draft Release
 on:
   push:
     tags:
@@ -30,7 +30,7 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
 
   release:
-    name: Create Release
+    name: Create Release Draft
     needs: build_debug
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
         with:
           name: piley
       - name: Rename APK
-        run: mv app-debug.apk piley_${{ github.ref_name }}-debug.apk
+        run: mv app-debug.apk piley-${{ github.ref_name }}-debug.apk
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -49,4 +49,4 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: true
           prerelease: false
-          files: piley_${{ github.ref_name }}-debug.apk
+          files: piley-${{ github.ref_name }}-debug.apk

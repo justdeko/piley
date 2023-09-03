@@ -67,7 +67,7 @@ fun CreateBaseUrlAlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
-                onClick = { onConfirm(urlTextValue) },
+                onClick = { onConfirm(urlTextValue.trim()) },
                 enabled = android.util.Patterns.WEB_URL.matcher(urlTextValue).matches()
             ) {
                 Text(stringResource(R.string.base_url_dialog_confirm))

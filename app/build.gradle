@@ -94,7 +94,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
     // material design components

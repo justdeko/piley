@@ -1,5 +1,7 @@
 package com.dk.piley.model.remote.user
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * User update request sent to the api endpoint
  *
@@ -9,8 +11,8 @@ package com.dk.piley.model.remote.user
  * @property newPassword new password of the user
  */
 data class UserUpdateRequest(
-    val email: String,
-    val name: String,
-    val oldPassword: String,
-    val newPassword: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("oldPassword") val oldPassword: String,
+    @SerializedName("newPassword") val newPassword: String,
 )

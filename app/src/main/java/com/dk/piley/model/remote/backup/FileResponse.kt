@@ -1,5 +1,6 @@
 package com.dk.piley.model.remote.backup
 
+import com.google.gson.annotations.SerializedName
 import java.io.File
 import java.time.Instant
 
@@ -10,6 +11,6 @@ import java.time.Instant
  * @property lastModified the last modification date of the backup
  */
 data class FileResponse(
-    val file: File,
-    val lastModified: Instant
+    @SerializedName("file") val file: File,
+    @SerializedName("lastModified") val lastModified: Instant
 )

@@ -1,5 +1,7 @@
 package com.dk.piley.model.remote.user
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * Entity representing a user request to the user api endpoint
  *
@@ -8,7 +10,7 @@ package com.dk.piley.model.remote.user
  * @property password user password
  */
 data class UserRequest(
-    val email: String,
-    val name: String,
-    val password: String
+    @SerializedName("email") val email: String,
+    @SerializedName("name") val name: String,
+    @SerializedName("password") val password: String
 )

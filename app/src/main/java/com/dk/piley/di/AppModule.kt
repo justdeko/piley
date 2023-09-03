@@ -27,7 +27,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -57,7 +57,7 @@ object AppModule {
     fun provideApi(baseUrlInterceptor: BaseUrlInterceptor): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.LOCAL_API_BASE_URL)
         .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(MoshiConverterFactory.create())
+        .addConverterFactory(GsonConverterFactory.create())
         .client(
             OkHttpClient.Builder()
                 .addInterceptor(baseUrlInterceptor)

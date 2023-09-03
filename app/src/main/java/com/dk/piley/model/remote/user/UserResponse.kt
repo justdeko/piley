@@ -1,5 +1,7 @@
 package com.dk.piley.model.remote.user
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * User response returned by the api endpoint
  *
@@ -7,6 +9,6 @@ package com.dk.piley.model.remote.user
  * @property name user name
  */
 data class UserResponse(
-    val email: String,
-    val name: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("name") val name: String,
 )

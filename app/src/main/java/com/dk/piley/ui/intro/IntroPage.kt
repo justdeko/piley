@@ -19,7 +19,7 @@ sealed class IntroPage(
     @StringRes val descriptionResource: Int,
     val isScreenshot: Boolean
 ) {
-    object Welcome : IntroPage(
+    data object Welcome : IntroPage(
         imageResource = R.drawable.tasks,
         imageNightResource = R.drawable.tasks,
         titleResource = R.string.welcome_page_title,
@@ -27,7 +27,7 @@ sealed class IntroPage(
         isScreenshot = false
     )
 
-    object Pile : IntroPage(
+    data object Pile : IntroPage(
         imageResource = R.drawable.pile_screen_demo,
         imageNightResource = R.drawable.pile_screen_night_demo,
         titleResource = R.string.pile_page_title,
@@ -35,7 +35,15 @@ sealed class IntroPage(
         isScreenshot = true
     )
 
-    object Piles : IntroPage(
+    data object RecurringPile : IntroPage(
+        imageResource = R.drawable.recurring_pile_screen_demo,
+        imageNightResource = R.drawable.recurring_pile_screen_night_demo,
+        titleResource = R.string.recurring_pile_page_title,
+        descriptionResource = R.string.recurring_pile_page_description,
+        isScreenshot = true
+    )
+
+    data object Piles : IntroPage(
         imageResource = R.drawable.pile_overview_screen_demo,
         imageNightResource = R.drawable.pile_overview_screen_night_demo,
         titleResource = R.string.piles_page_title,
@@ -43,7 +51,7 @@ sealed class IntroPage(
         isScreenshot = true
     )
 
-    object Profile : IntroPage(
+    data object Profile : IntroPage(
         imageResource = R.drawable.profile_screen_demo,
         imageNightResource = R.drawable.profile_screen_night_demo,
         titleResource = R.string.profile_page_title,
@@ -51,7 +59,7 @@ sealed class IntroPage(
         isScreenshot = true
     )
 
-    object End : IntroPage(
+    data object End : IntroPage(
         imageResource = R.drawable.door,
         imageNightResource = R.drawable.door,
         titleResource = R.string.end_page_title,

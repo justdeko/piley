@@ -158,6 +158,8 @@
     <string name="pile_page_title">Pile</string>
     <string name="pile_page_description">Ein Pile ist wie der Name\'s sagt - ein Stapel deiner Aufgaben. Klicke auf den Button unten, um einen neuen Task zu erstellen, oder wische Tasks zur Seite, um sie abzuschließen.</string>
     <string name="piles_page_title">Piles</string>
+    <string name="recurring_pile_page_title">Tasks, die sich wiederholen</string>
+    <string name="recurring_pile_page_description">Wenn du einen wiederholenden Reminder für einen Task setzt, kannst du diese Tasks mit dem Uhr-Button in deinem Pile anzeigen.</string>
     <string name="piles_page_description">Verwalte deine Piles, indem du zum Piles-Abschnitt navigierst und dort Piles erstellst, bearbeitest oder löschst. Nur der Tägliche Pile kann nicht gelöscht werden.</string>
     <string name="profile_page_title">Profil</string>
     <string name="profile_page_description">Du kannst auch Statistiken und anstehende Tasks einsehen, indem du zum Profil-Abschnitt navigierst.</string>

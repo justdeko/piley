@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/justdeko/piley">
-    <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" alt="Logo" width="160" height="160">
+    <img src="docs/assets/piley-logo.png" alt="Logo" width="160" height="160">
   </a>
 
 <h3 align="center">piley</h3>

@@ -1,12 +1,12 @@
-name: Build, Sign, and Release Android App
+name: Build Debug APK and draft Release
 on:
   push:
     tags:
       - 'v*'
 
 jobs:
-  build_and_sign:
-    name: Build Signed APK
+  build_debug:
+    name: Build Debug APK
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,44 +16,30 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1.2
-        with:
-          fileName: 'android_keystore.jks'
-          fileDir: '/home/runner/work/piley/piley/app/keystore/'
-          encodedString: ${{ secrets.KEYSTORE }}
+      - name: Build Debug APK
+        run: ./gradlew :app:assembleDebug -x test --stacktrace
 
-      - name: Build APK
-        run: ./gradlew :app:assembleRelease -x test
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-
-      - name: Verify Signature
-        run: $ANDROID_SDK_ROOT/build-tools/33.0.1/apksigner verify --print-certs app/build/outputs/apk/release/app-release.apk
-
-      - name: Upload APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v3.1.2
         with:
           name: piley
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
 
   release:
-    name: Create Release
-    needs: build_and_sign
+    name: Create Release Draft
+    needs: build_debug
     runs-on: ubuntu-latest
     steps:
-      - name: Download Signed APK
+      - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
           name: piley
       - name: Rename APK
-        run: mv app-release.apk piley-${{ github.ref_name }}.apk
+        run: mv app-debug.apk piley-${{ github.ref_name }}-debug.apk
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
@@ -63,4 +49,4 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: true
           prerelease: false
-          files: piley-${{ github.ref_name }}.apk
+          files: piley-${{ github.ref_name }}-debug.apk

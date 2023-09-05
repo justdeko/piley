@@ -51,10 +51,10 @@ server, you can also back up your tasks and sync regularly to get the newest sta
 
 <div align="center">
   <p>
-    <img style="border-radius: 12px;" src="app/src/main/res/drawable/pile_screen_demo.png" width="21%" />
-    <img style="border-radius: 12px;" src="app/src/main/res/drawable/recurring_pile_screen_demo.png" width="21%" />
-    <img style="border-radius: 12px;" src="app/src/main/res/drawable/pile_overview_screen_demo.png" width="21%" /> 
-    <img style="border-radius: 12px;" src="app/src/main/res/drawable/profile_screen_demo.png" width="21%" />
+    <img src="app/src/main/res/drawable/pile-screen.png" width="21%" />
+    <img src="app/src/main/res/drawable/pile-overview-screen.png" width="21%" />
+    <img src="app/src/main/res/drawable/recurring-pile-screen.png" width="21%" /> 
+    <img src="app/src/main/res/drawable/profile-screen.png" width="21%" />
   </p>
 </div>
 
@@ -91,7 +91,7 @@ emulators to connect to the localhost
 environment of the emulator host or the local computer api. You will need to change it unless you
 are running the app in an emulator.
 
-<img style="border-radius: 8px;" src="docs/assets/change_url.gif" width="33%" />
+<img style="border-radius: 8px;" src="docs/assets/change_url.gif" width="200" />
 
 If you want to use an endpoint with a self-signed
 SSL certificate, you will have to manually add a

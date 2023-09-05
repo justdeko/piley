@@ -14,8 +14,9 @@ Just download the source code and compile the app, or get one of the released ap
 
 <div align="center">
   <p>
-    <img src="./assets/pile_screen_demo.png" width="200" />
-    <img src="./assets/pile_overview_screen_demo.png" width="200" /> 
-    <img src="./assets/profile_screen_demo.png" width="200" />
+    <img src="./assets/pile-screen.png" width="21%" />
+    <img src="./assets/pile-overview-screen.png" width="21%" /> 
+    <img src="./assets/recurring-pile-screen.png" width="21%" />
+    <img src="./assets/profile-screen.png" width="21%" />
   </p>
 </div>

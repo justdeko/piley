@@ -51,10 +51,10 @@ server, you can also back up your tasks and sync regularly to get the newest sta
 
 <div align="center">
   <p>
-    <img src="app/src/main/res/drawable/pile-screen.png" width="21%" />
-    <img src="app/src/main/res/drawable/pile-overview-screen.png" width="21%" />
-    <img src="app/src/main/res/drawable/recurring-pile-screen.png" width="21%" /> 
-    <img src="app/src/main/res/drawable/profile-screen.png" width="21%" />
+    <img src="docs/assets/pile-screen.png" width="24%" />
+    <img src="docs/assets/pile-overview-screen.png" width="24%" />
+    <img src="docs/assets/recurring-pile-screen.png" width="24%" /> 
+    <img src="docs/assets/profile-screen.png" width="24%" />
   </p>
 </div>
 

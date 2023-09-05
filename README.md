@@ -9,15 +9,17 @@
     <img src="docs/assets/piley-logo.png" alt="Logo" width="160" height="160">
   </a>
 
-<h3 align="center">piley</h3>
+<h1 align="center">piley</h1>
 
   <p align="center">
-    <a href="https://github.com/justdeko/piley/issues">Report Bug</a>
+    <a href="https://github.com/justdeko/piley/issues">report bug</a>
     ·
-    <a href="https://github.com/justdeko/piley/issues">Suggest Feature</a>
+    <a href="https://github.com/justdeko/piley/issues">suggest feature</a>
+    ·
+    <a href="https://github.com/justdeko/piley-server">piley-server</a>
   </p>
+<a href='http://play.google.com/store/apps'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
 </div>
-
 
 
 <!-- TABLE OF CONTENTS -->
@@ -49,9 +51,10 @@ server, you can also back up your tasks and sync regularly to get the newest sta
 
 <div align="center">
   <p>
-    <img src="app/src/main/res/drawable/pile_screen_demo.png" width="200" />
-    <img src="app/src/main/res/drawable/pile_overview_screen_demo.png" width="200" /> 
-    <img src="app/src/main/res/drawable/profile_screen_demo.png" width="200" />
+    <img style="border-radius: 12px;" src="app/src/main/res/drawable/pile_screen_demo.png" width="21%" />
+    <img style="border-radius: 12px;" src="app/src/main/res/drawable/recurring_pile_screen_demo.png" width="21%" />
+    <img style="border-radius: 12px;" src="app/src/main/res/drawable/pile_overview_screen_demo.png" width="21%" /> 
+    <img style="border-radius: 12px;" src="app/src/main/res/drawable/profile_screen_demo.png" width="21%" />
   </p>
 </div>
 
@@ -73,25 +76,28 @@ piley is a native Android app built with Jetpack Compose. The following librarie
 
 ## Getting Started
 
-To start using piley, you can just get the apk from the
-**[Releases](https://github.com/justdeko/piley/releases)** section.
-
-However, this will not
-have any remote functionality and you will have to use offline mode (just check the offline mode
-checkbox when registering).
-The API url is by default `10.0.2.2`, which is used in emulators to connect to the localhost
-environment of the emulator host.
+To start using piley, you can just get the newest apk from the
+**[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [google
+play](http://play.google.com/store/apps) (coming soon)
 
 ### Connect to [piley-server](https://github.com/justdeko/piley-server)
+If you want to connect your app to a self-hosted piley-server backend to upload backups, you can
+input the url when signing in. You can also change the endpoint URL later in the user settings if
+your server location changes. The application allows cleartext traffic, meaning your endpoint can
+also be http.
 
-If you want to connect your app to a self-hosted piley-server backend to upload backups, you need to
-run the `build-with-custom-url.sh`script which will result in a debug apk with the target URL you
-entered. The URL should have a valid SSL certificate.
+The API url is by default `10.0.2.2` or `127.0.0.1` depending on the build type, which is used in
+emulators to connect to the localhost
+environment of the emulator host or the local computer api. You will need to change it unless you
+are running the app in an emulator.
 
-If you also want to build a release apk with your custom url or use an endpoint with a self-signed
-SSL certificate, you will have to manually change the
+<img style="border-radius: 8px;" src="docs/assets/change_url.gif" width="33%" />
+
+If you want to use an endpoint with a self-signed
+SSL certificate, you will have to manually add a
 network security config and include your certificate in `trust-anchors`. Then build the release apk
-as usual using Android Studio or the CLI.
+as usual using Android Studio or the CLI. For more information about custom
+certificates, [read the official documentation](https://developer.android.com/training/articles/security-config#CustomTrust).
 
 For information on getting started with
 piley-server, [go here](https://github.com/justdeko/piley-server).

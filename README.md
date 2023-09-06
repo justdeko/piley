@@ -81,6 +81,7 @@ To start using piley, you can just get the newest apk from the
 play](http://play.google.com/store/apps) (coming soon)
 
 ### Connect to [piley-server](https://github.com/justdeko/piley-server)
+
 If you want to connect your app to a self-hosted piley-server backend to upload backups, you can
 input the url when signing in. You can also change the endpoint URL later in the user settings if
 your server location changes. The application allows cleartext traffic, meaning your endpoint can
@@ -103,6 +104,11 @@ For information on getting started with
 piley-server, [go here](https://github.com/justdeko/piley-server).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Planned features
+
+To view planned features and track the general progress, visit
+the [project board](https://github.com/users/justdeko/projects/1)
 
 ## Contributing
 

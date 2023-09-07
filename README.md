@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/justdeko/piley">
-    <img src="docs/assets/piley-logo.png" alt="Logo" width="160" height="160">
+    <img src="docs/assets/piley-logo.png" alt="Logo" width="40%">
   </a>
 
 <h1 align="center">piley</h1>
@@ -108,7 +108,9 @@ piley-server, [go here](https://github.com/justdeko/piley-server).
 ## Planned features
 
 To view planned features and track the general progress, visit
-the [project board](https://github.com/users/justdeko/projects/1)
+the [project board](https://github.com/users/justdeko/projects/1).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Contributing
 

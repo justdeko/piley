@@ -6,7 +6,7 @@ buildscript {
         room_version = '2.5.2'
         hilt_version = "2.48"
         kotlin_version = '1.9.10'
-        nav_version = '2.7.1'
+        nav_version = '2.7.2'
         retrofit_version = "2.9.0"
     }
     dependencies {

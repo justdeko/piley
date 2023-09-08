@@ -69,6 +69,7 @@ fun CreateBaseUrlAlertDialog(
             TextButton(
                 onClick = { onConfirm(urlTextValue.trim()) },
                 enabled = android.util.Patterns.WEB_URL.matcher(urlTextValue).matches()
+                        && urlTextValue.last() == '/'
             ) {
                 Text(stringResource(R.string.base_url_dialog_confirm))
             }

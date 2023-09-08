@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/justdeko/piley">
-    <img src="docs/assets/piley-logo.png" alt="Logo" height="80">
+    <img src="docs/assets/piley-logo.png" alt="Logo" height="120">
   </a>
 
 <h3 align="center">piley</h3>

@@ -6,10 +6,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/justdeko/piley">
-    <img src="docs/assets/piley-logo.png" alt="Logo" height="200">
+    <img src="docs/assets/piley-logo.png" alt="Logo" height="80">
   </a>
 
-<h1 align="center">piley</h1>
+<h3 align="center">piley</h3>
 
   <p align="center">
     <a href="https://github.com/justdeko/piley/issues">report bug</a>

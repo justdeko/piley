@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -137,7 +139,10 @@ fun PileCard(
                             .align(Alignment.Start)
                             .defaultPadding(),
                         text = pileWithTasks.pile.name,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            hyphens = Hyphens.Auto,
+                            lineBreak = LineBreak.Paragraph
+                        ),
                         color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
@@ -166,6 +171,21 @@ fun PileCardLongTitlePreview() {
     PileyTheme(useDarkTheme = true) {
         val pileWithTasks = PileWithTasks(
             pile = Pile(name = "A very long pile name"),
+            tasks = listOf(Task(title = "hey"), Task(title = "hey too"))
+        )
+        PileCard(
+            modifier = Modifier.width(200.dp), pileWithTasks = pileWithTasks
+        )
+    }
+}
+
+
+@Preview
+@Composable
+fun PileCardLongWordPreview() {
+    PileyTheme(useDarkTheme = true) {
+        val pileWithTasks = PileWithTasks(
+            pile = Pile(name = "Organizational"),
             tasks = listOf(Task(title = "hey"), Task(title = "hey too"))
         )
         PileCard(

@@ -42,7 +42,7 @@
 
     <!-- clear statistics dialog -->
     <string name="clear_statistics_dialog_title">Clear all pile statistics</string>
-    <string name="clear_statistics_dialog_description">This is will clear all statistics of this pile by deleting all completed and deleted tasks.\nDo you want to continue?</string>
+    <string name="clear_statistics_dialog_description">This is will clear all statistics of this pile by deleting all completed and deleted tasks, except for recurring ones.\nDo you want to continue?</string>
     <string name="clear_statistics_dialog_confirm">Continue</string>
     <!-- pile statistics section -->
     <string name="statistics_section_title">Statistics</string>

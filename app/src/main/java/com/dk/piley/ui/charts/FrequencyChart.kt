@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -105,24 +106,34 @@ fun FrequencyChart(
                                 )
                             }
                         }
-                        Box(
-                            modifier = Modifier
-                                .padding(vertical = dim.medium, horizontal = dim.extraSmall)
-                                .height(if (boxHeight < 20.dp) dim.extraLarge else boxHeight)
-                                .background(color = Color.Transparent)
-                                .fillMaxWidth()
+                        this@Row.AnimatedVisibility(
+                            visibleState = remember {
+                                MutableTransitionState(initialTransitionValue).apply {
+                                    targetState = true
+                                }
+                            },
+                            // only show fade in when half of column animated
+                            enter = fadeIn(animationSpec = tween(delayMillis = (index * 50) + 25))
                         ) {
-                            Text(
-                                text = value.toString(),
-                                color = when {
-                                    boxHeight < 20.dp -> MaterialTheme.colorScheme.onBackground
-                                    value == 0 -> MaterialTheme.colorScheme.onBackground
-                                    index == 6 -> MaterialTheme.colorScheme.onPrimary
-                                    else -> MaterialTheme.colorScheme.onSecondary
-                                },
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.align(Alignment.Center)
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .padding(vertical = dim.medium, horizontal = dim.extraSmall)
+                                    .height(if (boxHeight < 20.dp) dim.extraLarge else boxHeight)
+                                    .background(color = Color.Transparent)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = value.toString(),
+                                    color = when {
+                                        boxHeight < 20.dp -> MaterialTheme.colorScheme.onBackground
+                                        value == 0 -> MaterialTheme.colorScheme.onBackground
+                                        index == 6 -> MaterialTheme.colorScheme.onPrimary
+                                        else -> MaterialTheme.colorScheme.onSecondary
+                                    },
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
                         }
                     }
                 }

@@ -22,10 +22,10 @@ interface TaskDao {
     suspend fun deleteTask(task: Task): Void
 
     /**
-     * Delete completed and deleted tasks for its parent pile
+     * Delete completed and deleted non-recurring tasks for its parent pile
      *
      * @param pileId the parent pile id
      */
-    @Query("DELETE FROM Task WHERE pileId=:pileId AND status IN ('DONE', 'DELETED')")
+    @Query("DELETE FROM Task WHERE pileId=:pileId AND status IN ('DONE', 'DELETED') AND isRecurring='0'")
     suspend fun deleteCompletedDeletedForPile(pileId: Long): Void
 }

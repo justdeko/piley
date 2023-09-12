@@ -25,7 +25,7 @@ class NotificationExecutor @Inject constructor(
                     actionHandler.show(action.taskId).collect()
                 }
             }
-            ReminderAction.BootCompleted -> {
+            is ReminderAction.BootCompleted -> {
                 GlobalScope.launch {
                     actionHandler.restartAll().collect()
                 }

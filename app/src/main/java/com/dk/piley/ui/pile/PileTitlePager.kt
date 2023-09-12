@@ -25,6 +25,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
@@ -73,7 +75,10 @@ fun PileTitlePager(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text = pileTitleList.getOrElse(index) { "" },
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    hyphens = Hyphens.Auto,
+                    lineBreak = LineBreak.Paragraph
+                ),
                 color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center
             )

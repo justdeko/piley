@@ -27,40 +27,43 @@ import com.dk.piley.R
  * @property icon screen icon
  */
 sealed class Screen(
-    val route: String, @StringRes val titleResource: Int, val icon: Pair<ImageVector, ImageVector>
+    val route: String,
+    @StringRes val titleResource: Int,
+    val icon: Pair<ImageVector, ImageVector>,
+    val argument: String = ""
 ) {
-    object Pile : Screen(
-        "pile", R.string.pile, Pair(Icons.Outlined.Home, Icons.Filled.Home)
+    data object Pile : Screen(
+        "taskPile", R.string.pile, Pair(Icons.Outlined.Home, Icons.Filled.Home), "pileId"
     )
 
-    object Piles : Screen(
+    data object Piles : Screen(
         "piles", R.string.piles, Pair(Icons.Outlined.ViewAgenda, Icons.Filled.ViewAgenda)
     )
 
-    object Profile : Screen(
+    data object Profile : Screen(
         "profile", R.string.profile, Pair(Icons.Outlined.Person, Icons.Filled.Person)
     )
 
-    object Settings : Screen(
+    data object Settings : Screen(
         "settings", R.string.settings, Pair(Icons.Outlined.Settings, Icons.Filled.Settings)
     )
 
-    object SignIn : Screen(
+    data object SignIn : Screen(
         "login", R.string.sign_in, Pair(Icons.Outlined.Login, Icons.Filled.Login)
     )
 
-    object Splash : Screen(
+    data object Splash : Screen(
         "splash", R.string.splash_screen, Pair(Icons.Outlined.Square, Icons.Filled.Square)
     )
 
-    object Intro : Screen(
+    data object Intro : Screen(
         "intro", R.string.introduction_screen, Pair(Icons.Outlined.Start, Icons.Filled.Start)
     )
 }
 
 sealed class IdentifierScreen(val route: String, val identifier: String, val root: String) {
-    object Task : IdentifierScreen("task/{taskId}", "taskId", "task")
-    object Pile : IdentifierScreen("pile/{pileId}", "pileId", "pile")
+    data object Task : IdentifierScreen("task/{taskId}", "taskId", "task")
+    data object Pile : IdentifierScreen("pile/{pileId}", "pileId", "pile")
 }
 
 val navItems = listOf(

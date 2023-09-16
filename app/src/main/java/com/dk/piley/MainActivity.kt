@@ -83,8 +83,8 @@ fun Home(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     // hide navigation bar on screens that are not in the main view
-    navigationBarShown.value =
-        navItems.map { it.route }.contains(navBackStackEntry?.destination?.route)
+    navigationBarShown.value = navItems.map { it.route }
+        .any { navBackStackEntry?.destination?.route?.contains(it) ?: false }
 
     // display initial message if not null
     if (initialMessage != null) {
@@ -111,7 +111,13 @@ fun Home(
             composable(Screen.Intro.route) {
                 IntroScreen(navController = navController)
             }
-            composable(Screen.Pile.route) {
+            composable(
+                "${Screen.Pile.route}?${Screen.Pile.argument}={${Screen.Pile.argument}}",
+                arguments = listOf(navArgument(Screen.Pile.argument) {
+                    type = NavType.LongType
+                    defaultValue = -1L // default value representing no pile passed
+                })
+            ) {
                 PileScreen(
                     modifier = Modifier.padding(padding),
                     navController = navController,

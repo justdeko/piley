@@ -5,7 +5,8 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,15 +52,18 @@ import com.dk.piley.util.defaultPadding
  * @param selected whether this pile is selected
  * @param onSelectPile on pile selection
  * @param onClick on card click
+ * @param onLongClick on card long click
  * @param transitionState card animation transition state
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileCard(
     modifier: Modifier = Modifier,
     pileWithTasks: PileWithTasks,
     selected: Boolean = false,
     onSelectPile: (Long) -> Unit = {},
-    onClick: (pile: Pile) -> Unit = {},
+    onClick: () -> Unit = {},
+    onLongClick: () -> Unit = {},
     transitionState: MutableTransitionState<Boolean> = MutableTransitionState(true)
 ) {
     val density = LocalDensity.current
@@ -78,7 +82,10 @@ fun PileCard(
                 modifier = modifier
                     .padding(dim.medium)
                     .clip(MaterialTheme.shapes.large)
-                    .clickable { onClick(pileWithTasks.pile) }
+                    .combinedClickable(
+                        onClick = onClick,
+                        onLongClick = onLongClick
+                    )
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth()

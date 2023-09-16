@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
+import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.getPreviewTransitionStates
@@ -57,7 +58,10 @@ fun PileOverviewScreen(
         onCreatePile = { viewModel.createPile(it) },
         onDeletePile = { viewModel.deletePile(it) },
         onSelectPile = { viewModel.setSelectedPile(it) },
-        onPileClick = { navController.navigate(pileScreen.root + "/" + it.pileId) }
+        onPileClick = { navController.navigate(pileScreen.root + "/" + it) },
+        onPileLongClick = { pileId ->
+            navController.navigate("${Screen.Pile.route}?${Screen.Pile.argument}=$pileId")
+        }
     )
 }
 
@@ -70,7 +74,8 @@ fun PileOverviewScreen(
  * @param onCreatePile on create new pile
  * @param onDeletePile on delete pile
  * @param onSelectPile on select pile as default
- * @param onPileClick on click pile
+ * @param onPileClick on click pile with id
+ * @param onPileLongClick on double click pile with id
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -81,7 +86,8 @@ fun PileOverviewScreen(
     onCreatePile: (String) -> Unit = {},
     onDeletePile: (Pile) -> Unit = {},
     onSelectPile: (Long) -> Unit = {},
-    onPileClick: (Pile) -> Unit = {}
+    onPileClick: (Long) -> Unit = {},
+    onPileLongClick: (Long) -> Unit = {}
 ) {
     val gridState = rememberLazyStaggeredGridState()
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
@@ -130,7 +136,8 @@ fun PileOverviewScreen(
                         pileWithTasks = pileWithTasks,
                         onSelectPile = onSelectPile,
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
-                        onClick = onPileClick,
+                        onClick = { onPileClick(pileWithTasks.pile.pileId) },
+                        onLongClick = { onPileLongClick(pileWithTasks.pile.pileId) },
                         transitionState = pileTransitionStates[index]
                     )
                 }

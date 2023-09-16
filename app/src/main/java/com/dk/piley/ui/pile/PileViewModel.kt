@@ -1,5 +1,6 @@
 package com.dk.piley.ui.pile
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.backup.BackupManager
 import com.dk.piley.common.StatefulViewModel
@@ -9,6 +10,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.ui.nav.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +37,7 @@ class PileViewModel @Inject constructor(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val backupManager: BackupManager,
+    savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<PileViewState>(PileViewState()) {
 
     private val _selectedPileIndex = MutableStateFlow(-1)
@@ -59,10 +62,22 @@ class PileViewModel @Inject constructor(
                         }
                         // initial default pile selection
                         if (!differsFromSelected) {
-                            val selectedPileIndex =
-                                idTitleList.indexOfFirst { it.first == user.selectedPileId }
-                            if (selectedPileIndex != -1) {
-                                onPileChanged(selectedPileIndex, false)
+                            // set initial selected pile if navigated with pile ID
+                            val navigationSelectedPileId =
+                                savedStateHandle.get<Long>(Screen.Pile.argument)
+                            navigationSelectedPileId?.let { pileId ->
+                                // if pile id navigation argument passed, navigate to that pile
+                                if (pileId != -1L) {
+                                    // calculate index of selected pile
+                                    val pileIndex = idTitleList.indexOfFirst { it.first == pileId }
+                                    onPileChanged(pileIndex, selectedPileIndex.value == pileIndex)
+                                } else {
+                                    val pileIndex =
+                                        idTitleList.indexOfFirst { it.first == user.selectedPileId }
+                                    if (pileIndex != -1) {
+                                        onPileChanged(pileIndex, false)
+                                    }
+                                }
                             }
                         }
                         // set index if needed

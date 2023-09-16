@@ -36,6 +36,9 @@
     <string name="complete_recurring_task_dialog_title">Complete recurring task</string>
     <string name="complete_recurring_task_dialog_description">Are you sure you want to complete this recurring task ahead of its due date (%1$s)?</string>
     <string name="complete_recurring_task_dialog_confirm">Complete</string>
+    <string name="delete_recurring_dialog_title">Delete recurring task</string>
+    <string name="delete_recurring_dialog_description">Are you sure you want to delete this recurring task? All future reminders will be canceled.</string>
+    <string name="delete_recurring_dialog_confirm">Yes</string>
 
     <!-- pile detail screen -->
     <string name="delete_pile_button_text">Delete</string>

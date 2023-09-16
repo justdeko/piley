@@ -79,6 +79,19 @@ fun TaskPile(
             onDismiss = { recurringTaskToComplete = null }
         )
     }
+    var recurringTaskToDelete by rememberSaveable { mutableStateOf<Task?>(null) }
+    recurringTaskToDelete?.let { task ->
+        AlertDialogHelper(
+            title = stringResource(R.string.delete_recurring_dialog_title),
+            description = stringResource(R.string.delete_recurring_dialog_description),
+            confirmText = stringResource(R.string.delete_recurring_dialog_confirm),
+            onDismiss = { recurringTaskToDelete = null },
+            onConfirm = {
+                onDelete(task)
+                recurringTaskToDelete = null
+            }
+        )
+    }
     LazyColumn(
         modifier = modifier.padding(dim.medium),
         reverseLayout = true,
@@ -97,8 +110,15 @@ fun TaskPile(
                             false
                         }
                         // if task is recurring and reminder not shown yet, show premature completion dialog
-                        else if (task.isRecurring && task.reminder?.isAfter(Instant.now()) == true) {
+                        else if (
+                            task.isRecurring
+                            && task.reminder?.isAfter(Instant.now()) == true
+                            && it == DismissValue.DismissedToEnd
+                        ) {
                             recurringTaskToComplete = task
+                            false
+                        } else if (task.isRecurring && it == DismissValue.DismissedToStart) {
+                            recurringTaskToDelete = task
                             false
                         } else true
                     },

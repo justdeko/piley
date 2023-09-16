@@ -193,4 +193,7 @@
     <string name="complete_recurring_task_dialog_title">Wiederholendes Task abschließen</string>
     <string name="complete_recurring_task_dialog_description">Bist du dir sicher, dass du diesen Task vorzeitig abschließen möchtest? Der nächste Reminder ist am %1$s</string>
     <string name="complete_recurring_task_dialog_confirm">Abschließen</string>
+    <string name="delete_recurring_dialog_title">Wiederholendes Task löschen</string>
+    <string name="delete_recurring_dialog_description">Bist du dir sicher, dass du dieses wiederholende Task löschen möchtest? Alle zukünftigen Reminder werden abgebrochen.</string>
+    <string name="delete_recurring_dialog_confirm">Ja</string>
 </resources>

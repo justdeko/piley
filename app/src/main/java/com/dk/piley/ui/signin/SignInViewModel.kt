@@ -235,6 +235,7 @@ class SignInViewModel @Inject constructor(
     fun setBaseUrl(url: String) {
         viewModelScope.launch {
             state.update { it.copy(baseUrlValue = url) }
+            setMessage(application.getString(R.string.api_base_url_info_message, url))
             userRepository.setBaseUrl(url)
         }
     }

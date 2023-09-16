@@ -196,4 +196,5 @@
     <string name="delete_recurring_dialog_title">Wiederholendes Task löschen</string>
     <string name="delete_recurring_dialog_description">Bist du dir sicher, dass du dieses wiederholende Task löschen möchtest? Alle zukünftigen Reminder werden abgebrochen.</string>
     <string name="delete_recurring_dialog_confirm">Ja</string>
+    <string name="api_base_url_info_message">Deine API-URL ist jetzt: %1$s</string>
 </resources>

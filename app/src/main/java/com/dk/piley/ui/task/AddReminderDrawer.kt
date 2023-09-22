@@ -39,16 +39,12 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
-import com.dk.piley.model.task.toRecurringTimeRange
-import com.dk.piley.model.task.toText
-import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.ReminderDatePicker
 import com.dk.piley.ui.common.ReminderTimePicker
@@ -58,7 +54,6 @@ import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
-import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.timeString
 import com.dk.piley.util.utcZoneId
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -165,9 +160,6 @@ fun AddReminderContent(
     val coroutineScope = rememberCoroutineScope()
     var localDate: LocalDate? by remember { mutableStateOf(null) }
     var localTime: LocalTime? by remember { mutableStateOf(null) }
-    var expandedTimeRange by remember { mutableStateOf(false) }
-    var expandedFrequency by remember { mutableStateOf(false) }
-    val timeRanges = stringArrayResource(R.array.time_range).toList()
     var recurring by remember(isRecurring) { (mutableStateOf(isRecurring)) }
     var timeRange by remember(recurringTimeRange) { (mutableStateOf(recurringTimeRange)) }
     var frequency by remember(recurringFrequency) { (mutableIntStateOf(recurringFrequency)) }
@@ -248,46 +240,12 @@ fun AddReminderContent(
             checked = recurring
         ) { recurring = it }
         AnimatedVisibility(recurring) {
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    DropDown(
-                        modifier = Modifier.weight(1f),
-                        value = timeRange.toText(),
-                        dropdownValues = timeRanges,
-                        expanded = expandedTimeRange,
-                        label = stringResource(R.string.reminder_time_range_label),
-                        onExpandedChange = { expandedTimeRange = !expandedTimeRange },
-                        onValueClick = {
-                            expandedTimeRange = false
-                            timeRange = it.toRecurringTimeRange(context)
-                        },
-                        onDismiss = { expandedTimeRange = false }
-                    )
-                    BigSpacer()
-                    DropDown(
-                        modifier = Modifier.weight(1f),
-                        value = frequency.toString(),
-                        dropdownValues = listOf(1, 2, 3, 4, 5).map { it.toString() },
-                        expanded = expandedFrequency,
-                        label = stringResource(R.string.reminder_frequency_label),
-                        onExpandedChange = { expandedFrequency = !expandedFrequency },
-                        onValueClick = {
-                            expandedFrequency = false
-                            frequency = Integer.parseInt(it)
-                        },
-                        onDismiss = { expandedFrequency = false }
-                    )
-                }
-                MediumSpacer()
-                Text(
-                    modifier = Modifier.align(CenterHorizontally),
-                    text = getFrequencyString(timeRange, frequency)
-                )
-            }
+            RecurringReminderSection(
+                selectedTimeRange = timeRange,
+                selectedFrequency = frequency,
+                onSelectTimeRange = { timeRange = it },
+                onSelectFrequency = { frequency = it }
+            )
         }
         Row(
             modifier = Modifier

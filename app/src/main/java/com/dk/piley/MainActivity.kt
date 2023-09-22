@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -78,6 +79,8 @@ fun Home(
 ) {
     val navController = rememberNavController()
     val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
+    // override scaffold padding due to animated visibility bug with flicker
+    val defaultNavbarPadding = 80.dp
     val snackbarHostState = remember { SnackbarHostState() }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -119,19 +122,19 @@ fun Home(
                 })
             ) {
                 PileScreen(
-                    modifier = Modifier.padding(padding),
+                    modifier = Modifier.padding(bottom = defaultNavbarPadding),
                     navController = navController,
                     snackbarHostState = snackbarHostState
                 )
             }
             composable(Screen.Piles.route) {
                 PileOverviewScreen(
-                    Modifier.padding(padding), navController
+                    Modifier.padding(bottom = defaultNavbarPadding), navController
                 )
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(
-                    modifier = Modifier.padding(padding),
+                    modifier = Modifier.padding(bottom = defaultNavbarPadding),
                     navController = navController,
                     snackbarHostState = snackbarHostState
                 )

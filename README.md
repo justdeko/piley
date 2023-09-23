@@ -18,7 +18,7 @@
     ·
     <a href="https://github.com/justdeko/piley-server">piley-server</a>
   </p>
-<a href='http://play.google.com/store/apps'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
+<a href='https://play.google.com/store/apps/details?id=com.dk.piley'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
 </div>
 
 
@@ -78,7 +78,7 @@ piley is a native Android app built with Jetpack Compose. The following librarie
 
 To start using piley, you can just get the newest apk from the
 **[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [google
-play](http://play.google.com/store/apps) (coming soon)
+play](https://play.google.com/store/apps/details?id=com.dk.piley) (coming soon)
 
 ### Connect to [piley-server](https://github.com/justdeko/piley-server)
 

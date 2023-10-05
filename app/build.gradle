@@ -98,7 +98,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:4.11.0"
     // material design components
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0'
     // permissions
     implementation "com.google.accompanist:accompanist-permissions:0.32.0"
     // logging

@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +48,7 @@ import com.dk.piley.ui.common.CreateBaseUrlAlertDialog
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.nav.Screen
+import com.dk.piley.ui.profile.AppInfo
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.isValidEmail
@@ -142,6 +145,7 @@ private fun SignInScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val dim = LocalDim.current
+    val scrollState = rememberScrollState()
 
     val isRegister =
         viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE || viewState.signInState == SignInState.REGISTERED
@@ -176,127 +180,137 @@ private fun SignInScreen(
         contentAlignment = Alignment.TopCenter
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = dim.veryLarge),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.fillMaxSize()
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null,
-                tint = Color.Unspecified
-            )
-            Text(
-                text = signInText,
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = dim.large),
-                textAlign = TextAlign.Center
-            )
-            OutlinedTextField(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = dim.medium)
-                    .onFocusChanged { emailFocused = it.isFocused },
-                value = viewState.email,
-                onValueChange = onEmailChange,
-                placeholder = { Text(stringResource(R.string.user_email_placeholder)) },
-                shape = MaterialTheme.shapes.large,
-                isError = emailError,
-                supportingText = if (emailError) {
-                    @Composable
-                    {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(),
-                            text = stringResource(R.string.invalid_email_hint),
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-                } else null,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email
-                ),
-            )
-            AnimatedVisibility(
-                viewState.signInState == SignInState.REGISTER
-                        || viewState.signInState == SignInState.REGISTER_OFFLINE
+                    .weight(1f)
+                    .padding(horizontal = dim.veryLarge, vertical = dim.large)
+                    .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+                Text(
+                    text = signInText,
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.headlineLarge,
+                    modifier = Modifier.padding(bottom = dim.large),
+                    textAlign = TextAlign.Center
+                )
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = dim.large),
-                    value = viewState.username,
-                    onValueChange = onUsernameChange,
-                    placeholder = { Text(stringResource(R.string.username_placeholder)) },
+                        .padding(vertical = dim.medium)
+                        .onFocusChanged { emailFocused = it.isFocused },
+                    value = viewState.email,
+                    onValueChange = onEmailChange,
+                    placeholder = { Text(stringResource(R.string.user_email_placeholder)) },
                     shape = MaterialTheme.shapes.large,
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    supportingText = {
-                        if (viewState.username.isNotEmpty()) {
+                    isError = emailError,
+                    supportingText = if (emailError) {
+                        @Composable
+                        {
                             Text(
-                                text = "${viewState.username.length} / $usernameCharacterLimit",
                                 modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.End,
+                                text = stringResource(R.string.invalid_email_hint),
+                                color = MaterialTheme.colorScheme.error
                             )
                         }
-                    }
+                    } else null,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Email
+                    ),
                 )
-            }
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = dim.medium),
-                value = viewState.password,
-                onValueChange = onPasswordChange,
-                placeholder = { Text(stringResource(R.string.password_placeholder)) },
-                visualTransformation = PasswordVisualTransformation(),
-                shape = MaterialTheme.shapes.large,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    focusManager.clearFocus()
-                    this.defaultKeyboardAction(ImeAction.Done)
-                })
-            )
-            AnimatedVisibility(
-                viewState.signInState == SignInState.REGISTER
-                        || viewState.signInState == SignInState.REGISTER_OFFLINE
-            ) {
-                TextWithCheckbox(
+                AnimatedVisibility(
+                    viewState.signInState == SignInState.REGISTER
+                            || viewState.signInState == SignInState.REGISTER_OFFLINE
+                ) {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = dim.large),
+                        value = viewState.username,
+                        onValueChange = onUsernameChange,
+                        placeholder = { Text(stringResource(R.string.username_placeholder)) },
+                        shape = MaterialTheme.shapes.large,
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        supportingText = {
+                            if (viewState.username.isNotEmpty()) {
+                                Text(
+                                    text = "${viewState.username.length} / $usernameCharacterLimit",
+                                    modifier = Modifier.fillMaxWidth(),
+                                    textAlign = TextAlign.End,
+                                )
+                            }
+                        }
+                    )
+                }
+                OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = dim.large, vertical = dim.medium),
-                    description = stringResource(R.string.user_offline_checkbox_label),
-                    checked = viewState.signInState == SignInState.REGISTER_OFFLINE,
-                    onChecked = onChangeOfflineRegister
+                        .padding(vertical = dim.medium),
+                    value = viewState.password,
+                    onValueChange = onPasswordChange,
+                    placeholder = { Text(stringResource(R.string.password_placeholder)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    shape = MaterialTheme.shapes.large,
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                        this.defaultKeyboardAction(ImeAction.Done)
+                    })
                 )
-            }
-            ElevatedButton(
-                modifier = Modifier.padding(top = dim.medium, bottom = dim.extraLarge),
-                onClick = onAttemptSignIn,
-                enabled = signInButtonEnabled(isRegister, viewState)
-            ) {
-                Text(signInText)
-            }
-            TextButton(onClick = onChangeRegister) {
-                Text(
-                    if (isRegister) {
-                        stringResource(R.string.navigate_to_sign_in_button_text)
-                    } else stringResource(
-                        R.string.navigate_to_register_button_text
+                AnimatedVisibility(
+                    viewState.signInState == SignInState.REGISTER
+                            || viewState.signInState == SignInState.REGISTER_OFFLINE
+                ) {
+                    TextWithCheckbox(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = dim.large, vertical = dim.medium),
+                        description = stringResource(R.string.user_offline_checkbox_label),
+                        checked = viewState.signInState == SignInState.REGISTER_OFFLINE,
+                        onChecked = onChangeOfflineRegister
                     )
-                )
-            }
-            AnimatedVisibility(viewState.signInState != SignInState.REGISTER_OFFLINE) {
-                TextButton(onClick = { dialogOpen = true }) {
-                    Text(stringResource(R.string.base_url_dialog_title))
                 }
+                ElevatedButton(
+                    modifier = Modifier.padding(top = dim.medium, bottom = dim.extraLarge),
+                    onClick = onAttemptSignIn,
+                    enabled = signInButtonEnabled(isRegister, viewState)
+                ) {
+                    Text(signInText)
+                }
+                TextButton(onClick = onChangeRegister) {
+                    Text(
+                        if (isRegister) {
+                            stringResource(R.string.navigate_to_sign_in_button_text)
+                        } else stringResource(
+                            R.string.navigate_to_register_button_text
+                        )
+                    )
+                }
+                AnimatedVisibility(viewState.signInState != SignInState.REGISTER_OFFLINE) {
+                    TextButton(onClick = { dialogOpen = true }) {
+                        Text(stringResource(R.string.base_url_dialog_title))
+                    }
+                }
+            }
+            Box(
+                contentAlignment = Alignment.BottomCenter
+            ) {
+                AppInfo() // TODO handle this better in landscape
             }
         }
         IndefiniteProgressBar(visible = viewState.loading)

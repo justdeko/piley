@@ -58,9 +58,11 @@ fun PileOverviewScreen(
         onCreatePile = { viewModel.createPile(it) },
         onDeletePile = { viewModel.deletePile(it) },
         onSelectPile = { viewModel.setSelectedPile(it) },
-        onPileClick = { navController.navigate(pileScreen.root + "/" + it) },
-        onPileLongClick = { pileId ->
+        onPileClick = { pileId ->
             navController.navigate("${Screen.Pile.route}?${Screen.Pile.argument}=$pileId")
+        },
+        onPileLongClick = { pileId ->
+            navController.navigate(pileScreen.root + "/" + pileId)
         }
     )
 }

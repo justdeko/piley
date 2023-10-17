@@ -180,16 +180,16 @@ fun TaskDetailScreen(
             }
             TwoButtonRow(
                 modifier = Modifier.weight(1f, false),
-                onRightClick = onCompleteTask,
-                onLeftClick = onDeleteTask,
-                rightText = stringResource(R.string.complete_task_button),
-                leftText = stringResource(R.string.delete_task_button),
+                onLeftClick = onCompleteTask,
+                onRightClick = onDeleteTask,
+                leftText = stringResource(R.string.complete_task_button),
+                rightText = stringResource(R.string.delete_task_button),
                 arrangement = Arrangement.SpaceEvenly,
-                leftColors = ButtonDefaults.buttonColors(
+                rightColors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.errorContainer,
                     contentColor = MaterialTheme.colorScheme.onErrorContainer
                 ),
-                rightColors = ButtonDefaults.buttonColors(
+                leftColors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )

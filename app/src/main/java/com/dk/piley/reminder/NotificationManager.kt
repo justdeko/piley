@@ -72,7 +72,7 @@ class NotificationManager @Inject constructor(
                     MainActivity::class.java
                 )
             )
-            getPendingIntent(OPEN_TASK_CODE, flags)
+            getPendingIntent(task.id.toInt(), flags)
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -116,7 +116,6 @@ class NotificationManager @Inject constructor(
             } else context.getString(
                 R.string.reminder_delay_action
             )
-        val requestCode = if (isDoneAction) COMPLETE_CODE else DELAY_CODE
         // action intent
         val receiverIntent = Intent(context, ReminderAlarmReceiver::class.java).apply {
             action =
@@ -125,7 +124,7 @@ class NotificationManager @Inject constructor(
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            requestCode,
+            taskId.toInt(),
             receiverIntent,
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -138,9 +137,6 @@ class NotificationManager @Inject constructor(
 
 
     companion object {
-        private const val OPEN_TASK_CODE = 1
-        private const val DELAY_CODE = 2
-        private const val COMPLETE_CODE = 3
         private const val CHANNEL_ID = "channel_reminder"
     }
 }

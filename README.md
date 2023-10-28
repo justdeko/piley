@@ -125,6 +125,6 @@ ways:
 
 ## License
 
-[MIT](https://github.com/justdeko/piley/blob/main/LICENSE)
+[Apache License 2.0](https://github.com/justdeko/piley/blob/main/LICENSE)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

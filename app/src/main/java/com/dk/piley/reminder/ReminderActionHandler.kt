@@ -89,7 +89,7 @@ class ReminderActionHandler @Inject constructor(
             }
             // set task to done
             // cancelling notification and setting next reminder is handled in repository
-            taskRepository.insertTask(
+            taskRepository.insertTaskWithStatus(
                 it.copy(status = TaskStatus.DONE)
             )
         }
@@ -115,7 +115,7 @@ class ReminderActionHandler @Inject constructor(
                 val newReminderTime =
                     Instant.now().plus(Duration.ofMinutes(user.defaultReminderDelay.toLong()))
                 // update reminder time in db
-                taskRepository.insertTask(task.copy(reminder = newReminderTime))
+                taskRepository.insertTaskWithStatus(task.copy(reminder = newReminderTime)) // TODO special case for this
                 // start new reminder
                 reminderManager.startReminder(newReminderTime, task.id)
                 notificationManager.dismiss(taskId)

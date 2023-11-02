@@ -196,6 +196,11 @@ class SignInViewModel @Inject constructor(
                 }
 
                 else -> {
+                    // do offline register if user is demo user
+                    if (userData.email == testUser.email && userData.password == testUser.password) {
+                        state.value = state.value.copy(username = testUser.name)
+                        doOfflineRegister(false)
+                    }
                     // Attempt sign in
                     attemptRemoteSignIn(userData.email, userData.password)
                 }
@@ -208,7 +213,7 @@ class SignInViewModel @Inject constructor(
      * setting as signed in user and creating default pile
      *
      */
-    private fun doOfflineRegister() {
+    private fun doOfflineRegister(firstTime: Boolean = true) {
         setLoading(true)
         val userData = state.value
         val user = User(
@@ -219,7 +224,7 @@ class SignInViewModel @Inject constructor(
         )
         viewModelScope.launch {
             // set user as first time since it is a register process
-            state.update { it.copy(firstTime = true) }
+            state.update { it.copy(firstTime = firstTime) }
             userRepository.insertUser(user)
             userRepository.setSignedInUser(user.email)
             createAndSetUserPile(false)

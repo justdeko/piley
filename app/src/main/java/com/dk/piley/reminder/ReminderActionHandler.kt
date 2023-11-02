@@ -89,7 +89,7 @@ class ReminderActionHandler @Inject constructor(
             }
             // set task to done
             // cancelling notification and setting next reminder is handled in repository
-            taskRepository.insertTask(
+            taskRepository.insertTaskWithStatus(
                 it.copy(status = TaskStatus.DONE)
             )
         }

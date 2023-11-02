@@ -72,7 +72,7 @@ class TaskDetailViewModel @Inject constructor(
      */
     fun deleteTask() {
         viewModelScope.launch {
-            repository.insertTask(state.value.task.copy(status = TaskStatus.DELETED))
+            repository.insertTaskWithStatus(state.value.task.copy(status = TaskStatus.DELETED))
         }
     }
 
@@ -82,7 +82,7 @@ class TaskDetailViewModel @Inject constructor(
      */
     fun completeTask() {
         viewModelScope.launch {
-            repository.insertTask(state.value.task.copy(status = TaskStatus.DONE))
+            repository.insertTaskWithStatus(state.value.task.copy(status = TaskStatus.DONE))
         }
     }
 

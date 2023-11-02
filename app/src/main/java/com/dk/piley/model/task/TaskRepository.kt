@@ -26,7 +26,13 @@ class TaskRepository @Inject constructor(
 
     fun getTaskById(taskId: Long): Flow<Task?> = taskDao.getTaskById(taskId)
 
-    suspend fun insertTask(task: Task): Long {
+    /**
+     * Insert task and perform additional actions based on task status
+     *
+     * @param task the task entity
+     * @return long representing db operation success
+     */
+    suspend fun insertTaskWithStatus(task: Task): Long {
         val now = Instant.now()
         // update modification time
         var tempTask = task.copy(modifiedAt = now)
@@ -41,6 +47,15 @@ class TaskRepository @Inject constructor(
             dismissAlarmAndNotificationAndInsert(tempTask)
         } else taskDao.insertTask(tempTask)
     }
+
+    /**
+     * Insert the task entry
+     *
+     * @param task the task entity
+     * @return long representing db operation success
+     */
+    suspend fun insertTask(task: Task): Long =
+        taskDao.insertTask(task.copy(modifiedAt = Instant.now()))
 
     suspend fun deleteTask(task: Task): Void {
         dismissAlarmAndNotificationAndInsert(task)

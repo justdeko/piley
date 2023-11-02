@@ -116,7 +116,7 @@ class PileViewModel @Inject constructor(
      */
     fun add(text: String) {
         viewModelScope.launch {
-            taskRepository.insertTask(
+            taskRepository.insertTaskWithStatus(
                 Task(
                     title = text.trim(),
                     pileId = state.value.pile.pileId,
@@ -134,7 +134,7 @@ class PileViewModel @Inject constructor(
      */
     fun done(task: Task) {
         viewModelScope.launch {
-            taskRepository.insertTask(task.copy(status = TaskStatus.DONE))
+            taskRepository.insertTaskWithStatus(task.copy(status = TaskStatus.DONE))
         }
     }
 
@@ -145,7 +145,7 @@ class PileViewModel @Inject constructor(
      */
     fun delete(task: Task) {
         viewModelScope.launch {
-            taskRepository.insertTask(task.copy(status = TaskStatus.DELETED))
+            taskRepository.insertTaskWithStatus(task.copy(status = TaskStatus.DELETED))
         }
     }
 

@@ -115,7 +115,7 @@ class ReminderActionHandler @Inject constructor(
                 val newReminderTime =
                     Instant.now().plus(Duration.ofMinutes(user.defaultReminderDelay.toLong()))
                 // update reminder time in db
-                taskRepository.insertTaskWithStatus(task.copy(reminder = newReminderTime)) // TODO special case for this
+                taskRepository.insertTask(task.copy(reminder = newReminderTime))
                 // start new reminder
                 reminderManager.startReminder(newReminderTime, task.id)
                 notificationManager.dismiss(taskId)

@@ -91,7 +91,7 @@ class SplashViewModel @Inject constructor(
     private fun doFirstTimeRegister() {
         val user = User(
             name = "John Doe",
-            email = "",
+            email = "john.doe@email2931238.com",
             password = "",
             isOffline = true
         )

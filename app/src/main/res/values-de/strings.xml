@@ -51,7 +51,7 @@
     <string name="delete_user_dialog_cancel_button">Abbrechen</string>
     <string name="delete_user_dialog_confirm_button">Löschen</string>
     <string name="edit_user_dialog_title">Bearbeite deine Nutzerdaten hier.</string>
-    <string name="user_name_hint">Name</string>
+    <string name="user_name_hint">Dein Name</string>
     <string name="user_new_password_hint">Neues Passwort (leerlassen, wenn unverändert)</string>
     <string name="user_current_password_hint">Aktuelles Passwort zur Bestätigung</string>
     <string name="edit_user_dialog_cancel_button">Abbrechen</string>

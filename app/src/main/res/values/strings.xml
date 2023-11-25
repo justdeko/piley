@@ -101,7 +101,7 @@
 
     <!-- edit user dialog -->
     <string name="edit_user_dialog_title">Modify your personal data here.</string>
-    <string name="user_name_hint">Name</string>
+    <string name="user_name_hint">Your Name</string>
     <string name="user_new_password_hint">New Password\n(leave empty if unchanged)</string>
     <string name="user_current_password_hint">Current password to confirm</string>
     <string name="edit_user_dialog_cancel_button">Cancel</string>

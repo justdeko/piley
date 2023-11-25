@@ -90,9 +90,9 @@ class SplashViewModel @Inject constructor(
      */
     private fun doFirstTimeRegister() {
         val user = User(
-            name = "Max",
-            email = "max@testmail",
-            password = "123456",
+            name = "John Doe",
+            email = "",
+            password = "",
             isOffline = true
         )
         viewModelScope.launch {

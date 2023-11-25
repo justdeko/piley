@@ -6,19 +6,27 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
@@ -26,22 +34,25 @@ import com.dk.piley.util.isDarkMode
 import com.dk.piley.util.roundedOutline
 
 /**
- * Intro page content
+ * Intro page content containing a text field and a button
  *
  * @param modifier generic modifier
  * @param introPage intro page object with title and image resource ids
- * @param showButton whether the intro page has a button
+ * @param textFieldHint hint to be displayed in the text field
+ * @param textMaxLength the maximum length of the text. infinite by default
  * @param buttonText intro page button text
- * @param onClickButton intro page button action
+ * @param onClickButton intro page button action that passes text entered into text field
  */
 @Composable
-fun IntroPageContent(
+fun IntroPageTextFieldContent(
     modifier: Modifier = Modifier,
     introPage: IntroPage,
-    showButton: Boolean = false,
-    buttonText: String = "",
-    onClickButton: () -> Unit = {}
+    textFieldHint: String? = null,
+    textMaxLength: Int = -1,
+    buttonText: String,
+    onClickButton: (String) -> Unit = {}
 ) {
+    var textValue by rememberSaveable { mutableStateOf("") }
     val dim = LocalDim.current
     val context = LocalContext.current
     val resourceId =
@@ -82,47 +93,73 @@ fun IntroPageContent(
             color = MaterialTheme.colorScheme.onBackground,
             textAlign = TextAlign.Center
         )
-        if (showButton) {
-            BigSpacer()
-            Button(
-                onClick = onClickButton,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            ) {
-                Text(text = buttonText)
-            }
+        BigSpacer()
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = dim.extraLarge),
+            value = textValue,
+            onValueChange = {
+                if (it.length <= textMaxLength) {
+                    textValue = it
+                }
+            },
+            placeholder = {
+                if (textFieldHint != null) {
+                    Text(textFieldHint)
+                }
+            },
+            shape = MaterialTheme.shapes.large,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+        )
+        BigSpacer()
+        Button(
+            onClick = { onClickButton(textValue) },
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            enabled = textValue.isNotBlank(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        ) {
+            Text(text = buttonText)
         }
     }
 }
 
 @Composable
 @Preview
-fun IntroPageContentPreview() {
+fun IntroPageTextFieldContentPreview() {
     PileyTheme(useDarkTheme = true) {
-        IntroPageContent(modifier = Modifier.fillMaxSize(), introPage = IntroPage.Welcome)
+        IntroPageTextFieldContent(
+            modifier = Modifier.fillMaxSize(),
+            introPage = IntroPage.End,
+            buttonText = stringResource(R.string.finish_intro_button)
+        )
+    }
+}
+
+@Composable
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+fun IntroPageTextFieldContentPreviewHorizontal() {
+    PileyTheme(useDarkTheme = true) {
+        IntroPageTextFieldContent(
+            modifier = Modifier.fillMaxSize(),
+            introPage = IntroPage.End,
+            buttonText = stringResource(R.string.finish_intro_button)
+        )
     }
 }
 
 @Composable
 @Preview(showBackground = true)
-fun IntroPageContentScreenshotPreview() {
+fun IntroPageTextFieldContentLightModePreview() {
     PileyTheme(useDarkTheme = false) {
-        IntroPageContent(modifier = Modifier.fillMaxSize(), introPage = IntroPage.Piles)
-    }
-}
-
-@Composable
-@Preview
-fun IntroPageContentWithButtonPreview() {
-    PileyTheme(useDarkTheme = true) {
-        IntroPageContent(
+        IntroPageTextFieldContent(
             modifier = Modifier.fillMaxSize(),
             introPage = IntroPage.End,
-            showButton = true,
-            buttonText = "Start Piling"
+            buttonText = stringResource(R.string.finish_intro_button)
         )
     }
 }

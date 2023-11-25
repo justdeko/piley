@@ -65,9 +65,17 @@ fun SplashScreen(
         onAnimFinished = {
             Timber.d("splash anim finished")
             val destination =
-                if (viewModel.state.value.initState == InitState.NOT_SIGNED_IN) {
-                    Screen.SignIn.route
-                } else Screen.Pile.route
+                when (viewModel.state.value.initState) {
+                    InitState.NOT_SIGNED_IN -> {
+                        Screen.SignIn.route
+                    }
+
+                    InitState.FIRST_TIME -> {
+                        Screen.Intro.route
+                    }
+
+                    else -> Screen.Pile.route
+                }
             navController.navigateClearBackstack(destination)
         }
     )

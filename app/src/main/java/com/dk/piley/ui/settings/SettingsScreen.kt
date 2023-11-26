@@ -156,6 +156,7 @@ private fun SettingsScreen(
         ContentAlertDialog(onDismiss = { editUserDialogOpen = false }) {
             EditUserContent(
                 existingName = viewState.user.name,
+                userIsOffline = viewState.user.isOffline,
                 onConfirm = { result ->
                     editUserDialogOpen = false
                     onEditUser(result)
@@ -168,6 +169,7 @@ private fun SettingsScreen(
     if (deleteUserDialogOpen) {
         ContentAlertDialog(onDismiss = { deleteUserDialogOpen = false }) {
             DeleteUserContent(
+                userIsOffline = viewState.user.isOffline,
                 onConfirm = { password ->
                     deleteUserDialogOpen = false
                     onDeleteUser(password)

@@ -34,6 +34,7 @@ import com.dk.piley.util.usernameCharacterLimit
  *
  * @param modifier generic modifier
  * @param existingName existing user name to set as initial value
+ * @param userIsOffline whether the user is an offline user
  * @param onConfirm on confirm user edit
  * @param onCancel on cancel user edit
  */
@@ -41,6 +42,7 @@ import com.dk.piley.util.usernameCharacterLimit
 fun EditUserContent(
     modifier: Modifier = Modifier,
     existingName: String,
+    userIsOffline: Boolean = false,
     onConfirm: (EditUserResult) -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
@@ -75,36 +77,38 @@ fun EditUserContent(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = newPassword,
-            onValueChange = { newPassword = it },
-            visualTransformation = PasswordVisualTransformation(),
-            placeholder = { Text(stringResource(R.string.user_new_password_hint)) },
-            shape = MaterialTheme.shapes.large,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Password
-            ),
-        )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = oldPassword,
-            visualTransformation = PasswordVisualTransformation(),
-            onValueChange = { oldPassword = it },
-            placeholder = { Text(stringResource(R.string.user_current_password_hint)) },
-            shape = MaterialTheme.shapes.large,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Password
-            ),
-            keyboardActions = KeyboardActions(onDone = {
-                focusManager.clearFocus()
-                defaultKeyboardAction(ImeAction.Done)
-            }),
-        )
+        if (!userIsOffline) {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = newPassword,
+                onValueChange = { newPassword = it },
+                visualTransformation = PasswordVisualTransformation(),
+                placeholder = { Text(stringResource(R.string.user_new_password_hint)) },
+                shape = MaterialTheme.shapes.large,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Password
+                ),
+            )
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = oldPassword,
+                visualTransformation = PasswordVisualTransformation(),
+                onValueChange = { oldPassword = it },
+                placeholder = { Text(stringResource(R.string.user_current_password_hint)) },
+                shape = MaterialTheme.shapes.large,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+            )
+        }
         TwoButtonRow(
             onRightClick = {
                 onConfirm(
@@ -118,7 +122,7 @@ fun EditUserContent(
             onLeftClick = onCancel,
             rightText = stringResource(R.string.edit_user_dialog_confirm_button),
             leftText = stringResource(R.string.edit_user_dialog_cancel_button),
-            rightEnabled = oldPassword.isNotBlank() && name.isNotBlank()
+            rightEnabled = (oldPassword.isNotBlank() && name.isNotBlank()) || (userIsOffline && name.isNotBlank())
         )
     }
 }
@@ -135,6 +139,18 @@ fun EditUserContentPreview() {
     PileyTheme(useDarkTheme = true) {
         EditUserContent(
             modifier = Modifier.fillMaxWidth(),
+            existingName = "Thomas"
+        )
+    }
+}
+
+@Preview
+@Composable
+fun EditUserContentOfflinePreview() {
+    PileyTheme(useDarkTheme = true) {
+        EditUserContent(
+            modifier = Modifier.fillMaxWidth(),
+            userIsOffline = true,
             existingName = "Thomas"
         )
     }

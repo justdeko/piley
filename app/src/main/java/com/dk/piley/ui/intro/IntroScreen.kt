@@ -77,7 +77,7 @@ fun IntroScreen(
             } else {
                 IntroPageTextFieldContent(
                     introPage = pages[position],
-                    textFieldHint = stringResource(R.string.user_name_hint),
+                    textFieldHint = stringResource(R.string.first_user_name_hint),
                     textMaxLength = usernameCharacterLimit,
                     buttonText = stringResource(R.string.finish_intro_button),
                     onClickButton = onFinish

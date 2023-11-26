@@ -41,6 +41,7 @@ import com.dk.piley.util.roundedOutline
  * @param textFieldHint hint to be displayed in the text field
  * @param textMaxLength the maximum length of the text. infinite by default
  * @param buttonText intro page button text
+ * @param buttonAlwaysEnabled whether the button is always enabled
  * @param onClickButton intro page button action that passes text entered into text field
  */
 @Composable
@@ -50,6 +51,7 @@ fun IntroPageTextFieldContent(
     textFieldHint: String? = null,
     textMaxLength: Int = -1,
     buttonText: String,
+    buttonAlwaysEnabled: Boolean = true,
     onClickButton: (String) -> Unit = {}
 ) {
     var textValue by rememberSaveable { mutableStateOf("") }
@@ -117,7 +119,7 @@ fun IntroPageTextFieldContent(
         Button(
             onClick = { onClickButton(textValue) },
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            enabled = textValue.isNotBlank(),
+            enabled = textValue.isNotBlank() || buttonAlwaysEnabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer

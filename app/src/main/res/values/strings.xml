@@ -95,6 +95,7 @@
 
     <!-- delete user dialog -->
     <string name="delete_user_dialog_title">Delete user</string>
+    <string name="delete_user_dialog_description">Are you sure you want to delete this user?</string>
     <string name="user_password_confirm_hint">Enter your password to confirm</string>
     <string name="delete_user_dialog_cancel_button">Cancel</string>
     <string name="delete_user_dialog_confirm_button">Delete</string>
@@ -251,5 +252,6 @@
     <string name="profile_page_description">You can also see general statistics and upcoming tasks by going to the profile section.</string>
     <string name="end_page_title">Almost there</string>
     <string name="end_page_description">That\'s it! Click on the button to start using the app, and have fun with piley!</string>
+    <string name="first_user_name_hint">e.g. John Doe</string>
 
 </resources>

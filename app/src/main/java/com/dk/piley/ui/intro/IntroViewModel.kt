@@ -19,8 +19,11 @@ class IntroViewModel @Inject constructor(
      */
     fun setUsername(name: String) {
         viewModelScope.launch {
-            userRepository.getSignedInUserEntity()?.let {
-                userRepository.insertUser(it.copy(name = name))
+            // only set the name if the passed name is not blank, otherwise just use sample username
+            if (name.isNotBlank()) {
+                userRepository.getSignedInUserEntity()?.let {
+                    userRepository.insertUser(it.copy(name = name))
+                }
             }
         }
     }

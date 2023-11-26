@@ -95,7 +95,7 @@
     <string name="password_placeholder">Passwort</string>
     <string name="user_offline_checkbox_label">Benutzer offline machen</string>
     <string name="navigate_to_sign_in_button_text">Stattdessen anmelden</string>
-    <string name="navigate_to_register_button_text">Noch kein Konto? Hier klicken, um zu registrieren</string>
+    <string name="navigate_to_register_button_text">Account erstellen</string>
     <string name="user_register_error_message">Fehler beim registrieren</string>
     <string name="sign_in_success_message">Erfolgreich angemeldet!</string>
     <string name="sign_in_error_message">Fehler beim Anmelden</string>

@@ -122,7 +122,11 @@ class SplashViewModel @Inject constructor(
             )
         }
         // signal loading process has finished to user and set state to first time
-        state.update { SplashViewState(InitState.FIRST_TIME) }
+        // or navigate straight to main screen if tutorial already shown
+        val tutorialShown = userRepository.getTutorialShown()
+        val finalState =
+            if (tutorialShown) InitState.BACKUP_LOADED_SIGNED_IN else InitState.FIRST_TIME
+        state.update { SplashViewState(finalState) }
     }
 }
 

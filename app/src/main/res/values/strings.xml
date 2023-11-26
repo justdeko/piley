@@ -167,7 +167,7 @@
     <string name="password_placeholder">Password</string>
     <string name="user_offline_checkbox_label">Make user offline</string>
     <string name="navigate_to_sign_in_button_text">Sign In instead</string>
-    <string name="navigate_to_register_button_text">No account? Click here to register</string>
+    <string name="navigate_to_register_button_text">Create account</string>
     <string name="user_register_error_message">Error when attempting to register</string>
     <string name="sign_in_success_message">Signed in!</string>
     <string name="sign_in_error_message">Error signing in</string>

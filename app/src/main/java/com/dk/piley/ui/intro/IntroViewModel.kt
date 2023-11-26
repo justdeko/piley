@@ -19,6 +19,8 @@ class IntroViewModel @Inject constructor(
      */
     fun setUsername(name: String) {
         viewModelScope.launch {
+            // set tutorial shown to true to prevent it from new displays
+            userRepository.setTutorialShown()
             // only set the name if the passed name is not blank, otherwise just use sample username
             if (name.isNotBlank()) {
                 userRepository.getSignedInUserEntity()?.let {

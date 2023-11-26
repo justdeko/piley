@@ -39,6 +39,9 @@ class UserRepository @Inject constructor(
     suspend fun getSignedInUserEmail(): String =
         userPrefsManager.getUserPrefsEmail().firstOrNull() ?: ""
 
+    suspend fun getTutorialShown(): Boolean =
+        userPrefsManager.getTutorialShown().firstOrNull() ?: false
+
     suspend fun localCredentials(email: String): String {
         val user = getUserByEmail(email)
         Timber.d("generating credentials using user: $user")
@@ -98,6 +101,10 @@ class UserRepository @Inject constructor(
 
     suspend fun setBaseUrl(url: String) {
         userPrefsManager.setBaseUrl(url)
+    }
+
+    suspend fun setTutorialShown(shown: Boolean = true) {
+        userPrefsManager.setTutorialShown(shown)
     }
 
     fun getBaseUrlFlow() = userPrefsManager.getBaseUrl()

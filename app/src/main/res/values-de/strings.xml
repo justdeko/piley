@@ -199,4 +199,6 @@
     <string name="api_base_url_info_message">Deine API-URL ist jetzt: %1$s</string>
     <string name="delete_user_dialog_description">Bist du dir sicher, dass du deinen User löschen möchtest?</string>
     <string name="first_user_name_hint">z.B. John Doe</string>
+    <string name="use_offline_button_text">Offline benutzen</string>
+    <string name="or">oder</string>
 </resources>

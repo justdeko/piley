@@ -84,6 +84,7 @@ class SignInViewModel @Inject constructor(
         // create user and set as signed in
         userRepository.insertUser(user)
         userRepository.setSignedInUser(user.email)
+        userRepository.setSignedOut(false)
         // if it is a sign in, perform remote backup fetch
         if (isSignIn) {
             backupManager.syncBackupToLocalForUserFlow().collect {
@@ -190,16 +191,11 @@ class SignInViewModel @Inject constructor(
                     attemptRegister()
                 }
 
-                SignInState.REGISTER_OFFLINE -> {
-                    // register but only locally
-                    doOfflineRegister()
-                }
-
                 else -> {
                     // do offline register if user is demo user
                     if (userData.email == testUser.email && userData.password == testUser.password) {
                         state.value = state.value.copy(username = testUser.name)
-                        doOfflineRegister(false)
+                        doFirstTimeRegister()
                     }
                     // Attempt sign in
                     attemptRemoteSignIn(userData.email, userData.password)
@@ -209,26 +205,15 @@ class SignInViewModel @Inject constructor(
     }
 
     /**
-     * Perform offline user registration by creating user entity,
-     * setting as signed in user and creating default pile
+     * Perform a first-time registration
      *
      */
-    private fun doOfflineRegister(firstTime: Boolean = true) {
-        setLoading(true)
-        val userData = state.value
-        val user = User(
-            name = userData.username.trim(),
-            email = userData.email,
-            password = userData.password,
-            isOffline = true
-        )
+    fun doFirstTimeRegister() {
         viewModelScope.launch {
-            // set user as first time since it is a register process
-            state.update { it.copy(firstTime = firstTime) }
-            userRepository.insertUser(user)
-            userRepository.setSignedInUser(user.email)
+            userRepository.insertUser(firstTimeUser)
+            userRepository.setSignedInUser(firstTimeUser.email)
+            userRepository.setSignedOut(false)
             createAndSetUserPile(false)
-            setLoading(false)
         }
     }
 

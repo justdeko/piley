@@ -177,6 +177,7 @@ class SettingsViewModel @Inject constructor(
     private suspend fun deleteUserLocally() {
         pileRepository.deletePileData()
         userRepository.setSignedInUser("")
+        userRepository.setSignedOut(true)
         userRepository.deleteUserTable()
         state.update {
             it.copy(

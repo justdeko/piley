@@ -22,6 +22,7 @@ class UserPrefsManager(
     private val urlKey = stringPreferencesKey("base_url")
     private val signedInUserKey = stringPreferencesKey("signed_in_user_id")
     private val hasSeenTutorialKey = booleanPreferencesKey("tutorial_shown")
+    private val signedOutKey = booleanPreferencesKey("signed_out")
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUserKey] = email
     }
@@ -34,6 +35,10 @@ class UserPrefsManager(
         prefs[hasSeenTutorialKey] = shown
     }
 
+    suspend fun setSignedOut(signedOut: Boolean) = userPrefs.edit { prefs ->
+        prefs[signedOutKey] = signedOut
+    }
+
     fun getBaseUrl(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[urlKey] ?: BuildConfig.LOCAL_API_BASE_URL }
 
@@ -42,4 +47,7 @@ class UserPrefsManager(
 
     fun getTutorialShown(): Flow<Boolean> =
         userPrefs.data.map { prefs -> prefs[hasSeenTutorialKey] ?: false }
+
+    fun getSignedOut(): Flow<Boolean> =
+        userPrefs.data.map { prefs -> prefs[signedOutKey] ?: false }
 }

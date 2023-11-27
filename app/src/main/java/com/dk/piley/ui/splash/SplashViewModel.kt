@@ -8,8 +8,8 @@ import com.dk.piley.common.StatefulAndroidViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
-import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.ui.signin.firstTimeUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -39,6 +39,7 @@ class SplashViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val userEmail = userRepository.getSignedInUserEmail()
+            val signedOut = userRepository.getSignedOut()
             if (userEmail.isNotBlank()) {
                 collectState(
                     combine(loadingBackupFlow()) { (loadingBackup) ->
@@ -53,7 +54,11 @@ class SplashViewModel @Inject constructor(
                     }
                 )
             } else {
-                doFirstTimeRegister() // TODO also consider not signed in
+                if (signedOut) {
+                    state.value = SplashViewState(InitState.NOT_SIGNED_IN)
+                } else {
+                    doFirstTimeRegister()
+                }
             }
         }
     }
@@ -72,6 +77,11 @@ class SplashViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
+                    // if the tutorial has not been shown but the user is not new, set it to shown
+                    val tutorialShown = userRepository.getTutorialShown()
+                    if (!tutorialShown) {
+                        userRepository.setTutorialShown(true)
+                    }
                     Timber.d("Remote backup request completed, replaced local db: ${it.data != null}")
                     emit(false)
                 }
@@ -89,15 +99,9 @@ class SplashViewModel @Inject constructor(
      *
      */
     private fun doFirstTimeRegister() {
-        val user = User(
-            name = "John Doe",
-            email = "john.doe@email2931238.com",
-            password = "",
-            isOffline = true
-        )
         viewModelScope.launch {
-            userRepository.insertUser(user)
-            userRepository.setSignedInUser(user.email)
+            userRepository.insertUser(firstTimeUser)
+            userRepository.setSignedInUser(firstTimeUser.email)
             createAndSetUserPile()
         }
     }

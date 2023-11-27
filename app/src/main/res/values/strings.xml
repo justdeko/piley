@@ -172,6 +172,8 @@
     <string name="sign_in_success_message">Signed in!</string>
     <string name="sign_in_error_message">Error signing in</string>
     <string name="api_base_url_info_message">Your API request url is now: %1$s</string>
+    <string name="use_offline_button_text">Use Offline</string>
+    <string name="or">or</string>
 
     <!-- add reminder sheet -->
     <string name="edit_reminder_title">Edit reminder</string>

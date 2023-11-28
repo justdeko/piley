@@ -140,6 +140,7 @@ private fun SettingsScreen(
     var editUserDialogOpen by remember { mutableStateOf(false) }
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
     var baseUrlDialogOpen by remember { mutableStateOf(false) }
+    var makeUserOnlineDialogOpen by remember { mutableStateOf(false) }
 
     if (baseUrlDialogOpen) {
         CreateBaseUrlAlertDialog(
@@ -162,6 +163,16 @@ private fun SettingsScreen(
                     onEditUser(result)
                 },
                 onCancel = { editUserDialogOpen = false }
+            )
+        }
+    }
+
+    if (makeUserOnlineDialogOpen) {
+        ContentAlertDialog(onDismiss = { makeUserOnlineDialogOpen = false }) {
+            MakeUserOnlineContent(
+                existingName = viewState.user.name,
+                onConfirm = {},
+                onCancel = { makeUserOnlineDialogOpen = false }
             )
         }
     }
@@ -310,17 +321,23 @@ private fun SettingsScreen(
                             description = stringResource(R.string.set_base_url_setting_description),
                             onClick = { baseUrlDialogOpen = true }
                         )
+                    } else { // if user is offline, show option to make user online
+                        SettingsItem(
+                            title = "Make user online",
+                            description = "Make this offline use online by connecting to your backup server",
+                            onClick = { makeUserOnlineDialogOpen = true }
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        AppInfo()
                     }
                 }
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    AppInfo()
-                }
             }
+            IndefiniteProgressBar(visible = viewState.loading)
         }
-        IndefiniteProgressBar(visible = viewState.loading)
     }
 }
 

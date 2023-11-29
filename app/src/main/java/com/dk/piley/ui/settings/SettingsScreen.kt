@@ -92,7 +92,8 @@ fun SettingsScreen(
         onDeleteUser = { password -> viewModel.deleteUser(password) },
         onCloseSettings = { navController.popBackStack() },
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
-        onSetBaseUrlValue = { baseUrl -> viewModel.setBaseUrl(baseUrl) }
+        onSetBaseUrlValue = { baseUrl -> viewModel.setBaseUrl(baseUrl) },
+        onMakeUserOnline = { makeUserOnlineResult -> viewModel.makeUserOnline(makeUserOnlineResult) }
     )
 }
 
@@ -114,6 +115,7 @@ fun SettingsScreen(
  * @param onCloseSettings on close settings screen
  * @param onStartTutorial on restart tutorial
  * @param onSetBaseUrlValue on set base url value
+ * @param onMakeUserOnline on make user online
  */
 @Composable
 private fun SettingsScreen(
@@ -132,6 +134,7 @@ private fun SettingsScreen(
     onCloseSettings: () -> Unit = {},
     onStartTutorial: () -> Unit = {},
     onSetBaseUrlValue: (String) -> Unit = {},
+    onMakeUserOnline: (MakeUserOnlineResult) -> Unit = {},
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
@@ -171,7 +174,10 @@ private fun SettingsScreen(
         ContentAlertDialog(onDismiss = { makeUserOnlineDialogOpen = false }) {
             MakeUserOnlineContent(
                 existingName = viewState.user.name,
-                onConfirm = {},
+                onConfirm = {
+                    onMakeUserOnline(it)
+                    makeUserOnlineDialogOpen = false
+                },
                 onCancel = { makeUserOnlineDialogOpen = false }
             )
         }
@@ -324,7 +330,7 @@ private fun SettingsScreen(
                     } else { // if user is offline, show option to make user online
                         SettingsItem(
                             title = "Make user online",
-                            description = "Make this offline use online by connecting to your backup server",
+                            description = "Make this user online by connecting to your backup server",
                             onClick = { makeUserOnlineDialogOpen = true }
                         )
                     }

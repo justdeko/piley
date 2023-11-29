@@ -47,6 +47,8 @@ fun MakeUserOnlineContent(
     var name by rememberSaveable { mutableStateOf(existingName) }
     var password by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
+    var serverUrl by rememberSaveable { mutableStateOf("") }
+
     val focusManager = LocalFocusManager.current
     Column(
         modifier.padding(
@@ -57,7 +59,7 @@ fun MakeUserOnlineContent(
         verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
     ) {
         Text(
-            text = "Input the remaining data to upload your first backup.",
+            text = "Input the remaining data to upload your first backup.", // TODO extract
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
@@ -79,8 +81,7 @@ fun MakeUserOnlineContent(
             modifier = Modifier.fillMaxWidth(),
             value = email,
             onValueChange = { email = it },
-            visualTransformation = PasswordVisualTransformation(),
-            placeholder = { Text("Email") },
+            placeholder = { Text("Email") }, // TODO extract
             shape = MaterialTheme.shapes.large,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -93,12 +94,27 @@ fun MakeUserOnlineContent(
             value = password,
             visualTransformation = PasswordVisualTransformation(),
             onValueChange = { password = it },
-            placeholder = { Text("Password") },
+            placeholder = { Text("Password") }, // TODO extract
             shape = MaterialTheme.shapes.large,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
+                imeAction = ImeAction.Next,
                 keyboardType = KeyboardType.Password
+            ),
+            keyboardActions = KeyboardActions(onDone = {
+                focusManager.clearFocus()
+                defaultKeyboardAction(ImeAction.Done)
+            }),
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = serverUrl,
+            onValueChange = { serverUrl = it },
+            placeholder = { Text("Server URL") }, // TODO extract
+            shape = MaterialTheme.shapes.large,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(onDone = {
                 focusManager.clearFocus()
@@ -111,14 +127,15 @@ fun MakeUserOnlineContent(
                     MakeUserOnlineResult(
                         name = name,
                         email = email,
-                        password = password
+                        password = password,
+                        serverUrl = serverUrl
                     )
                 )
             },
             onLeftClick = onCancel,
-            rightText = "Create User",
+            rightText = "Create User", // TODO extract
             leftText = stringResource(R.string.edit_user_dialog_cancel_button),
-            rightEnabled = password.isNotBlank() && name.isNotBlank() && email.isNotBlank()
+            rightEnabled = password.isNotBlank() && name.isNotBlank() && email.isNotBlank() && serverUrl.isNotBlank()
         )
     }
 }
@@ -126,7 +143,8 @@ fun MakeUserOnlineContent(
 data class MakeUserOnlineResult(
     val name: String,
     val email: String,
-    val password: String
+    val password: String,
+    val serverUrl: String
 )
 
 @Preview

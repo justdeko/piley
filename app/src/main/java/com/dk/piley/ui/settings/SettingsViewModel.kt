@@ -3,6 +3,7 @@ package com.dk.piley.ui.settings
 import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
+import com.dk.piley.backup.BackupManager
 import com.dk.piley.common.StatefulAndroidViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
@@ -28,7 +29,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val application: Application,
     private val userRepository: UserRepository,
-    private val pileRepository: PileRepository
+    private val pileRepository: PileRepository,
+    private val backupManager: BackupManager
 ) : StatefulAndroidViewModel<SettingsViewState>(application, SettingsViewState()) {
 
     init {
@@ -326,8 +328,13 @@ class SettingsViewModel @Inject constructor(
         // set relevant preferences
         userRepository.setSignedInUser(user.email)
         userRepository.setSignedOut(false)
+        // perform a backup
+        val successful = backupManager.doBackup()
+        val message = if (!successful) {
+            "Backup failed" // TODO extract string resource
+        } else "User created"
+        state.update { it.copy(message = message, loading = false) }
         setLoading(false)
-        // TODO perform a first backup
     }
 
     /**

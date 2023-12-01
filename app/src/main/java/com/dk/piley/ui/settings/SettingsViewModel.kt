@@ -308,7 +308,7 @@ class SettingsViewModel @Inject constructor(
                         state.update { viewState ->
                             viewState.copy(
                                 loading = false,
-                                message = "Error creating user" // TODO string resource
+                                message = application.getString(R.string.error_make_user_online)
                             )
                         }
                     }
@@ -331,8 +331,8 @@ class SettingsViewModel @Inject constructor(
         // perform a backup
         val successful = backupManager.doBackup()
         val message = if (!successful) {
-            "Backup failed" // TODO extract string resource
-        } else "User created"
+            application.getString(R.string.make_user_online_backup_failed)
+        } else application.getString(R.string.make_user_online_success)
         state.update { it.copy(message = message, loading = false) }
         setLoading(false)
     }

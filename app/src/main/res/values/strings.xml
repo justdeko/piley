@@ -157,6 +157,13 @@
     <string name="start_tutorial_setting_description">Click here if you want to see the tutorial again.</string>
     <string name="set_base_url_setting_title">Set the request URL</string>
     <string name="set_base_url_setting_description">Set the base request URL the app connects to for uploading and fetching backups.</string>
+    <!-- make user online-->
+    <string name="request_url_hint">Request url ending in a forward slash</string>
+    <string name="make_user_online_title">Input the remaining data to upload your first backup.</string>
+    <string name="make_user_online_confirm_button">Create User</string>
+    <string name="error_make_user_online">Error creating user</string>
+    <string name="make_user_online_backup_failed">Backup failed. Try backing up manually on your profile page.</string>
+    <string name="make_user_online_success">User created and first backup uploaded!</string>
 
     <!-- sign in screen -->
     <string name="register_button_text">Register</string>

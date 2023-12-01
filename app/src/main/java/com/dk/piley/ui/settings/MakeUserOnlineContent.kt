@@ -59,7 +59,7 @@ fun MakeUserOnlineContent(
         verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
     ) {
         Text(
-            text = "Input the remaining data to upload your first backup.", // TODO extract
+            text = stringResource(R.string.make_user_online_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
@@ -81,7 +81,7 @@ fun MakeUserOnlineContent(
             modifier = Modifier.fillMaxWidth(),
             value = email,
             onValueChange = { email = it },
-            placeholder = { Text("Email") }, // TODO extract
+            placeholder = { Text(stringResource(R.string.user_email_placeholder)) },
             shape = MaterialTheme.shapes.large,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -94,7 +94,7 @@ fun MakeUserOnlineContent(
             value = password,
             visualTransformation = PasswordVisualTransformation(),
             onValueChange = { password = it },
-            placeholder = { Text("Password") }, // TODO extract
+            placeholder = { Text(stringResource(R.string.password_placeholder)) },
             shape = MaterialTheme.shapes.large,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -110,7 +110,7 @@ fun MakeUserOnlineContent(
             modifier = Modifier.fillMaxWidth(),
             value = serverUrl,
             onValueChange = { serverUrl = it },
-            placeholder = { Text("Server URL") }, // TODO extract
+            placeholder = { Text(stringResource(id = R.string.request_url_hint)) },
             shape = MaterialTheme.shapes.large,
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -133,7 +133,7 @@ fun MakeUserOnlineContent(
                 )
             },
             onLeftClick = onCancel,
-            rightText = "Create User", // TODO extract
+            rightText = stringResource(R.string.make_user_online_confirm_button),
             leftText = stringResource(R.string.edit_user_dialog_cancel_button),
             rightEnabled = password.isNotBlank() && name.isNotBlank() && email.isNotBlank() && serverUrl.isNotBlank()
         )

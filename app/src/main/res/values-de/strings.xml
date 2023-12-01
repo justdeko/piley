@@ -87,6 +87,7 @@
     <string name="delete_user_success_info">Benutzer gelöscht, wird abgemeldet</string>
     <string name="update_user_error_wrong_password">Fehler beim aktualisieren: Falsches Passwort</string>
     <string name="user_update_success_info">Benutzerdaten erfolgreich aktualisiert!</string>
+    <string name="request_url_hint">API-Url mit Schrägstrich am Ende</string>
     <string name="register_button_text">Registrieren</string>
     <string name="sign_in_button_text">Anmelden</string>
     <string name="user_email_placeholder">E-Mail</string>
@@ -201,4 +202,9 @@
     <string name="first_user_name_hint">z.B. John Doe</string>
     <string name="use_offline_button_text">Offline benutzen</string>
     <string name="or">oder</string>
+    <string name="make_user_online_title">Gebe die restlichen Daten ein, um dein erstes Backup hochzuladen.</string>
+    <string name="make_user_online_confirm_button">User erstellen</string>
+    <string name="error_make_user_online">Fehler beim Erstellen des Users</string>
+    <string name="make_user_online_backup_failed">Backup fehlgeschlagen. Probiere es später auf deiner Profilseite.</string>
+    <string name="make_user_online_success">User erstellt und erstes Backup hochgeladen!</string>
 </resources>

@@ -51,7 +51,7 @@
     <string name="delete_user_dialog_cancel_button">Abbrechen</string>
     <string name="delete_user_dialog_confirm_button">Löschen</string>
     <string name="edit_user_dialog_title">Bearbeite deine Nutzerdaten hier.</string>
-    <string name="user_name_hint">Name</string>
+    <string name="user_name_hint">Dein Name</string>
     <string name="user_new_password_hint">Neues Passwort (leerlassen, wenn unverändert)</string>
     <string name="user_current_password_hint">Aktuelles Passwort zur Bestätigung</string>
     <string name="edit_user_dialog_cancel_button">Abbrechen</string>
@@ -87,6 +87,7 @@
     <string name="delete_user_success_info">Benutzer gelöscht, wird abgemeldet</string>
     <string name="update_user_error_wrong_password">Fehler beim aktualisieren: Falsches Passwort</string>
     <string name="user_update_success_info">Benutzerdaten erfolgreich aktualisiert!</string>
+    <string name="request_url_hint">API-Url mit Schrägstrich am Ende</string>
     <string name="register_button_text">Registrieren</string>
     <string name="sign_in_button_text">Anmelden</string>
     <string name="user_email_placeholder">E-Mail</string>
@@ -95,7 +96,7 @@
     <string name="password_placeholder">Passwort</string>
     <string name="user_offline_checkbox_label">Benutzer offline machen</string>
     <string name="navigate_to_sign_in_button_text">Stattdessen anmelden</string>
-    <string name="navigate_to_register_button_text">Noch kein Konto? Hier klicken, um zu registrieren</string>
+    <string name="navigate_to_register_button_text">Account erstellen</string>
     <string name="user_register_error_message">Fehler beim registrieren</string>
     <string name="sign_in_success_message">Erfolgreich angemeldet!</string>
     <string name="sign_in_error_message">Fehler beim Anmelden</string>
@@ -197,4 +198,13 @@
     <string name="delete_recurring_dialog_description">Bist du dir sicher, dass du dieses wiederholende Task löschen möchtest? Alle zukünftigen Reminder werden abgebrochen.</string>
     <string name="delete_recurring_dialog_confirm">Ja</string>
     <string name="api_base_url_info_message">Deine API-URL ist jetzt: %1$s</string>
+    <string name="delete_user_dialog_description">Bist du dir sicher, dass du deinen User löschen möchtest?</string>
+    <string name="first_user_name_hint">z.B. John Doe</string>
+    <string name="use_offline_button_text">Offline benutzen</string>
+    <string name="or">oder</string>
+    <string name="make_user_online_title">Gebe die restlichen Daten ein, um dein erstes Backup hochzuladen.</string>
+    <string name="make_user_online_confirm_button">User erstellen</string>
+    <string name="error_make_user_online">Fehler beim Erstellen des Users</string>
+    <string name="make_user_online_backup_failed">Backup fehlgeschlagen. Probiere es später auf deiner Profilseite.</string>
+    <string name="make_user_online_success">User erstellt und erstes Backup hochgeladen!</string>
 </resources>

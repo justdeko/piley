@@ -3,6 +3,7 @@ package com.dk.piley.ui.settings
 import android.app.Application
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.R
+import com.dk.piley.backup.BackupManager
 import com.dk.piley.common.StatefulAndroidViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.PileRepository
@@ -11,6 +12,7 @@ import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,7 +29,8 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val application: Application,
     private val userRepository: UserRepository,
-    private val pileRepository: PileRepository
+    private val pileRepository: PileRepository,
+    private val backupManager: BackupManager
 ) : StatefulAndroidViewModel<SettingsViewState>(application, SettingsViewState()) {
 
     init {
@@ -177,6 +180,7 @@ class SettingsViewModel @Inject constructor(
     private suspend fun deleteUserLocally() {
         pileRepository.deletePileData()
         userRepository.setSignedInUser("")
+        userRepository.setSignedOut(true)
         userRepository.deleteUserTable()
         state.update {
             it.copy(
@@ -274,6 +278,71 @@ class SettingsViewModel @Inject constructor(
             userRepository.insertUser(state.value.user.copy(loadBackupAfterDays = days))
         }
     }
+
+    /**
+     * Make user online by connecting to backup server
+     *
+     * @param result
+     */
+    fun makeUserOnline(result: MakeUserOnlineResult) {
+        viewModelScope.launch {
+            // get current user and update params
+            val currentUser = userRepository.getSignedInUserEntity() ?: return@launch
+            val newUser = currentUser.copy(
+                name = result.name,
+                email = result.email,
+                password = result.password,
+                isOffline = false
+            )
+            // cancel operation
+            // set the base url before making request
+            userRepository.setBaseUrl(result.serverUrl)
+            // create user object
+            userRepository.registerUserFlow(newUser).collectLatest {
+                when (it) {
+                    is Resource.Loading -> setLoading(true)
+                    // if registration successful, continue to local operations
+                    is Resource.Success -> onRemoteRegisterSuccess(newUser)
+                    // if registration failed, show error message
+                    is Resource.Failure -> {
+                        state.update { viewState ->
+                            viewState.copy(
+                                loading = false,
+                                message = application.getString(R.string.error_make_user_online)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Perform final local actions on remote register success
+     *
+     * @param user the user entity to update
+     */
+    private suspend fun onRemoteRegisterSuccess(user: User) {
+        // update user
+        userRepository.insertUser(user)
+        // set relevant preferences
+        userRepository.setSignedInUser(user.email)
+        userRepository.setSignedOut(false)
+        // perform a backup
+        val successful = backupManager.doBackup()
+        val message = if (!successful) {
+            application.getString(R.string.make_user_online_backup_failed)
+        } else application.getString(R.string.make_user_online_success)
+        state.update { it.copy(message = message, loading = false) }
+        setLoading(false)
+    }
+
+    /**
+     * Set whether something is loading
+     *
+     * @param loading loading is true
+     */
+    private fun setLoading(loading: Boolean) = state.update { it.copy(loading = loading) }
 }
 
 data class SettingsViewState(

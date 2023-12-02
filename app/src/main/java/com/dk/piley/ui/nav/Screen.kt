@@ -74,4 +74,4 @@ val navItems = listOf(
 
 val taskScreen = IdentifierScreen.Task
 val pileScreen = IdentifierScreen.Pile
-const val DEEPLINK_ROOT = "https://piley.app"
+const val DEEPLINK_ROOT = "piley://piley.app"

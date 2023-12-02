@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,7 +47,6 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.CreateBaseUrlAlertDialog
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.profile.AppInfo
 import com.dk.piley.ui.theme.PileyTheme
@@ -107,13 +107,7 @@ fun SignInScreen(
                 viewModel.setSignInState(SignInState.REGISTER)
             }
         },
-        onChangeOfflineRegister = { isOffline ->
-            if (isOffline) {
-                viewModel.setSignInState(SignInState.REGISTER_OFFLINE)
-            } else {
-                viewModel.setSignInState(SignInState.REGISTER)
-            }
-        },
+        onUseOffline = { viewModel.doFirstTimeRegister() },
         onSetBaseUrlValue = { viewModel.setBaseUrl(it) }
     )
 }
@@ -129,7 +123,7 @@ fun SignInScreen(
  * @param onAttemptSignIn on attempt sign in (sign in/register button clicked)
  * @param onChangeRegister on set to register view
  * @param onSetBaseUrlValue on set base url value
- * @param onChangeOfflineRegister on set offline registration
+ * @param onUseOffline on use offline mode
  */
 @Composable
 private fun SignInScreen(
@@ -141,14 +135,14 @@ private fun SignInScreen(
     onAttemptSignIn: () -> Unit = {},
     onChangeRegister: () -> Unit = {},
     onSetBaseUrlValue: (String) -> Unit = {},
-    onChangeOfflineRegister: (Boolean) -> Unit = {}
+    onUseOffline: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
     val dim = LocalDim.current
     val scrollState = rememberScrollState()
 
     val isRegister =
-        viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTER_OFFLINE || viewState.signInState == SignInState.REGISTERED
+        viewState.signInState == SignInState.REGISTER || viewState.signInState == SignInState.REGISTERED
     val signInText =
         if (isRegister) {
             stringResource(R.string.register_button_text)
@@ -228,10 +222,7 @@ private fun SignInScreen(
                         keyboardType = KeyboardType.Email
                     ),
                 )
-                AnimatedVisibility(
-                    viewState.signInState == SignInState.REGISTER
-                            || viewState.signInState == SignInState.REGISTER_OFFLINE
-                ) {
+                AnimatedVisibility(viewState.signInState == SignInState.REGISTER) {
                     OutlinedTextField(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -272,25 +263,25 @@ private fun SignInScreen(
                         this.defaultKeyboardAction(ImeAction.Done)
                     })
                 )
-                AnimatedVisibility(
-                    viewState.signInState == SignInState.REGISTER
-                            || viewState.signInState == SignInState.REGISTER_OFFLINE
+                Row(
+                    modifier = Modifier
+                        .padding(top = dim.medium, bottom = dim.extraLarge)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    TextWithCheckbox(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = dim.large, vertical = dim.medium),
-                        description = stringResource(R.string.user_offline_checkbox_label),
-                        checked = viewState.signInState == SignInState.REGISTER_OFFLINE,
-                        onChecked = onChangeOfflineRegister
-                    )
-                }
-                ElevatedButton(
-                    modifier = Modifier.padding(top = dim.medium, bottom = dim.extraLarge),
-                    onClick = onAttemptSignIn,
-                    enabled = signInButtonEnabled(isRegister, viewState)
-                ) {
-                    Text(signInText)
+                    ElevatedButton(
+                        onClick = onAttemptSignIn,
+                        enabled = signInButtonEnabled(isRegister, viewState)
+                    ) {
+                        Text(signInText)
+                    }
+                    Text(stringResource(R.string.or))
+                    ElevatedButton(
+                        onClick = onUseOffline,
+                    ) {
+                        Text(stringResource(R.string.use_offline_button_text))
+                    }
                 }
                 TextButton(onClick = onChangeRegister) {
                     Text(
@@ -301,10 +292,8 @@ private fun SignInScreen(
                         )
                     )
                 }
-                AnimatedVisibility(viewState.signInState != SignInState.REGISTER_OFFLINE) {
-                    TextButton(onClick = { dialogOpen = true }) {
-                        Text(stringResource(R.string.base_url_dialog_title))
-                    }
+                TextButton(onClick = { dialogOpen = true }) {
+                    Text(stringResource(R.string.base_url_dialog_title))
                 }
             }
             Box(

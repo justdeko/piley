@@ -30,25 +30,25 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.usernameCharacterLimit
 
 /**
- * Edit user dialog content
+ * Make user online content
  *
  * @param modifier generic modifier
  * @param existingName existing user name to set as initial value
- * @param userIsOffline whether the user is an offline user
- * @param onConfirm on confirm user edit
- * @param onCancel on cancel user edit
+ * @param onConfirm on confirm user online
+ * @param onCancel on cancel make user online
  */
 @Composable
-fun EditUserContent(
+fun MakeUserOnlineContent(
     modifier: Modifier = Modifier,
     existingName: String,
-    userIsOffline: Boolean = false,
-    onConfirm: (EditUserResult) -> Unit = {},
+    onConfirm: (MakeUserOnlineResult) -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
     var name by rememberSaveable { mutableStateOf(existingName) }
-    var oldPassword by rememberSaveable { mutableStateOf("") }
-    var newPassword by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var serverUrl by rememberSaveable { mutableStateOf("") }
+
     val focusManager = LocalFocusManager.current
     Column(
         modifier.padding(
@@ -59,7 +59,7 @@ fun EditUserContent(
         verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
     ) {
         Text(
-            text = stringResource(R.string.edit_user_dialog_title),
+            text = stringResource(R.string.make_user_online_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
@@ -77,80 +77,82 @@ fun EditUserContent(
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         )
-        if (!userIsOffline) {
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = newPassword,
-                onValueChange = { newPassword = it },
-                visualTransformation = PasswordVisualTransformation(),
-                placeholder = { Text(stringResource(R.string.user_new_password_hint)) },
-                shape = MaterialTheme.shapes.large,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Password
-                ),
-            )
-            OutlinedTextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = oldPassword,
-                visualTransformation = PasswordVisualTransformation(),
-                onValueChange = { oldPassword = it },
-                placeholder = { Text(stringResource(R.string.user_current_password_hint)) },
-                shape = MaterialTheme.shapes.large,
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    keyboardType = KeyboardType.Password
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    focusManager.clearFocus()
-                    defaultKeyboardAction(ImeAction.Done)
-                }),
-            )
-        }
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = email,
+            onValueChange = { email = it },
+            placeholder = { Text(stringResource(R.string.user_email_placeholder)) },
+            shape = MaterialTheme.shapes.large,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Email
+            ),
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = password,
+            visualTransformation = PasswordVisualTransformation(),
+            onValueChange = { password = it },
+            placeholder = { Text(stringResource(R.string.password_placeholder)) },
+            shape = MaterialTheme.shapes.large,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Password
+            ),
+            keyboardActions = KeyboardActions(onDone = {
+                focusManager.clearFocus()
+                defaultKeyboardAction(ImeAction.Done)
+            }),
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = serverUrl,
+            onValueChange = { serverUrl = it },
+            placeholder = { Text(stringResource(id = R.string.request_url_hint)) },
+            shape = MaterialTheme.shapes.large,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone = {
+                focusManager.clearFocus()
+                defaultKeyboardAction(ImeAction.Done)
+            }),
+        )
         TwoButtonRow(
             onRightClick = {
                 onConfirm(
-                    EditUserResult(
+                    MakeUserOnlineResult(
                         name = name,
-                        oldPassword = oldPassword,
-                        newPassword = newPassword
+                        email = email,
+                        password = password,
+                        serverUrl = serverUrl
                     )
                 )
             },
             onLeftClick = onCancel,
-            rightText = stringResource(R.string.edit_user_dialog_confirm_button),
+            rightText = stringResource(R.string.make_user_online_confirm_button),
             leftText = stringResource(R.string.edit_user_dialog_cancel_button),
-            rightEnabled = (oldPassword.isNotBlank() && name.isNotBlank()) || (userIsOffline && name.isNotBlank())
+            rightEnabled = password.isNotBlank() && name.isNotBlank() && email.isNotBlank() && serverUrl.isNotBlank()
         )
     }
 }
 
-data class EditUserResult(
+data class MakeUserOnlineResult(
     val name: String,
-    val oldPassword: String,
-    val newPassword: String
+    val email: String,
+    val password: String,
+    val serverUrl: String
 )
 
 @Preview
 @Composable
-fun EditUserContentPreview() {
+fun MakeUserOnlineContentPreview() {
     PileyTheme(useDarkTheme = true) {
-        EditUserContent(
+        MakeUserOnlineContent(
             modifier = Modifier.fillMaxWidth(),
-            existingName = "Thomas"
-        )
-    }
-}
-
-@Preview
-@Composable
-fun EditUserContentOfflinePreview() {
-    PileyTheme(useDarkTheme = true) {
-        EditUserContent(
-            modifier = Modifier.fillMaxWidth(),
-            userIsOffline = true,
             existingName = "Thomas"
         )
     }

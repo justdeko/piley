@@ -10,27 +10,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.usernameCharacterLimit
 
 /**
  * Intro screen
  *
  * @param modifier generic modifier
  * @param navController generic nav controller
+ * @param viewModel intro view model
  */
 @Composable
 fun IntroScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
+    viewModel: IntroViewModel = hiltViewModel()
 ) {
     IntroScreen(
         modifier = modifier,
         onFinish = {
+            viewModel.setUsername(it)
             navController.popBackStack()
             navController.navigate(Screen.Pile.route)
         }
@@ -47,7 +52,7 @@ fun IntroScreen(
 @Composable
 fun IntroScreen(
     modifier: Modifier = Modifier,
-    onFinish: () -> Unit = {}
+    onFinish: (String) -> Unit = {},
 ) {
     val pages = listOf(
         IntroPage.Welcome,
@@ -70,9 +75,10 @@ fun IntroScreen(
             if (position != pages.lastIndex) {
                 IntroPageContent(introPage = pages[position])
             } else {
-                IntroPageContent(
+                IntroPageTextFieldContent(
                     introPage = pages[position],
-                    showButton = true,
+                    textFieldHint = stringResource(R.string.first_user_name_hint),
+                    textMaxLength = usernameCharacterLimit,
                     buttonText = stringResource(R.string.finish_intro_button),
                     onClickButton = onFinish
                 )

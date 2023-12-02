@@ -34,11 +34,13 @@ import com.dk.piley.util.defaultPadding
  *
  * @param modifier generic modifier
  * @param onConfirm on delete confirm
+ * @param userIsOffline whether the user is an offline user
  * @param onCancel on delete cancel
  */
 @Composable
 fun DeleteUserContent(
     modifier: Modifier = Modifier,
+    userIsOffline: Boolean = false,
     onConfirm: (String) -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
@@ -56,29 +58,37 @@ fun DeleteUserContent(
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
-        OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = password,
-            onValueChange = { password = it },
-            placeholder = { Text(stringResource(R.string.user_password_confirm_hint)) },
-            shape = MaterialTheme.shapes.large,
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Password
-            ),
-            keyboardActions = KeyboardActions(onDone = {
-                focusManager.clearFocus()
-                defaultKeyboardAction(ImeAction.Done)
-            }),
-            visualTransformation = PasswordVisualTransformation(),
+        Text(
+            text = stringResource(R.string.delete_user_dialog_description),
+            color = MaterialTheme.colorScheme.secondary,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
         )
+        if (!userIsOffline) {
+            OutlinedTextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = password,
+                onValueChange = { password = it },
+                placeholder = { Text(stringResource(R.string.user_password_confirm_hint)) },
+                shape = MaterialTheme.shapes.large,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password
+                ),
+                keyboardActions = KeyboardActions(onDone = {
+                    focusManager.clearFocus()
+                    defaultKeyboardAction(ImeAction.Done)
+                }),
+                visualTransformation = PasswordVisualTransformation(),
+            )
+        }
         TwoButtonRow(
             onRightClick = { onConfirm(password) },
             onLeftClick = onCancel,
             rightText = stringResource(R.string.delete_user_dialog_confirm_button),
             leftText = stringResource(R.string.delete_user_dialog_cancel_button),
-            rightEnabled = password.isNotBlank(),
+            rightEnabled = password.isNotBlank() || userIsOffline,
             rightColors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer
@@ -93,6 +103,17 @@ fun DeleteUserContentPreview() {
     PileyTheme(useDarkTheme = true) {
         DeleteUserContent(
             modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun DeleteUserOfflineContentPreview() {
+    PileyTheme(useDarkTheme = true) {
+        DeleteUserContent(
+            modifier = Modifier.fillMaxWidth(),
+            userIsOffline = true
         )
     }
 }

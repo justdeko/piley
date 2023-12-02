@@ -92,7 +92,8 @@ fun SettingsScreen(
         onDeleteUser = { password -> viewModel.deleteUser(password) },
         onCloseSettings = { navController.popBackStack() },
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
-        onSetBaseUrlValue = { baseUrl -> viewModel.setBaseUrl(baseUrl) }
+        onSetBaseUrlValue = { baseUrl -> viewModel.setBaseUrl(baseUrl) },
+        onMakeUserOnline = { makeUserOnlineResult -> viewModel.makeUserOnline(makeUserOnlineResult) }
     )
 }
 
@@ -114,6 +115,7 @@ fun SettingsScreen(
  * @param onCloseSettings on close settings screen
  * @param onStartTutorial on restart tutorial
  * @param onSetBaseUrlValue on set base url value
+ * @param onMakeUserOnline on make user online
  */
 @Composable
 private fun SettingsScreen(
@@ -132,6 +134,7 @@ private fun SettingsScreen(
     onCloseSettings: () -> Unit = {},
     onStartTutorial: () -> Unit = {},
     onSetBaseUrlValue: (String) -> Unit = {},
+    onMakeUserOnline: (MakeUserOnlineResult) -> Unit = {},
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
@@ -140,6 +143,7 @@ private fun SettingsScreen(
     var editUserDialogOpen by remember { mutableStateOf(false) }
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
     var baseUrlDialogOpen by remember { mutableStateOf(false) }
+    var makeUserOnlineDialogOpen by remember { mutableStateOf(false) }
 
     if (baseUrlDialogOpen) {
         CreateBaseUrlAlertDialog(
@@ -156,6 +160,7 @@ private fun SettingsScreen(
         ContentAlertDialog(onDismiss = { editUserDialogOpen = false }) {
             EditUserContent(
                 existingName = viewState.user.name,
+                userIsOffline = viewState.user.isOffline,
                 onConfirm = { result ->
                     editUserDialogOpen = false
                     onEditUser(result)
@@ -165,9 +170,23 @@ private fun SettingsScreen(
         }
     }
 
+    if (makeUserOnlineDialogOpen) {
+        ContentAlertDialog(onDismiss = { makeUserOnlineDialogOpen = false }) {
+            MakeUserOnlineContent(
+                existingName = viewState.user.name,
+                onConfirm = {
+                    onMakeUserOnline(it)
+                    makeUserOnlineDialogOpen = false
+                },
+                onCancel = { makeUserOnlineDialogOpen = false }
+            )
+        }
+    }
+
     if (deleteUserDialogOpen) {
         ContentAlertDialog(onDismiss = { deleteUserDialogOpen = false }) {
             DeleteUserContent(
+                userIsOffline = viewState.user.isOffline,
                 onConfirm = { password ->
                     deleteUserDialogOpen = false
                     onDeleteUser(password)
@@ -308,17 +327,23 @@ private fun SettingsScreen(
                             description = stringResource(R.string.set_base_url_setting_description),
                             onClick = { baseUrlDialogOpen = true }
                         )
+                    } else { // if user is offline, show option to make user online
+                        SettingsItem(
+                            title = "Make user online",
+                            description = "Make this user online by connecting to your backup server",
+                            onClick = { makeUserOnlineDialogOpen = true }
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        AppInfo()
                     }
                 }
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    AppInfo()
-                }
             }
+            IndefiniteProgressBar(visible = viewState.loading)
         }
-        IndefiniteProgressBar(visible = viewState.loading)
     }
 }
 

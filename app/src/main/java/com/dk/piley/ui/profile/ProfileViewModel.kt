@@ -149,6 +149,7 @@ class ProfileViewModel @Inject constructor(
         }
         pileRepository.deletePileData()
         userRepository.setSignedInUser("")
+        userRepository.setSignedOut(true)
         userRepository.deleteUserTable()
     }
 }

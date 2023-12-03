@@ -41,6 +41,11 @@ class SplashViewModel @Inject constructor(
             val userEmail = userRepository.getSignedInUserEmail()
             val signedOut = userRepository.getSignedOut()
             if (userEmail.isNotBlank()) {
+                // if the tutorial has not been shown but the user is not new, set it to shown
+                val tutorialShown = userRepository.getTutorialShown()
+                if (!tutorialShown) {
+                    userRepository.setTutorialShown(true)
+                }
                 collectState(
                     combine(loadingBackupFlow()) { (loadingBackup) ->
                         // while loading backup, set state to loading
@@ -77,11 +82,6 @@ class SplashViewModel @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    // if the tutorial has not been shown but the user is not new, set it to shown
-                    val tutorialShown = userRepository.getTutorialShown()
-                    if (!tutorialShown) {
-                        userRepository.setTutorialShown(true)
-                    }
                     Timber.d("Remote backup request completed, replaced local db: ${it.data != null}")
                     emit(false)
                 }

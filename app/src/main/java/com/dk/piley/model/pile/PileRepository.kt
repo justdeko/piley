@@ -44,6 +44,10 @@ class PileRepository @Inject constructor(
         return pileDao.updateAllPileModes(defaultPileMode)
     }
 
+    /**
+     * Delete pile data by deleting all tasks belonging to pile and pile itself
+     *
+     */
     suspend fun deletePileData() = pileDao.deletePileData()
 
     /**
@@ -55,4 +59,10 @@ class PileRepository @Inject constructor(
         // wal checkpoint with truncating wal file
         pileDao.checkpoint(SimpleSQLiteQuery("pragma wal_checkpoint(truncate)"))
     }
+
+    /**
+     * Delete all tasks with status DELETEd
+     *
+     */
+    suspend fun deleteDeletedTasks() = pileDao.deleteDeletedTasks()
 }

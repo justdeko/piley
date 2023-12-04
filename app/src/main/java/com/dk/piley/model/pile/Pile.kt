@@ -1,5 +1,6 @@
 package com.dk.piley.model.pile
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dk.piley.model.user.PileMode
@@ -26,5 +27,6 @@ data class Pile(
     val pileLimit: Int = 0,
     val createdAt: Instant = Instant.now(),
     val modifiedAt: Instant = Instant.now(),
-    val deletedCount: Int = 0,
+    @ColumnInfo(defaultValue = "0")
+    val deletedCount: Int = 0, // TODO reset pile statistics differently
 )

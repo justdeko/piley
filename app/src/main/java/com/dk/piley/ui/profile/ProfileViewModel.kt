@@ -77,7 +77,7 @@ class ProfileViewModel @Inject constructor(
         piles?.forEach { pileWithTasks ->
             val deletedCount =
                 pileWithTasks.pile.deletedCount + pileWithTasks.tasks.count { it.status == TaskStatus.DELETED }
-            pileRepository.insertPile(pileWithTasks.pile.copy(deletedCount = deletedCount))
+            pileRepository.updatePile(pileWithTasks.pile.copy(deletedCount = deletedCount))
         }
         // delete all deleted tasks
         pileRepository.deleteDeletedTasks()

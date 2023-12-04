@@ -59,7 +59,7 @@ class PileDetailViewModel @Inject constructor(
                             pile = pileWithTasks.pile,
                             completedTaskCounts = getCompletedTasksForWeekValues(pileWithTasks),
                             doneCount = pileWithTasks.tasks.count { it.status == TaskStatus.DONE },
-                            deletedCount = pileWithTasks.tasks.count { it.status == TaskStatus.DELETED },
+                            deletedCount = pileWithTasks.pile.deletedCount,
                             currentCount = pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT },
                             canDeleteOrEdit = id != user.defaultPileId
                         )

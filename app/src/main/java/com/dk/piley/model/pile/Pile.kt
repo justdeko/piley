@@ -28,5 +28,5 @@ data class Pile(
     val createdAt: Instant = Instant.now(),
     val modifiedAt: Instant = Instant.now(),
     @ColumnInfo(defaultValue = "0")
-    val deletedCount: Int = 0, // TODO reset pile statistics differently
+    val deletedCount: Int = 0,
 )

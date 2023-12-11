@@ -113,6 +113,7 @@ class PileDetailViewModel @Inject constructor(
     fun clearStatistics() {
         viewModelScope.launch {
             taskRepository.deleteAllCompletedDeletedTasksForPile(state.value.pile.pileId)
+            pileRepository.updatePile(state.value.pile.copy(deletedCount = 0))
         }
     }
 }

@@ -90,7 +90,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
     implementation "androidx.compose.material:material-icons-extended:$compose_material_icons_version"
     implementation 'androidx.datastore:datastore-preferences:1.1.0-alpha07'
-    implementation 'androidx.activity:activity-compose:1.8.1'
+    implementation 'androidx.activity:activity-compose:1.8.2'
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

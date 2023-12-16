@@ -61,7 +61,7 @@ class PileRepository @Inject constructor(
     }
 
     /**
-     * Delete all tasks with status DELETEd
+     * Delete all tasks with status DELETED
      *
      */
     suspend fun deleteDeletedTasks() = pileDao.deleteDeletedTasks()

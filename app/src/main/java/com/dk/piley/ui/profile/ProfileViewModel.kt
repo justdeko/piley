@@ -15,11 +15,13 @@ import com.dk.piley.util.getBiggestPileName
 import com.dk.piley.util.getUpcomingTasks
 import com.dk.piley.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -42,7 +44,9 @@ class ProfileViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             // one-time script to delete deleted tasks
-            deleteDeletedTasks()
+            if (!userRepository.getTasksDeleted()) {
+                deleteDeletedTasks()
+            }
             // instantiate flows
             val pileFlow = pileRepository.getPilesWithTasks()
             val userFlow = userRepository.getSignedInUserNotNullFlow()
@@ -72,15 +76,20 @@ class ProfileViewModel @Inject constructor(
      *
      */
     private suspend fun deleteDeletedTasks() {
-        val piles = pileRepository.getPilesWithTasks().firstOrNull()
-        // updated all piles with deleted count
-        piles?.forEach { pileWithTasks ->
-            val deletedCount =
-                pileWithTasks.pile.deletedCount + pileWithTasks.tasks.count { it.status == TaskStatus.DELETED }
-            pileRepository.updatePile(pileWithTasks.pile.copy(deletedCount = deletedCount))
+        // launch in io thread to prevent view blocking
+        withContext(Dispatchers.IO) {
+            val piles = pileRepository.getPilesWithTasks().firstOrNull()
+            // updated all piles with deleted count
+            piles?.forEach { pileWithTasks ->
+                val deletedCount =
+                    pileWithTasks.pile.deletedCount + pileWithTasks.tasks.count { it.status == TaskStatus.DELETED }
+                pileRepository.updatePile(pileWithTasks.pile.copy(deletedCount = deletedCount))
+            }
+            // delete all deleted tasks
+            pileRepository.deleteDeletedTasks()
+            // set preference to true
+            userRepository.setTasksDeleted(true)
         }
-        // delete all deleted tasks
-        pileRepository.deleteDeletedTasks()
     }
 
     /**

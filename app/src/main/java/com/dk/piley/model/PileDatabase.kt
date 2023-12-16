@@ -1,6 +1,7 @@
 package com.dk.piley.model
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -16,7 +17,17 @@ const val DATABASE_NAME = "piley-db"
  * Pile database containing user piles and tasks
  *
  */
-@Database(entities = [Pile::class, Task::class], version = 1, exportSchema = false)
+@Database(
+    entities = [Pile::class, Task::class],
+    autoMigrations = [
+        AutoMigration(
+            from = 1,
+            to = 2
+        )
+    ],
+    version = 2,
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 abstract class PileDatabase : RoomDatabase() {
     // DAOs

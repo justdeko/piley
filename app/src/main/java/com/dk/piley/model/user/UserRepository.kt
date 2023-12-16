@@ -45,6 +45,9 @@ class UserRepository @Inject constructor(
     suspend fun getSignedOut(): Boolean =
         userPrefsManager.getSignedOut().firstOrNull() ?: false
 
+    suspend fun getTasksDeleted(): Boolean =
+        userPrefsManager.getTasksDeleted().firstOrNull() ?: false
+
     suspend fun localCredentials(email: String): String {
         val user = getUserByEmail(email)
         Timber.d("generating credentials using user: $user")
@@ -112,6 +115,10 @@ class UserRepository @Inject constructor(
 
     suspend fun setSignedOut(signedOut: Boolean = false) {
         userPrefsManager.setSignedOut(signedOut)
+    }
+
+    suspend fun setTasksDeleted(deleted: Boolean = false) {
+        userPrefsManager.setTasksDeleted(deleted)
     }
 
     fun getBaseUrlFlow() = userPrefsManager.getBaseUrl()

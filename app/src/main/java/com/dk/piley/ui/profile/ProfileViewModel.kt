@@ -15,10 +15,13 @@ import com.dk.piley.util.getBiggestPileName
 import com.dk.piley.util.getUpcomingTasks
 import com.dk.piley.util.toLocalDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -40,12 +43,17 @@ class ProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            // one-time script to delete deleted tasks
+            if (!userRepository.getTasksDeleted()) {
+                deleteDeletedTasks()
+            }
+            // instantiate flows
             val pileFlow = pileRepository.getPilesWithTasks()
             val userFlow = userRepository.getSignedInUserNotNullFlow()
             userFlow.combine(pileFlow) { user, pilesWithTasks ->
                 val tasks = pilesWithTasks.flatMap { it.tasks }
                 val done = tasks.count { it.status == TaskStatus.DONE }
-                val deleted = tasks.count { it.status == TaskStatus.DELETED }
+                val deleted = pilesWithTasks.sumOf { it.pile.deletedCount }
                 val current = tasks.count { it.status == TaskStatus.DEFAULT }
 
                 state.value.copy(
@@ -60,6 +68,27 @@ class ProfileViewModel @Inject constructor(
                     userIsOffline = user.isOffline
                 )
             }.collect { state.value = it }
+        }
+    }
+
+    /**
+     * Delete tasks with status deleted forever
+     *
+     */
+    private suspend fun deleteDeletedTasks() {
+        // launch in io thread to prevent view blocking
+        withContext(Dispatchers.IO) {
+            val piles = pileRepository.getPilesWithTasks().firstOrNull()
+            // updated all piles with deleted count
+            piles?.forEach { pileWithTasks ->
+                val deletedCount =
+                    pileWithTasks.pile.deletedCount + pileWithTasks.tasks.count { it.status == TaskStatus.DELETED }
+                pileRepository.updatePile(pileWithTasks.pile.copy(deletedCount = deletedCount))
+            }
+            // delete all deleted tasks
+            pileRepository.deleteDeletedTasks()
+            // set preference to true
+            userRepository.setTasksDeleted(true)
         }
     }
 

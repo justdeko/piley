@@ -1,5 +1,6 @@
 package com.dk.piley.model.pile
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dk.piley.model.user.PileMode
@@ -15,6 +16,7 @@ import java.time.Instant
  * @property pileLimit task limit for the pile
  * @property createdAt represents when the pile was created
  * @property modifiedAt represents when the pile was last modified
+ * @property deletedCount number of deleted tasks from this pile
  */
 @Entity
 data class Pile(
@@ -25,4 +27,6 @@ data class Pile(
     val pileLimit: Int = 0,
     val createdAt: Instant = Instant.now(),
     val modifiedAt: Instant = Instant.now(),
+    @ColumnInfo(defaultValue = "0")
+    val deletedCount: Int = 0,
 )

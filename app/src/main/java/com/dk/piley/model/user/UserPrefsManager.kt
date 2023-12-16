@@ -23,6 +23,8 @@ class UserPrefsManager(
     private val signedInUserKey = stringPreferencesKey("signed_in_user_id")
     private val hasSeenTutorialKey = booleanPreferencesKey("tutorial_shown")
     private val signedOutKey = booleanPreferencesKey("signed_out")
+    private val tasksDeletedKey = booleanPreferencesKey("tasksDeleted")
+
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUserKey] = email
     }
@@ -39,6 +41,10 @@ class UserPrefsManager(
         prefs[signedOutKey] = signedOut
     }
 
+    suspend fun setTasksDeleted(tasksDeleted: Boolean) = userPrefs.edit { prefs ->
+        prefs[tasksDeletedKey] = tasksDeleted
+    }
+
     fun getBaseUrl(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[urlKey] ?: BuildConfig.LOCAL_API_BASE_URL }
 
@@ -50,4 +56,7 @@ class UserPrefsManager(
 
     fun getSignedOut(): Flow<Boolean> =
         userPrefs.data.map { prefs -> prefs[signedOutKey] ?: false }
+
+    fun getTasksDeleted(): Flow<Boolean> =
+        userPrefs.data.map { prefs -> prefs[tasksDeletedKey] ?: false }
 }

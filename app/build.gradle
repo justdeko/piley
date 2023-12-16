@@ -67,6 +67,10 @@ android {
     namespace 'com.dk.piley'
 }
 
+ksp {
+    arg('room.schemaLocation', "$projectDir/schemas")
+}
+
 dependencies {
     // core
     implementation 'androidx.core:core-ktx:1.12.0'

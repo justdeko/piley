@@ -78,7 +78,7 @@ piley is a native Android app built with Jetpack Compose. The following librarie
 
 To start using piley, you can just get the newest apk from the
 **[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [google
-play](https://play.google.com/store/apps/details?id=com.dk.piley) (coming soon)
+play](https://play.google.com/store/apps/details?id=com.dk.piley)
 
 ### Connect to [piley-server](https://github.com/justdeko/piley-server)
 

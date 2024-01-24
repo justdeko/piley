@@ -6,6 +6,7 @@ import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getNextReminderTime
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.last
 import timber.log.Timber
 import java.time.Instant
 import javax.inject.Inject
@@ -96,6 +97,21 @@ class TaskRepository @Inject constructor(
                 )
             }
         }
-        return taskDao.insertTask(task)
+        // clear reminder value
+        return taskDao.insertTask(task.copy(reminder = null))
+    }
+
+    suspend fun restartAlarms() {
+        getTasks().last()
+            .filter { it.reminder != null && it.status != TaskStatus.DELETED }
+            .forEach {
+                reminderManager.cancelReminder(it.id)
+                it.reminder?.let { reminderTime ->
+                    reminderManager.startReminder(
+                        reminderTime,
+                        it.id
+                    )
+                }
+            }
     }
 }

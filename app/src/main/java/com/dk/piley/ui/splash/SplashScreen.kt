@@ -184,7 +184,7 @@ private fun SplashAnimationLaunchedEffect(
 
 @PreviewMainScreen
 @Composable
-fun TaskDetailScreenPreview() {
+fun SplashScreenPreview() {
     PileyTheme {
         Surface {
             SplashScreen(viewState = SplashViewState())

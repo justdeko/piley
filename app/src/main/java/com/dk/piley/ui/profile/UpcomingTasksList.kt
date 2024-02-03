@@ -1,5 +1,6 @@
 package com.dk.piley.ui.profile
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,9 +29,14 @@ import com.dk.piley.util.toLocalDateTime
  *
  * @param modifier generic modifier
  * @param pileNameTaskList list of pile name-task pairs
+ * @param onTaskClick action on task click, passes task id
  */
 @Composable
-fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair<String, Task>>) {
+fun UpcomingTasksList(
+    modifier: Modifier = Modifier,
+    pileNameTaskList: List<Pair<String, Task>>,
+    onTaskClick: (Long) -> Unit = {}
+) {
     val dim = LocalDim.current
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         if (pileNameTaskList.isNotEmpty()) {
@@ -38,6 +44,7 @@ fun UpcomingTasksList(modifier: Modifier = Modifier, pileNameTaskList: List<Pair
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clickable { onTaskClick(task.id) }
                         .padding(horizontal = dim.large, vertical = dim.small),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,

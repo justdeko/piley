@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material3.Icon
@@ -36,6 +36,7 @@ import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
+import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.BigSpacer
@@ -90,6 +91,9 @@ fun ProfileScreen(
         },
         onSignOutWithError = {
             viewModel.signOutAfterError()
+        },
+        onUpcomingTaskClick = {
+            navController.navigate(taskScreen.root + "/" + it)
         }
     )
 }
@@ -105,6 +109,7 @@ fun ProfileScreen(
  * @param onBackup on click backup action
  * @param onSignOut on click sign out
  * @param onSignOutWithError on click sign out after showing sign out error
+ * @param onUpcomingTaskClick on click upcoming task
  */
 @Composable
 private fun ProfileScreen(
@@ -116,6 +121,7 @@ private fun ProfileScreen(
     onBackup: () -> Unit = {},
     onSignOut: () -> Unit = {},
     onSignOutWithError: () -> Unit = {},
+    onUpcomingTaskClick: (Long) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
@@ -167,7 +173,7 @@ private fun ProfileScreen(
                     ) {
                         IconButton(onClick = onSignOut) {
                             Icon(
-                                Icons.Filled.Logout,
+                                Icons.AutoMirrored.Filled.Logout,
                                 tint = MaterialTheme.colorScheme.secondary,
                                 contentDescription = "sign out"
                             )
@@ -208,7 +214,8 @@ private fun ProfileScreen(
                     ) {
                         UpcomingTasksList(
                             modifier = Modifier.fillMaxWidth(),
-                            pileNameTaskList = viewState.upcomingTaskList
+                            pileNameTaskList = viewState.upcomingTaskList,
+                            onTaskClick = onUpcomingTaskClick
                         )
                     }
                     if (!viewState.userIsOffline) {

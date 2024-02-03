@@ -6,7 +6,8 @@ import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getNextReminderTime
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import timber.log.Timber
 import java.time.Instant
 import javax.inject.Inject
@@ -101,17 +102,23 @@ class TaskRepository @Inject constructor(
         return taskDao.insertTask(task.copy(reminder = null))
     }
 
-    suspend fun restartAlarms() {
-        getTasks().last()
-            .filter { it.reminder != null && it.status != TaskStatus.DELETED }
-            .forEach {
-                reminderManager.cancelReminder(it.id)
-                it.reminder?.let { reminderTime ->
-                    reminderManager.startReminder(
-                        reminderTime,
-                        it.id
+    /**
+     * Restarts all reminder alarms
+     *
+     * @return flow of the tasks that are restarted
+     */
+    fun restartAlarms(): Flow<List<Task>> = getTasks().take(1).onEach { taskList ->
+        taskList.filter {
+            // only tasks that are either recurring or not completed yet, and reminder in the future
+            it.reminder != null
+                    && it.reminder.isAfter(Instant.now())
+                    && (it.status == TaskStatus.DEFAULT
+                    || (it.status == TaskStatus.DONE && it.isRecurring)
                     )
-                }
+        }.forEach { task ->
+            task.reminder?.let { reminder ->
+                reminderManager.startReminder(reminder, task.id)
             }
+        }
     }
 }

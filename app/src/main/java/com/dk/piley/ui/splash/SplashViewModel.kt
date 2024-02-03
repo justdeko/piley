@@ -8,6 +8,7 @@ import com.dk.piley.common.StatefulAndroidViewModel
 import com.dk.piley.model.common.Resource
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.signin.firstTimeUser
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,7 @@ class SplashViewModel @Inject constructor(
     private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,
+    private val taskRepository: TaskRepository,
     private val backupManager: BackupManager
 ) : StatefulAndroidViewModel<SplashViewState>(application, SplashViewState()) {
 
@@ -54,6 +56,8 @@ class SplashViewModel @Inject constructor(
                             SplashViewState(InitState.LOADING_BACKUP)
                         } else {
                             Timber.d("Backup loading attempt finished...")
+                            // restart all alarms just in case
+                            taskRepository.restartAlarms()
                             SplashViewState(InitState.BACKUP_LOADED_SIGNED_IN)
                         }
                     }

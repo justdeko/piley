@@ -50,8 +50,6 @@ class PileViewModel @Inject constructor(
         viewModelScope.launch {
             // perform a recurring backup if necessary
             backupManager.performBackupIfNecessary()
-            // restart all alarms that got canceled
-            taskRepository.restartAlarms()
             // get piles and start updating state
             userRepository.getSignedInUserNotNullFlow().flatMapLatest { user ->
                 pileRepository.getPilesWithTasks().flatMapLatest { pilesWithTasks ->

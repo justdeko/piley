@@ -8,19 +8,24 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material3.Card
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,7 +57,7 @@ import com.dk.piley.util.MediumSpacer
 @Composable
 fun PileTask(
     modifier: Modifier,
-    dismissState: DismissState,
+    dismissState: SwipeToDismissBoxState,
     task: Task,
     transitionState: MutableTransitionState<Boolean>,
     onClick: (task: Task) -> Unit = {}
@@ -60,33 +65,34 @@ fun PileTask(
     val density = LocalDensity.current
     val dim = LocalDim.current
 
-    SwipeToDismiss(
+    SwipeToDismissBox(
         state = dismissState,
         modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
             onClick = { onClick(task) }
         ),
-        directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
-        background = {
-            val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
+        backgroundContent = {
+            val direction = dismissState.dismissDirection
             val color by animateColorAsState(
                 when (dismissState.targetValue) {
-                    DismissValue.Default -> Color.LightGray
-                    DismissValue.DismissedToEnd -> confirm_green
-                    DismissValue.DismissedToStart -> MaterialTheme.colorScheme.error
+                    SwipeToDismissBoxValue.Settled -> Color.LightGray
+                    SwipeToDismissBoxValue.StartToEnd -> confirm_green
+                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
                 }, label = "dismiss color"
             )
             val alignment = when (direction) {
-                DismissDirection.StartToEnd -> Alignment.CenterStart
-                DismissDirection.EndToStart -> Alignment.CenterEnd
+                SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+                SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+                else -> Alignment.CenterStart
             }
             val icon = when (direction) {
-                DismissDirection.StartToEnd -> Icons.Default.Done
-                DismissDirection.EndToStart -> Icons.Default.Delete
+                SwipeToDismissBoxValue.StartToEnd -> Icons.Default.Done
+                SwipeToDismissBoxValue.EndToStart -> Icons.Default.Delete
+                else -> Icons.Default.Done
             }
             val scale by animateFloatAsState(
-                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f,
+                if (dismissState.targetValue == SwipeToDismissBoxValue.Settled) 0.75f else 1f,
                 label = "dismiss icon scale"
             )
 
@@ -104,7 +110,7 @@ fun PileTask(
                 )
             }
         },
-        dismissContent = {
+        content = {
             AnimatedVisibility(
                 visibleState = transitionState,
                 enter = slideInVertically {

@@ -47,10 +47,17 @@ interface PileDao {
     @Query("DELETE FROM Task")
     suspend fun deleteTaskTable(): Void
 
+    @Query("DELETE FROM sqlite_sequence")
+    suspend fun clearSequence()
+
     @Transaction
     suspend fun deletePileData() {
         deletePileTable()
         deleteTaskTable()
+        // relevant to reset autoincrement ids for pile and task
+        // as otherwise first new pile entry starts where autoincrement left off
+        // https://stackoverflow.com/q/50878734
+        clearSequence()
     }
 
     @Transaction

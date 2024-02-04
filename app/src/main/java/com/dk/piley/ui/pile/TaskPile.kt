@@ -6,10 +6,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissState
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +18,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Density
 import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
@@ -61,6 +61,7 @@ fun TaskPile(
 ) {
     val haptic = LocalHapticFeedback.current
     val dim = LocalDim.current
+    val context = LocalContext.current
     var recurringTaskToComplete by rememberSaveable { mutableStateOf<Task?>(null) }
     if (recurringTaskToComplete != null) {
         AlertDialogHelper(
@@ -100,11 +101,12 @@ fun TaskPile(
         itemsIndexed(tasks, key = { _, task -> task.id }) { index, task ->
             // recomposition key of tasks to recalculate possibility of dismiss for last/first item
             val dismissState = remember(tasks) {
-                DismissState(
-                    initialValue = DismissValue.Default,
+                SwipeToDismissBoxState(
+                    initialValue = SwipeToDismissBoxValue.Settled,
+                    density = Density(context),
                     confirmValueChange = {
                         if (cannotDismiss(pileMode, index, tasks.lastIndex)
-                            && it == DismissValue.DismissedToEnd
+                            && it == SwipeToDismissBoxValue.StartToEnd
                         ) {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             false
@@ -113,21 +115,21 @@ fun TaskPile(
                         else if (
                             task.isRecurring
                             && task.reminder?.isAfter(Instant.now()) == true
-                            && it == DismissValue.DismissedToEnd
+                            && it == SwipeToDismissBoxValue.StartToEnd
                         ) {
                             recurringTaskToComplete = task
                             false
-                        } else if (task.isRecurring && it == DismissValue.DismissedToStart) {
+                        } else if (task.isRecurring && it == SwipeToDismissBoxValue.EndToStart) {
                             recurringTaskToDelete = task
                             false
                         } else true
                     },
-                    positionalThreshold = { 300.dp.toPx() }
+                    positionalThreshold = { it }
                 )
             }
-            if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+            if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
                 onDelete(task)
-            } else if (dismissState.isDismissed(DismissDirection.StartToEnd)) {
+            } else if (dismissState.currentValue == SwipeToDismissBoxValue.StartToEnd) {
                 onDone(task)
             }
             PileTask(

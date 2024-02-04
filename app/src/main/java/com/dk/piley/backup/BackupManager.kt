@@ -9,7 +9,7 @@ import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.remote.backup.FileResponse
 import com.dk.piley.model.user.UserRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
@@ -47,7 +47,7 @@ class BackupManager @Inject constructor(
      * @return Resource Flow with a nullable [Instant]
      * that represents whether the sync was needed (null if not) and when the downloaded backup occurred
      */
-    @OptIn(FlowPreview::class)
+    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun syncBackupToLocalForUserFlow(): Flow<Resource<Instant?>> {
         val user = userRepository.getSignedInUserEntity() ?: return flowOf(
             Resource.Failure(

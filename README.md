@@ -90,7 +90,9 @@ also be http.
 The API url is by default `10.0.2.2` or `127.0.0.1` depending on the build type, which is used in
 emulators to connect to the localhost
 environment of the emulator host or the local computer api. You will need to change it unless you
-are running the app in an emulator.
+are running the app in an emulator. If your backup server is running on localhost for testing
+purposes, you can use `http://10.0.2.2:8081` inside the emulator to avoid having to install a custom
+root certificate to use the https equivalent.
 
 <img style="border-radius: 8px;" src="docs/assets/change_url.gif" width="200" />
 

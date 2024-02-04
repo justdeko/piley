@@ -27,6 +27,7 @@ import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.isValidEmail
 import com.dk.piley.util.usernameCharacterLimit
 
 /**
@@ -135,7 +136,7 @@ fun MakeUserOnlineContent(
             onLeftClick = onCancel,
             rightText = stringResource(R.string.make_user_online_confirm_button),
             leftText = stringResource(R.string.edit_user_dialog_cancel_button),
-            rightEnabled = password.isNotBlank() && name.isNotBlank() && email.isNotBlank() && serverUrl.isNotBlank()
+            rightEnabled = password.isNotBlank() && name.isNotBlank() && email.isNotBlank() && serverUrl.isNotBlank() && email.isValidEmail()
         )
     }
 }

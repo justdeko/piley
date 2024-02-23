@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
+import androidx.compose.ui.tooling.preview.Preview
+import com.dk.piley.ui.theme.PileyTheme
 
 /**
  * Generic drop down element
@@ -21,6 +23,7 @@ import androidx.compose.ui.platform.LocalTextInputService
  * @param label dropdown label
  * @param onExpandedChange on dropdown collapse/expand
  * @param onValueClick on selecting a value from the dropdown
+ * @param onIndexClick on selecting a value by its index from the dropdown
  * @param onDismiss on dropdown dismiss
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,9 +33,10 @@ fun DropDown(
     value: String,
     dropdownValues: List<String>,
     expanded: Boolean = false,
-    label: String,
+    label: String?,
     onExpandedChange: (Boolean) -> Unit = {},
     onValueClick: (String) -> Unit = {},
+    onIndexClick: (Int) -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
     ExposedDropdownMenuBox(
@@ -49,7 +53,7 @@ fun DropDown(
                 readOnly = true,
                 value = value,
                 onValueChange = {},
-                label = { Text(label) },
+                label = label?.let { { Text(label) } },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
             )
@@ -58,13 +62,24 @@ fun DropDown(
             expanded = expanded,
             onDismissRequest = onDismiss,
         ) {
-            dropdownValues.forEach { selectionOption ->
+            dropdownValues.forEachIndexed { index, selectionOption ->
                 DropdownMenuItem(
                     text = { Text(selectionOption) },
-                    onClick = { onValueClick(selectionOption) },
+                    onClick = {
+                        onIndexClick(index)
+                        onValueClick(selectionOption)
+                    },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewDropdown() {
+    PileyTheme(useDarkTheme = true) {
+        DropDown(value = "a", dropdownValues = listOf("a", "b", "c"), label = "select a letter")
     }
 }

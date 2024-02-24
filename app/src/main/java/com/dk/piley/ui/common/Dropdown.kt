@@ -1,11 +1,14 @@
 package com.dk.piley.ui.common
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -40,7 +43,7 @@ fun DropDown(
     onDismiss: () -> Unit = {},
 ) {
     ExposedDropdownMenuBox(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         expanded = expanded,
         onExpandedChange = onExpandedChange,
     ) {
@@ -48,17 +51,23 @@ fun DropDown(
         CompositionLocalProvider(
             LocalTextInputService provides null
         ) {
-            TextField(
-                modifier = Modifier.menuAnchor(),
+            OutlinedTextField(
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth(),
                 readOnly = true,
                 value = value,
+                shape = MaterialTheme.shapes.large,
                 onValueChange = {},
                 label = label?.let { { Text(label) } },
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             )
         }
-        ExposedDropdownMenu(
+        // TODO change back to ExposedDropDownMenu when width bug fixed
+        // https://issuetracker.google.com/issues/205589613
+        DropdownMenu(
+            modifier = Modifier.exposedDropdownSize(),
             expanded = expanded,
             onDismissRequest = onDismiss,
         ) {

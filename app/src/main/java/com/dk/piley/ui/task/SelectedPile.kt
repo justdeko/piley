@@ -1,6 +1,7 @@
 package com.dk.piley.ui.task
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,7 +33,7 @@ fun SelectedPile(
     onSelect: (Int) -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = "Current Pile",
             color = MaterialTheme.colorScheme.secondary,
@@ -41,7 +42,7 @@ fun SelectedPile(
             textAlign = TextAlign.Start
         )
         DropDown(
-            modifier = Modifier.padding(LocalDim.current.medium),
+            modifier = Modifier.padding(LocalDim.current.medium).fillMaxWidth(),
             value = pileNames.getOrElse(selectedPileIndex) { "" },
             dropdownValues = pileNames,
             label = null,
@@ -50,7 +51,8 @@ fun SelectedPile(
             onIndexClick = {
                 onSelect(it)
                 expanded = false
-            }
+            },
+            onDismiss = { expanded = false }
         )
     }
 }

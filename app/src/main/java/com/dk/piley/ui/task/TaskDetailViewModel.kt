@@ -3,6 +3,7 @@ package com.dk.piley.ui.task
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
+import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
@@ -34,6 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository,
+    private val pileRepository: PileRepository,
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
     savedStateHandle: SavedStateHandle
@@ -44,10 +46,16 @@ class TaskDetailViewModel @Inject constructor(
             val id = savedStateHandle.get<Long>(taskScreen.identifier)
             // set initial values for text fields
             id?.let { taskId ->
-                repository.getTaskById(taskId).firstOrNull()?.let {
+                val piles = pileRepository.getPilesWithTasks().firstOrNull()
+                    ?.map { Pair(it.pile.pileId, it.pile.name) }
+                    ?: emptyList()
+                repository.getTaskById(taskId).firstOrNull()?.let { task ->
+                    val selectionIndex = piles.indexOfFirst { it.first == task.pileId }
                     state.value = state.value.copy(
-                        titleTextValue = it.title,
-                        descriptionTextValue = it.description
+                        titleTextValue = task.title,
+                        descriptionTextValue = task.description,
+                        piles = piles,
+                        selectedPileIndex = if (selectionIndex == -1) 0 else selectionIndex
                     )
                 }
             }
@@ -177,11 +185,25 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Select pile of this task
+     *
+     * @param index index of the selected pile
+     */
+    fun selectPile(index: Int) {
+        viewModelScope.launch {
+            repository.insertTask(state.value.task.copy(pileId = state.value.piles[index].first))
+            state.update { it.copy(selectedPileIndex = index) }
+        }
+    }
+
 }
 
 data class TaskDetailViewState(
     val task: Task = Task(),
     val titleTextValue: String = "",
     val descriptionTextValue: String = "",
-    val reminderDateTimeText: String? = null
+    val reminderDateTimeText: String? = null,
+    val piles: List<Pair<Long, String>> = emptyList(),
+    val selectedPileIndex: Int = 0,
 )

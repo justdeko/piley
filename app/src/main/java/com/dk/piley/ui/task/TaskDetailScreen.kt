@@ -75,7 +75,8 @@ fun TaskDetailScreen(
         onCancelReminder = { viewModel.cancelReminder() },
         onClose = { navController.popBackStack() },
         onEditDesc = { viewModel.editDescription(it) },
-        onEditTitle = { viewModel.editTitle(it) }
+        onEditTitle = { viewModel.editTitle(it) },
+        onSelectPile = { viewModel.selectPile(it) }
     )
 }
 
@@ -108,6 +109,7 @@ fun TaskDetailScreen(
     onEditTitle: (String) -> Unit = {},
     onAddReminder: (ReminderState) -> Unit = {},
     onCancelReminder: () -> Unit = {},
+    onSelectPile: (Int) -> Unit = {},
     permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else {
@@ -177,6 +179,11 @@ fun TaskDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
                     task = viewState.task
                 )
+                SelectedPile(
+                    pileNames = viewState.piles.map { it.second },
+                    selectedPileIndex = viewState.selectedPileIndex,
+                    onSelect = onSelectPile
+                )
             }
             TwoButtonRow(
                 modifier = Modifier.weight(1f, false),
@@ -206,7 +213,9 @@ fun TaskDetailScreenPreview() {
         Surface {
             val state = TaskDetailViewState(
                 task = previewUpcomingTasksList[1].second,
-                titleTextValue = "Hello"
+                titleTextValue = "Hello",
+                piles = listOf(Pair(0, "pile1")),
+                selectedPileIndex = 0
             )
             TaskDetailScreen(viewState = state, permissionState = null)
         }
@@ -221,7 +230,9 @@ fun TaskDetailScreenPreviewRecurring() {
         Surface {
             val state = TaskDetailViewState(
                 task = previewUpcomingTasksList[0].second,
-                titleTextValue = "Hello"
+                titleTextValue = "Hello",
+                piles = listOf(Pair(0, "pile1")),
+                selectedPileIndex = 0
             )
             TaskDetailScreen(viewState = state, permissionState = null)
         }

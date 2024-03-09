@@ -7,8 +7,6 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.temporal.ChronoUnit
 import kotlin.math.roundToLong
 
 /**
@@ -92,25 +90,8 @@ fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>, context: Context): S
  * @return average completion time in hours or 0 if no completed tasks found
  */
 fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
-    val taskDurations = pilesWithTasks.flatMap { pileWithTasks ->
-        pileWithTasks.tasks
-            .filter { it.status == TaskStatus.DONE }
-            .map(Task::completionDurationsInHours)
-    }.flatten()
-    return if (taskDurations.isNotEmpty()) {
-        taskDurations.average().roundToLong()
-    } else 0
-}
-
-/**
- * Get completion durations in hours for a specific task
- *
- * @return list of durations between completion times in hours
- */
-fun Task.completionDurationsInHours(): List<Long> {
-    return (
-            listOf(createdAt.atZone(ZoneId.systemDefault()).toInstant()) + completionTimes)
-        .zipWithNext { a, b ->
-            ChronoUnit.HOURS.between(a, b)
-        }
+    val avg = pilesWithTasks // TODO add filter for done
+        .map { pile -> if (pile.tasks.isEmpty()) 0 else pile.tasks.sumOf { it.averageCompletionTimeInHours } / pile.tasks.size }
+        .average()
+    return if (avg.isNaN()) 0 else avg.roundToLong()
 }

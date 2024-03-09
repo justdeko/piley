@@ -41,21 +41,24 @@ class StatisticsHelperTest {
                     completionTimes = listOf(
                         LocalDateTime.now().minusDays(2).toInstantWithOffset(),
                         LocalDateTime.now().minusDays(2).toInstantWithOffset()
-                    )
+                    ),
+                    averageCompletionTimeInHours = 24
                 ),
                 Task(
                     createdAt = LocalDateTime.now().minusDays(6).toInstantWithOffset(),
                     status = TaskStatus.DONE, completionTimes = listOf(
                         LocalDateTime.now().minusDays(5).toInstantWithOffset(),
                         LocalDateTime.now().minusDays(4).toInstantWithOffset()
-                    )
+                    ),
+                    averageCompletionTimeInHours = 24
                 ),
                 Task(
                     createdAt = LocalDateTime.now().minusDays(8).toInstantWithOffset(),
                     status = TaskStatus.DONE, completionTimes = listOf(
                         LocalDateTime.now().minusDays(7).toInstantWithOffset(),
                         LocalDateTime.now().minusDays(5).toInstantWithOffset()
-                    )
+                    ),
+                    averageCompletionTimeInHours = 48
                 ),
                 Task(
                     reminder = Instant.now().toLocalDateTime(utcZoneId).plusDays(2)
@@ -142,18 +145,11 @@ class StatisticsHelperTest {
 
     @Test
     fun getAverageTaskCompletionInHours() {
-        val expectedValue = 31L
+        val expectedValue = 16L
         val averageCompletionDuration = getAverageTaskCompletionInHours(listOf(samplePile))
         assertEquals(expectedValue, averageCompletionDuration)
         // empty list
         val emptyCompletionDuration = getAverageTaskCompletionInHours(emptyList())
         assertEquals(0, emptyCompletionDuration)
-    }
-
-    @Test
-    fun getCompletionDurations() {
-        val expectedDurations = listOf<Long>(24, 48)
-        val durations = samplePile.tasks[3].completionDurationsInHours()
-        assertEquals(expectedDurations, durations)
     }
 }

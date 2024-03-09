@@ -1,5 +1,6 @@
 package com.dk.piley.model.task
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -20,6 +21,7 @@ import java.time.Instant
  * @property isRecurring boolean showing whether the task is recurring
  * @property recurringTimeRange time range for the recurring task
  * @property recurringFrequency frequency for the given time range (e.g. every 2 weeks for time range weekly)
+ * @property averageCompletionTimeInHours the average completion time of this task in hours
  * @property status task completion status
  */
 @Entity(
@@ -45,4 +47,6 @@ data class Task(
     val recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     val recurringFrequency: Int = 1,
     val status: TaskStatus = TaskStatus.DEFAULT,
+    @ColumnInfo(defaultValue = "0")
+    val averageCompletionTimeInHours: Long = 0
 )

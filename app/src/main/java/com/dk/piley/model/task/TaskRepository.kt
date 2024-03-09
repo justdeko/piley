@@ -39,7 +39,7 @@ class TaskRepository @Inject constructor(
         // update modification time
         var tempTask = task.copy(modifiedAt = now)
         // add new completion time
-        if (task.status == TaskStatus.DONE) {
+        if (task.status == TaskStatus.DONE) { // TODO: for recurring tasks, use diff between completion time and reminder time
             tempTask = tempTask.copy(
                 completionTimes = tempTask.completionTimes + now
             )
@@ -58,11 +58,6 @@ class TaskRepository @Inject constructor(
      */
     suspend fun insertTask(task: Task): Long =
         taskDao.insertTask(task.copy(modifiedAt = Instant.now()))
-
-    suspend fun deleteTask(task: Task): Void {
-        dismissAlarmAndNotificationAndInsert(task)
-        return taskDao.deleteTask(task)
-    }
 
     suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long): Void =
         taskDao.deleteCompletedDeletedForPile(pileId)

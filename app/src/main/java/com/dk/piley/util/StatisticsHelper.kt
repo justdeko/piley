@@ -5,8 +5,10 @@ import com.dk.piley.R
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import kotlin.math.roundToLong
 
 /**
@@ -86,12 +88,26 @@ fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>, context: Context): S
 /**
  * Get average task completion time in hours
  *
- * @param pilesWithTasks list of piles with tasks to calculate the average task completion time for
- * @return average completion time in hours or 0 if no completed tasks found
+ * @param tasks list of tasks to calculate the average task completion time for
+ * @return average completion time in hours or 0 if list is empty
  */
-fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
-    val avg = pilesWithTasks // TODO add filter for done
-        .map { pile -> if (pile.tasks.isEmpty()) 0 else pile.tasks.sumOf { it.averageCompletionTimeInHours } / pile.tasks.size }
-        .average()
-    return if (avg.isNaN()) 0 else avg.roundToLong()
+fun getAverageTaskCompletionInHours(tasks: List<Task>): Long {
+    if (tasks.isEmpty()) return 0
+    return tasks.map { it.averageCompletionTimeInHours }.average().roundToLong()
+}
+
+/**
+ * Generates a copy of the given task with the new completion time and newly calculated
+ * average completion time added to the copy.
+ *
+ * @param now generic [Instant.now] provider
+ * @return copy of the new task
+ */
+fun Task.withNewCompletionTime(now: Instant = Instant.now()): Task {
+    val comparisonTime = reminder ?: createdAt
+    val completionTime = ChronoUnit.HOURS.between(comparisonTime, now)
+    return copy(
+        completionTimes = completionTimes + now,
+        averageCompletionTimeInHours = averageCompletionTimeInHours + (completionTime - averageCompletionTimeInHours) / (completionTimes.size + 1)
+    )
 }

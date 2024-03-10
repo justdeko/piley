@@ -41,21 +41,24 @@ class StatisticsHelperTest {
                     completionTimes = listOf(
                         LocalDateTime.now().minusDays(2).toInstantWithOffset(),
                         LocalDateTime.now().minusDays(2).toInstantWithOffset()
-                    )
+                    ),
+                    averageCompletionTimeInHours = 24
                 ),
                 Task(
                     createdAt = LocalDateTime.now().minusDays(6).toInstantWithOffset(),
                     status = TaskStatus.DONE, completionTimes = listOf(
                         LocalDateTime.now().minusDays(5).toInstantWithOffset(),
                         LocalDateTime.now().minusDays(4).toInstantWithOffset()
-                    )
+                    ),
+                    averageCompletionTimeInHours = 24
                 ),
                 Task(
                     createdAt = LocalDateTime.now().minusDays(8).toInstantWithOffset(),
                     status = TaskStatus.DONE, completionTimes = listOf(
                         LocalDateTime.now().minusDays(7).toInstantWithOffset(),
                         LocalDateTime.now().minusDays(5).toInstantWithOffset()
-                    )
+                    ),
+                    averageCompletionTimeInHours = 48
                 ),
                 Task(
                     reminder = Instant.now().toLocalDateTime(utcZoneId).plusDays(2)
@@ -142,8 +145,8 @@ class StatisticsHelperTest {
 
     @Test
     fun getAverageTaskCompletionInHours() {
-        val expectedValue = 31L
-        val averageCompletionDuration = getAverageTaskCompletionInHours(listOf(samplePile))
+        val expectedValue = 16L
+        val averageCompletionDuration = getAverageTaskCompletionInHours(samplePile.tasks)
         assertEquals(expectedValue, averageCompletionDuration)
         // empty list
         val emptyCompletionDuration = getAverageTaskCompletionInHours(emptyList())
@@ -151,9 +154,24 @@ class StatisticsHelperTest {
     }
 
     @Test
-    fun getCompletionDurations() {
-        val expectedDurations = listOf<Long>(24, 48)
-        val durations = samplePile.tasks[3].completionDurationsInHours()
-        assertEquals(expectedDurations, durations)
+    fun taskWithNewCompletionTime() {
+        val dateNow = LocalDateTime.now()
+
+        val taskWithSomeCompletionTimes = Task(
+            reminder = dateNow.minusDays(1).toInstantWithOffset(),
+            completionTimes = listOf(dateNow.minusDays(1).toInstantWithOffset()),
+            averageCompletionTimeInHours = 48
+        )
+        val newTask = taskWithSomeCompletionTimes.withNewCompletionTime()
+        assertEquals(36, newTask.averageCompletionTimeInHours)
+
+        val taskWithNoCompletionTimes =
+            Task(reminder = dateNow.minusHours(32).toInstantWithOffset())
+        val newTaskEmpty = taskWithNoCompletionTimes.withNewCompletionTime()
+        assertEquals(32, newTaskEmpty.averageCompletionTimeInHours)
+
+        val taskWithNoReminder = Task(createdAt = dateNow.minusDays(1).toInstantWithOffset())
+        val newTaskWitNoReminder = taskWithNoReminder.withNewCompletionTime()
+        assertEquals(24, newTaskWitNoReminder.averageCompletionTimeInHours)
     }
 }

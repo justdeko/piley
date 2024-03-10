@@ -5,9 +5,9 @@ import com.dk.piley.R
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import kotlin.math.roundToLong
 
@@ -88,29 +88,26 @@ fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>, context: Context): S
 /**
  * Get average task completion time in hours
  *
- * @param pilesWithTasks list of piles with tasks to calculate the average task completion time for
- * @return average completion time in hours or 0 if no completed tasks found
+ * @param tasks list of tasks to calculate the average task completion time for
+ * @return average completion time in hours or 0 if list is empty
  */
-fun getAverageTaskCompletionInHours(pilesWithTasks: List<PileWithTasks>): Long {
-    val taskDurations = pilesWithTasks.flatMap { pileWithTasks ->
-        pileWithTasks.tasks
-            .filter { it.status == TaskStatus.DONE }
-            .map(Task::completionDurationsInHours)
-    }.flatten()
-    return if (taskDurations.isNotEmpty()) {
-        taskDurations.average().roundToLong()
-    } else 0
+fun getAverageTaskCompletionInHours(tasks: List<Task>): Long {
+    if (tasks.isEmpty()) return 0
+    return tasks.map { it.averageCompletionTimeInHours }.average().roundToLong()
 }
 
 /**
- * Get completion durations in hours for a specific task
+ * Generates a copy of the given task with the new completion time and newly calculated
+ * average completion time added to the copy.
  *
- * @return list of durations between completion times in hours
+ * @param now generic [Instant.now] provider
+ * @return copy of the new task
  */
-fun Task.completionDurationsInHours(): List<Long> {
-    return (
-            listOf(createdAt.atZone(ZoneId.systemDefault()).toInstant()) + completionTimes)
-        .zipWithNext { a, b ->
-            ChronoUnit.HOURS.between(a, b)
-        }
+fun Task.withNewCompletionTime(now: Instant = Instant.now()): Task {
+    val comparisonTime = reminder ?: createdAt
+    val completionTime = ChronoUnit.HOURS.between(comparisonTime, now)
+    return copy(
+        completionTimes = completionTimes + now,
+        averageCompletionTimeInHours = averageCompletionTimeInHours + (completionTime - averageCompletionTimeInHours) / (completionTimes.size + 1)
+    )
 }

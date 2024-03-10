@@ -64,7 +64,7 @@ class ProfileViewModel @Inject constructor(
                     currentTasks = current,
                     upcomingTaskList = getUpcomingTasks(pilesWithTasks),
                     biggestPileName = getBiggestPileName(pilesWithTasks, application),
-                    averageTaskDurationInHours = getAverageTaskCompletionInHours(pilesWithTasks),
+                    averageTaskDurationInHours = getAverageTaskCompletionInHours(tasks),
                     userIsOffline = user.isOffline
                 )
             }.collect { state.value = it }

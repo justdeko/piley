@@ -5,6 +5,7 @@ import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getNextReminderTime
 import com.dk.piley.util.toLocalDateTime
+import com.dk.piley.util.withNewCompletionTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
@@ -24,7 +25,7 @@ class TaskRepository @Inject constructor(
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
 ) {
-    fun getTasks(): Flow<List<Task>> = taskDao.getTasks()
+    private fun getTasks(): Flow<List<Task>> = taskDao.getTasks()
 
     fun getTaskById(taskId: Long): Flow<Task?> = taskDao.getTaskById(taskId)
 
@@ -40,9 +41,7 @@ class TaskRepository @Inject constructor(
         var tempTask = task.copy(modifiedAt = now)
         // add new completion time
         if (task.status == TaskStatus.DONE) {
-            tempTask = tempTask.copy(
-                completionTimes = tempTask.completionTimes + now
-            )
+            tempTask = tempTask.withNewCompletionTime(Instant.now())
         }
         // remove notification or scheduled alarms if task is set to done/deleted
         return if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) {
@@ -58,11 +57,6 @@ class TaskRepository @Inject constructor(
      */
     suspend fun insertTask(task: Task): Long =
         taskDao.insertTask(task.copy(modifiedAt = Instant.now()))
-
-    suspend fun deleteTask(task: Task): Void {
-        dismissAlarmAndNotificationAndInsert(task)
-        return taskDao.deleteTask(task)
-    }
 
     suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long): Void =
         taskDao.deleteCompletedDeletedForPile(pileId)

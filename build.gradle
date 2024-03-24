@@ -7,7 +7,7 @@ buildscript {
         hilt_version = "2.51"
         kotlin_version = '1.9.22'
         nav_version = '2.7.7'
-        retrofit_version = "2.9.0"
+        retrofit_version = "2.10.0"
     }
     dependencies {
         classpath("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")

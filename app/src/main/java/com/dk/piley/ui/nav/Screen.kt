@@ -2,21 +2,24 @@ package com.dk.piley.ui.nav
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Login
+import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Login
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Square
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Login
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Square
 import androidx.compose.material.icons.outlined.Start
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.dk.piley.R
 
 /**
@@ -25,12 +28,14 @@ import com.dk.piley.R
  * @property route screen navigation route
  * @property titleResource screen title resource id
  * @property icon screen icon
+ * @property optionalArguments list of optional nav arguments
  */
 sealed class Screen(
     val route: String,
     @StringRes val titleResource: Int,
     val icon: Pair<ImageVector, ImageVector>,
-    val argument: String = ""
+    val argument: String = "",
+    val optionalArguments: List<NamedNavArgument> = emptyList(),
 ) {
     data object Pile : Screen(
         "taskPile", R.string.pile, Pair(Icons.Outlined.Home, Icons.Filled.Home), "pileId"
@@ -49,7 +54,9 @@ sealed class Screen(
     )
 
     data object SignIn : Screen(
-        "login", R.string.sign_in, Pair(Icons.Outlined.Login, Icons.Filled.Login)
+        "login",
+        R.string.sign_in,
+        Pair(Icons.AutoMirrored.Outlined.Login, Icons.AutoMirrored.Filled.Login)
     )
 
     data object Splash : Screen(
@@ -57,7 +64,15 @@ sealed class Screen(
     )
 
     data object Intro : Screen(
-        "intro", R.string.introduction_screen, Pair(Icons.Outlined.Start, Icons.Filled.Start)
+        "intro?name={name}",
+        R.string.introduction_screen,
+        Pair(Icons.Outlined.Start, Icons.Filled.Start),
+        optionalArguments = listOf(
+            navArgument("name") {
+                defaultValue = ""
+                type = NavType.StringType
+            }
+        )
     )
 }
 

@@ -210,6 +210,7 @@ class SignInViewModel @Inject constructor(
      */
     fun doFirstTimeRegister() {
         viewModelScope.launch {
+            state.update { it.copy(firstTime = true) }
             userRepository.insertUser(firstTimeUser)
             userRepository.setSignedInUser(firstTimeUser.email)
             userRepository.setSignedOut(false)

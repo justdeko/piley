@@ -1,5 +1,6 @@
 package com.dk.piley.ui.intro
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.user.UserRepository
@@ -9,8 +10,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    var registerName: String
+
+    init {
+        // query the name of the registered user, if already specified
+        registerName = savedStateHandle.get<String>("name") ?: ""
+    }
 
     /**
      * Set username

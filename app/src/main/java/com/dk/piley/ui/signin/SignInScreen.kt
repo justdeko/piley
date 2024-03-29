@@ -54,6 +54,7 @@ import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.isValidEmail
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.usernameCharacterLimit
+import com.dk.piley.util.withArgument
 
 /**
  * Sign in screen
@@ -76,7 +77,12 @@ fun SignInScreen(
         // navigate to register screen if it is the user's first time
         if (viewState.firstTime) {
             LaunchedEffect(viewState.signInState) {
-                navController.navigateClearBackstack(Screen.Intro.route)
+                navController.navigateClearBackstack(
+                    Screen.Intro.route.withArgument(
+                        "name",
+                        viewState.username
+                    )
+                )
             }
         } else {
             LaunchedEffect(viewState.signInState) {

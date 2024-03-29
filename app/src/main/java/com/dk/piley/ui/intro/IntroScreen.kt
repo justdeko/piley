@@ -38,7 +38,8 @@ fun IntroScreen(
             viewModel.setUsername(it)
             navController.popBackStack()
             navController.navigate(Screen.Pile.route)
-        }
+        },
+        nameFieldValue = viewModel.registerName
     )
 }
 
@@ -46,12 +47,14 @@ fun IntroScreen(
  * Intro screen content
  *
  * @param modifier generic modifier
+ * @param nameFieldValue the initial name value, if passed by the register screen
  * @param onFinish on intro screen completion
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IntroScreen(
     modifier: Modifier = Modifier,
+    nameFieldValue: String = "",
     onFinish: (String) -> Unit = {},
 ) {
     val pages = listOf(
@@ -80,6 +83,7 @@ fun IntroScreen(
                     textFieldHint = stringResource(R.string.first_user_name_hint),
                     textMaxLength = usernameCharacterLimit,
                     buttonText = stringResource(R.string.finish_intro_button),
+                    initialTextFieldValue = nameFieldValue,
                     onClickButton = onFinish
                 )
             }

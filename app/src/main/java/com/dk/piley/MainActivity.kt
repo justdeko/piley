@@ -111,7 +111,7 @@ fun Home(
             composable(Screen.SignIn.route) {
                 SignInScreen(navController = navController, snackbarHostState = snackbarHostState)
             }
-            composable(Screen.Intro.route) {
+            composable(route = Screen.Intro.route, arguments = Screen.Intro.optionalArguments) {
                 IntroScreen(navController = navController)
             }
             composable(

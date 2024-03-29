@@ -42,6 +42,7 @@ import com.dk.piley.util.roundedOutline
  * @param textMaxLength the maximum length of the text. infinite by default
  * @param buttonText intro page button text
  * @param buttonAlwaysEnabled whether the button is always enabled
+ * @param initialTextFieldValue the initial value of the text field, empty by default
  * @param onClickButton intro page button action that passes text entered into text field
  */
 @Composable
@@ -52,9 +53,10 @@ fun IntroPageTextFieldContent(
     textMaxLength: Int = -1,
     buttonText: String,
     buttonAlwaysEnabled: Boolean = true,
+    initialTextFieldValue: String = "",
     onClickButton: (String) -> Unit = {}
 ) {
-    var textValue by rememberSaveable { mutableStateOf("") }
+    var textValue by rememberSaveable { mutableStateOf(initialTextFieldValue) }
     val dim = LocalDim.current
     val context = LocalContext.current
     val resourceId =

@@ -106,8 +106,10 @@ fun getAverageTaskCompletionInHours(tasks: List<Task>): Long {
 fun Task.withNewCompletionTime(now: Instant = Instant.now()): Task {
     val comparisonTime = reminder ?: createdAt
     val completionTime = ChronoUnit.HOURS.between(comparisonTime, now)
+    val newCompletionTime =
+        averageCompletionTimeInHours + (completionTime - averageCompletionTimeInHours) / (completionTimes.size + 1)
     return copy(
         completionTimes = completionTimes + now,
-        averageCompletionTimeInHours = averageCompletionTimeInHours + (completionTime - averageCompletionTimeInHours) / (completionTimes.size + 1)
+        averageCompletionTimeInHours = if (newCompletionTime < 0) 0 else newCompletionTime
     )
 }

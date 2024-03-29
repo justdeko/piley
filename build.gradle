@@ -4,7 +4,7 @@ buildscript {
         compose_material_icons_version = '1.6.4'
         compose_compiler_version = '1.5.11'
         room_version = '2.6.1'
-        hilt_version = "2.51"
+        hilt_version = "2.51.1"
         kotlin_version = '1.9.23'
         nav_version = '2.7.7'
         retrofit_version = "2.11.0"

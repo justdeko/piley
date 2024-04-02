@@ -5,6 +5,7 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -65,69 +66,74 @@ fun PileTask(
     val density = LocalDensity.current
     val dim = LocalDim.current
 
-    SwipeToDismissBox(
-        state = dismissState,
+    Box(
         modifier = modifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
             onClick = { onClick(task) }
-        ),
-        backgroundContent = {
-            val direction = dismissState.dismissDirection
-            val color by animateColorAsState(
-                when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.Settled -> Color.LightGray
-                    SwipeToDismissBoxValue.StartToEnd -> confirm_green
-                    SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
-                }, label = "dismiss color"
-            )
-            val alignment = when (direction) {
-                SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
-                SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
-                else -> Alignment.CenterStart
-            }
-            val icon = when (direction) {
-                SwipeToDismissBoxValue.StartToEnd -> Icons.Default.Done
-                SwipeToDismissBoxValue.EndToStart -> Icons.Default.Delete
-                else -> Icons.Default.Done
-            }
-            val scale by animateFloatAsState(
-                if (dismissState.targetValue == SwipeToDismissBoxValue.Settled) 0.75f else 1f,
-                label = "dismiss icon scale"
-            )
+        )
+    ) {
+        AnimatedVisibility(
+            visibleState = transitionState,
+            enter = slideInVertically {
+                // 40dp slide in from top
+                with(density) { -dim.medium.roundToPx() }
+            } + fadeIn(initialAlpha = 0.3f),
+            exit = fadeOut()
+        ) {
+            SwipeToDismissBox(
+                modifier = Modifier.fillMaxSize(),
+                state = dismissState,
+                backgroundContent = {
+                    val direction = dismissState.dismissDirection
+                    val color by animateColorAsState(
+                        when (dismissState.targetValue) {
+                            SwipeToDismissBoxValue.Settled -> Color.LightGray
+                            SwipeToDismissBoxValue.StartToEnd -> confirm_green
+                            SwipeToDismissBoxValue.EndToStart -> MaterialTheme.colorScheme.error
+                        }, label = "dismiss color"
+                    )
+                    val alignment = when (direction) {
+                        SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+                        SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+                        else -> Alignment.CenterStart
+                    }
+                    val icon = when (direction) {
+                        SwipeToDismissBoxValue.StartToEnd -> Icons.Default.Done
+                        SwipeToDismissBoxValue.EndToStart -> Icons.Default.Delete
+                        else -> Icons.Default.Done
+                    }
+                    val scale by animateFloatAsState(
+                        if (dismissState.targetValue == SwipeToDismissBoxValue.Settled) 0.75f else 1f,
+                        label = "dismiss icon scale"
+                    )
 
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = dim.large),
-                contentAlignment = alignment
-            ) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    modifier = Modifier.scale(scale),
-                    tint = color
-                )
-            }
-        },
-        content = {
-            AnimatedVisibility(
-                visibleState = transitionState,
-                enter = slideInVertically {
-                    // 40dp slide in from top
-                    with(density) { -dim.extraLarge.roundToPx() }
-                } + fadeIn(initialAlpha = 0.3f)
-            ) {
-                PileEntry(
-                    modifier = Modifier
-                        .defaultMinSize(minHeight = dim.large)
-                        .fillMaxWidth(),
-                    taskText = task.title,
-                    isRecurring = task.isRecurring
-                )
-            }
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = dim.large),
+                        contentAlignment = alignment
+                    ) {
+                        Icon(
+                            icon,
+                            contentDescription = null,
+                            modifier = Modifier.scale(scale),
+                            tint = color
+                        )
+                    }
+                },
+                content = {
+                    PileEntry(
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = dim.large)
+                            .fillMaxWidth(),
+                        taskText = task.title,
+                        isRecurring = task.isRecurring
+                    )
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable

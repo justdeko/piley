@@ -88,7 +88,7 @@ dependencies {
     // compose
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-util:$compose_version"
-    implementation 'androidx.compose.material:material:1.6.4'
+    implementation 'androidx.compose.material:material:1.6.5'
     implementation 'androidx.compose.material3:material3:1.2.1'
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.navigation:navigation-compose:$nav_version"

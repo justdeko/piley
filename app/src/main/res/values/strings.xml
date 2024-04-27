@@ -133,6 +133,8 @@
     <string name="reset_all_pile_modes_setting_description">Reset all pile modes to the default of \"Free\"</string>
     <string name="automatically_hide_keyboard_setting_title">Automatically hide keyboard</string>
     <string name="automatically_hide_keyboard_setting_description">Automatically hide the keyboard after creating a new task.</string>
+    <string name="show_recurring_tasks_setting_title">Show recurring tasks</string>
+    <string name="show_recurring_tasks_setting_description">Recurring tasks are shown together with regular tasks by default.</string>
     <!-- piles settings section-->
     <string name="settings_section_notifications_title">Notifications</string>
     <string name="reminder_delay_duration_setting_title">Reminder Delay Duration</string>

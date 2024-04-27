@@ -1,6 +1,7 @@
 package com.dk.piley.model
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,7 +15,17 @@ const val USER_DATABASE_NAME = "piley-db-users"
  * User database containing the user and its preferences
  *
  */
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(
+    entities = [User::class],
+    autoMigrations = [
+        AutoMigration(
+            from = 1,
+            to = 2
+        )
+    ],
+    version = 2,
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {
     // DAOs

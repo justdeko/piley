@@ -1,5 +1,6 @@
 package com.dk.piley.model.user
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.Instant
@@ -41,4 +42,6 @@ data class User(
     val autoHideKeyboard: Boolean = true,
     val isOffline: Boolean = false,
     val loadBackupAfterDays: Int = 1,
+    @ColumnInfo(defaultValue = "0")
+    val showRecurringTasks: Boolean = false,
 )

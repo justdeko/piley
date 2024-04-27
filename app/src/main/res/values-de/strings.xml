@@ -207,4 +207,6 @@
     <string name="error_make_user_online">Fehler beim Erstellen des Users</string>
     <string name="make_user_online_backup_failed">Backup fehlgeschlagen. Probiere es später auf deiner Profilseite.</string>
     <string name="make_user_online_success">User erstellt und erstes Backup hochgeladen!</string>
+    <string name="show_recurring_tasks_setting_title">Wiederholende Tasks anzeigen</string>
+    <string name="show_recurring_tasks_setting_description">Zeige sich wiederholende Tasks standardmäßig zusammen mit regulären an.</string>
 </resources>

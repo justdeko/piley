@@ -100,6 +100,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     /**
+     * Set show recurring tasks by default setting
+     *
+     * @param shown whether recurring tasks should be shown
+     */
+    fun setShowRecurringTasks(shown: Boolean) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(showRecurringTasks = shown))
+        }
+    }
+
+    /**
      * Update reminder delay setting
      *
      * @param delay new delay value

@@ -12,7 +12,7 @@ import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ViewAgenda
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -93,7 +93,8 @@ fun SettingsScreen(
         onCloseSettings = { navController.popBackStack() },
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
         onSetBaseUrlValue = { baseUrl -> viewModel.setBaseUrl(baseUrl) },
-        onMakeUserOnline = { makeUserOnlineResult -> viewModel.makeUserOnline(makeUserOnlineResult) }
+        onMakeUserOnline = { makeUserOnlineResult -> viewModel.makeUserOnline(makeUserOnlineResult) },
+        onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) }
     )
 }
 
@@ -116,6 +117,7 @@ fun SettingsScreen(
  * @param onStartTutorial on restart tutorial
  * @param onSetBaseUrlValue on set base url value
  * @param onMakeUserOnline on make user online
+ * @param onShowRecurringTasks show recurring tasks by default
  */
 @Composable
 private fun SettingsScreen(
@@ -135,6 +137,7 @@ private fun SettingsScreen(
     onStartTutorial: () -> Unit = {},
     onSetBaseUrlValue: (String) -> Unit = {},
     onMakeUserOnline: (MakeUserOnlineResult) -> Unit = {},
+    onShowRecurringTasks: (Boolean) -> Unit = {},
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(R.array.night_modes).toList()
@@ -236,7 +239,7 @@ private fun SettingsScreen(
                         onValueChange = onDynamicColorChange
                     )
                 }
-                Divider()
+                HorizontalDivider()
                 SettingsSection(
                     title = stringResource(R.string.settings_section_piles_title),
                     icon = Icons.Filled.ViewAgenda
@@ -262,8 +265,14 @@ private fun SettingsScreen(
                         value = viewState.user.autoHideKeyboard,
                         onValueChange = onAutoHideKeyboardChange
                     )
+                    SwitchSettingsItem(
+                        title = stringResource(R.string.show_recurring_tasks_setting_title),
+                        description = stringResource(R.string.show_recurring_tasks_setting_description),
+                        value = viewState.user.showRecurringTasks,
+                        onValueChange = onShowRecurringTasks
+                    )
                 }
-                Divider()
+                HorizontalDivider()
                 SettingsSection(
                     title = stringResource(R.string.settings_section_notifications_title),
                     icon = Icons.Filled.Notifications
@@ -278,7 +287,7 @@ private fun SettingsScreen(
                     )
                 }
                 if (!viewState.user.isOffline) {
-                    Divider()
+                    HorizontalDivider()
                     SettingsSection(
                         title = stringResource(R.string.settings_section_backup_title),
                         icon = Icons.Filled.Backup
@@ -301,7 +310,7 @@ private fun SettingsScreen(
                         )
                     }
                 }
-                Divider()
+                HorizontalDivider()
                 SettingsSection(
                     title = stringResource(R.string.settings_section_user_title),
                     icon = Icons.Filled.Person

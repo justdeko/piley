@@ -52,6 +52,8 @@ class PileViewModel @Inject constructor(
             backupManager.performBackupIfNecessary()
             // get piles and start updating state
             userRepository.getSignedInUserNotNullFlow().flatMapLatest { user ->
+                // set recurring tasks to shown if user property changes
+                setShowRecurring(user.showRecurringTasks)
                 pileRepository.getPilesWithTasks().flatMapLatest { pilesWithTasks ->
                     selectedPileIndex.map { index ->
                         val idTitleList = pilesWithTasks.map {

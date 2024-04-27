@@ -52,6 +52,7 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
+import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
@@ -116,7 +117,8 @@ fun PileScreen(
         onClick = { navController.navigate(taskScreen.root + "/" + it.id) },
         onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
         onSetMessage = { viewModel.setMessage(it) },
-        onToggleRecurring = { viewModel.setShowRecurring(it) }
+        onToggleRecurring = { viewModel.setShowRecurring(it) },
+        onClickTitle = { navController.navigate(pileScreen.root + "/" + viewState.pile.pileId) }
     )
 }
 
@@ -135,6 +137,7 @@ fun PileScreen(
  * @param onClick on task click
  * @param onSetMessage on set user message
  * @param onToggleRecurring on toggle show recurring tasks
+ * @param onClickTitle on pile title click
  */
 @Composable
 private fun PileScreen(
@@ -150,6 +153,7 @@ private fun PileScreen(
     onClick: (Task) -> Unit = {},
     onSetMessage: (String) -> Unit = {},
     onToggleRecurring: (Boolean) -> Unit = {},
+    onClickTitle: () -> Unit = {},
 ) {
     val dim = LocalDim.current
     val context = LocalContext.current
@@ -177,7 +181,8 @@ private fun PileScreen(
             modifier = Modifier.fillMaxWidth(),
             pileTitleList = viewState.pileIdTitleList.map { it.second },
             onPageChanged = onTitlePageChanged,
-            selectedPageIndex = selectedPileIndex
+            selectedPageIndex = selectedPileIndex,
+            onClickTitle = onClickTitle,
         )
         Box(
             modifier = Modifier
@@ -297,7 +302,7 @@ private val shakeAnimationSpec: AnimationSpec<Float> = keyframes {
             0 -> 8f
             1 -> -8f
             else -> 0f
-        } at 500 / 10 * i with FastOutLinearInEasing
+        } at 500 / 10 * i using FastOutLinearInEasing
     }
 }
 

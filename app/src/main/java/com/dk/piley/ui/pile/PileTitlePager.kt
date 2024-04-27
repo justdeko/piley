@@ -10,13 +10,14 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowLeft
-import androidx.compose.material.icons.filled.ArrowRight
+import androidx.compose.material.icons.automirrored.filled.ArrowLeft
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
@@ -39,6 +41,7 @@ import com.dk.piley.ui.theme.PileyTheme
  * @param pileTitleList list of pile titles
  * @param selectedPageIndex selected page index of pager
  * @param onPageChanged on pile title pager page change
+ * @param onClickTitle on current pile title click
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -47,6 +50,7 @@ fun PileTitlePager(
     pileTitleList: List<String>,
     selectedPageIndex: Int = 0,
     onPageChanged: (Int) -> Unit = {},
+    onClickTitle: () -> Unit = {},
 ) {
     Row(
         modifier = modifier.padding(LocalDim.current.medium),
@@ -58,7 +62,7 @@ fun PileTitlePager(
             enabled = selectedPageIndex != 0
         ) {
             Icon(
-                Icons.Filled.ArrowLeft,
+                Icons.AutoMirrored.Filled.ArrowLeft,
                 tint = MaterialTheme.colorScheme.primary.copy(alpha = LocalContentColor.current.alpha),
                 contentDescription = "switch to left pile"
             )
@@ -73,7 +77,12 @@ fun PileTitlePager(
             }, label = "pile slide animation"
         ) { index ->
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable {
+                        onClickTitle()
+                    },
                 text = pileTitleList.getOrElse(index) { "" },
                 style = MaterialTheme.typography.headlineLarge.copy(
                     hyphens = Hyphens.Auto,
@@ -88,7 +97,7 @@ fun PileTitlePager(
             enabled = selectedPageIndex != pileTitleList.lastIndex
         ) {
             Icon(
-                Icons.Filled.ArrowRight,
+                Icons.AutoMirrored.Filled.ArrowRight,
                 tint = MaterialTheme.colorScheme.primary.copy(alpha = LocalContentColor.current.alpha),
                 contentDescription = "switch to right pile"
             )

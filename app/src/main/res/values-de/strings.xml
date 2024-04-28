@@ -209,4 +209,6 @@
     <string name="make_user_online_success">User erstellt und erstes Backup hochgeladen!</string>
     <string name="show_recurring_tasks_setting_title">Wiederholende Tasks anzeigen</string>
     <string name="show_recurring_tasks_setting_description">Zeige sich wiederholende Tasks standardmäßig zusammen mit regulären an.</string>
+    <string name="make_user_online_setting_title">User online verfügbar machen</string>
+    <string name="make_user_online_setting_description">Mache diesen user online verfügbar, indem du dich mit deinem Backup-Server verbindest.</string>
 </resources>

@@ -160,6 +160,8 @@
     <string name="set_base_url_setting_title">Set the request URL</string>
     <string name="set_base_url_setting_description">Set the base request URL the app connects to for uploading and fetching backups.</string>
     <!-- make user online-->
+    <string name="make_user_online_setting_title">Make user online</string>
+    <string name="make_user_online_setting_description">Make this user online by connecting to your backup server.</string>
     <string name="request_url_hint">Request url ending in a forward slash</string>
     <string name="make_user_online_title">Input the remaining data to upload your first backup.</string>
     <string name="make_user_online_confirm_button">Create User</string>

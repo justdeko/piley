@@ -338,8 +338,8 @@ private fun SettingsScreen(
                         )
                     } else { // if user is offline, show option to make user online
                         SettingsItem(
-                            title = "Make user online",
-                            description = "Make this user online by connecting to your backup server",
+                            title = stringResource(R.string.make_user_online_setting_title),
+                            description = stringResource(R.string.make_user_online_setting_description),
                             onClick = { makeUserOnlineDialogOpen = true }
                         )
                     }

@@ -94,5 +94,15 @@ val previewUpcomingTasksList = listOf(
             title = "Call Dentist",
             reminder = LocalDateTime.parse("2023-08-04T14:01:24").plusDays(3).toInstantWithOffset()
         )
+    ),
+    Pair(
+        "Daily",
+        Task(
+            id = 4,
+            title = "Completed recurring task",
+            reminder = LocalDateTime.parse("2023-08-04T14:01:24").plusDays(3).toInstantWithOffset(),
+            completionTimes = listOf(LocalDateTime.now().toInstantWithOffset()),
+            isRecurring = true
+        )
     )
 )

@@ -1,7 +1,7 @@
 package com.dk.piley.ui.common
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,7 +33,7 @@ fun TitleTopAppBar(
     canDeleteOrEdit: Boolean = false,
     justTitle: Boolean = false,
     onEdit: (String) -> Unit = {},
-    icon: ImageVector = Icons.Default.ArrowBack,
+    icon: ImageVector = Icons.AutoMirrored.Filled.ArrowBack,
     contentDescription: String? = null,
     onButtonClick: () -> Unit
 ) {

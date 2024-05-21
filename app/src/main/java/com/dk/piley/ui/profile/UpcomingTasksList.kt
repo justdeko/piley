@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -73,7 +73,7 @@ fun UpcomingTasksList(
                     )
                 }
                 if (index < pileNameTaskList.lastIndex) {
-                    Divider(Modifier.padding(horizontal = dim.large))
+                    HorizontalDivider(Modifier.padding(horizontal = dim.large))
                 }
             }
         } else {

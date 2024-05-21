@@ -2,8 +2,8 @@ package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,9 +24,7 @@ fun ContentAlertDialog(
     onDismiss: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-    ) {
+    BasicAlertDialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier
                 .wrapContentHeight()

@@ -152,7 +152,6 @@ html[dir=rtl] .app__logo-wrapper {
 }
 .app__logo {
   border-radius: 22.5%;
-  mask-image: url("ios-mask.svg");
   mask-size: cover;
   width: 100%;
   height: auto;

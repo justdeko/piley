@@ -9,7 +9,6 @@
     <string name="sign_in">Sign In</string>
     <string name="splash_screen" translatable="false">Splash Screen</string>
     <string name="introduction_screen" translatable="false">Introduction Screen</string>
-
     <string name="daily_pile_name">Daily</string>
 
     <!--notifications-->
@@ -47,9 +46,11 @@
     <string name="clear_statistics_dialog_title">Clear all pile statistics</string>
     <string name="clear_statistics_dialog_description">This is will clear all statistics of this pile by deleting all completed and deleted tasks, except for recurring ones.\nDo you want to continue?</string>
     <string name="clear_statistics_dialog_confirm">Continue</string>
+
     <!-- pile statistics section -->
     <string name="statistics_section_title">Statistics</string>
     <string name="clear_statistics_button_text">Clear Statistics</string>
+
     <!-- pile settings -->
     <string name="pile_settings_section_title">Settings</string>
     <string name="pile_mode_setting_title">Pile mode</string>
@@ -60,11 +61,13 @@
 
     <!-- pile overview screen -->
     <string name="add_pile_button">Add Pile</string>
+
     <!-- create pile dialog -->
     <string name="create_pile_dialog_title">Create a Pile</string>
     <string name="pile_title_hint">Pile Title</string>
     <string name="pile_create_dialog_confirm_button_text">Create Pile</string>
     <string name="pile_create_dialog_dismiss_button_text">Cancel</string>
+
     <!-- delete pile dialog -->
     <string name="delete_pile_dialog_title">Delete Pile</string>
     <string name="delete_pile_dialog_description">Are you sure you want to delete this pile? This will also affect user statistics since all tasks in the pile will be deleted.</string>
@@ -73,10 +76,12 @@
     <!-- profile screen -->
     <string name="last_backup_label">Last backup</string>
     <string name="no_backup_text">No backup yet.\nClick on the icon on the right side to create your first backup</string>
+
     <!-- backup error dialog -->
     <string name="backup_error_dialog_title">Error when uploading backup</string>
     <string name="backup_error_dialog_description">An error occurred when uploading the backup. Do you still want to sign out? Recent changes might be lost.</string>
     <string name="backup_error_dialog_confirm_button">Sign out</string>
+
     <!-- user profile sections -->
     <string name="user_statistics_section_title">Statistics</string>
     <string name="upcoming_tasks_section_title">Upcoming Tasks</string>
@@ -117,6 +122,7 @@
 
     <!-- settings screen -->
     <string name="settings_screen_title">@string/settings</string>
+
     <!-- appearance settings section-->
     <string name="settings_section_appearance_title">Appearance</string>
     <string name="night_mode_enabled_setting_title">Night mode enabled</string>
@@ -124,6 +130,7 @@
     <string name="night_mode_enabled_setting_option_label">Night Mode</string>
     <string name="dynamic_color_enabled_setting_title">Dynamic Color enabled</string>
     <string name="dynamic_color_enabled_setting_description">Set whether dynamic color is enabled.</string>
+
     <!-- piles settings section-->
     <string name="settings_section_piles_title">Piles</string>
     <string name="default_pile_mode_setting_title">Default pile mode</string>
@@ -135,16 +142,19 @@
     <string name="automatically_hide_keyboard_setting_description">Automatically hide the keyboard after creating a new task.</string>
     <string name="show_recurring_tasks_setting_title">Show recurring tasks</string>
     <string name="show_recurring_tasks_setting_description">Recurring tasks are shown together with regular tasks by default.</string>
+
     <!-- piles settings section-->
     <string name="settings_section_notifications_title">Notifications</string>
     <string name="reminder_delay_duration_setting_title">Reminder Delay Duration</string>
     <string name="reminder_delay_duration_setting_description">Set the duration for the \"Delay\" button in your task reminders.</string>
+
     <!-- backup settings section-->
     <string name="settings_section_backup_title">Backup</string>
     <string name="backup_frequency_setting_title">Backup Frequency</string>
     <string name="backup_frequency_setting_description">Set the frequency of backups in days.</string>
     <string name="backup_pull_after_title">Download Backup after…</string>
     <string name="backup_pull_after_description">Set after how many days the remote backup should be fetched on app start again. 0 Means always</string>
+
     <!-- user settings section-->
     <string name="settings_section_user_title">User</string>
     <string name="update_user_setting_title">Update User</string>
@@ -159,6 +169,7 @@
     <string name="start_tutorial_setting_description">Click here if you want to see the tutorial again.</string>
     <string name="set_base_url_setting_title">Set the request URL</string>
     <string name="set_base_url_setting_description">Set the base request URL the app connects to for uploading and fetching backups.</string>
+
     <!-- make user online-->
     <string name="make_user_online_setting_title">Make user online</string>
     <string name="make_user_online_setting_description">Make this user online by connecting to your backup server.</string>
@@ -208,7 +219,6 @@
     <string name="confirm_date_time_picker_button">Confirm</string>
     <string name="cancel_date_time_picker_button">Cancel</string>
 
-
     <!-- task detail screen -->
     <string name="reminder_info_title">Reminder</string>
     <string name="no_reminder_set_placeholder">No reminder set</string>
@@ -244,7 +254,6 @@
         <item>Month</item>
         <item>Year</item>
     </string-array>
-
     <plurals name="plural_s">
         <item quantity="one" />
         <item quantity="other">s</item>
@@ -252,6 +261,7 @@
 
     <!-- intro screen -->
     <string name="finish_intro_button">Start Piling</string>
+
     <!-- intro screen pages -->
     <string name="welcome_page_title">Hi there</string>
     <string name="welcome_page_description">Welcome to piley! This app allows you to manage regular and one-time tasks by displaying them in piles.</string>
@@ -266,5 +276,4 @@
     <string name="end_page_title">Almost there</string>
     <string name="end_page_description">That\'s it! Click on the button to start using the app, and have fun with piley!</string>
     <string name="first_user_name_hint">e.g. John Doe</string>
-
 </resources>

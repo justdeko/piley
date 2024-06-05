@@ -168,7 +168,7 @@
     <string name="start_tutorial_setting_title">Öğreticiyi yeniden başlatın</string>
     <string name="start_tutorial_setting_description">Öğreticiyi tekrar görmek istiyorsanız buraya tıklayın.</string>
     <string name="set_base_url_setting_title">İstek URL\'sini ayarla</string>
-    <string name="set_base_url_setting_description">Yedeklemeleri yüklemek ve almak için uygulamanın bağlandığı temel istek URL'sini ayarlayın.</string>
+    <string name="set_base_url_setting_description">Yedeklemeleri yüklemek ve almak için uygulamanın bağlandığı temel istek URL\'sini ayarlayın.</string>
 
     <!-- make user online-->
     <string name="make_user_online_setting_title">Kullanıcıyı çevrimiçi yap</string>

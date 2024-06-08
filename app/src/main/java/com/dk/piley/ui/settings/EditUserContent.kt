@@ -68,7 +68,7 @@ fun EditUserContent(
             modifier = Modifier.fillMaxWidth(),
             value = name,
             onValueChange = {
-                if (name.length <= usernameCharacterLimit) {
+                if (it.length <= usernameCharacterLimit) {
                     name = it
                 }
             },

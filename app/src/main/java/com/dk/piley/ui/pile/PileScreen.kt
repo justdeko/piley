@@ -239,7 +239,7 @@ private fun PileScreen(
                 modifier = Modifier.weight(1f),
                 value = taskTextValue,
                 onChange = {
-                    if (taskTextValue.text.length <= titleCharacterLimit) {
+                    if (it.text.length <= titleCharacterLimit) {
                         taskTextValue = it
                     }
                 },

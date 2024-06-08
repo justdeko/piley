@@ -37,7 +37,9 @@ import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.RequestNotificationPermissionDialog
+import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
@@ -45,6 +47,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
+import java.time.Instant
 
 /**
  * Task detail screen
@@ -120,6 +123,7 @@ fun TaskDetailScreen(
     val scope = rememberCoroutineScope()
     val drawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
     val scrollState = rememberScrollState()
+    var completeRecurringDialogOpen by remember { mutableStateOf(false) }
 
     // notification permission
     var rationaleOpen by remember { mutableStateOf(false) }
@@ -127,6 +131,22 @@ fun TaskDetailScreen(
         RequestNotificationPermissionDialog(rationaleOpen) {
             rationaleOpen = false
         }
+    }
+
+    if (completeRecurringDialogOpen) {
+        AlertDialogHelper(
+            title = stringResource(R.string.complete_recurring_task_dialog_title),
+            description = stringResource(
+                R.string.complete_recurring_task_dialog_description,
+                viewState.task.reminder?.toLocalDateTime()?.dateTimeString() ?: ""
+            ),
+            confirmText = stringResource(R.string.complete_recurring_task_dialog_confirm),
+            onConfirm = {
+                onCompleteTask()
+                completeRecurringDialogOpen = false
+            },
+            onDismiss = { completeRecurringDialogOpen = false }
+        )
     }
 
     AddReminderDrawer(
@@ -187,7 +207,17 @@ fun TaskDetailScreen(
             }
             TwoButtonRow(
                 modifier = Modifier.weight(1f, false),
-                onLeftClick = onCompleteTask,
+                onLeftClick = {
+                    // if task is recurring and reminder is in the future, show dialog first
+                    if (
+                        viewState.task.isRecurring
+                        && viewState.task.reminder?.isAfter(Instant.now()) == true
+                    ) {
+                        completeRecurringDialogOpen = true
+                    } else {
+                        onCompleteTask()
+                    }
+                },
                 onRightClick = onDeleteTask,
                 leftText = stringResource(R.string.complete_task_button),
                 rightText = stringResource(R.string.delete_task_button),

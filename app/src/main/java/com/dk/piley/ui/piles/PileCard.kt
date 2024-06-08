@@ -42,7 +42,6 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.TinySpacer
-import com.dk.piley.util.defaultPadding
 
 /**
  * Pile card
@@ -140,11 +139,10 @@ fun PileCard(
                             }
                         }
                     }
-                    TinySpacer()
                     Text(
                         modifier = Modifier
                             .align(Alignment.Start)
-                            .defaultPadding(),
+                            .padding(start = LocalDim.current.large,  bottom = LocalDim.current.large),
                         text = pileWithTasks.pile.name,
                         style = MaterialTheme.typography.headlineSmall.copy(
                             hyphens = Hyphens.Auto,

@@ -1,6 +1,9 @@
 package com.dk.piley.ui.piles
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +14,20 @@ import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -96,7 +110,7 @@ fun PileOverviewScreen(
     var pileTitle by rememberSaveable { mutableStateOf("") }
     val expandedFab by remember {
         derivedStateOf {
-            gridState.firstVisibleItemIndex == 0
+            gridState.firstVisibleItemScrollOffset <= 0
         }
     }
 
@@ -110,12 +124,14 @@ fun PileOverviewScreen(
     Scaffold(
         modifier = modifier,
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { createPileDialogOpen = true },
-                expanded = expandedFab,
-                icon = { Icon(Icons.Filled.Add, "Add Pile Icon") },
-                text = { Text(text = stringResource(R.string.add_pile_button)) },
-            )
+            AnimatedVisibility(visible = expandedFab, enter = fadeIn(), exit = fadeOut()) {
+                ExtendedFloatingActionButton(
+                    onClick = { createPileDialogOpen = true },
+                    expanded = false,
+                    icon = { Icon(Icons.Filled.Add, "Add Pile Icon") },
+                    text = { Text(text = stringResource(R.string.add_pile_button)) },
+                )
+            }
         },
         floatingActionButtonPosition = FabPosition.End,
     ) { paddingValues ->

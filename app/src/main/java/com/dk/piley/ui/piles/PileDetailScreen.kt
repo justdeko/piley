@@ -31,9 +31,11 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
+import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
+import com.dk.piley.util.navigateClearBackstack
 import java.time.LocalDateTime
 
 /**
@@ -51,7 +53,7 @@ fun PileDetailScreen(
     PileDetailScreen(
         viewState = viewState,
         onDeletePile = {
-            navController.popBackStack()
+            navController.navigateClearBackstack(Screen.Piles.route)
             viewModel.deletePile()
         },
         onEditTitle = { viewModel.editTitle(it) },

@@ -123,7 +123,7 @@ fun Home(
             ) {
                 PileScreen(
                     modifier = Modifier.padding(bottom = defaultNavbarPadding),
-                    navController = navController,
+                    navController = navController, // TODO: don't pass navController
                     snackbarHostState = snackbarHostState
                 )
             }

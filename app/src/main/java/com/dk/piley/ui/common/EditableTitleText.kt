@@ -41,7 +41,6 @@ fun EditableTitleText(
         textStyle = sizeBasedTextStyle
             .copy(textDecoration = TextDecoration.None)
             .copy(textAlign = TextAlign.Center),
-        singleLine = true,
         colors = TextFieldDefaults.colors(
             focusedTextColor = MaterialTheme.colorScheme.onBackground,
             focusedContainerColor = Color.Transparent,

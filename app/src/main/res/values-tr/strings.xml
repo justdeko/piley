@@ -22,7 +22,7 @@
     <string name="cancel">İptal</string>
 
     <!-- generic ui views -->
-    <string name="no_pile_completed_hint">Görünüşe göre bu yığın için bir süredir hiçbir görevi tamamlamadınız...</string>
+    <string name="no_pile_completed_hint">Görünüşe göre bu yığın için bir süredir hiçbir görevi tamamlamadınız…</string>
     <string name="add_description_hint">Açıklama eklemek için buraya tıklayın</string>
 
     <!-- pile screen -->
@@ -95,7 +95,7 @@
     <string name="average_task_completion_duration_label">Bir görev için harcanan ortalama süre:</string>
     <string name="biggest_pile_label">Şu anda en büyük yığın:</string>
     <string name="no_upcoming_tasks_hint">Yaklaşan görev yok</string>
-    <string name="average_task_completion_duration_value">%1 $dh</string>
+    <string name="average_task_completion_duration_value">%1$dh</string>
     <string name="no_pile">Yok</string>
 
     <!-- delete user dialog -->

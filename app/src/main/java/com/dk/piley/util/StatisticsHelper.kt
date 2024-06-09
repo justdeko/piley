@@ -58,7 +58,7 @@ fun getCompletedTasksForWeekValues(pileWithTasks: PileWithTasks): List<Int> =
 
 
 /**
- * Get list of 3 most upcoming/urgent tasks (nearest reminder times)
+ * Get list of 10 most upcoming/urgent tasks (nearest reminder times)
  *
  * @param pilesWithTasks list of piles with tasks to get the tasks from
  * @return list of pairs containing the pile name and the task
@@ -71,7 +71,7 @@ fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Tas
                         || (it.reminder != null && it.isRecurring && it.status != TaskStatus.DELETED)
             }
             .map { Pair(pileWithTasks.pile.name, it) }
-    }.sortedBy { it.second.reminder }.take(3)
+    }.sortedBy { it.second.reminder }.take(10)
 
 /**
  * Get the name of the pile with the most uncompleted tasks

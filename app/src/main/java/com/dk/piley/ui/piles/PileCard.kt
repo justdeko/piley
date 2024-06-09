@@ -142,7 +142,11 @@ fun PileCard(
                     Text(
                         modifier = Modifier
                             .align(Alignment.Start)
-                            .padding(start = LocalDim.current.large,  bottom = LocalDim.current.large),
+                            .padding(
+                                start = LocalDim.current.large,
+                                bottom = LocalDim.current.large,
+                                end = LocalDim.current.medium
+                            ),
                         text = pileWithTasks.pile.name,
                         style = MaterialTheme.typography.headlineSmall.copy(
                             hyphens = Hyphens.Auto,

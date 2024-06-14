@@ -119,6 +119,7 @@ class StatisticsHelperTest {
             Pair("sample pile name", samplePile.tasks[4]),
             Pair("other pile name", samplePile.tasks[4]),
             Pair("sample pile name", samplePile.tasks[5]),
+            Pair("other pile name", samplePile.tasks[5]),
         )
         val testPiles = listOf(
             samplePile,

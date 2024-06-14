@@ -1,13 +1,12 @@
 package com.dk.piley.ui.common
 
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +35,7 @@ fun EditableTitleText(
         value = value,
         enabled = enabled,
         onValueChange = onValueChange,
-        modifier = Modifier.wrapContentSize(Alignment.Center),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         label = null,
         textStyle = sizeBasedTextStyle
             .copy(textDecoration = TextDecoration.None)

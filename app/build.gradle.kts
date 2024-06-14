@@ -14,8 +14,8 @@ android {
         applicationId = "com.dk.piley"
         minSdk = 26
         targetSdk = 34
-        versionCode = 11
-        versionName = "0.6.6"
+        versionCode = 12
+        versionName = "0.6.7"
 
         // default api base urls
         val url = project.findProperty("API_URL") as String? ?: "https://127.0.0.1/"

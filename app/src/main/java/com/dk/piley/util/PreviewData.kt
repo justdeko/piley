@@ -8,6 +8,7 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
+import java.time.Instant
 import java.time.LocalDateTime
 
 val previewTaskList: List<Task> = listOf(
@@ -76,7 +77,8 @@ val previewUpcomingTasksList = listOf(
             reminder = LocalDateTime.parse("2023-08-04T09:36:24").plusDays(1).toInstantWithOffset(),
             isRecurring = true,
             recurringFrequency = 2,
-            recurringTimeRange = RecurringTimeRange.WEEKLY
+            recurringTimeRange = RecurringTimeRange.WEEKLY,
+            completionTimes = listOf(Instant.now())
         )
     ),
     Pair(

@@ -9,8 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
-import com.dk.piley.util.TinySpacer
+import com.dk.piley.util.MediumSpacer
 
 /**
  * Full width info section with label and value
@@ -36,9 +37,9 @@ fun FullWidthInfo(
             modifier = Modifier.weight(1f),
             text = label,
             color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.labelLarge
+            style = MaterialTheme.typography.labelLarge.copy(lineBreak = LineBreak.Heading)
         )
-        TinySpacer()
+        MediumSpacer()
         Text(
             textAlign = TextAlign.End,
             text = value,

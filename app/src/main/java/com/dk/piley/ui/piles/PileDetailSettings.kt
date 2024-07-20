@@ -4,6 +4,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -23,6 +29,7 @@ import com.dk.piley.util.roundedOutline
  *
  * @param modifier generic modifier
  * @param viewState pile detail view state
+ * @param expandedState expanded state
  * @param onSetPileMode on set pile completion mode
  * @param onSetPileLimit on set pile task limit
  */
@@ -30,16 +37,19 @@ import com.dk.piley.util.roundedOutline
 fun PileDetailSettings(
     modifier: Modifier = Modifier,
     viewState: PileDetailViewState,
+    expandedState: MutableState<Boolean> = remember { mutableStateOf(false) },
     onSetPileMode: (PileMode) -> Unit = {},
     onSetPileLimit: (Int) -> Unit = {},
 ) {
+    var sliderValue by mutableIntStateOf(viewState.pile.pileLimit)
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     SettingsSection(
         modifier = modifier
             .padding(LocalDim.current.medium)
             .roundedOutline(),
         title = stringResource(R.string.pile_settings_section_title),
-        icon = Icons.Default.Settings
+        icon = Icons.Default.Settings,
+        expandedState = expandedState
     ) {
         DropdownSettingsItem(
             title = stringResource(R.string.pile_mode_setting_title),
@@ -57,7 +67,10 @@ fun PileDetailSettings(
             value = viewState.pile.pileLimit,
             range = Pair(0, 20),
             steps = 20,
-            onValueChange = onSetPileLimit
+            onValueChange = {
+                sliderValue = it
+                onSetPileLimit(it)
+            }
         )
     }
 }
@@ -72,7 +85,8 @@ fun PileDetailSettingsPreview() {
                     pileMode = PileMode.FIFO,
                     pileLimit = 15
                 )
-            )
+            ),
+            expandedState = mutableStateOf(true)
         )
     }
 }

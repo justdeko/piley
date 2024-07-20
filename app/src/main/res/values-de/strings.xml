@@ -211,4 +211,7 @@
     <string name="show_recurring_tasks_setting_description">Zeige sich wiederholende Tasks standardmäßig zusammen mit regulären an.</string>
     <string name="make_user_online_setting_title">User online verfügbar machen</string>
     <string name="make_user_online_setting_description">Mache diesen user online verfügbar, indem du dich mit deinem Backup-Server verbindest.</string>
+    <string name="delete_task_dialog_title">Task löschen</string>
+    <string name="delete_task_dialog_description">Bist du dir sicher, dass du diesen Task löschen möchtest?</string>
+    <string name="delete_task_dialog_confirm_button">Löschen</string>
 </resources>

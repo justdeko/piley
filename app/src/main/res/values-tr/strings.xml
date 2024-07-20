@@ -276,4 +276,7 @@
     <string name="end_page_title">Neredeyse tamam</string>
     <string name="end_page_description">İşte bu kadar! Uygulamayı kullanmaya başlamak için düğmeye tıklayın ve piley ile eğlenin!</string>
     <string name="first_user_name_hint">ör. John Doe</string>
+    <string name="delete_task_dialog_title">Görevi sil</string>
+    <string name="delete_task_dialog_description">Bu görevi silmek istediğinizden emin misiniz?</string>
+    <string name="delete_task_dialog_confirm_button">Sil</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,18 +26,22 @@ import com.dk.piley.ui.theme.PileyTheme
  * @param modifier generic modifier
  * @param title section title
  * @param icon section icon
+ * @param expandedState section expanded state
  * @param items section items
  */
 @Composable
 fun SettingsSection(
-    modifier: Modifier = Modifier, title: String, icon: ImageVector, items: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    title: String,
+    icon: ImageVector,
+    expandedState : MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
+    items: @Composable () -> Unit
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
     Column(modifier = modifier.fillMaxWidth()) {
         ExpandableContent(
-            onHeaderClick = { expanded = !expanded },
-            onArrowClick = { expanded = !expanded },
-            expanded = expanded,
+            onHeaderClick = { expandedState.value = !expandedState.value },
+            onArrowClick = { expandedState.value = !expandedState.value },
+            expanded = expandedState.value,
             headerContent = {
                 TitleHeader(
                     modifier = Modifier.padding(

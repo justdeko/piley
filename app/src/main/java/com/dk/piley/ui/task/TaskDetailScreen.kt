@@ -124,6 +124,7 @@ fun TaskDetailScreen(
     val drawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
     val scrollState = rememberScrollState()
     var completeRecurringDialogOpen by remember { mutableStateOf(false) }
+    var confirmDeleteDialogOpen by remember { mutableStateOf(false) }
 
     // notification permission
     var rationaleOpen by remember { mutableStateOf(false) }
@@ -146,6 +147,19 @@ fun TaskDetailScreen(
                 completeRecurringDialogOpen = false
             },
             onDismiss = { completeRecurringDialogOpen = false }
+        )
+    }
+
+    if (confirmDeleteDialogOpen) {
+        AlertDialogHelper(
+            title = stringResource(R.string.delete_task_dialog_title),
+            description = stringResource(R.string.delete_task_dialog_description),
+            confirmText = stringResource(R.string.delete_task_dialog_confirm_button),
+            onDismiss = { confirmDeleteDialogOpen = false },
+            onConfirm = {
+                onDeleteTask()
+                confirmDeleteDialogOpen = false
+            }
         )
     }
 
@@ -207,7 +221,8 @@ fun TaskDetailScreen(
             }
             TwoButtonRow(
                 modifier = Modifier.weight(1f, false),
-                onLeftClick = {
+                onLeftClick = { confirmDeleteDialogOpen = true },
+                onRightClick = {
                     // if task is recurring and reminder is in the future, show dialog first
                     if (
                         viewState.task.isRecurring
@@ -218,15 +233,14 @@ fun TaskDetailScreen(
                         onCompleteTask()
                     }
                 },
-                onRightClick = onDeleteTask,
-                leftText = stringResource(R.string.complete_task_button),
-                rightText = stringResource(R.string.delete_task_button),
+                leftText = stringResource(R.string.delete_task_button),
+                rightText = stringResource(R.string.complete_task_button),
                 arrangement = Arrangement.SpaceEvenly,
-                rightColors = ButtonDefaults.buttonColors(
+                leftColors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.errorContainer,
                     contentColor = MaterialTheme.colorScheme.onErrorContainer
                 ),
-                leftColors = ButtonDefaults.buttonColors(
+                rightColors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )

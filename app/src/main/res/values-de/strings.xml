@@ -41,7 +41,7 @@
     <string name="done_tasks_label">Fertig</string>
     <string name="current_tasks_label">Aktuell</string>
     <string name="deleted_tasks_label">Gelöscht</string>
-    <string name="average_task_completion_duration_label">Durchschnittliche Zeit pro Task:</string>
+    <string name="tasks_completed_past_days_label">Aufgaben in den letzten 7 Tagen abgeschlossen:</string>
     <string name="biggest_pile_label">Größter Pile aktuell:</string>
     <string name="no_upcoming_tasks_hint">Keine anstehenden Tasks</string>
     <string name="average_task_completion_duration_value">%1$dh</string>

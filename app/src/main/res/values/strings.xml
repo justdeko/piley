@@ -92,7 +92,7 @@
     <string name="done_tasks_label">Done</string>
     <string name="current_tasks_label">Current</string>
     <string name="deleted_tasks_label">Deleted</string>
-    <string name="average_task_completion_duration_label">Average time spent on a task:</string>
+    <string name="tasks_completed_past_days_label">Tasks completed in the last 7 days:</string>
     <string name="biggest_pile_label">Biggest Pile right now:</string>
     <string name="no_upcoming_tasks_hint">No upcoming tasks</string>
     <string name="average_task_completion_duration_value">%1$dh</string>

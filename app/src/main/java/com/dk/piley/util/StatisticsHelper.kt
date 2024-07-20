@@ -97,6 +97,19 @@ fun getAverageTaskCompletionInHours(tasks: List<Task>): Long {
 }
 
 /**
+ * Get tasks completed in past n days
+ *
+ * @param tasks list of tasks to count the completed tasks for
+ * @param days number of days to count the completed tasks for
+ * @return number of completed tasks in the past n days
+ */
+fun getTasksCompletedInPastDays(tasks: List<Task>, days: Long = 7): Int = tasks.count {
+    it.status == TaskStatus.DONE
+            && LocalDateTime.now().minusDays(days)
+        .isBefore(it.completionTimes.last().toLocalDateTime())
+}
+
+/**
  * Generates a copy of the given task with the new completion time and newly calculated
  * average completion time added to the copy.
  *

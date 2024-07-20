@@ -37,7 +37,7 @@ fun TaskStats(
     doneCount: Int,
     deletedCount: Int,
     currentCount: Int,
-    averageTaskDuration: Long = 0,
+    tasksCompletedPastDays: Int = 0,
     biggestPile: String = "",
     tasksOnly: Boolean = false
 ) {
@@ -65,11 +65,8 @@ fun TaskStats(
         if (!tasksOnly) {
             MediumSpacer()
             FullWidthInfo(
-                label = stringResource(R.string.average_task_completion_duration_label),
-                value = stringResource(
-                    R.string.average_task_completion_duration_value,
-                    averageTaskDuration
-                )
+                label = stringResource(R.string.tasks_completed_past_days_label),
+                value = tasksCompletedPastDays.toString()
             )
             FullWidthInfo(
                 label = stringResource(R.string.biggest_pile_label),
@@ -110,7 +107,7 @@ fun TaskStatsPreview() {
             doneCount = 2,
             deletedCount = 3,
             currentCount = 1,
-            averageTaskDuration = 4,
+            tasksCompletedPastDays = 4,
             biggestPile = "Home",
         )
     }

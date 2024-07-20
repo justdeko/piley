@@ -203,7 +203,7 @@ private fun ProfileScreen(
                             doneCount = viewState.doneTasks,
                             deletedCount = viewState.deletedTasks,
                             currentCount = viewState.currentTasks,
-                            averageTaskDuration = viewState.averageTaskDurationInHours,
+                            tasksCompletedPastDays = viewState.tasksCompletedPastDays,
                             biggestPile = viewState.biggestPileName,
                         )
                     }
@@ -248,7 +248,7 @@ fun ProfileScreenPreview() {
                 currentTasks = 3,
                 biggestPileName = "Daily",
                 upcomingTaskList = previewUpcomingTasksList,
-                averageTaskDurationInHours = 9,
+                tasksCompletedPastDays = 9,
                 isLoading = true
             )
             ProfileScreen(viewState = state)

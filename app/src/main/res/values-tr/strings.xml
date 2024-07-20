@@ -92,7 +92,7 @@
     <string name="done_tasks_label">Bitti</string>
     <string name="current_tasks_label">Mevcut</string>
     <string name="deleted_tasks_label">Silindi</string>
-    <string name="average_task_completion_duration_label">Bir görev için harcanan ortalama süre:</string>
+    <string name="tasks_completed_past_days_label">Son 7 gün içinde tamamlanan görevler:</string>
     <string name="biggest_pile_label">Şu anda en büyük yığın:</string>
     <string name="no_upcoming_tasks_hint">Yaklaşan görev yok</string>
     <string name="average_task_completion_duration_value">%1$dh</string>

@@ -155,6 +155,13 @@ class StatisticsHelperTest {
     }
 
     @Test
+    fun getTasksCompletedInPastDays() {
+        val expectedValue = 4
+        val tasksCompletedInPastDays = getTasksCompletedInPastDays(samplePile.tasks)
+        assertEquals(expectedValue, tasksCompletedInPastDays)
+    }
+
+    @Test
     fun taskWithNewCompletionTime() {
         val dateNow = LocalDateTime.now()
 

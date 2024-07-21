@@ -214,4 +214,6 @@
     <string name="delete_task_dialog_title">Task löschen</string>
     <string name="delete_task_dialog_description">Bist du dir sicher, dass du diesen Task löschen möchtest?</string>
     <string name="delete_task_dialog_confirm_button">Löschen</string>
+    <string name="task_deleted_message">Task gelöscht</string>
+    <string name="undo_task_deleted">Rückgängig</string>
 </resources>

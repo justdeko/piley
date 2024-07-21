@@ -23,7 +23,9 @@ import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,6 +82,7 @@ fun PileScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: PileViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val viewState by viewModel.state.collectAsState()
     val selectedPileViewState by viewModel.selectedPileIndex.collectAsState()
     // filter out recurring tasks, show if recurring enabled
@@ -97,9 +100,17 @@ fun PileScreen(
     } // TODO fix disappearance animation
 
     // snackbar handler
-    viewState.message?.let { message ->
+    viewState.messageWithAction?.let { message ->
         LaunchedEffect(message, snackbarHostState) {
-            snackbarHostState.showSnackbar(message)
+            val result =
+                snackbarHostState.showSnackbar(
+                    message = message.message,
+                    actionLabel = message.actionText,
+                    duration = message.duration
+                )
+            if (result == SnackbarResult.ActionPerformed) {
+                message.action()
+            }
             // reset message
             viewModel.setMessage(null)
         }
@@ -112,7 +123,16 @@ fun PileScreen(
         taskTransitionStates = taskTransitionStates,
         selectedPileIndex = selectedPileViewState,
         onDone = { viewModel.done(it) },
-        onDelete = { viewModel.delete(it) },
+        onDelete = {
+            viewModel.delete(it)
+            viewModel.setMessage(
+                MessageWithAction(
+                    message = context.getString(R.string.task_deleted_message),
+                    actionText = context.getString(R.string.undo_task_deleted),
+                    duration = SnackbarDuration.Short
+                ) { viewModel.undoDelete(it) }
+            )
+        },
         onAdd = { viewModel.add(it) },
         onClick = { navController.navigate(taskScreen.root + "/" + it.id) },
         onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
@@ -151,7 +171,7 @@ private fun PileScreen(
     onDelete: (Task) -> Unit = {},
     onAdd: (String) -> Unit = {},
     onClick: (Task) -> Unit = {},
-    onSetMessage: (String) -> Unit = {},
+    onSetMessage: (MessageWithAction) -> Unit = {},
     onToggleRecurring: (Boolean) -> Unit = {},
     onClickTitle: () -> Unit = {},
 ) {
@@ -200,9 +220,11 @@ private fun PileScreen(
                     // if task is recurring, display completion message and next due date
                     if (it.isRecurring) {
                         onSetMessage(
-                            context.getString(
-                                R.string.recurring_task_completed_info,
-                                it.getNextReminderTime().toLocalDateTime().dateTimeString()
+                            MessageWithAction(
+                                context.getString(
+                                    R.string.recurring_task_completed_info,
+                                    it.getNextReminderTime().toLocalDateTime().dateTimeString()
+                                )
                             )
                         )
                     }
@@ -250,7 +272,7 @@ private fun PileScreen(
                             viewState.pile.pileLimit > 0
                             && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
                         ) {
-                            onSetMessage(context.getString(R.string.pile_full_warning))
+                            onSetMessage(MessageWithAction(context.getString(R.string.pile_full_warning)))
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             coroutineScope.launch {
                                 pileOffset.animateTo(
@@ -267,7 +289,7 @@ private fun PileScreen(
                             taskTextValue = TextFieldValue()
                         }
                     } else {
-                        onSetMessage(context.getString(R.string.task_empty_not_allowed_hint))
+                        onSetMessage(MessageWithAction(context.getString(R.string.task_empty_not_allowed_hint)))
                     }
                 }
             )

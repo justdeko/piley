@@ -33,15 +33,23 @@ class TaskRepository @Inject constructor(
      * Insert task and perform additional actions based on task status
      *
      * @param task the task entity
+     * @param undo flag signifying whether the action is an undo
      * @return long representing db operation success
      */
-    suspend fun insertTaskWithStatus(task: Task): Long {
+    suspend fun insertTaskWithStatus(task: Task, undo: Boolean = false): Long {
         val now = Instant.now()
         // update modification time
-        var tempTask = task.copy(modifiedAt = now)
+        var tempTask = if (undo) task else task.copy(modifiedAt = now)
         // add new completion time
-        if (task.status == TaskStatus.DONE) {
+        if (task.status == TaskStatus.DONE && !undo) {
             tempTask = tempTask.withNewCompletionTime(Instant.now())
+        }
+        // recreate reminder if undo occurred
+        if (task.status == TaskStatus.DEFAULT && undo && task.reminder != null) {
+            reminderManager.startReminder(
+                reminderTime = task.reminder,
+                taskId = task.id
+            )
         }
         // remove notification or scheduled alarms if task is set to done/deleted
         return if (task.status == TaskStatus.DONE || task.status == TaskStatus.DELETED) {

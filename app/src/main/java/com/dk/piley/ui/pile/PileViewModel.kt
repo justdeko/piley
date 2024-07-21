@@ -1,5 +1,6 @@
 package com.dk.piley.ui.pile
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.backup.BackupManager
@@ -152,6 +153,17 @@ class PileViewModel @Inject constructor(
     }
 
     /**
+     * Undo task deletion
+     *
+     * @param task the task to undo the deletion for
+     */
+    fun undoDelete(task: Task) {
+        viewModelScope.launch {
+            taskRepository.insertTaskWithStatus(task, true)
+        }
+    }
+
+    /**
      * On pile selection changed
      *
      * @param index selected pile index
@@ -163,12 +175,12 @@ class PileViewModel @Inject constructor(
     }
 
     /**
-     * Set user message
+     * Set user message with optional action
      *
-     * @param message message text
+     * @param messageWithAction user message with optional action
      */
-    fun setMessage(message: String?) {
-        state.update { it.copy(message = message) }
+    fun setMessage(messageWithAction: MessageWithAction?) {
+        state.update { it.copy(messageWithAction = messageWithAction) }
     }
 
     /**
@@ -187,6 +199,13 @@ data class PileViewState(
     val autoHideEnabled: Boolean = true,
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),
     val noTasksYet: Boolean = false,
-    val message: String? = null,
+    val messageWithAction: MessageWithAction? = null,
     val showRecurring: Boolean = false
+)
+
+data class MessageWithAction(
+    val message: String,
+    val actionText: String? = null,
+    val duration: SnackbarDuration = SnackbarDuration.Short,
+    val action: () -> Unit = {},
 )

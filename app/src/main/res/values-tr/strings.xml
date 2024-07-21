@@ -279,4 +279,6 @@
     <string name="delete_task_dialog_title">Görevi sil</string>
     <string name="delete_task_dialog_description">Bu görevi silmek istediğinizden emin misiniz?</string>
     <string name="delete_task_dialog_confirm_button">Sil</string>
+    <string name="task_deleted_message">Görev silindi</string>
+    <string name="undo_task_deleted">Geri al</string>
 </resources>

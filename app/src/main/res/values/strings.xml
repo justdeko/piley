@@ -219,6 +219,7 @@
         <item>Afternoon</item>
         <item>Evening</item>
     </string-array>
+    <string name="reminder_use_now_description">Use now as reminder calculation date</string>
     <string name="tomorrow_prefix">Tomorrow</string>
     <string name="time_suggestion">%1$s%2$s (%3$s)</string>
     <string name="confirm_date_time_picker_button">Confirm</string>

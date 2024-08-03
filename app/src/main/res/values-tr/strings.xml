@@ -281,4 +281,5 @@
     <string name="delete_task_dialog_confirm_button">Sil</string>
     <string name="task_deleted_message">Görev silindi</string>
     <string name="undo_task_deleted">Geri al</string>
+    <string name="reminder_use_now_description">Hatırlatma hesaplama tarihi olarak şimdi kullanın</string>
 </resources>

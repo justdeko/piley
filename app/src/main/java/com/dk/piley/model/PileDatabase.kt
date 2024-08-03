@@ -27,9 +27,13 @@ const val DATABASE_NAME = "piley-db"
         AutoMigration(
             from = 2,
             to = 3
+        ),
+        AutoMigration(
+            from = 3,
+            to = 4
         )
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

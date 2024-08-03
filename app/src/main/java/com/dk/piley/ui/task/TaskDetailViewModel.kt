@@ -111,6 +111,7 @@ class TaskDetailViewModel @Inject constructor(
                     isRecurring = reminderState.recurring,
                     recurringFrequency = reminderState.recurringFrequency,
                     recurringTimeRange = reminderState.recurringTimeRange,
+                    nowAsReminderTime = reminderState.nowAsReminderTime
                 )
             )
             // dismiss existing alarms and notification for this task

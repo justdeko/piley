@@ -82,7 +82,12 @@ class TaskRepository @Inject constructor(
         notificationManager.dismiss(task.id)
         // set next reminder if task is recurring
         if (task.status != TaskStatus.DELETED && task.isRecurring && task.reminder != null) {
-            task.getNextReminderTime().let {
+            val nextReminder = if (task.nowAsReminderTime) {
+                task.getNextReminderTime()
+            } else {
+                task.getNextReminderTime(task.reminder)
+            }
+            nextReminder.let {
                 Timber.d(
                     "set next reminder time for recurring reminder: ${
                         it.toLocalDateTime().dateTimeString()

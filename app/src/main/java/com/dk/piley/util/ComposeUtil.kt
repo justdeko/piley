@@ -23,6 +23,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dk.piley.R
@@ -138,9 +139,8 @@ fun Modifier.roundedOutline() = composed {
  * Default padding modifier
  *
  */
-fun Modifier.defaultPadding() = composed {
-    padding(LocalDim.current.large)
-}
+@Composable
+fun Modifier.defaultPadding() = this then padding(LocalDim.current.large)
 
 /**
  * Big spacer with large dimen size
@@ -169,3 +169,7 @@ fun TinySpacer() {
     Spacer(modifier = Modifier.size(LocalDim.current.small))
 }
 
+
+class BooleanProvider : PreviewParameterProvider<Boolean> {
+    override val values: Sequence<Boolean> = sequenceOf(false, true)
+}

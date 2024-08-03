@@ -46,7 +46,9 @@ data class Task(
     val isRecurring: Boolean = false,
     val recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     val recurringFrequency: Int = 1,
+    @ColumnInfo(defaultValue = "0")
+    val nowAsReminderTime: Boolean = false,
     val status: TaskStatus = TaskStatus.DEFAULT,
     @ColumnInfo(defaultValue = "0")
-    val averageCompletionTimeInHours: Long = 0
+    val averageCompletionTimeInHours: Long = 0,
 )

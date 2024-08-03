@@ -27,7 +27,7 @@ import com.dk.piley.util.MediumSpacer
  * @param doneCount completed task count
  * @param deletedCount deleted task count
  * @param currentCount current task count
- * @param averageTaskDuration average task completion duration
+ * @param tasksCompletedPastDays number of tasks completed in the last n days
  * @param biggestPile name of the pile with the largest amount of tasks
  * @param tasksOnly whether only statistics about the tasks themselves should be shown
  */
@@ -68,6 +68,7 @@ fun TaskStats(
                 label = stringResource(R.string.tasks_completed_past_days_label),
                 value = tasksCompletedPastDays.toString()
             )
+            MediumSpacer()
             FullWidthInfo(
                 label = stringResource(R.string.biggest_pile_label),
                 value = biggestPile

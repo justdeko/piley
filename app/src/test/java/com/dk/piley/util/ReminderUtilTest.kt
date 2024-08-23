@@ -35,36 +35,69 @@ class ReminderUtilTest {
     }
 
     @Test
-    fun getNextReminderTime() {
+    fun reminderPlusTime() {
         val expectedTomorrow = sampleDateTime.plusDays(1)
         val expectedTwoWeeks = sampleDateTime.plusWeeks(2)
         val expectedThreeMonths = sampleDateTime.plusMonths(3)
         val expectedTwoYears = sampleDateTime.plusYears(2)
         assertEquals(
             expectedTomorrow,
-            getNextReminderTime(sampleDateTime, RecurringTimeRange.DAILY, 1)
+            reminderPlusTime(sampleDateTime, RecurringTimeRange.DAILY, 1)
         )
         assertEquals(
             expectedTwoWeeks,
-            getNextReminderTime(sampleDateTime, RecurringTimeRange.WEEKLY, 2)
+            reminderPlusTime(sampleDateTime, RecurringTimeRange.WEEKLY, 2)
         )
         assertEquals(
             expectedThreeMonths,
-            getNextReminderTime(sampleDateTime, RecurringTimeRange.MONTHLY, 3)
+            reminderPlusTime(sampleDateTime, RecurringTimeRange.MONTHLY, 3)
         )
         assertEquals(
             expectedTwoYears,
-            getNextReminderTime(sampleDateTime, RecurringTimeRange.YEARLY, 2)
+            reminderPlusTime(sampleDateTime, RecurringTimeRange.YEARLY, 2)
         )
     }
 
     @Test
     fun testGetNextReminderTime() {
-        val sampleTask =
-            Task(recurringTimeRange = RecurringTimeRange.WEEKLY, recurringFrequency = 2)
+        val sampleTask = Task(
+            recurringTimeRange = RecurringTimeRange.WEEKLY,
+            recurringFrequency = 2,
+            nowAsReminderTime = true
+        )
         val now = Instant.now()
         val expectedTime = now.toLocalDateTime().plusWeeks(2).toInstantWithOffset()
         val reminderTime = sampleTask.getNextReminderTime(now)
+        assertEquals(expectedTime, reminderTime)
+    }
+
+    @Test
+    fun testGetNextReminderTimeWithPastAsReminder() {
+        val now = Instant.now()
+        val pastReminder = now.toLocalDateTime().minusDays(2).toInstantWithOffset()
+        val sampleTask = Task(
+            recurringTimeRange = RecurringTimeRange.WEEKLY,
+            recurringFrequency = 2,
+            nowAsReminderTime = false,
+            reminder = pastReminder
+        )
+        val expectedTime = now.toLocalDateTime().plusWeeks(2).minusDays(2).toInstantWithOffset()
+        val reminderTime = sampleTask.getNextReminderTime()
+        assertEquals(expectedTime, reminderTime)
+    }
+
+    @Test
+    fun testGetNextReminderTimeWithLongAgoAsReminder() {
+        val now = Instant.now()
+        val pastReminder = now.toLocalDateTime().minusDays(2).minusWeeks(9).toInstantWithOffset()
+        val sampleTask = Task(
+            recurringTimeRange = RecurringTimeRange.WEEKLY,
+            recurringFrequency = 2,
+            nowAsReminderTime = false,
+            reminder = pastReminder
+        )
+        val expectedTime = now.toLocalDateTime().plusWeeks(1).minusDays(2).toInstantWithOffset()
+        val reminderTime = sampleTask.getNextReminderTime()
         assertEquals(expectedTime, reminderTime)
     }
 

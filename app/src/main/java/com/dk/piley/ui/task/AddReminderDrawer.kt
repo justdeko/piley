@@ -6,6 +6,7 @@ import android.os.Build
 import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -142,7 +144,9 @@ fun AddReminderDrawer(
  * @param permissionState permission state for notifications
  */
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class
+    ExperimentalMaterialApi::class,
+    ExperimentalPermissionsApi::class,
+    ExperimentalAnimationApi::class
 )
 @Composable
 fun AddReminderContent(
@@ -255,6 +259,11 @@ fun AddReminderContent(
                 useNowAsReminderTime = nowAsReminderTime,
                 onUseNowAsReminderTimeChange = { nowAsReminderTime = it }
             )
+            if (!this.transition.isRunning && drawerState.isOpen && isRecurring) {
+                LaunchedEffect(key1 = Unit) {
+                    coroutineScope.launch { drawerState.expand() }
+                }
+            }
         }
         Row(
             modifier = Modifier

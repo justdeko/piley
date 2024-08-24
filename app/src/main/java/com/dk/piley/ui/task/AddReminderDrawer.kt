@@ -1,3 +1,9 @@
+@file:OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalPermissionsApi::class,
+    ExperimentalAnimationApi::class
+)
+
 package com.dk.piley.ui.task
 
 import android.Manifest
@@ -10,31 +16,29 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomDrawer
-import androidx.compose.material.BottomDrawerState
-import androidx.compose.material.BottomDrawerValue
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
@@ -44,7 +48,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.LocalDim
@@ -62,17 +65,15 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
 /**
- * Bottom sheet drawer for adding or editing reminders
- * TODO: replace with [ModalBottomSheet] (material 3)
+ * Bottom sheet with options to add a reminder.
  *
  * @param modifier generic modifier
- * @param drawerState bottom drawer state
+ * @param sheetState bottom sheet state
  * @param initialDate initial reminder date time
  * @param isRecurring whether reminder is recurring
  * @param recurringTimeRange time range for recurring reminders
@@ -81,13 +82,11 @@ import java.time.LocalTime
  * @param onAddReminder on add or update reminder
  * @param onDeleteReminder on delete reminder
  * @param permissionState permission state for notifications
- * @param content reminder drawer content
  */
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
 @Composable
 fun AddReminderDrawer(
     modifier: Modifier = Modifier,
-    drawerState: BottomDrawerState,
+    sheetState: SheetState,
     initialDate: LocalDateTime? = null,
     isRecurring: Boolean = false,
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
@@ -100,32 +99,28 @@ fun AddReminderDrawer(
     } else {
         null
     },
-    content: @Composable () -> Unit
+    onDismiss: () -> Unit = {},
 ) {
-    BottomDrawer(
-        drawerContent = {
-            AddReminderContent(
-                modifier = modifier,
-                drawerState = drawerState,
-                onAddReminder = onAddReminder,
-                onDeleteReminder = onDeleteReminder,
-                initialDateTime = initialDate,
-                isRecurring = isRecurring,
-                recurringTimeRange = recurringTimeRange,
-                recurringFrequency = recurringFrequency,
-                useNowAsReminderTime = useNowAsReminderDate,
-                permissionState = permissionState
-            )
-        },
-        gesturesEnabled = !drawerState.isClosed,
-        drawerState = drawerState,
-        drawerBackgroundColor = MaterialTheme.colorScheme.surface,
-        drawerShape = RoundedCornerShape(
+    ModalBottomSheet(
+        sheetState = sheetState,
+        containerColor = MaterialTheme.colorScheme.surface,
+        shape = RoundedCornerShape(
             topStart = LocalDim.current.veryLarge,
             topEnd = LocalDim.current.veryLarge
         ),
+        onDismissRequest = onDismiss
     ) {
-        content()
+        AddReminderContent(
+            modifier = modifier,
+            onAddReminder = onAddReminder,
+            onDeleteReminder = onDeleteReminder,
+            initialDateTime = initialDate,
+            isRecurring = isRecurring,
+            recurringTimeRange = recurringTimeRange,
+            recurringFrequency = recurringFrequency,
+            useNowAsReminderTime = useNowAsReminderDate,
+            permissionState = permissionState
+        )
     }
 }
 
@@ -133,7 +128,6 @@ fun AddReminderDrawer(
  * Add/edit reminder content
  *
  * @param modifier generic modifier
- * @param drawerState bottom drawer state
  * @param onAddReminder on add or update reminder
  * @param onDeleteReminder on delete reminder
  * @param initialDateTime initial reminder date time
@@ -143,15 +137,9 @@ fun AddReminderDrawer(
  * @param useNowAsReminderTime whether to use current time as reminder date
  * @param permissionState permission state for notifications
  */
-@OptIn(
-    ExperimentalMaterialApi::class,
-    ExperimentalPermissionsApi::class,
-    ExperimentalAnimationApi::class
-)
 @Composable
 fun AddReminderContent(
     modifier: Modifier = Modifier,
-    drawerState: BottomDrawerState,
     onAddReminder: (ReminderState) -> Unit,
     onDeleteReminder: () -> Unit = {},
     initialDateTime: LocalDateTime? = null,
@@ -167,7 +155,6 @@ fun AddReminderContent(
 ) {
     val context = LocalContext.current
     val dim = LocalDim.current
-    val coroutineScope = rememberCoroutineScope()
     var localDate: LocalDate? by remember { mutableStateOf(null) }
     var localTime: LocalTime? by remember { mutableStateOf(null) }
     var recurring by remember(isRecurring) { (mutableStateOf(isRecurring)) }
@@ -259,11 +246,6 @@ fun AddReminderContent(
                 useNowAsReminderTime = nowAsReminderTime,
                 onUseNowAsReminderTimeChange = { nowAsReminderTime = it }
             )
-            if (!this.transition.isRunning && drawerState.isOpen && isRecurring) {
-                LaunchedEffect(key1 = Unit) {
-                    coroutineScope.launch { drawerState.expand() }
-                }
-            }
         }
         Row(
             modifier = Modifier
@@ -309,9 +291,6 @@ fun AddReminderContent(
                                 nowAsReminderTime = nowAsReminderTime
                             )
                         )
-                    }
-                    coroutineScope.launch {
-                        drawerState.close()
                     }
                 }
             ) {
@@ -384,72 +363,55 @@ data class ReminderState(
     val recurringFrequency: Int,
 )
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
+@OptIn(
+    ExperimentalPermissionsApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AddReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
-            val drawerState = BottomDrawerState(
-                BottomDrawerValue.Expanded, density = Density(
-                    LocalContext.current
-                )
-            )
+            val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
             AddReminderDrawer(
-                content = {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text("some text here")
-                    }
-                }, drawerState = drawerState, permissionState = null
+                sheetState = sheetState,
+                permissionState = null
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
-@Preview(showBackground = true)
+@OptIn(
+    ExperimentalPermissionsApi::class,
+    ExperimentalMaterial3Api::class
+)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun EditReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
-            val drawerState = BottomDrawerState(
-                BottomDrawerValue.Expanded, density = Density(
-                    LocalContext.current
-                )
-            )
+            val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
             AddReminderDrawer(
-                initialDate = initialDateTime, content = {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text("some text here")
-                    }
-                }, drawerState = drawerState, permissionState = null
+                initialDate = initialDateTime,
+                sheetState = sheetState,
+                permissionState = null
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class)
-@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun EditReminderDrawerRecurringPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
             val initialDateTime = LocalDateTime.now(utcZoneId)
-            val drawerState = BottomDrawerState(
-                BottomDrawerValue.Expanded, density = Density(
-                    LocalContext.current
-                )
-            )
+            val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
             AddReminderDrawer(
                 initialDate = initialDateTime,
-                content = {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Text("some text here")
-                    }
-                },
                 isRecurring = true,
-                drawerState = drawerState,
+                sheetState = sheetState,
                 permissionState = null
             )
         }

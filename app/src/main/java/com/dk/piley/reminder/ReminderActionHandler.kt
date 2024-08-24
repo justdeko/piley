@@ -1,11 +1,18 @@
 package com.dk.piley.reminder
 
+import android.content.Context
+import android.content.Intent
+import androidx.core.net.toUri
+import com.dk.piley.MainActivity
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.ui.nav.DEEPLINK_ROOT
+import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.util.getPileNameForTaskId
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -25,6 +32,7 @@ import javax.inject.Inject
  * @property userRepository instance of user repository to perform db operations regarding user
  */
 class ReminderActionHandler @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
     private val taskRepository: TaskRepository,
@@ -102,6 +110,26 @@ class ReminderActionHandler @Inject constructor(
                 reminderManager.startReminder(newReminderTime, task.id)
                 notificationManager.dismiss(taskId)
             }
+        }
+    }
+
+    override suspend fun customDelay(taskId: Long): Flow<Task?> {
+        // no task found
+        if (taskId.toInt() == -1) return emptyFlow()
+        return taskRepository.getTaskById(taskId).take(1).onEach { task ->
+            // task already deleted
+            if (task == null) {
+                notificationManager.dismiss(taskId)
+                return@onEach
+            }
+            // intent
+            val taskDetailIntent = Intent(
+                Intent.ACTION_VIEW,
+                "$DEEPLINK_ROOT/${taskScreen.root}/${task.id}".toUri(),
+                context,
+                MainActivity::class.java
+            )
+            context.startActivity(taskDetailIntent)
         }
     }
 }

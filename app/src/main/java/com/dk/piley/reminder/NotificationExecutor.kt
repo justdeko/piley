@@ -40,6 +40,11 @@ class NotificationExecutor @Inject constructor(
                     actionHandler.delay(action.taskId).collect()
                 }
             }
+            is ReminderAction.CustomDelay -> {
+                GlobalScope.launch {
+                    actionHandler.customDelay(action.taskId).collect()
+                }
+            }
         }
     }
 }

@@ -33,6 +33,9 @@ class ReminderAlarmReceiver : BroadcastReceiver() {
             ACTION_DELAY -> {
                 taskNotificationExecutor.execute(ReminderAction.Delay(taskId))
             }
+            ACTION_CUSTOM_DELAY -> {
+                taskNotificationExecutor.execute(ReminderAction.CustomDelay(taskId))
+            }
             Intent.ACTION_BOOT_COMPLETED -> {
                 taskNotificationExecutor.execute(ReminderAction.BootCompleted)
             }
@@ -45,6 +48,7 @@ class ReminderAlarmReceiver : BroadcastReceiver() {
         const val EXTRA_TASK_ID = "$PACKAGE_NAME.extra.TASK_ID"
         const val ACTION_SHOW = "$PACKAGE_NAME.action.ACTION_REMINDER_SHOW"
         const val ACTION_DELAY = "$PACKAGE_NAME.action.ACTION_REMINDER_DELAY"
+        const val ACTION_CUSTOM_DELAY = "$PACKAGE_NAME.action.ACTION_REMINDER_CUSTOM_DELAY"
         const val ACTION_COMPLETE = "$PACKAGE_NAME.action.ACTION_REMINDER_COMPLETE"
     }
 }

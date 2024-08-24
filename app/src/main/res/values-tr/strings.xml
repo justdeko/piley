@@ -16,6 +16,7 @@
     <string name="reminder_notification_channel_description" translatable="false">Reminder</string>
     <string name="reminder_complete_action">Tamamlandı</string>
     <string name="reminder_delay_action">Gecikme</string>
+    <string name="reminder_custom_delay_action">Gecikme…</string>
 
     <!-- common strings -->
     <string name="ok">Tamam</string>

@@ -31,7 +31,7 @@ fun FullWidthInfo(
             .fillMaxWidth()
             .padding(horizontal = LocalDim.current.large),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Bottom
     ) {
         Text(
             modifier = Modifier.weight(1f),

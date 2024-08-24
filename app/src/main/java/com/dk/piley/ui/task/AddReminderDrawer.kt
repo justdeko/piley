@@ -69,7 +69,7 @@ import java.time.LocalTime
 
 /**
  * Bottom sheet drawer for adding or editing reminders
- * TODO: replace with [BottomSheetScaffold] (material 3)
+ * TODO: replace with [ModalBottomSheet] (material 3)
  *
  * @param modifier generic modifier
  * @param drawerState bottom drawer state

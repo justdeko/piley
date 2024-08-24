@@ -24,7 +24,7 @@ import java.time.ZoneId
  * @param recurringFrequency recurring reminder frequency to calculate next reminder with
  * @return next reminder date time in [LocalDateTime] form
  */
-fun getNextReminderTime(
+fun reminderPlusTime(
     lastReminder: LocalDateTime,
     recurringTimeRange: RecurringTimeRange,
     recurringFrequency: Int
@@ -36,18 +36,30 @@ fun getNextReminderTime(
 }
 
 /**
- * Get next reminder time for a given task
+ * Get next reminder time for a given task based on reminder settings
  *
- * @param startingTime starting time to calculate the next reminder time with. Current moment if not specified
  * @return next reminder time in [Instant] form
  */
-fun Task.getNextReminderTime(startingTime: Instant = Instant.now()): Instant =
-    getNextReminderTime(
+fun Task.getNextReminderTime(
+    now: Instant = LocalDateTime.now().toInstantWithOffset()
+): Instant {
+    val startingTime = if (nowAsReminderTime) now else reminder ?: now
+    var reminderTime = reminderPlusTime(
         LocalDateTime.ofInstant(
             startingTime,
             ZoneId.systemDefault()
         ), recurringTimeRange, recurringFrequency
     ).toInstantWithOffset()
+    // recalculate if next reminder time is in the past
+    while (reminderTime.isBefore(now)) {
+        reminderTime = reminderPlusTime(
+            reminderTime.toLocalDateTime(),
+            recurringTimeRange,
+            recurringFrequency
+        ).toInstantWithOffset()
+    }
+    return reminderTime
+}
 
 /**
  * Get frequency string given a recurring reminder time range and frequency

@@ -6,6 +6,7 @@ import android.os.Build
 import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -75,6 +77,7 @@ import java.time.LocalTime
  * @param isRecurring whether reminder is recurring
  * @param recurringTimeRange time range for recurring reminders
  * @param recurringFrequency frequency for recurring reminders
+ * @param useNowAsReminderDate whether to use current time as reminder date
  * @param onAddReminder on add or update reminder
  * @param onDeleteReminder on delete reminder
  * @param permissionState permission state for notifications
@@ -89,6 +92,7 @@ fun AddReminderDrawer(
     isRecurring: Boolean = false,
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
+    useNowAsReminderDate: Boolean = false,
     onAddReminder: (ReminderState) -> Unit = {},
     onDeleteReminder: () -> Unit = {},
     permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -109,6 +113,7 @@ fun AddReminderDrawer(
                 isRecurring = isRecurring,
                 recurringTimeRange = recurringTimeRange,
                 recurringFrequency = recurringFrequency,
+                useNowAsReminderTime = useNowAsReminderDate,
                 permissionState = permissionState
             )
         },
@@ -135,10 +140,13 @@ fun AddReminderDrawer(
  * @param isRecurring whether reminder is recurring
  * @param recurringTimeRange time range for recurring reminders
  * @param recurringFrequency frequency for recurring reminders
+ * @param useNowAsReminderTime whether to use current time as reminder date
  * @param permissionState permission state for notifications
  */
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalPermissionsApi::class
+    ExperimentalMaterialApi::class,
+    ExperimentalPermissionsApi::class,
+    ExperimentalAnimationApi::class
 )
 @Composable
 fun AddReminderContent(
@@ -150,6 +158,7 @@ fun AddReminderContent(
     isRecurring: Boolean = false,
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
+    useNowAsReminderTime: Boolean = false,
     permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else {
@@ -166,6 +175,7 @@ fun AddReminderContent(
     var frequency by remember(recurringFrequency) { (mutableIntStateOf(recurringFrequency)) }
     var datePickerVisible by remember { mutableStateOf(false) }
     var timePickerVisible by remember { mutableStateOf(false) }
+    var nowAsReminderTime by remember { mutableStateOf(useNowAsReminderTime) }
 
     if (datePickerVisible) {
         ReminderDatePicker(
@@ -245,8 +255,15 @@ fun AddReminderContent(
                 selectedTimeRange = timeRange,
                 selectedFrequency = frequency,
                 onSelectTimeRange = { timeRange = it },
-                onSelectFrequency = { frequency = it }
+                onSelectFrequency = { frequency = it },
+                useNowAsReminderTime = nowAsReminderTime,
+                onUseNowAsReminderTimeChange = { nowAsReminderTime = it }
             )
+            if (!this.transition.isRunning && drawerState.isOpen && isRecurring) {
+                LaunchedEffect(key1 = Unit) {
+                    coroutineScope.launch { drawerState.expand() }
+                }
+            }
         }
         Row(
             modifier = Modifier
@@ -273,7 +290,8 @@ fun AddReminderContent(
                                     reminder = it,
                                     recurring = recurring,
                                     recurringTimeRange = timeRange,
-                                    recurringFrequency = frequency
+                                    recurringFrequency = frequency,
+                                    nowAsReminderTime = nowAsReminderTime
                                 )
                             )
                         }
@@ -287,7 +305,8 @@ fun AddReminderContent(
                                 reminder = time.atDate(date),
                                 recurring = recurring,
                                 recurringTimeRange = timeRange,
-                                recurringFrequency = frequency
+                                recurringFrequency = frequency,
+                                nowAsReminderTime = nowAsReminderTime
                             )
                         )
                     }
@@ -361,6 +380,7 @@ data class ReminderState(
     val reminder: LocalDateTime,
     val recurring: Boolean,
     val recurringTimeRange: RecurringTimeRange,
+    val nowAsReminderTime: Boolean,
     val recurringFrequency: Int,
 )
 

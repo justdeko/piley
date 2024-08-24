@@ -41,7 +41,7 @@ fun PileDetailSettings(
     onSetPileMode: (PileMode) -> Unit = {},
     onSetPileLimit: (Int) -> Unit = {},
 ) {
-    var sliderValue by mutableIntStateOf(viewState.pile.pileLimit)
+    var sliderValue by remember { mutableIntStateOf(viewState.pile.pileLimit) }
     val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
     SettingsSection(
         modifier = modifier
@@ -86,7 +86,7 @@ fun PileDetailSettingsPreview() {
                     pileLimit = 15
                 )
             ),
-            expandedState = mutableStateOf(true)
+            expandedState = remember { mutableStateOf(true) }
         )
     }
 }

@@ -31,7 +31,7 @@ fun ReminderTimeSuggestions(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(LocalDim.current.medium)
     ) {
-        val timeSuggestions = TimeSuggestion.values()
+        val timeSuggestions = TimeSuggestion.entries.toTypedArray()
         timeSuggestions
             .map { timeSuggestion -> timeSuggestion.getLabelAndDate(context, LocalDateTime.now()) }
             .sortedBy { (_, date) -> date }

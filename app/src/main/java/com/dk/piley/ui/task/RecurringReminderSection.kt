@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +23,8 @@ import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.toRecurringTimeRange
 import com.dk.piley.model.task.toText
 import com.dk.piley.ui.common.DropDown
+import com.dk.piley.ui.common.LocalDim
+import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
@@ -33,7 +36,9 @@ fun RecurringReminderSection(
     selectedTimeRange: RecurringTimeRange,
     selectedFrequency: Int,
     onSelectTimeRange: (RecurringTimeRange) -> Unit = {},
-    onSelectFrequency: (Int) -> Unit = {}
+    onSelectFrequency: (Int) -> Unit = {},
+    useNowAsReminderTime: Boolean = false,
+    onUseNowAsReminderTimeChange: (Boolean) -> Unit = {}
 ) {
     val context = LocalContext.current
     val timeRanges = stringArrayResource(R.array.time_range).toList()
@@ -79,6 +84,15 @@ fun RecurringReminderSection(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             color = MaterialTheme.colorScheme.onBackground,
             text = getFrequencyString(selectedTimeRange, selectedFrequency)
+        )
+        MediumSpacer()
+        TextWithCheckbox(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = LocalDim.current.medium),
+            description = stringResource(R.string.reminder_use_now_description),
+            checked = useNowAsReminderTime,
+            onChecked = onUseNowAsReminderTimeChange
         )
     }
 }

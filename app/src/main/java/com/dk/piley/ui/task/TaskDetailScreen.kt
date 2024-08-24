@@ -9,12 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.BottomDrawerValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberBottomDrawerState
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -98,8 +97,7 @@ fun TaskDetailScreen(
  * @param permissionState notification permission state
  */
 @OptIn(
-    ExperimentalMaterialApi::class,
-    ExperimentalPermissionsApi::class
+    ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class
 )
 @Composable
 fun TaskDetailScreen(
@@ -121,14 +119,15 @@ fun TaskDetailScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
-    val drawerState = rememberBottomDrawerState(initialValue = BottomDrawerValue.Closed)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showBottomSheet by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     var completeRecurringDialogOpen by remember { mutableStateOf(false) }
     var confirmDeleteDialogOpen by remember { mutableStateOf(false) }
 
     // notification permission
     var rationaleOpen by remember { mutableStateOf(false) }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && drawerState.isOpen) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && sheetState.hasExpandedState) {
         RequestNotificationPermissionDialog(rationaleOpen) {
             rationaleOpen = false
         }
@@ -163,89 +162,107 @@ fun TaskDetailScreen(
         )
     }
 
-    AddReminderDrawer(
-        drawerState = drawerState,
-        onAddReminder = onAddReminder,
-        onDeleteReminder = onCancelReminder,
-        initialDate = viewState.task.reminder?.toLocalDateTime(),
-        isRecurring = viewState.task.isRecurring,
-        recurringFrequency = viewState.task.recurringFrequency,
-        recurringTimeRange = viewState.task.recurringTimeRange,
-        permissionState = permissionState
+    if (showBottomSheet) {
+        AddReminderDrawer(
+            sheetState = sheetState,
+            onAddReminder = {
+                onAddReminder(it)
+                scope.launch { sheetState.hide() }
+                    .invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+            },
+            onDeleteReminder = {
+                scope.launch { sheetState.hide() }
+                    .invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                            onCancelReminder()
+                        }
+                    }
+            },
+            initialDate = viewState.task.reminder?.toLocalDateTime(),
+            isRecurring = viewState.task.isRecurring,
+            recurringFrequency = viewState.task.recurringFrequency,
+            recurringTimeRange = viewState.task.recurringTimeRange,
+            permissionState = permissionState,
+            onDismiss = { showBottomSheet = false }
+        )
+    }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .defaultPadding()
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            },
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .defaultPadding()
-                .pointerInput(Unit) {
-                    detectTapGestures(onTap = {
-                        focusManager.clearFocus()
-                    })
-                },
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(scrollState)
-            ) {
-                TitleTopAppBar(
-                    textValue = viewState.titleTextValue,
-                    canDeleteOrEdit = true,
-                    onEdit = onEditTitle,
-                    contentDescription = "close the task detail",
-                    onButtonClick = onClose
-                )
-                EditDescriptionField(
-                    value = viewState.descriptionTextValue,
-                    onChange = {
-                        onEditDesc(it)
-                    }
-                )
-                ReminderInfo(
-                    reminderDateTimeText = viewState.reminderDateTimeText,
-                    onAddReminder = { scope.launch { drawerState.expand() } },
-                    isRecurring = viewState.task.isRecurring,
-                    recurringTimeRange = viewState.task.recurringTimeRange,
-                    recurringFrequency = viewState.task.recurringFrequency
-                )
-                TaskInfo(
-                    modifier = Modifier.fillMaxWidth(),
-                    task = viewState.task
-                )
-                SelectedPile(
-                    pileNames = viewState.piles.map { it.second },
-                    selectedPileIndex = viewState.selectedPileIndex,
-                    onSelect = onSelectPile
-                )
-            }
-            TwoButtonRow(
-                modifier = Modifier.weight(1f, false),
-                onLeftClick = { confirmDeleteDialogOpen = true },
-                onRightClick = {
-                    // if task is recurring and reminder is in the future, show dialog first
-                    if (
-                        viewState.task.isRecurring
-                        && viewState.task.reminder?.isAfter(Instant.now()) == true
-                    ) {
-                        completeRecurringDialogOpen = true
-                    } else {
-                        onCompleteTask()
-                    }
-                },
-                leftText = stringResource(R.string.delete_task_button),
-                rightText = stringResource(R.string.complete_task_button),
-                arrangement = Arrangement.SpaceEvenly,
-                leftColors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-                rightColors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+            TitleTopAppBar(
+                textValue = viewState.titleTextValue,
+                canDeleteOrEdit = true,
+                onEdit = onEditTitle,
+                contentDescription = "close the task detail",
+                onButtonClick = onClose
+            )
+            EditDescriptionField(
+                value = viewState.descriptionTextValue,
+                onChange = {
+                    onEditDesc(it)
+                }
+            )
+            ReminderInfo(
+                reminderDateTimeText = viewState.reminderDateTimeText,
+                onAddReminder = { showBottomSheet = true },
+                isRecurring = viewState.task.isRecurring,
+                recurringTimeRange = viewState.task.recurringTimeRange,
+                recurringFrequency = viewState.task.recurringFrequency
+            )
+            TaskInfo(
+                modifier = Modifier.fillMaxWidth(),
+                task = viewState.task
+            )
+            SelectedPile(
+                pileNames = viewState.piles.map { it.second },
+                selectedPileIndex = viewState.selectedPileIndex,
+                onSelect = onSelectPile
             )
         }
+        TwoButtonRow(
+            modifier = Modifier.weight(1f, false),
+            onLeftClick = { confirmDeleteDialogOpen = true },
+            onRightClick = {
+                // if task is recurring and reminder is in the future, show dialog first
+                if (
+                    viewState.task.isRecurring
+                    && viewState.task.reminder?.isAfter(Instant.now()) == true
+                ) {
+                    completeRecurringDialogOpen = true
+                } else {
+                    onCompleteTask()
+                }
+            },
+            leftText = stringResource(R.string.delete_task_button),
+            rightText = stringResource(R.string.complete_task_button),
+            arrangement = Arrangement.SpaceEvenly,
+            leftColors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.errorContainer,
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
+            ),
+            rightColors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        )
     }
 }
 

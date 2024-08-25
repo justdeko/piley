@@ -17,6 +17,13 @@
     <string name="reminder_complete_action">Tamamlandı</string>
     <string name="reminder_delay_action">Gecikme</string>
     <string name="reminder_custom_delay_action">Gecikme…</string>
+    <string-array name="delay_by">
+        <item>Dakika</item>
+        <item>Saatler</item>
+        <item>Günler</item>
+        <item>Haftalar</item>
+        <item>Aylar</item>
+    </string-array>
 
     <!-- common strings -->
     <string name="cancel_delay_button">Geciktirmeyin</string>

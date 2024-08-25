@@ -208,7 +208,8 @@ fun TaskDetailScreen(
             recurringFrequency = viewState.task.recurringFrequency,
             recurringTimeRange = viewState.task.recurringTimeRange,
             permissionState = permissionState,
-            onDismiss = { showBottomSheet = false }
+            onDismiss = { showBottomSheet = false },
+            useNowAsReminderDate = viewState.task.nowAsReminderTime
         )
     }
 

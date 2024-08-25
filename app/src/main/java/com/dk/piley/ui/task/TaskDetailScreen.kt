@@ -59,7 +59,8 @@ import java.time.Instant
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController = rememberNavController(),
-    viewModel: TaskDetailViewModel = hiltViewModel()
+    viewModel: TaskDetailViewModel = hiltViewModel(),
+    onFinish: () -> Unit = {},
 ) {
     val viewState by viewModel.state.collectAsState()
 
@@ -67,6 +68,14 @@ fun TaskDetailScreen(
     if ((viewState.task.status == TaskStatus.DONE && !viewState.task.isRecurring) || viewState.task.status == TaskStatus.DELETED) {
         LaunchedEffect(true) {
             navController.popBackStack()
+        }
+    }
+
+    // if delay screen was shown and delay action finished
+    // trigger onFinish callback to close activity
+    if (viewState.delayFinished) {
+        LaunchedEffect(Unit) {
+            onFinish()
         }
     }
 

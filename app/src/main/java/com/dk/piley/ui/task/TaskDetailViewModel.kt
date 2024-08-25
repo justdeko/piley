@@ -214,10 +214,11 @@ class TaskDetailViewModel @Inject constructor(
     }
 
     fun delayReminder(durationInMinutes: Long) {
-        if (durationInMinutes > 0) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            if (durationInMinutes > 0) {
                 taskRepository.delayTask(state.value.task, durationInMinutes)
             }
+            state.update { it.copy(delayFinished = true) }
         }
     }
 
@@ -233,4 +234,5 @@ data class TaskDetailViewState(
     val showDelaySection: Boolean = false,
     val defaultDelayRange: DelayRange = DelayRange.Minute,
     val defaultDelayIndex: Int = 0,
+    val delayFinished: Boolean = false
 )

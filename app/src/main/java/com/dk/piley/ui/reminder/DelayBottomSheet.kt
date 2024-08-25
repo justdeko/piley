@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.calculateDelayDuration
 import com.dk.piley.util.defaultPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,7 +31,14 @@ fun DelayBottomSheet(
     sheetState: SheetState,
     onDelay: (Long) -> Unit = {}
 ) {
-    var delayTime by remember { mutableLongStateOf(0) }
+    var delayTime by remember {
+        mutableLongStateOf(
+            calculateDelayDuration(
+                delayRange = defaultDelayRange,
+                delayDurationIndex = defaultDelayIndex
+            )
+        )
+    }
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = {

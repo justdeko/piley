@@ -25,6 +25,8 @@ import com.dk.piley.util.defaultPadding
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DelayBottomSheet(
+    defaultDelayRange: DelayRange = DelayRange.Minute,
+    defaultDelayIndex: Int = 0,
     sheetState: SheetState,
     onDelay: (Long) -> Unit = {}
 ) {
@@ -43,8 +45,10 @@ fun DelayBottomSheet(
                 text = stringResource(R.string.delay_title),
                 style = MaterialTheme.typography.headlineMedium
             )
-            DelaySelection( // TODO set default values
-                onSelect = { delayTime = it }
+            DelaySelection(
+                defaultRangeIndex = defaultDelayRange.ordinal,
+                defaultDurationIndex = defaultDelayIndex,
+                onSetDelay = { delayTime = it }
             )
             TwoButtonRow(
                 leftText = stringResource(R.string.cancel_delay_button),

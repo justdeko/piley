@@ -27,7 +27,8 @@ fun DelaySelection(
     modifier: Modifier = Modifier,
     defaultRangeIndex: Int = 0,
     defaultDurationIndex: Int = 0,
-    onSelect: (Long) -> Unit = {}
+    onSetDelay: (Long) -> Unit = {},
+    onSelectValues: (DelayRange, Int) -> Unit = { _, _ -> },
 ) {
     val dim = LocalDim.current
     var rangeSelectionIndex by remember { mutableIntStateOf(defaultRangeIndex) }
@@ -41,12 +42,13 @@ fun DelaySelection(
                     onClick = {
                         rangeSelectionIndex = index
                         durationSelectionIndex = 0
-                        onSelect(
+                        onSetDelay(
                             calculateDelayDuration(
                                 delayRange = delayRange,
-                                delayDuration = delaySelectionMap[delayRange]?.get(0) ?: 0
+                                delayDurationIndex = 0
                             )
                         )
+                        onSelectValues(delayRange, 0)
                     },
                     label = {
                         Text(delayRanges[delayRange.ordinal])
@@ -66,12 +68,13 @@ fun DelaySelection(
                         onClick = {
                             val delayRange = DelayRange.entries[rangeSelectionIndex]
                             durationSelectionIndex = index
-                            onSelect(
+                            onSetDelay(
                                 calculateDelayDuration(
                                     delayRange = delayRange,
-                                    delayDuration = delaySelectionMap[delayRange]?.get(index) ?: 0
+                                    delayDurationIndex = index
                                 )
                             )
+                            onSelectValues(delayRange, index)
                         },
                         label = {
                             Text(delayDuration.toString())

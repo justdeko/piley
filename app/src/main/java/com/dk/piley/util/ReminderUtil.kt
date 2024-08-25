@@ -13,6 +13,7 @@ import com.dk.piley.model.task.RecurringTimeRange.YEARLY
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.toText
 import com.dk.piley.ui.reminder.DelayRange
+import com.dk.piley.ui.reminder.getDurationByIndex
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -105,10 +106,11 @@ fun getPileNameForTaskId(taskId: Long, pilesWithTasks: List<PileWithTasks>): Str
  * and a duration
  *
  * @param delayRange the delay range of type [DelayRange]
- * @param delayDuration the delay duration integer, e.g. 1,2,3 etc.
+ * @param delayDurationIndex the delay duration index representing a duration in the map
  * @return delay time in minutes
  */
-fun calculateDelayDuration(delayRange: DelayRange, delayDuration: Int): Long {
+fun calculateDelayDuration(delayRange: DelayRange, delayDurationIndex: Int): Long {
+    val duration = delayRange.getDurationByIndex(delayDurationIndex)
     val factor = when (delayRange) {
         DelayRange.Minute -> 1
         DelayRange.Hour -> 60
@@ -116,5 +118,5 @@ fun calculateDelayDuration(delayRange: DelayRange, delayDuration: Int): Long {
         DelayRange.Week -> 10080
         DelayRange.Month -> 43830
     }.toLong()
-    return factor * delayDuration
+    return factor * duration
 }

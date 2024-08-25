@@ -205,6 +205,8 @@ fun TaskDetailScreen(
 
     if (showDelaySheet) {
         DelayBottomSheet(
+            defaultDelayRange = viewState.defaultDelayRange,
+            defaultDelayIndex = viewState.defaultDelayIndex,
             sheetState = delaySheetState,
             onDelay = {
                 onDelay(it)

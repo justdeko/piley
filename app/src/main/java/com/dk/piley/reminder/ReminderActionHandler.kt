@@ -5,6 +5,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.util.calculateDelayDuration
 import com.dk.piley.util.getPileNameForTaskId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -91,7 +92,11 @@ class ReminderActionHandler @Inject constructor(
                 return@onEach
             }
             userRepository.getSignedInUser().first()?.let { user ->
-                taskRepository.delayTask(task, user.defaultReminderDelay.toLong())
+                val delayInMinutes = calculateDelayDuration(
+                    delayRange = user.defaultReminderDelayRange,
+                    delayDurationIndex = user.defaultReminderDelayIndex
+                )
+                taskRepository.delayTask(task, delayInMinutes)
             }
         }
     }

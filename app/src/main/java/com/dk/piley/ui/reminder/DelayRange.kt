@@ -15,3 +15,5 @@ val delaySelectionMap = mutableMapOf(
     DelayRange.Week to listOf(1, 2, 3, 4),
     DelayRange.Month to listOf(1, 2, 3)
 )
+
+fun DelayRange.getDurationByIndex(index: Int) = delaySelectionMap[this]?.getOrNull(index) ?: 0

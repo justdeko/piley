@@ -16,7 +16,10 @@
     <string name="reminder_notification_channel_description" translatable="false">Reminder</string>
     <string name="reminder_complete_action">Complete</string>
     <string name="reminder_delay_action">Delay</string>
-
+    <string name="reminder_custom_delay_action">Delay by…</string>
+    <string name="cancel_delay_button">Don\'t Delay</string>
+    <string name="confirm_delay_button">Delay</string>
+    <string name="delay_title">Delay this Task</string>
     <!-- common strings -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -150,8 +153,8 @@
 
     <!-- piles settings section-->
     <string name="settings_section_notifications_title">Notifications</string>
-    <string name="reminder_delay_duration_setting_title">Reminder Delay Duration</string>
-    <string name="reminder_delay_duration_setting_description">Set the duration for the \"Delay\" button in your task reminders.</string>
+    <string name="reminder_delay_duration_setting_title">Default Reminder Delay Duration</string>
+    <string name="reminder_delay_duration_setting_description">Set the default duration for the \"Delay\" button in your task reminders.</string>
 
     <!-- backup settings section-->
     <string name="settings_section_backup_title">Backup</string>
@@ -264,6 +267,14 @@
         <item quantity="one" />
         <item quantity="other">s</item>
     </plurals>
+    <!--reminder delay-->
+    <string-array name="delay_by">
+        <item>Minutes</item>
+        <item>Hours</item>
+        <item>Days</item>
+        <item>Weeks</item>
+        <item>Months</item>
+    </string-array>
 
     <!-- intro screen -->
     <string name="finish_intro_button">Start Piling</string>

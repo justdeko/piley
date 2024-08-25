@@ -3,6 +3,7 @@ package com.dk.piley.model.user
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.dk.piley.ui.reminder.DelayRange
 import java.time.Instant
 
 /**
@@ -18,11 +19,13 @@ import java.time.Instant
  * @property nightMode night mode setting of the user
  * @property dynamicColorOn whether dynamic color theming should be used within the app
  * @property pileMode default pile mode when creating new piles
- * @property defaultReminderDelay default delay for the task reminder delay action
  * @property defaultBackupFrequency default frequency when performing backups
  * @property autoHideKeyboard whether the keyboard should be hidden after creating a new task
  * @property isOffline whether the user is in offline mode
  * @property loadBackupAfterDays setting after how many days the backup should be loaded
+ * @property showRecurringTasks whether to show recurring tasks by default
+ * @property defaultReminderDelayRange the default delay range (minutes, hours, etc.)
+ * @property defaultReminderDelayIndex the default delay index for the given range
  */
 @Entity
 data class User(
@@ -37,11 +40,15 @@ data class User(
     val nightMode: NightMode = NightMode.SYSTEM,
     val dynamicColorOn: Boolean = true,
     val pileMode: PileMode = PileMode.FREE,
-    val defaultReminderDelay: Int = 15,
     val defaultBackupFrequency: Int = 2,
     val autoHideKeyboard: Boolean = true,
     val isOffline: Boolean = false,
     val loadBackupAfterDays: Int = 1,
     @ColumnInfo(defaultValue = "0")
     val showRecurringTasks: Boolean = false,
+    // reminder delay prefs
+    @ColumnInfo(defaultValue = "Minute")
+    val defaultReminderDelayRange: DelayRange = DelayRange.Minute,
+    @ColumnInfo(defaultValue = "0")
+    val defaultReminderDelayIndex: Int = 0
 )

@@ -11,6 +11,7 @@ import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.ui.reminder.DelayRange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -113,11 +114,17 @@ class SettingsViewModel @Inject constructor(
     /**
      * Update reminder delay setting
      *
-     * @param delay new delay value
+     * @param range the selected default delay range
+     * @param durationIndex index of the selected default duration
      */
-    fun updateReminderDelay(delay: Int) {
+    fun updateReminderDelay(range: DelayRange, durationIndex: Int) {
         viewModelScope.launch {
-            userRepository.insertUser(state.value.user.copy(defaultReminderDelay = delay))
+            userRepository.insertUser(
+                state.value.user.copy(
+                    defaultReminderDelayRange = range,
+                    defaultReminderDelayIndex = durationIndex
+                )
+            )
         }
     }
 

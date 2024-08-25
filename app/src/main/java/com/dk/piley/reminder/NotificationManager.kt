@@ -62,7 +62,6 @@ class NotificationManager @Inject constructor(
      * @param pileName the name of the parent pile
      */
     fun showNotification(task: Task, pileName: String?) {
-        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         val taskDetailIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
                 Intent(
@@ -72,7 +71,7 @@ class NotificationManager @Inject constructor(
                     MainActivity::class.java
                 )
             )
-            getPendingIntent(task.id.toInt(), flags)
+            getPendingIntent(task.id.toInt(), FLAGS)
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -93,8 +92,9 @@ class NotificationManager @Inject constructor(
             .setContentIntent(taskDetailIntent)
             .setAutoCancel(true)
             .setShowWhen(false)
-            .addAction(getNotificationAction(task.id))
-            .addAction(getNotificationAction(task.id, true))
+            .addAction(getNotificationAction(task.id, NotificationActionType.Delay))
+            .addAction(getNotificationAction(task.id, NotificationActionType.CustomDelay))
+            .addAction(getNotificationAction(task.id, NotificationActionType.Done))
             .build()
         notificationManager?.notify(task.id.toInt(), notification)
     }
@@ -103,23 +103,25 @@ class NotificationManager @Inject constructor(
      * Get notification action (done or delay) based on the task id and whether it is a done action
      *
      * @param taskId task id to perform the action
-     * @param isDoneAction whether the action is "complete task"
+     * @param notificationActionType the notification action type
      * @return notification action
      */
     private fun getNotificationAction(
         taskId: Long,
-        isDoneAction: Boolean = false
+        notificationActionType: NotificationActionType
     ): NotificationCompat.Action {
-        val actionTitle =
-            if (isDoneAction) {
-                context.getString(R.string.reminder_complete_action)
-            } else context.getString(
-                R.string.reminder_delay_action
-            )
+        val actionTitle = when (notificationActionType) {
+            NotificationActionType.Done -> context.getString(R.string.reminder_complete_action)
+            NotificationActionType.Delay -> context.getString(R.string.reminder_delay_action)
+            NotificationActionType.CustomDelay -> context.getString(R.string.reminder_custom_delay_action)
+        }
         // action intent
         val receiverIntent = Intent(context, ReminderAlarmReceiver::class.java).apply {
-            action =
-                if (isDoneAction) ReminderAlarmReceiver.ACTION_COMPLETE else ReminderAlarmReceiver.ACTION_DELAY
+            action = when (notificationActionType) {
+                NotificationActionType.Done -> ReminderAlarmReceiver.ACTION_COMPLETE
+                NotificationActionType.Delay -> ReminderAlarmReceiver.ACTION_DELAY
+                NotificationActionType.CustomDelay -> ReminderAlarmReceiver.ACTION_CUSTOM_DELAY
+            }
             putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)
         }
         val pendingIntent = PendingIntent.getBroadcast(
@@ -128,7 +130,23 @@ class NotificationManager @Inject constructor(
             receiverIntent,
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        return NotificationCompat.Action(0, actionTitle, pendingIntent)
+        val delayReminderIntent = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    "$DEEPLINK_ROOT/${taskScreen.root}/${taskId}?delay=true".toUri(),
+                    context,
+                    MainActivity::class.java
+                )
+            )
+            getPendingIntent(taskId.toInt(), FLAGS)
+        }
+        val intent = if (notificationActionType == NotificationActionType.CustomDelay) {
+            delayReminderIntent
+        } else {
+            pendingIntent
+        }
+        return NotificationCompat.Action(0, actionTitle, intent)
     }
 
     fun dismiss(taskId: Long) {
@@ -137,6 +155,7 @@ class NotificationManager @Inject constructor(
 
 
     companion object {
+        private const val FLAGS = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         private const val CHANNEL_ID = "channel_reminder"
     }
 }

@@ -8,6 +8,7 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
+import com.dk.piley.ui.reminder.DelayRange
 import java.time.Instant
 import java.time.LocalDateTime
 
@@ -62,7 +63,8 @@ val previewUser: User = User(
     nightMode = NightMode.SYSTEM,
     dynamicColorOn = true,
     pileMode = PileMode.FREE,
-    defaultReminderDelay = 15,
+    defaultReminderDelayRange = DelayRange.Minute,
+    defaultReminderDelayIndex = 0,
     defaultBackupFrequency = 2,
     autoHideKeyboard = true,
     isOffline = false

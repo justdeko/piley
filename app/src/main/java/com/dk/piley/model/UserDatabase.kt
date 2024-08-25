@@ -3,9 +3,11 @@ package com.dk.piley.model
 import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
+import androidx.room.DeleteColumn
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserDao
 
@@ -21,9 +23,14 @@ const val USER_DATABASE_NAME = "piley-db-users"
         AutoMigration(
             from = 1,
             to = 2
-        )
+        ),
+        AutoMigration(
+            from = 2,
+            to = 3,
+            spec = TwoToThreeMigrationSpec::class
+        ),
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -48,3 +55,9 @@ abstract class UserDatabase : RoomDatabase() {
         }
     }
 }
+
+@DeleteColumn(
+    tableName = "User",
+    columnName = "defaultReminderDelay",
+)
+private class TwoToThreeMigrationSpec : AutoMigrationSpec

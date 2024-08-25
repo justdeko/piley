@@ -41,6 +41,8 @@ import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.profile.AppInfo
+import com.dk.piley.ui.reminder.DelayRange
+import com.dk.piley.ui.reminder.DelaySelection
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.navigateClearBackstack
@@ -85,7 +87,7 @@ fun SettingsScreen(
         onPileModeChange = { viewModel.updateDefaultPileMode(it) },
         onResetPileModes = { viewModel.onResetPileModes() },
         onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) },
-        onReminderDelayChange = { viewModel.updateReminderDelay(it) },
+        onReminderDelayChange = { range, index -> viewModel.updateReminderDelay(range, index) },
         onBackupFrequencyChange = { viewModel.updateBackupFrequency(it) },
         onPullBackupPeriodChange = { viewModel.updatePullBackupPeriod(it) },
         onEditUser = { result -> viewModel.updateUser(result) },
@@ -128,7 +130,7 @@ private fun SettingsScreen(
     onPileModeChange: (PileMode) -> Unit = {},
     onResetPileModes: () -> Unit = {},
     onAutoHideKeyboardChange: (Boolean) -> Unit = {},
-    onReminderDelayChange: (Int) -> Unit = {},
+    onReminderDelayChange: (DelayRange, Int) -> Unit = { _, _ -> },
     onBackupFrequencyChange: (Int) -> Unit = {},
     onPullBackupPeriodChange: (Int) -> Unit = {},
     onEditUser: (EditUserResult) -> Unit = {},
@@ -277,14 +279,16 @@ private fun SettingsScreen(
                     title = stringResource(R.string.settings_section_notifications_title),
                     icon = Icons.Filled.Notifications
                 ) {
-                    SliderSettingsItem(
+                    SettingsItem(
                         title = stringResource(R.string.reminder_delay_duration_setting_title),
                         description = stringResource(R.string.reminder_delay_duration_setting_description),
-                        value = viewState.user.defaultReminderDelay,
-                        range = Pair(15, 60),
-                        steps = 2,
-                        onValueChange = onReminderDelayChange
-                    )
+                    ) {
+                        DelaySelection(
+                            defaultRangeIndex = viewState.user.defaultReminderDelayRange.ordinal,
+                            defaultDurationIndex = viewState.user.defaultReminderDelayIndex,
+                            onSelectValues = onReminderDelayChange
+                        )
+                    }
                 }
                 if (!viewState.user.isOffline) {
                     HorizontalDivider()

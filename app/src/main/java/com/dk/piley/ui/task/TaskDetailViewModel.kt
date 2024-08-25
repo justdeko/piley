@@ -8,9 +8,11 @@ import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
+import com.dk.piley.model.user.UserRepository
 import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
 import com.dk.piley.ui.nav.taskScreen
+import com.dk.piley.ui.reminder.DelayRange
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.descriptionCharacterLimit
 import com.dk.piley.util.titleCharacterLimit
@@ -36,26 +38,35 @@ import javax.inject.Inject
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository,
     private val pileRepository: PileRepository,
+    private val taskRepository: TaskRepository,
+    private val userRepository: UserRepository,
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<TaskDetailViewState>(TaskDetailViewState()) {
 
     init {
+
         viewModelScope.launch {
             val id = savedStateHandle.get<Long>(taskScreen.identifier)
+            val isDelay = savedStateHandle.get<Boolean>("delay") ?: false
+            if (isDelay) dismissDelayNotification(id)
             // set initial values for text fields
             id?.let { taskId ->
                 val piles = pileRepository.getPilesWithTasks().firstOrNull()
                     ?.map { Pair(it.pile.pileId, it.pile.name) }
                     ?: emptyList()
                 repository.getTaskById(taskId).firstOrNull()?.let { task ->
+                    val user = userRepository.getSignedInUserEntity()
                     val selectionIndex = piles.indexOfFirst { it.first == task.pileId }
                     state.value = state.value.copy(
                         titleTextValue = task.title,
                         descriptionTextValue = task.description,
                         piles = piles,
-                        selectedPileIndex = if (selectionIndex == -1) 0 else selectionIndex
+                        selectedPileIndex = if (selectionIndex == -1) 0 else selectionIndex,
+                        showDelaySection = isDelay,
+                        defaultDelayRange = user?.defaultReminderDelayRange ?: DelayRange.Minute,
+                        defaultDelayIndex = user?.defaultReminderDelayIndex ?: 0
                     )
                 }
             }
@@ -72,6 +83,10 @@ class TaskDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun dismissDelayNotification(id: Long?) {
+        id?.let { notificationManager.dismiss(taskId = it) }
     }
 
     /**
@@ -198,6 +213,15 @@ class TaskDetailViewModel @Inject constructor(
         }
     }
 
+    fun delayReminder(durationInMinutes: Long) {
+        viewModelScope.launch {
+            if (durationInMinutes > 0) {
+                taskRepository.delayTask(state.value.task, durationInMinutes)
+            }
+            state.update { it.copy(delayFinished = true) }
+        }
+    }
+
 }
 
 data class TaskDetailViewState(
@@ -207,4 +231,8 @@ data class TaskDetailViewState(
     val reminderDateTimeText: String? = null,
     val piles: List<Pair<Long, String>> = emptyList(),
     val selectedPileIndex: Int = 0,
+    val showDelaySection: Boolean = false,
+    val defaultDelayRange: DelayRange = DelayRange.Minute,
+    val defaultDelayIndex: Int = 0,
+    val delayFinished: Boolean = false
 )

@@ -60,7 +60,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ThemeHostScreen {
-                Home(initialMessage = initialMessage)
+                Home(
+                    initialMessage = initialMessage,
+                    onFinishActivity = { this.finishAndRemoveTask() }
+                )
             }
         }
     }
@@ -76,6 +79,7 @@ class MainActivity : AppCompatActivity() {
 fun Home(
     modifier: Modifier = Modifier,
     initialMessage: String? = null,
+    onFinishActivity: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
@@ -150,9 +154,14 @@ fun Home(
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "$DEEPLINK_ROOT/${taskScreen.route}"
                 }),
-                arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })
+                arguments = listOf(navArgument(taskScreen.identifier) {
+                    type = NavType.LongType
+                }) + taskScreen.optionalArguments
             ) {
-                TaskDetailScreen(navController)
+                TaskDetailScreen(
+                    navController = navController,
+                    onFinish = onFinishActivity
+                )
             }
             composable(
                 pileScreen.route,

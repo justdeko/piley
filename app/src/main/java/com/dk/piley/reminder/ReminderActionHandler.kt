@@ -5,14 +5,13 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.util.calculateDelayDuration
 import com.dk.piley.util.getPileNameForTaskId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import java.time.Duration
-import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -93,15 +92,19 @@ class ReminderActionHandler @Inject constructor(
                 return@onEach
             }
             userRepository.getSignedInUser().first()?.let { user ->
-                // delay by n minutes
-                val newReminderTime =
-                    Instant.now().plus(Duration.ofMinutes(user.defaultReminderDelay.toLong()))
-                // update reminder time in db
-                taskRepository.insertTask(task.copy(reminder = newReminderTime))
-                // start new reminder
-                reminderManager.startReminder(newReminderTime, task.id)
-                notificationManager.dismiss(taskId)
+                val delayInMinutes = calculateDelayDuration(
+                    delayRange = user.defaultReminderDelayRange,
+                    delayDurationIndex = user.defaultReminderDelayIndex
+                )
+                taskRepository.delayTask(task, delayInMinutes)
             }
         }
+    }
+
+    override suspend fun customDelay(taskId: Long): Flow<Task?> {
+        // no task found
+        if (taskId.toInt() == -1) return emptyFlow()
+        // for now no action
+        return taskRepository.getTaskById(taskId).take(1)
     }
 }

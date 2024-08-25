@@ -1,0 +1,133 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "138d12e04d7d47081d5baa45031ca9bf",
+    "entities": [
+      {
+        "tableName": "User",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`email` TEXT NOT NULL, `name` TEXT NOT NULL, `password` TEXT NOT NULL, `selectedPileId` INTEGER NOT NULL, `defaultPileId` INTEGER NOT NULL, `lastBackup` INTEGER, `lastBackupQuery` INTEGER, `nightMode` TEXT NOT NULL, `dynamicColorOn` INTEGER NOT NULL, `pileMode` TEXT NOT NULL, `defaultBackupFrequency` INTEGER NOT NULL, `autoHideKeyboard` INTEGER NOT NULL, `isOffline` INTEGER NOT NULL, `loadBackupAfterDays` INTEGER NOT NULL, `showRecurringTasks` INTEGER NOT NULL DEFAULT 0, `defaultReminderDelayRange` TEXT NOT NULL DEFAULT 'Minute', `defaultReminderDelayIndex` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`email`))",
+        "fields": [
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "password",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectedPileId",
+            "columnName": "selectedPileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defaultPileId",
+            "columnName": "defaultPileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastBackup",
+            "columnName": "lastBackup",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastBackupQuery",
+            "columnName": "lastBackupQuery",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nightMode",
+            "columnName": "nightMode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dynamicColorOn",
+            "columnName": "dynamicColorOn",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pileMode",
+            "columnName": "pileMode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defaultBackupFrequency",
+            "columnName": "defaultBackupFrequency",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autoHideKeyboard",
+            "columnName": "autoHideKeyboard",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isOffline",
+            "columnName": "isOffline",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loadBackupAfterDays",
+            "columnName": "loadBackupAfterDays",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "showRecurringTasks",
+            "columnName": "showRecurringTasks",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "defaultReminderDelayRange",
+            "columnName": "defaultReminderDelayRange",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'Minute'"
+          },
+          {
+            "fieldPath": "defaultReminderDelayIndex",
+            "columnName": "defaultReminderDelayIndex",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "email"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '138d12e04d7d47081d5baa45031ca9bf')"
+    ]
+  }
+}

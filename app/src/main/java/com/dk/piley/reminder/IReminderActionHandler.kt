@@ -12,4 +12,5 @@ interface IReminderActionHandler {
     fun restartAll(): Flow<List<Task>>
     suspend fun complete(taskId: Long): Flow<Task?>
     suspend fun delay(taskId: Long): Flow<Task?>
+    suspend fun customDelay(taskId: Long): Flow<Task?>
 }

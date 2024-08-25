@@ -79,7 +79,8 @@ fun TaskDetailScreen(
         onClose = { navController.popBackStack() },
         onEditDesc = { viewModel.editDescription(it) },
         onEditTitle = { viewModel.editTitle(it) },
-        onSelectPile = { viewModel.selectPile(it) }
+        onSelectPile = { viewModel.selectPile(it) },
+        onDelay = { viewModel.delayReminder(it) }
     )
 }
 

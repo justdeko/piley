@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import timber.log.Timber
+import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
 
@@ -122,5 +123,14 @@ class TaskRepository @Inject constructor(
                 reminderManager.startReminder(reminder, task.id)
             }
         }
+    }
+
+    suspend fun delayTask(task: Task, minutes: Long) {
+        val newReminderTime = Instant.now().plus(Duration.ofMinutes(minutes))
+        // update reminder time in db
+        insertTask(task.copy(reminder = newReminderTime))
+        // start new reminder
+        reminderManager.startReminder(newReminderTime, task.id)
+        notificationManager.dismiss(task.id)
     }
 }

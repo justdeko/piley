@@ -36,6 +36,7 @@ import javax.inject.Inject
 class TaskDetailViewModel @Inject constructor(
     private val repository: TaskRepository,
     private val pileRepository: PileRepository,
+    private val taskRepository: TaskRepository,
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
     savedStateHandle: SavedStateHandle
@@ -203,6 +204,14 @@ class TaskDetailViewModel @Inject constructor(
         viewModelScope.launch {
             repository.insertTask(state.value.task.copy(pileId = state.value.piles[index].first))
             state.update { it.copy(selectedPileIndex = index) }
+        }
+    }
+
+    fun delayReminder(durationInMinutes: Long) {
+        if (durationInMinutes > 0) {
+            viewModelScope.launch {
+                taskRepository.delayTask(state.value.task, durationInMinutes)
+            }
         }
     }
 

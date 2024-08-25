@@ -218,4 +218,14 @@
     <string name="task_deleted_message">Task gelöscht</string>
     <string name="undo_task_deleted">Rückgängig</string>
     <string name="reminder_use_now_description">Aktuelle Zeit als Berechnungszeitpunkt verwenden</string>
+    <string name="cancel_delay_button">Nicht Verschieben</string>
+    <string name="confirm_delay_button">Verschieben</string>
+    <string name="delay_title">Task Verschieben</string>
+    <string-array name="delay_by">
+        <item>Minuten</item>
+        <item>Stunden</item>
+        <item>Tage</item>
+        <item>Wochen</item>
+        <item>Monate</item>
+    </string-array>
 </resources>

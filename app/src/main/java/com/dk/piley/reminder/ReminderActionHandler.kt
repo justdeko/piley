@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import java.time.Duration
-import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -93,14 +91,7 @@ class ReminderActionHandler @Inject constructor(
                 return@onEach
             }
             userRepository.getSignedInUser().first()?.let { user ->
-                // delay by n minutes
-                val newReminderTime =
-                    Instant.now().plus(Duration.ofMinutes(user.defaultReminderDelay.toLong()))
-                // update reminder time in db
-                taskRepository.insertTask(task.copy(reminder = newReminderTime))
-                // start new reminder
-                reminderManager.startReminder(newReminderTime, task.id)
-                notificationManager.dismiss(taskId)
+                taskRepository.delayTask(task, user.defaultReminderDelay.toLong())
             }
         }
     }

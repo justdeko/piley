@@ -101,20 +101,20 @@ fun getPileNameForTaskId(taskId: Long, pilesWithTasks: List<PileWithTasks>): Str
     }.find { (_, id) -> id == taskId }?.first
 
 /**
- * Return the delay duration in milliseconds based on a delay range (minutes, hours, etc.)
+ * Return the delay duration in minutes based on a delay range (minutes, hours, etc.)
  * and a duration
  *
  * @param delayRange the delay range of type [DelayRange]
  * @param delayDuration the delay duration integer, e.g. 1,2,3 etc.
- * @return delay time in milliseconds
+ * @return delay time in minutes
  */
 fun calculateDelayDuration(delayRange: DelayRange, delayDuration: Int): Long {
-    val factor = 1000L * 60 * when (delayRange) {
+    val factor = when (delayRange) {
         DelayRange.Minute -> 1
         DelayRange.Hour -> 60
         DelayRange.Day -> 1440
         DelayRange.Week -> 10080
         DelayRange.Month -> 43830
-    }
+    }.toLong()
     return factor * delayDuration
 }

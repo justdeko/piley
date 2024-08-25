@@ -153,8 +153,8 @@
 
     <!-- piles settings section-->
     <string name="settings_section_notifications_title">Notifications</string>
-    <string name="reminder_delay_duration_setting_title">Reminder Delay Duration</string>
-    <string name="reminder_delay_duration_setting_description">Set the duration for the \"Delay\" button in your task reminders.</string>
+    <string name="reminder_delay_duration_setting_title">Default Reminder Delay Duration</string>
+    <string name="reminder_delay_duration_setting_description">Set the default duration for the \"Delay\" button in your task reminders.</string>
 
     <!-- backup settings section-->
     <string name="settings_section_backup_title">Backup</string>

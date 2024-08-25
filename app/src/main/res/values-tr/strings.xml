@@ -19,6 +19,9 @@
     <string name="reminder_custom_delay_action">Gecikme…</string>
 
     <!-- common strings -->
+    <string name="cancel_delay_button">Geciktirmeyin</string>
+    <string name="confirm_delay_button">Gecikme</string>
+    <string name="delay_title">Bu Görevi Geciktirin</string>
     <string name="ok">Tamam</string>
     <string name="cancel">İptal</string>
 

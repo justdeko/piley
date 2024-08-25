@@ -265,6 +265,14 @@
         <item quantity="one" />
         <item quantity="other">s</item>
     </plurals>
+    <!--reminder delay-->
+    <string-array name="delay_by">
+        <item>Minutes</item>
+        <item>Hours</item>
+        <item>Days</item>
+        <item>Weeks</item>
+        <item>Months</item>
+    </string-array>
 
     <!-- intro screen -->
     <string name="finish_intro_button">Start Piling</string>

@@ -35,6 +35,7 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoButtonRow
+import com.dk.piley.ui.reminder.DelayBottomSheet
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.RequestNotificationPermissionDialog
@@ -111,6 +112,7 @@ fun TaskDetailScreen(
     onAddReminder: (ReminderState) -> Unit = {},
     onCancelReminder: () -> Unit = {},
     onSelectPile: (Int) -> Unit = {},
+    onDelay: (Long) -> Unit = {},
     permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
     } else {
@@ -121,6 +123,8 @@ fun TaskDetailScreen(
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
+    val delaySheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showDelaySheet by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     var completeRecurringDialogOpen by remember { mutableStateOf(false) }
     var confirmDeleteDialogOpen by remember { mutableStateOf(false) }
@@ -130,6 +134,12 @@ fun TaskDetailScreen(
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && sheetState.hasExpandedState) {
         RequestNotificationPermissionDialog(rationaleOpen) {
             rationaleOpen = false
+        }
+    }
+
+    LaunchedEffect(key1 = viewState.showDelaySection) {
+        if (viewState.showDelaySection) {
+            showDelaySheet = true
         }
     }
 
@@ -191,6 +201,17 @@ fun TaskDetailScreen(
             onDismiss = { showBottomSheet = false }
         )
     }
+
+    if (showDelaySheet) {
+        DelayBottomSheet(
+            sheetState = delaySheetState,
+            onDelay = {
+                onDelay(it)
+                showDelaySheet = false
+            }
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()

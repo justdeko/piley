@@ -150,7 +150,9 @@ fun Home(
                 deepLinks = listOf(navDeepLink {
                     uriPattern = "$DEEPLINK_ROOT/${taskScreen.route}"
                 }),
-                arguments = listOf(navArgument(taskScreen.identifier) { type = NavType.LongType })
+                arguments = listOf(navArgument(taskScreen.identifier) {
+                    type = NavType.LongType
+                }) + taskScreen.optionalArguments
             ) {
                 TaskDetailScreen(navController)
             }

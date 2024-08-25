@@ -62,7 +62,6 @@ class NotificationManager @Inject constructor(
      * @param pileName the name of the parent pile
      */
     fun showNotification(task: Task, pileName: String?) {
-        val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         val taskDetailIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
                 Intent(
@@ -72,7 +71,7 @@ class NotificationManager @Inject constructor(
                     MainActivity::class.java
                 )
             )
-            getPendingIntent(task.id.toInt(), flags)
+            getPendingIntent(task.id.toInt(), FLAGS)
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -131,7 +130,23 @@ class NotificationManager @Inject constructor(
             receiverIntent,
             PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        return NotificationCompat.Action(0, actionTitle, pendingIntent)
+        val delayReminderIntent = TaskStackBuilder.create(context).run {
+            addNextIntentWithParentStack(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    "$DEEPLINK_ROOT/${taskScreen.root}/${taskId}?delay=true".toUri(),
+                    context,
+                    MainActivity::class.java
+                )
+            )
+            getPendingIntent(taskId.toInt(), FLAGS)
+        }
+        val intent = if (notificationActionType == NotificationActionType.CustomDelay) {
+            delayReminderIntent
+        } else {
+            pendingIntent
+        }
+        return NotificationCompat.Action(0, actionTitle, intent)
     }
 
     fun dismiss(taskId: Long) {
@@ -140,6 +155,7 @@ class NotificationManager @Inject constructor(
 
 
     companion object {
+        private const val FLAGS = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         private const val CHANNEL_ID = "channel_reminder"
     }
 }

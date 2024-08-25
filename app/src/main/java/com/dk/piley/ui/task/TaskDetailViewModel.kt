@@ -42,8 +42,11 @@ class TaskDetailViewModel @Inject constructor(
 ) : StatefulViewModel<TaskDetailViewState>(TaskDetailViewState()) {
 
     init {
+
         viewModelScope.launch {
             val id = savedStateHandle.get<Long>(taskScreen.identifier)
+            val isDelay = savedStateHandle.get<Boolean>("delay") ?: false
+            if (isDelay) dismissDelayNotification(id)
             // set initial values for text fields
             id?.let { taskId ->
                 val piles = pileRepository.getPilesWithTasks().firstOrNull()
@@ -55,7 +58,8 @@ class TaskDetailViewModel @Inject constructor(
                         titleTextValue = task.title,
                         descriptionTextValue = task.description,
                         piles = piles,
-                        selectedPileIndex = if (selectionIndex == -1) 0 else selectionIndex
+                        selectedPileIndex = if (selectionIndex == -1) 0 else selectionIndex,
+                        showDelaySection = isDelay
                     )
                 }
             }
@@ -72,6 +76,10 @@ class TaskDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun dismissDelayNotification(id: Long?) {
+        id?.let { notificationManager.dismiss(taskId = it) }
     }
 
     /**
@@ -207,4 +215,5 @@ data class TaskDetailViewState(
     val reminderDateTimeText: String? = null,
     val piles: List<Pair<Long, String>> = emptyList(),
     val selectedPileIndex: Int = 0,
+    val showDelaySection: Boolean = false,
 )

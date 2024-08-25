@@ -12,6 +12,7 @@ import com.dk.piley.model.task.RecurringTimeRange.WEEKLY
 import com.dk.piley.model.task.RecurringTimeRange.YEARLY
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.toText
+import com.dk.piley.ui.reminder.DelayRange
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -98,3 +99,22 @@ fun getPileNameForTaskId(taskId: Long, pilesWithTasks: List<PileWithTasks>): Str
             )
         }
     }.find { (_, id) -> id == taskId }?.first
+
+/**
+ * Return the delay duration in milliseconds based on a delay range (minutes, hours, etc.)
+ * and a duration
+ *
+ * @param delayRange the delay range of type [DelayRange]
+ * @param delayDuration the delay duration integer, e.g. 1,2,3 etc.
+ * @return delay time in milliseconds
+ */
+fun calculateDelayDuration(delayRange: DelayRange, delayDuration: Int): Long {
+    val factor = 1000L * 60 * when (delayRange) {
+        DelayRange.Minute -> 1
+        DelayRange.Hour -> 60
+        DelayRange.Day -> 1440
+        DelayRange.Week -> 10080
+        DelayRange.Month -> 43830
+    }
+    return factor * delayDuration
+}

@@ -76,8 +76,24 @@ sealed class Screen(
     )
 }
 
-sealed class IdentifierScreen(val route: String, val identifier: String, val root: String) {
-    data object Task : IdentifierScreen("task/{taskId}", "taskId", "task")
+sealed class IdentifierScreen(
+    val route: String,
+    val identifier: String,
+    val root: String,
+    val optionalArguments: List<NamedNavArgument> = emptyList()
+) {
+    data object Task : IdentifierScreen(
+        route = "task/{taskId}?delay={delay}",
+        identifier = "taskId",
+        root = "task",
+        optionalArguments = listOf(
+            navArgument("delay") {
+                defaultValue = false
+                type = NavType.BoolType
+            }
+        )
+    )
+
     data object Pile : IdentifierScreen("pile/{pileId}", "pileId", "pile")
 }
 

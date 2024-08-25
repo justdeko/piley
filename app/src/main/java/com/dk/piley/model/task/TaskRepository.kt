@@ -128,7 +128,9 @@ class TaskRepository @Inject constructor(
     suspend fun delayTask(task: Task, minutes: Long) {
         val newReminderTime = Instant.now().plus(Duration.ofMinutes(minutes))
         // update reminder time in db
-        insertTask(task.copy(reminder = newReminderTime))
+        if (task.nowAsReminderTime) {
+            insertTask(task.copy(reminder = newReminderTime))
+        }
         // start new reminder
         reminderManager.startReminder(newReminderTime, task.id)
         notificationManager.dismiss(task.id)

@@ -1,11 +1,10 @@
 package com.dk.piley.util
 
 import com.dk.piley.model.remote.backup.ContentDispositionHeaders
+import kotlinx.datetime.Instant
 import okhttp3.Credentials
 import okhttp3.Headers
 import timber.log.Timber
-import java.time.Instant
-import java.time.format.DateTimeParseException
 
 /**
  * Basic auth credentials for api requests
@@ -33,8 +32,8 @@ fun Headers.contentDispositionHeaders(): ContentDispositionHeaders? {
         Timber.d("content disposition data. filename: $fileName modification date: $modificationDateString")
 
         val modifiedInstant = try {
-            Instant.parse(modificationDateString)
-        } catch (e: DateTimeParseException) {
+            Instant.parse(modificationDateString!!)
+        } catch (e: Exception) {
             null
         } catch (e: NullPointerException) {
             null

@@ -47,7 +47,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
-import java.time.Instant
+import kotlinx.datetime.Clock
 
 /**
  * Task detail screen
@@ -278,7 +278,7 @@ fun TaskDetailScreen(
                 // if task is recurring and reminder is in the future, show dialog first
                 if (
                     viewState.task.isRecurring
-                    && viewState.task.reminder?.isAfter(Instant.now()) == true
+                    && viewState.task.reminder?.let { it > Clock.System.now() } == true
                 ) {
                     completeRecurringDialogOpen = true
                 } else {

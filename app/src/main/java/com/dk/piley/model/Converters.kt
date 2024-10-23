@@ -1,7 +1,7 @@
 package com.dk.piley.model
 
 import androidx.room.TypeConverter
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * Converters to convert complex entity types to primitive ones
@@ -10,12 +10,12 @@ import java.time.Instant
 class Converters {
     @TypeConverter
     fun fromTimeStamp(value: Long?): Instant? {
-        return value?.let { Instant.ofEpochMilli(it) }
+        return value?.let { Instant.fromEpochMilliseconds(it) }
     }
 
     @TypeConverter
     fun instantToTimestamp(instant: Instant?): Long? {
-        return instant?.toEpochMilli()
+        return instant?.toEpochMilliseconds()
     }
 
     @TypeConverter

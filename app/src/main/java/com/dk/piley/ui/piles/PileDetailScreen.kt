@@ -36,7 +36,8 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.navigateClearBackstack
-import java.time.LocalDateTime
+import com.dk.piley.util.toLocalDateTime
+import kotlinx.datetime.Clock
 
 /**
  * Pile detail screen
@@ -93,7 +94,7 @@ fun PileDetailScreen(
     onClose: () -> Unit = {},
     initialStatisticsGraphTransitionValue: Boolean = true
 ) {
-    val today = LocalDateTime.now().toLocalDate()
+    val today = Clock.System.now().toLocalDateTime().date
     var dialogOpen by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current

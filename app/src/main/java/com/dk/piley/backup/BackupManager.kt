@@ -17,12 +17,15 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import timber.log.Timber
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.time.Duration
-import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -61,9 +64,12 @@ class BackupManager @Inject constructor(
         // if backup fetch wasn't longer than x days ago, do nothing and return successful flow
         val backupPullDuration = user.loadBackupAfterDays
         if (backupPullDuration > 0
-            && user.lastBackupQuery?.isAfter(
-                Instant.now().minus(Duration.ofDays(backupPullDuration.toLong()))
-            ) == true
+            && user.lastBackupQuery != null
+            && user.lastBackupQuery > (Clock.System.now().minus(
+                backupPullDuration,
+                DateTimeUnit.DAY,
+                TimeZone.currentSystemDefault()
+            ))
         ) {
             Timber.i("Last backup not too long ago, aborting backup sync")
             return flowOf(Resource.Success(null))
@@ -75,7 +81,7 @@ class BackupManager @Inject constructor(
                 is Resource.Loading -> flowOf(Resource.Loading())
                 is Resource.Success -> createOrUpdateDbFileFlow(it.data).also {
                     userRepository.insertUser(
-                        user.copy(lastBackupQuery = Instant.now())
+                        user.copy(lastBackupQuery = Clock.System.now())
                     )
                 }
 
@@ -114,8 +120,13 @@ class BackupManager @Inject constructor(
             // get date of last backup and perform new backup if date was too long ago
             val lastBackup = it.lastBackup
             val latestBackupDate =
-                Instant.now().minus(Duration.ofDays(it.defaultBackupFrequency.toLong()))
-            if (lastBackup != null && lastBackup.isBefore(latestBackupDate)) {
+                Clock.System.now()
+                    .minus(
+                        it.defaultBackupFrequency.toLong(),
+                        DateTimeUnit.DAY,
+                        TimeZone.currentSystemDefault()
+                    )
+            if (lastBackup != null && lastBackup < latestBackupDate) {
                 doBackup()
             }
         }
@@ -132,7 +143,7 @@ class BackupManager @Inject constructor(
             is Resource.Loading -> Timber.i("Syncing local backup to remote")
             is Resource.Success -> {
                 val user = userRepository.getSignedInUserEntity()
-                user?.let { userRepository.insertUser(user.copy(lastBackup = Instant.now())) }
+                user?.let { userRepository.insertUser(user.copy(lastBackup = Clock.System.now())) }
                 Timber.i("Backup successfully synced")
                 return true
             }
@@ -152,10 +163,10 @@ class BackupManager @Inject constructor(
         flow {
             emit(Resource.Loading())
             val dbFile = context.getDatabasePath(DATABASE_NAME)
-            val localLastModified = Instant.ofEpochMilli(dbFile.lastModified())
+            val localLastModified = Instant.fromEpochMilliseconds(dbFile.lastModified())
             // if local file was modified more recently than remote file
             // then emit success but with false representing no update of local backup
-            if (fileResponse.lastModified.isBefore(localLastModified)) {
+            if (fileResponse.lastModified < localLastModified) {
                 Timber.i("Last modification date of local file: $localLastModified")
                 Timber.i("Last modification date of local file: ${fileResponse.lastModified}")
                 Timber.i("Remote backup file is outdated, no overwrite needed")

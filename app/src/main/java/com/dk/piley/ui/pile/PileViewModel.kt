@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Instant
+import kotlinx.datetime.Clock
 import javax.inject.Inject
 
 /**
@@ -123,8 +123,8 @@ class PileViewModel @Inject constructor(
                 Task(
                     title = text.trim(),
                     pileId = state.value.pile.pileId,
-                    createdAt = Instant.now(),
-                    modifiedAt = Instant.now()
+                    createdAt = Clock.System.now(),
+                    modifiedAt = Clock.System.now()
                 )
             )
         }

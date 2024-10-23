@@ -32,7 +32,7 @@ import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.toLocalDateTime
-import java.time.Instant
+import kotlinx.datetime.Clock
 
 /**
  * Task pile view
@@ -104,9 +104,9 @@ fun TaskPile(
                 SwipeToDismissBoxState(
                     initialValue = SwipeToDismissBoxValue.Settled,
                     density = Density(context),
-                    confirmValueChange = {
+                    confirmValueChange = { swipeToDismissBoxValue ->
                         if (cannotDismiss(pileMode, index, tasks.lastIndex)
-                            && it == SwipeToDismissBoxValue.StartToEnd
+                            && swipeToDismissBoxValue == SwipeToDismissBoxValue.StartToEnd
                         ) {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             false
@@ -114,12 +114,12 @@ fun TaskPile(
                         // if task is recurring and reminder not shown yet, show premature completion dialog
                         else if (
                             task.isRecurring
-                            && task.reminder?.isAfter(Instant.now()) == true
-                            && it == SwipeToDismissBoxValue.StartToEnd
+                            && task.reminder?.let { it > Clock.System.now() } == true
+                            && swipeToDismissBoxValue == SwipeToDismissBoxValue.StartToEnd
                         ) {
                             recurringTaskToComplete = task
                             false
-                        } else if (task.isRecurring && it == SwipeToDismissBoxValue.EndToStart) {
+                        } else if (task.isRecurring && swipeToDismissBoxValue == SwipeToDismissBoxValue.EndToStart) {
                             recurringTaskToDelete = task
                             false
                         } else true

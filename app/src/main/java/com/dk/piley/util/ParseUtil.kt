@@ -1,36 +1,36 @@
 package com.dk.piley.util
 
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.time.format.TextStyle
-import java.util.Locale
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.char
+import kotlinx.datetime.minus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 /**
- * Convert Instant to local date time using a specific zone id
+ * Convert Instant to local date time using a specific timezone
  *
- * @param zoneId the zone id to use for the local date time, system default if not specified
+ * @param timeZone the time zone
  * @return local date time within specified zone id
  */
-fun Instant.toLocalDateTime(zoneId: ZoneId = ZoneId.systemDefault()): LocalDateTime {
-    return LocalDateTime.ofInstant(this, zoneId)
+fun Instant.toLocalDateTime(timeZone: TimeZone = TimeZone.currentSystemDefault()): LocalDateTime {
+    return this.toLocalDateTime(timeZone)
 }
 
 /**
  * Convert local date time to an instant with offset
  *
- * @param zoneId zone id to calculate the offset with
+ * @param timeZone timezone to calculate the offset with
  * @return Instant with local date time offset considered.
  * So if the zone id was in a +1 zone, the instant will be 1 hour behind the date time.
  */
-fun LocalDateTime.toInstantWithOffset(zoneId: ZoneId = ZoneId.systemDefault()): Instant {
-    val offset = zoneId.rules.getOffset(this)
-    return this.toInstant(offset)
+fun LocalDateTime.toInstantWithOffset(timeZone: TimeZone = TimeZone.currentSystemDefault()): Instant {
+    return this.toInstant(timeZone)
 }
 
 /**
@@ -39,8 +39,18 @@ fun LocalDateTime.toInstantWithOffset(zoneId: ZoneId = ZoneId.systemDefault()): 
  * @return localized date time string
  */
 fun LocalDateTime.dateTimeString(): String {
-    val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-    return this.format(formatter)
+    val format = LocalDateTime.Format {
+        hour()
+        chars(":")
+        minute()
+        chars(" ")
+        dayOfMonth()
+        chars(".")
+        monthNumber()
+        chars(".")
+        yearTwoDigits(2000)
+    }
+    return this.format(format)
 }
 
 /**
@@ -49,9 +59,7 @@ fun LocalDateTime.dateTimeString(): String {
  * @return localized date and localized time each on a separate line
  */
 fun LocalDateTime.dateTimeStringNewLine(): String {
-    val formatterDate = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-    val formatterTime = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-    return "${this.format(formatterDate)}\n${this.format(formatterTime)}"
+    return "${this.date.dateString()}\n${this.time.timeString()}"
 }
 
 /**
@@ -60,8 +68,7 @@ fun LocalDateTime.dateTimeStringNewLine(): String {
  * @return localized time string
  */
 fun LocalTime.timeString(): String {
-    val formatter = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
-    return this.format(formatter)
+    return this.format(LocalTime.Format { hour();char(':');minute() })
 }
 
 /**
@@ -70,8 +77,7 @@ fun LocalTime.timeString(): String {
  * @return localized date string
  */
 fun LocalDate.dateString(): String {
-    val formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-    return this.format(formatter)
+    return this.format(LocalDate.Formats.ISO)
 }
 
 /**
@@ -80,16 +86,16 @@ fun LocalDate.dateString(): String {
  * @param date the starting date for the last seven days
  * @return localized list of days of week in abbreviated form
  */
-fun lastSevenDays(date: LocalDate): List<String> = (0..6)
+fun lastSevenDays(
+    date: LocalDate,
+    timeZone: TimeZone = TimeZone.UTC
+): List<String> = (0..6)
     .map {
-        date.minusDays(it.toLong()).dayOfWeek.getDisplayName(
-            TextStyle.SHORT,
-            Locale.getDefault()
-        )
+        date.minus(it, DateTimeUnit.DAY).dayOfWeek.name.substring(0..1)
     }
     .reversed()
 
 /**
  * Utc time zone id
  */
-val utcZoneId: ZoneId = ZoneId.ofOffset("UTC", ZoneOffset.UTC)
+val utcZone: TimeZone = TimeZone.UTC

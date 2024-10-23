@@ -5,7 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.dk.piley.model.pile.Pile
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 /**
  * Task entity representing a task created by the user
@@ -39,8 +40,8 @@ data class Task(
     val title: String = "",
     val pileId: Long = 1,
     val description: String = "",
-    val createdAt: Instant = Instant.now(),
-    val modifiedAt: Instant = Instant.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val modifiedAt: Instant = Clock.System.now(),
     val completionTimes: List<Instant> = emptyList(),
     val reminder: Instant? = null,
     val isRecurring: Boolean = false,

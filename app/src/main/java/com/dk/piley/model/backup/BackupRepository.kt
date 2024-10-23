@@ -11,12 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.datetime.Instant
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
-import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -44,7 +44,7 @@ class BackupRepository @Inject constructor(
                 val responseBody = backupResponse.body()
                 val contentDispositionHeaders = backupResponse.headers().contentDispositionHeaders()
                 val filename = contentDispositionHeaders?.filename ?: "backup.db"
-                val lastModified = contentDispositionHeaders?.lastModified ?: Instant.MIN
+                val lastModified = contentDispositionHeaders?.lastModified ?: Instant.fromEpochMilliseconds(0)
                 if (responseBody != null) {
                     val file = File(context.cacheDir, filename)
                     val inputStream = responseBody.byteStream()

@@ -7,8 +7,8 @@ import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.receiver.ReminderAlarmReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.datetime.Instant
 import timber.log.Timber
-import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,7 +45,7 @@ class ReminderManager @Inject constructor(
 
         alarmManager?.let {
             AlarmManagerCompat.setAndAllowWhileIdle(
-                it, AlarmManager.RTC_WAKEUP, reminderTime.toEpochMilli(), intent
+                it, AlarmManager.RTC_WAKEUP, reminderTime.toEpochMilliseconds(), intent
             )
         }
     }

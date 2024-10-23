@@ -9,9 +9,10 @@ import com.dk.piley.util.withNewCompletionTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.plus
 import timber.log.Timber
-import java.time.Duration
-import java.time.Instant
 import javax.inject.Inject
 
 /**
@@ -38,12 +39,12 @@ class TaskRepository @Inject constructor(
      * @return long representing db operation success
      */
     suspend fun insertTaskWithStatus(task: Task, undo: Boolean = false): Long {
-        val now = Instant.now()
+        val now = Clock.System.now()
         // update modification time
         var tempTask = if (undo) task else task.copy(modifiedAt = now)
         // add new completion time
         if (task.status == TaskStatus.DONE && !undo) {
-            tempTask = tempTask.withNewCompletionTime(Instant.now())
+            tempTask = tempTask.withNewCompletionTime(now)
         }
         // recreate reminder if undo occurred
         if (task.status == TaskStatus.DEFAULT && undo && task.reminder != null) {
@@ -65,7 +66,7 @@ class TaskRepository @Inject constructor(
      * @return long representing db operation success
      */
     suspend fun insertTask(task: Task): Long =
-        taskDao.insertTask(task.copy(modifiedAt = Instant.now()))
+        taskDao.insertTask(task.copy(modifiedAt = Clock.System.now()))
 
     suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long): Void =
         taskDao.deleteCompletedDeletedForPile(pileId)
@@ -114,7 +115,7 @@ class TaskRepository @Inject constructor(
         taskList.filter {
             // only tasks that are either recurring or not completed yet, and reminder in the future
             it.reminder != null
-                    && it.reminder.isAfter(Instant.now())
+                    && it.reminder > Clock.System.now()
                     && (it.status == TaskStatus.DEFAULT
                     || (it.status == TaskStatus.DONE && it.isRecurring)
                     )
@@ -126,7 +127,7 @@ class TaskRepository @Inject constructor(
     }
 
     suspend fun delayTask(task: Task, minutes: Long) {
-        val newReminderTime = Instant.now().plus(Duration.ofMinutes(minutes))
+        val newReminderTime = Clock.System.now().plus(minutes, DateTimeUnit.MINUTE)
         // update reminder time in db
         if (task.nowAsReminderTime) {
             insertTask(task.copy(reminder = newReminderTime))

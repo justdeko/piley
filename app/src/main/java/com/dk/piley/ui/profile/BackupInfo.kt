@@ -21,7 +21,9 @@ import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
-import java.time.LocalDateTime
+import com.dk.piley.util.toLocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
 
 /**
  * User backup info section
@@ -74,7 +76,7 @@ fun BackupInfo(
 fun BackupInfoPreview() {
     PileyTheme(useDarkTheme = true) {
         BackupInfo(
-            lastBackup = LocalDateTime.now()
+            lastBackup = Clock.System.now().toLocalDateTime()
         )
     }
 }

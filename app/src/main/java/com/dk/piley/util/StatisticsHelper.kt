@@ -5,10 +5,14 @@ import com.dk.piley.R
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.periodUntil
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.roundToLong
 
 /**
@@ -17,15 +21,18 @@ import kotlin.math.roundToLong
  * @param pileWithTasks pile with tasks to get the frequencies for
  * @return map of date keys and completed task frequency values
  */
-fun pileFrequenciesForDates(pileWithTasks: PileWithTasks): Map<LocalDate, Int> =
+fun pileFrequenciesForDates(
+    pileWithTasks: PileWithTasks,
+    timeZone: TimeZone = TimeZone.currentSystemDefault(),
+): Map<LocalDate, Int> =
     pileWithTasks.tasks
         .filter {
-            it.status == TaskStatus.DONE && LocalDateTime.now().minusWeeks(1)
-                .isBefore(it.modifiedAt.toLocalDateTime())
+            it.status == TaskStatus.DONE && (Clock.System.now()
+                .minus(1, DateTimeUnit.WEEK, timeZone) < it.modifiedAt)
         } // only include completed tasks from the past week
         .map { it.completionTimes } // mop to lists of completion times
         .flatten() // flatten lists into a single list of completion times
-        .groupingBy { it.toLocalDateTime().toLocalDate() } // group by completion date
+        .groupingBy { it.toLocalDateTime(timeZone).date } // group by completion date
         .eachCount()
 
 /**
@@ -34,10 +41,14 @@ fun pileFrequenciesForDates(pileWithTasks: PileWithTasks): Map<LocalDate, Int> =
  * @param frequencyMap calculated frequency map of completed tasks using [pileFrequenciesForDates]
  * @return map of date keys within the last 7 days and completed task counts as values
  */
-fun pileFrequenciesForDatesWithZerosForLast7Days(frequencyMap: Map<LocalDate, Int>): Map<LocalDate, Int> {
+fun pileFrequenciesForDatesWithZerosForLast7Days(
+    frequencyMap: Map<LocalDate, Int>,
+    timeZone: TimeZone = TimeZone.currentSystemDefault(),
+): Map<LocalDate, Int> {
     val finalMap = mutableMapOf<LocalDate, Int>()
     for (i in 0..6) {
-        val date = LocalDateTime.now().minusDays(i.toLong()).toLocalDate()
+        val date =
+            Clock.System.now().minus(i, DateTimeUnit.DAY, timeZone).toLocalDateTime(timeZone).date
         val existingValue = frequencyMap[date]
         val mapValue = existingValue ?: 0
         finalMap[date] = mapValue
@@ -103,10 +114,14 @@ fun getAverageTaskCompletionInHours(tasks: List<Task>): Long {
  * @param days number of days to count the completed tasks for
  * @return number of completed tasks in the past n days
  */
-fun getTasksCompletedInPastDays(tasks: List<Task>, days: Long = 7): Int = tasks.count {
+fun getTasksCompletedInPastDays(
+    tasks: List<Task>, days: Long = 7,
+    timeZone: TimeZone = TimeZone.currentSystemDefault(),
+): Int = tasks.count {
     it.status == TaskStatus.DONE
-            && LocalDateTime.now().minusDays(days)
-        .isBefore(it.completionTimes.last().toLocalDateTime())
+            && (Clock.System.now().minus(days, DateTimeUnit.DAY, timeZone)
+            < it.completionTimes.last()
+            )
 }
 
 /**
@@ -116,11 +131,12 @@ fun getTasksCompletedInPastDays(tasks: List<Task>, days: Long = 7): Int = tasks.
  * @param now generic [Instant.now] provider
  * @return copy of the new task
  */
-fun Task.withNewCompletionTime(now: Instant = Instant.now()): Task {
+fun Task.withNewCompletionTime(now: Instant = Clock.System.now()): Task {
+    val timeZone = TimeZone.currentSystemDefault()
     val comparisonTime = reminder ?: createdAt
-    val completionTime = ChronoUnit.HOURS.between(comparisonTime, now)
+    val completionTimeHours = comparisonTime.periodUntil(now, timeZone).hours
     val newCompletionTime =
-        averageCompletionTimeInHours + (completionTime - averageCompletionTimeInHours) / (completionTimes.size + 1)
+        averageCompletionTimeInHours + (completionTimeHours - averageCompletionTimeInHours) / (completionTimes.size + 1)
     return copy(
         completionTimes = completionTimes + now,
         averageCompletionTimeInHours = if (newCompletionTime < 0) 0 else newCompletionTime

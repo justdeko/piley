@@ -1,7 +1,6 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalPermissionsApi::class,
-    ExperimentalAnimationApi::class
 )
 
 package com.dk.piley.ui.task
@@ -12,7 +11,6 @@ import android.os.Build
 import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,14 +58,15 @@ import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.timeString
-import com.dk.piley.util.utcZoneId
+import com.dk.piley.util.toLocalDateTime
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 
 /**
  * Bottom sheet with options to add a reminder.
@@ -166,7 +165,7 @@ fun AddReminderContent(
 
     if (datePickerVisible) {
         ReminderDatePicker(
-            initialDate = localDate ?: initialDateTime?.toLocalDate(),
+            initialDate = localDate ?: initialDateTime?.date,
             onDismiss = { datePickerVisible = false },
             onConfirm = {
                 localDate = it
@@ -177,7 +176,7 @@ fun AddReminderContent(
 
     if (timePickerVisible) {
         ReminderTimePicker(
-            initialTime = localTime ?: initialDateTime?.toLocalTime(),
+            initialTime = localTime ?: initialDateTime?.time,
             onDismiss = { timePickerVisible = false },
             is24hFormat = DateFormat.is24HourFormat(context),
             onConfirm = {
@@ -206,7 +205,7 @@ fun AddReminderContent(
         BigSpacer()
         PickerSection(
             modifier = Modifier.padding(horizontal = dim.large),
-            text = localDate?.dateString() ?: (initialDateTime?.toLocalDate()?.dateString()
+            text = localDate?.dateString() ?: (initialDateTime?.date?.dateString()
                 ?: stringResource(R.string.date_selection_placeholder)),
             icon = Icons.Default.Event,
             onIconClick = { datePickerVisible = true },
@@ -216,9 +215,15 @@ fun AddReminderContent(
         PickerSection(
             modifier = Modifier.padding(horizontal = dim.large),
             text = localTime?.timeString() ?: (
-                    initialDateTime?.toLocalTime()?.withNano(0)
-                        ?.timeString() ?: stringResource(R.string.time_selection_placeholder)
-                    ),
+                    with(initialDateTime?.time) {
+                        this?.let {
+                            LocalTime(
+                                it.hour,
+                                this.minute,
+                                this.second
+                            )
+                        }
+                    }?.timeString() ?: stringResource(R.string.time_selection_placeholder)),
             icon = Icons.Default.Schedule,
             onIconClick = { timePickerVisible = true },
             iconContentDescription = "set the time for a reminder"
@@ -226,8 +231,8 @@ fun AddReminderContent(
         MediumSpacer()
         ReminderTimeSuggestions(
             onSelectTimeSuggestion = {
-                localDate = it.toLocalDate()
-                localTime = it.toLocalTime()
+                localDate = it.date
+                localTime = it.time
             }
         )
         TextWithCheckbox(
@@ -266,25 +271,27 @@ fun AddReminderContent(
                         return@Button
                     }
                     if (localTime != null && localDate != null) {
-                        localTime?.atDate(localDate)?.let {
-                            onAddReminder(
-                                ReminderState(
-                                    reminder = it,
-                                    recurring = recurring,
-                                    recurringTimeRange = timeRange,
-                                    recurringFrequency = frequency,
-                                    nowAsReminderTime = nowAsReminderTime
+                        localDate?.let { date ->
+                            localTime?.let { time ->
+                                onAddReminder(
+                                    ReminderState(
+                                        reminder = LocalDateTime(date, time),
+                                        recurring = recurring,
+                                        recurringTimeRange = timeRange,
+                                        recurringFrequency = frequency,
+                                        nowAsReminderTime = nowAsReminderTime
+                                    )
                                 )
-                            )
+                            }
                         }
                     } else if (initialDateTime != null) {
                         // case of an existing reminder getting updated
                         // where only one or no fields were touched
-                        val time = localTime ?: initialDateTime.toLocalTime()
-                        val date = localDate ?: initialDateTime.toLocalDate()
+                        val date = localDate ?: initialDateTime.date
+                        val time = localTime ?: initialDateTime.time
                         onAddReminder(
                             ReminderState(
-                                reminder = time.atDate(date),
+                                reminder = LocalDateTime(date, time),
                                 recurring = recurring,
                                 recurringTimeRange = timeRange,
                                 recurringFrequency = frequency,
@@ -390,7 +397,7 @@ fun AddReminderDrawerPreview() {
 fun EditReminderDrawerPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
-            val initialDateTime = LocalDateTime.now(utcZoneId)
+            val initialDateTime = Clock.System.now().toLocalDateTime()
             val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
             AddReminderDrawer(
                 initialDate = initialDateTime,
@@ -406,7 +413,7 @@ fun EditReminderDrawerPreview() {
 fun EditReminderDrawerRecurringPreview() {
     PileyTheme(useDarkTheme = true) {
         Surface {
-            val initialDateTime = LocalDateTime.now(utcZoneId)
+            val initialDateTime = Clock.System.now().toLocalDateTime()
             val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
             AddReminderDrawer(
                 initialDate = initialDateTime,

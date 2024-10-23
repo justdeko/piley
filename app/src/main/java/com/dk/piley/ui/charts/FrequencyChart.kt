@@ -34,7 +34,7 @@ import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.lastSevenDays
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * Frequency chart of completed tasks
@@ -179,7 +179,7 @@ fun FrequencyChart(
 fun FrequencyChartPreview() {
     PileyTheme(useDarkTheme = true) {
         val last7Days = listOf(10, 15, 20, 18, 13, 12, 8)
-        FrequencyChart(last7Days, LocalDate.of(2023, 4, 29))
+        FrequencyChart(last7Days, LocalDate(2023, 4, 29))
     }
 }
 
@@ -188,7 +188,7 @@ fun FrequencyChartPreview() {
 fun FrequencyChartPreviewAllZeros() {
     PileyTheme(useDarkTheme = true) {
         val last7Days = listOf(0, 0, 0, 0, 0, 0, 0)
-        FrequencyChart(last7Days, LocalDate.of(2023, 4, 29))
+        FrequencyChart(last7Days, LocalDate(2023, 4, 29))
     }
 }
 
@@ -198,7 +198,7 @@ fun FrequencyChartPreviewAllZeros() {
 fun FrequencyChartPreviewLargeContrast() {
     PileyTheme(useDarkTheme = true) {
         val last7Days = listOf(0, 0, 0, 20, 0, 0, 1)
-        FrequencyChart(last7Days, LocalDate.of(2023, 4, 29))
+        FrequencyChart(last7Days, LocalDate(2023, 4, 29))
     }
 }
 
@@ -212,7 +212,7 @@ fun FrequencyChartPreviewLargeContrastSmallWidth() {
                 .fillMaxWidth()
                 .padding(40.dp)
         ) {
-            FrequencyChart(last7Days, LocalDate.of(2023, 4, 29))
+            FrequencyChart(last7Days, LocalDate(2023, 4, 29))
         }
     }
 }

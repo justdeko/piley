@@ -1,8 +1,8 @@
 package com.dk.piley.model.remote.backup
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.datetime.Instant
 import java.io.File
-import java.time.Instant
 
 /**
  * File response sent to the api when doing backups

@@ -3,9 +3,14 @@ package com.dk.piley.ui.task
 import android.content.Context
 import com.dk.piley.R
 import com.dk.piley.util.timeString
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import com.dk.piley.util.toLocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 
 /**
  * Time suggestion enum representing the suggested reminder value,
@@ -27,7 +32,7 @@ enum class TimeSuggestion {
  */
 fun TimeSuggestion.getLabelAndDate(
     context: Context,
-    currentDateTime: LocalDateTime
+    currentDateTime: LocalDateTime = Clock.System.now().toLocalDateTime()
 ): Pair<String, LocalDateTime> {
     val timeOfDayNames = context.resources.getStringArray(R.array.time_of_day)
     val timeOfDayString = when (this) {
@@ -36,22 +41,23 @@ fun TimeSuggestion.getLabelAndDate(
         TimeSuggestion.EVENING -> timeOfDayNames[2]
     }
     val timeOfDay = when (this) {
-        TimeSuggestion.MORNING -> LocalTime.of(8, 0)
-        TimeSuggestion.AFTERNOON -> LocalTime.of(13, 0)
-        TimeSuggestion.EVENING -> LocalTime.of(20, 0)
+        TimeSuggestion.MORNING -> LocalTime(8, 0)
+        TimeSuggestion.AFTERNOON -> LocalTime(13, 0)
+        TimeSuggestion.EVENING -> LocalTime(20, 0)
     }
-    val isTomorrow = currentDateTime.toLocalTime().isAfter(timeOfDay)
+    val isTomorrow = currentDateTime.time >= timeOfDay
     val tomorrowPrefix = if (isTomorrow) {
         "${context.getString(R.string.tomorrow_prefix)} "
     } else ""
-    val date = if (isTomorrow) LocalDate.now().plusDays(1) else LocalDate.now()
-    val dateTime = LocalDateTime.of(date, timeOfDay)
+    val now = Clock.System.now()
+    val dateTime = if (isTomorrow) now.plus(1, DateTimeUnit.DAY, TimeZone.currentSystemDefault())
+        .toLocalDateTime() else now.toLocalDateTime()
     return Pair(
         context.getString(
             R.string.time_suggestion,
             tomorrowPrefix,
             timeOfDayString,
             timeOfDay.timeString()
-        ), dateTime
+        ), LocalDateTime(dateTime.date, timeOfDay)
     )
 }

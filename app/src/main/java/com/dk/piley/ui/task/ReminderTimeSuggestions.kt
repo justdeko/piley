@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
 
 /**
  * Reminder time suggestions list
@@ -33,7 +33,7 @@ fun ReminderTimeSuggestions(
     ) {
         val timeSuggestions = TimeSuggestion.entries.toTypedArray()
         timeSuggestions
-            .map { timeSuggestion -> timeSuggestion.getLabelAndDate(context, LocalDateTime.now()) }
+            .map { timeSuggestion -> timeSuggestion.getLabelAndDate(context) }
             .sortedBy { (_, date) -> date }
             .map { (label, date) ->
                 ElevatedSuggestionChip(

@@ -4,7 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dk.piley.model.user.PileMode
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 /**
  * Pile entity representing a user pile
@@ -25,8 +26,8 @@ data class Pile(
     val description: String = "",
     val pileMode: PileMode = PileMode.FREE,
     val pileLimit: Int = 0,
-    val createdAt: Instant = Instant.now(),
-    val modifiedAt: Instant = Instant.now(),
+    val createdAt: Instant = Clock.System.now(),
+    val modifiedAt: Instant = Clock.System.now(),
     @ColumnInfo(defaultValue = "0")
     val deletedCount: Int = 0,
 )

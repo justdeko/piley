@@ -77,6 +77,9 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.permissions)
+    ksp(libs.kotlin.inject.compiler.ksp)
+    implementation(libs.kotlin.inject.runtime)
+    implementation(libs.kotlinx.datetime)
 
 
     testImplementation(libs.junit)

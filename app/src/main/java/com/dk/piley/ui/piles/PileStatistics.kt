@@ -22,7 +22,9 @@ import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.profile.TaskStats
 import com.dk.piley.ui.theme.PileyTheme
-import java.time.LocalDate
+import com.dk.piley.util.toLocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
 
 /**
  * Pile statistics section
@@ -43,7 +45,7 @@ fun PileStatistics(
     deletedCount: Int = 0,
     currentCount: Int = 0,
     completedTaskCounts: List<Int> = emptyList(),
-    currentDay: LocalDate = LocalDate.now(),
+    currentDay: LocalDate = Clock.System.now().toLocalDateTime().date,
     onClearStatistics: () -> Unit = {},
     initialGraphTransitionValue: Boolean = true
 ) {

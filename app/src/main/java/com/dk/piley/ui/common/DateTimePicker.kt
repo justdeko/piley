@@ -28,11 +28,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
-import com.dk.piley.util.utcZoneId
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import com.dk.piley.util.toLocalDateTime
+import com.dk.piley.util.utcZone
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.atStartOfDayIn
 
 /**
  * Reminder date picker
@@ -49,7 +51,7 @@ fun ReminderDatePicker(
     onConfirm: (LocalDate) -> Unit
 ) {
     val datePickerState =
-        rememberDatePickerState(initialDate?.atStartOfDay(utcZoneId)?.toInstant()?.toEpochMilli())
+        rememberDatePickerState(initialDate?.atStartOfDayIn(utcZone)?.toEpochMilliseconds())
     val confirmEnabled = remember { derivedStateOf { datePickerState.selectedDateMillis != null } }
     DatePickerDialog(
         onDismissRequest = onDismiss,
@@ -57,7 +59,7 @@ fun ReminderDatePicker(
             TextButton(
                 onClick = {
                     datePickerState.selectedDateMillis?.let {
-                        onConfirm(Instant.ofEpochMilli(it).atZone(utcZoneId).toLocalDate())
+                        onConfirm(Instant.fromEpochMilliseconds(it).toLocalDateTime().date)
                     }
                 },
                 enabled = confirmEnabled.value
@@ -89,7 +91,7 @@ fun ReminderTimePicker(
     onDismiss: () -> Unit,
     onConfirm: (LocalTime) -> Unit
 ) {
-    val now = LocalDateTime.now().toLocalTime()
+    val now = Clock.System.now().toLocalDateTime().time
     val state =
         rememberTimePickerState(
             initialHour = initialTime?.hour ?: now.hour,
@@ -128,7 +130,7 @@ fun ReminderTimePicker(
             }
             TwoButtonRow(
                 modifier = Modifier.padding(top = LocalDim.current.medium),
-                onRightClick = { onConfirm(LocalTime.of(state.hour, state.minute)) },
+                onRightClick = { onConfirm(LocalTime(state.hour, state.minute)) },
                 onLeftClick = onDismiss,
                 rightText = stringResource(R.string.confirm_date_time_picker_button),
                 leftText = stringResource(R.string.cancel_date_time_picker_button)
@@ -141,7 +143,7 @@ fun ReminderTimePicker(
 @Composable
 fun ReminderDatePickerPreview() {
     PileyTheme(useDarkTheme = true) {
-        ReminderDatePicker(initialDate = LocalDate.now(), onDismiss = {}, onConfirm = {})
+        ReminderDatePicker(initialDate = LocalDate(2024, 10, 13), onDismiss = {}, onConfirm = {})
     }
 }
 
@@ -149,6 +151,6 @@ fun ReminderDatePickerPreview() {
 @Composable
 fun ReminderTimePickerPreview() {
     PileyTheme(useDarkTheme = true) {
-        ReminderTimePicker(initialTime = LocalTime.now(), onDismiss = {}, onConfirm = {})
+        ReminderTimePicker(initialTime = LocalTime(13, 24), onDismiss = {}, onConfirm = {})
     }
 }

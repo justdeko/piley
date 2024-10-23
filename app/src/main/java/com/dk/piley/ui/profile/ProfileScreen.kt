@@ -46,7 +46,8 @@ import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.SlideDirection
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.previewUpcomingTasksList
-import java.time.LocalDateTime
+import com.dk.piley.util.toLocalDateTime
+import kotlinx.datetime.Clock
 
 
 /**
@@ -242,7 +243,7 @@ fun ProfileScreenPreview() {
         Surface {
             val state = ProfileViewState(
                 userName = "Thomas",
-                lastBackup = LocalDateTime.now(),
+                lastBackup = Clock.System.now().toLocalDateTime(),
                 doneTasks = 0,
                 deletedTasks = 2,
                 currentTasks = 3,
@@ -263,7 +264,7 @@ fun ProfileScreenUserOfflinePreview() {
         Surface {
             val state = ProfileViewState(
                 userName = "Thomas",
-                lastBackup = LocalDateTime.now(),
+                lastBackup = Clock.System.now().toLocalDateTime(),
                 doneTasks = 0,
                 deletedTasks = 2,
                 currentTasks = 3,

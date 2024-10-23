@@ -9,8 +9,10 @@ import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.ui.reminder.DelayRange
-import java.time.Instant
-import java.time.LocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.plus
 
 val previewTaskList: List<Task> = listOf(
     Task(id = 1, title = "Buy groceries", description = "Milk, eggs, bread, and vegetables"),
@@ -76,11 +78,11 @@ val previewUpcomingTasksList = listOf(
         Task(
             id = 1,
             title = "Clean room",
-            reminder = LocalDateTime.parse("2023-08-04T09:36:24").plusDays(1).toInstantWithOffset(),
+            reminder = LocalDateTime.parse("2023-08-04T09:36:24").toInstantWithOffset().plus(1, DateTimeUnit.DAY, utcZone),
             isRecurring = true,
             recurringFrequency = 2,
             recurringTimeRange = RecurringTimeRange.WEEKLY,
-            completionTimes = listOf(Instant.now())
+            completionTimes = listOf(Clock.System.now())
         )
     ),
     Pair(
@@ -88,7 +90,7 @@ val previewUpcomingTasksList = listOf(
         Task(
             id = 2,
             title = "Buy bananas with a very long task title that has a lot of symbols",
-            reminder = LocalDateTime.parse("2023-08-04T18:02:24").plusDays(2).toInstantWithOffset()
+            reminder = LocalDateTime.parse("2023-08-04T18:02:24").toInstantWithOffset().plus(2, DateTimeUnit.DAY, utcZone)
         )
     ),
     Pair(
@@ -96,7 +98,7 @@ val previewUpcomingTasksList = listOf(
         Task(
             id = 3,
             title = "Call Dentist",
-            reminder = LocalDateTime.parse("2023-08-04T14:01:24").plusDays(3).toInstantWithOffset()
+            reminder = LocalDateTime.parse("2023-08-04T14:01:24").toInstantWithOffset().plus(3, DateTimeUnit.DAY, utcZone)
         )
     ),
     Pair(
@@ -104,8 +106,8 @@ val previewUpcomingTasksList = listOf(
         Task(
             id = 4,
             title = "Completed recurring task",
-            reminder = LocalDateTime.parse("2023-08-04T14:01:24").plusDays(3).toInstantWithOffset(),
-            completionTimes = listOf(LocalDateTime.now().toInstantWithOffset()),
+            reminder = LocalDateTime.parse("2023-08-04T14:01:24").toInstantWithOffset().plus(3, DateTimeUnit.DAY, utcZone),
+            completionTimes = listOf(Clock.System.now()),
             isRecurring = true
         )
     )

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.dk.piley.ui.reminder.DelayRange
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /**
  * User entity representing the user and its preferences

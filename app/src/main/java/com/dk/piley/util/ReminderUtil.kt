@@ -14,9 +14,14 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.toText
 import com.dk.piley.ui.reminder.DelayRange
 import com.dk.piley.ui.reminder.getDurationByIndex
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 
 /**
  * Get next reminder time for a specific reminder
@@ -30,11 +35,16 @@ fun reminderPlusTime(
     lastReminder: LocalDateTime,
     recurringTimeRange: RecurringTimeRange,
     recurringFrequency: Int
-): LocalDateTime = when (recurringTimeRange) {
-    DAILY -> lastReminder.plusDays(recurringFrequency.toLong())
-    WEEKLY -> lastReminder.plusWeeks(recurringFrequency.toLong())
-    MONTHLY -> lastReminder.plusMonths(recurringFrequency.toLong())
-    YEARLY -> lastReminder.plusYears(recurringFrequency.toLong())
+): LocalDateTime {
+    val timeZone = TimeZone.currentSystemDefault()
+    val instant = lastReminder.toInstant(TimeZone.currentSystemDefault())
+
+    return when (recurringTimeRange) {
+        DAILY -> instant.plus(recurringFrequency, DateTimeUnit.DAY, timeZone)
+        WEEKLY -> instant.plus(recurringFrequency, DateTimeUnit.WEEK, timeZone)
+        MONTHLY -> instant.plus(recurringFrequency, DateTimeUnit.MONTH, timeZone)
+        YEARLY -> instant.plus(recurringFrequency, DateTimeUnit.YEAR, timeZone)
+    }.toLocalDateTime(timeZone)
 }
 
 /**
@@ -43,17 +53,14 @@ fun reminderPlusTime(
  * @return next reminder time in [Instant] form
  */
 fun Task.getNextReminderTime(
-    now: Instant = LocalDateTime.now().toInstantWithOffset()
+    now: Instant = Clock.System.now()
 ): Instant {
     val startingTime = if (nowAsReminderTime) now else reminder ?: now
     var reminderTime = reminderPlusTime(
-        LocalDateTime.ofInstant(
-            startingTime,
-            ZoneId.systemDefault()
-        ), recurringTimeRange, recurringFrequency
+        startingTime.toLocalDateTime(), recurringTimeRange, recurringFrequency
     ).toInstantWithOffset()
     // recalculate if next reminder time is in the past
-    while (reminderTime.isBefore(now)) {
+    while (reminderTime < now) {
         reminderTime = reminderPlusTime(
             reminderTime.toLocalDateTime(),
             recurringTimeRange,

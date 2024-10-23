@@ -19,7 +19,9 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.toLocalDateTime
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.minus
 
 /**
  * Task info section
@@ -68,8 +70,8 @@ fun TaskInfoPreview() {
         TaskInfo(
             Modifier.fillMaxWidth(),
             task = Task(
-                createdAt = Instant.now().minusMillis(1000 * 60 * 60 * 3), // 3 hours
-                modifiedAt = Instant.now()
+                createdAt = Clock.System.now().minus(3, DateTimeUnit.HOUR),
+                modifiedAt = Clock.System.now()
             )
         )
     }
@@ -82,10 +84,13 @@ fun TaskInfoRecurringPreview() {
         TaskInfo(
             Modifier.fillMaxWidth(),
             task = Task(
-                createdAt = Instant.now().minusMillis(1000 * 60 * 60 * 3), // 3 hours
-                modifiedAt = Instant.now(),
+                createdAt = Clock.System.now().minus(3, DateTimeUnit.HOUR), // 3 hours
+                modifiedAt = Clock.System.now(),
                 isRecurring = true,
-                completionTimes = listOf(Instant.now().minusMillis(1000 * 60 * 60 * 3), Instant.now().minusMillis(1000 * 60 * 60 * 1))
+                completionTimes = listOf(
+                    Clock.System.now().minus(3, DateTimeUnit.HOUR),
+                    Clock.System.now().minus(3, DateTimeUnit.HOUR)
+                )
             )
         )
     }

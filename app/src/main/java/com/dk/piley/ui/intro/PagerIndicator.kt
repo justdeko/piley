@@ -1,6 +1,5 @@
 package com.dk.piley.ui.intro
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,7 +26,6 @@ import com.dk.piley.ui.theme.PileyTheme
  * @param modifier generic modifier
  * @param pagerState pager indicator state
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
     Row(
@@ -52,7 +50,6 @@ fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 fun PagerIndicatorPreview() {

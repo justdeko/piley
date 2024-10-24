@@ -6,7 +6,6 @@ import android.content.Intent
 import com.dk.piley.reminder.NotificationExecutor
 import com.dk.piley.reminder.ReminderAction
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -20,7 +19,6 @@ class ReminderAlarmReceiver : BroadcastReceiver() {
     lateinit var taskNotificationExecutor: NotificationExecutor
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        Timber.d("Alarm received with ${intent?.action}")
         val taskId = intent?.getLongExtra(EXTRA_TASK_ID, -1) ?: -1
 
         when (intent?.action) {

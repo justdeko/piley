@@ -22,7 +22,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -115,7 +114,6 @@ class TaskDetailViewModel @Inject constructor(
      * @param reminderState reminder selection state containing parameters set by user when setting reminder
      */
     fun addReminder(reminderState: ReminderState) {
-        Timber.d("adding reminder for state $reminderState")
         state.update {
             it.copy(reminderDateTimeText = reminderState.reminder.dateTimeString())
         }

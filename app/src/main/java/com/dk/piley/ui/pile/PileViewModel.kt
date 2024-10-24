@@ -3,7 +3,6 @@ package com.dk.piley.ui.pile
 import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.dk.piley.backup.BackupManager
 import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
@@ -29,7 +28,6 @@ import javax.inject.Inject
  * @property taskRepository task repository instance
  * @property pileRepository pile repository instance
  * @property userRepository user repository instance
- * @property backupManager backup manager instance
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
@@ -37,7 +35,6 @@ class PileViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
-    private val backupManager: BackupManager,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<PileViewState>(PileViewState()) {
 
@@ -49,8 +46,6 @@ class PileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            // perform a recurring backup if necessary
-            backupManager.performBackupIfNecessary()
             // get piles and start updating state
             userRepository.getSignedInUserNotNullFlow().flatMapLatest { user ->
                 // set recurring tasks to shown if user property changes

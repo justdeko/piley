@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
@@ -36,7 +35,6 @@ import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.ui.common.ContentAlertDialog
-import com.dk.piley.ui.common.CreateBaseUrlAlertDialog
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
@@ -75,7 +73,7 @@ fun SettingsScreen(
 
     if (viewState.userDeleted) {
         LaunchedEffect(true) {
-            navController.navigateClearBackstack(Screen.SignIn.route)
+            navController.navigateClearBackstack(Screen.Splash.route)
         }
     }
 
@@ -88,14 +86,10 @@ fun SettingsScreen(
         onResetPileModes = { viewModel.onResetPileModes() },
         onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) },
         onReminderDelayChange = { range, index -> viewModel.updateReminderDelay(range, index) },
-        onBackupFrequencyChange = { viewModel.updateBackupFrequency(it) },
-        onPullBackupPeriodChange = { viewModel.updatePullBackupPeriod(it) },
         onEditUser = { result -> viewModel.updateUser(result) },
-        onDeleteUser = { password -> viewModel.deleteUser(password) },
+        onDeleteUser = { viewModel.deleteUser() },
         onCloseSettings = { navController.popBackStack() },
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
-        onSetBaseUrlValue = { baseUrl -> viewModel.setBaseUrl(baseUrl) },
-        onMakeUserOnline = { makeUserOnlineResult -> viewModel.makeUserOnline(makeUserOnlineResult) },
         onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) }
     )
 }
@@ -111,14 +105,10 @@ fun SettingsScreen(
  * @param onResetPileModes on reset pile modes for all piles to free
  * @param onAutoHideKeyboardChange on change auto hide keyboard enabled setting
  * @param onReminderDelayChange on change default reminder delay setting
- * @param onBackupFrequencyChange on change backup frequency setting
- * @param onPullBackupPeriodChange on change query backup frequency setting
  * @param onEditUser on edit user
  * @param onDeleteUser on delete user
  * @param onCloseSettings on close settings screen
  * @param onStartTutorial on restart tutorial
- * @param onSetBaseUrlValue on set base url value
- * @param onMakeUserOnline on make user online
  * @param onShowRecurringTasks show recurring tasks by default
  */
 @Composable
@@ -131,14 +121,10 @@ private fun SettingsScreen(
     onResetPileModes: () -> Unit = {},
     onAutoHideKeyboardChange: (Boolean) -> Unit = {},
     onReminderDelayChange: (DelayRange, Int) -> Unit = { _, _ -> },
-    onBackupFrequencyChange: (Int) -> Unit = {},
-    onPullBackupPeriodChange: (Int) -> Unit = {},
     onEditUser: (EditUserResult) -> Unit = {},
-    onDeleteUser: (String) -> Unit = {},
+    onDeleteUser: () -> Unit = {},
     onCloseSettings: () -> Unit = {},
     onStartTutorial: () -> Unit = {},
-    onSetBaseUrlValue: (String) -> Unit = {},
-    onMakeUserOnline: (MakeUserOnlineResult) -> Unit = {},
     onShowRecurringTasks: (Boolean) -> Unit = {},
 ) {
     val dim = LocalDim.current
@@ -147,25 +133,11 @@ private fun SettingsScreen(
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
-    var baseUrlDialogOpen by remember { mutableStateOf(false) }
-    var makeUserOnlineDialogOpen by remember { mutableStateOf(false) }
-
-    if (baseUrlDialogOpen) {
-        CreateBaseUrlAlertDialog(
-            initialUrlValue = viewState.baseUrlValue,
-            onDismiss = { baseUrlDialogOpen = false },
-            onConfirm = {
-                onSetBaseUrlValue(it)
-                baseUrlDialogOpen = false
-            },
-        )
-    }
 
     if (editUserDialogOpen) {
         ContentAlertDialog(onDismiss = { editUserDialogOpen = false }) {
             EditUserContent(
                 existingName = viewState.user.name,
-                userIsOffline = viewState.user.isOffline,
                 onConfirm = { result ->
                     editUserDialogOpen = false
                     onEditUser(result)
@@ -175,26 +147,12 @@ private fun SettingsScreen(
         }
     }
 
-    if (makeUserOnlineDialogOpen) {
-        ContentAlertDialog(onDismiss = { makeUserOnlineDialogOpen = false }) {
-            MakeUserOnlineContent(
-                existingName = viewState.user.name,
-                onConfirm = {
-                    onMakeUserOnline(it)
-                    makeUserOnlineDialogOpen = false
-                },
-                onCancel = { makeUserOnlineDialogOpen = false }
-            )
-        }
-    }
-
     if (deleteUserDialogOpen) {
         ContentAlertDialog(onDismiss = { deleteUserDialogOpen = false }) {
             DeleteUserContent(
-                userIsOffline = viewState.user.isOffline,
-                onConfirm = { password ->
+                onConfirm = {
                     deleteUserDialogOpen = false
-                    onDeleteUser(password)
+                    onDeleteUser()
                 },
                 onCancel = {
                     deleteUserDialogOpen = false
@@ -290,30 +248,6 @@ private fun SettingsScreen(
                         )
                     }
                 }
-                if (!viewState.user.isOffline) {
-                    HorizontalDivider()
-                    SettingsSection(
-                        title = stringResource(R.string.settings_section_backup_title),
-                        icon = Icons.Filled.Backup
-                    ) {
-                        SliderSettingsItem(
-                            title = stringResource(R.string.backup_frequency_setting_title),
-                            description = stringResource(R.string.backup_frequency_setting_description),
-                            value = viewState.user.defaultBackupFrequency,
-                            range = Pair(1, 14),
-                            steps = 14,
-                            onValueChange = onBackupFrequencyChange
-                        )
-                        SliderSettingsItem(
-                            title = stringResource(R.string.backup_pull_after_title),
-                            description = stringResource(R.string.backup_pull_after_description),
-                            value = viewState.user.loadBackupAfterDays,
-                            range = Pair(0, 14),
-                            steps = 15,
-                            onValueChange = onPullBackupPeriodChange
-                        )
-                    }
-                }
                 HorizontalDivider()
                 SettingsSection(
                     title = stringResource(R.string.settings_section_user_title),
@@ -334,19 +268,6 @@ private fun SettingsScreen(
                         description = stringResource(R.string.start_tutorial_setting_description),
                         onClick = { onStartTutorial() }
                     )
-                    if (!viewState.user.isOffline) {
-                        SettingsItem(
-                            title = stringResource(R.string.set_base_url_setting_title),
-                            description = stringResource(R.string.set_base_url_setting_description),
-                            onClick = { baseUrlDialogOpen = true }
-                        )
-                    } else { // if user is offline, show option to make user online
-                        SettingsItem(
-                            title = stringResource(R.string.make_user_online_setting_title),
-                            description = stringResource(R.string.make_user_online_setting_description),
-                            onClick = { makeUserOnlineDialogOpen = true }
-                        )
-                    }
                     Box(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.BottomCenter

@@ -17,10 +17,6 @@ android {
         versionCode = 14
         versionName = "0.7.0"
 
-        // default api base urls
-        val url = project.findProperty("API_URL") as String? ?: "https://127.0.0.1/"
-        buildConfigField("String", "LOCAL_API_BASE_URL", "\"$url\"")
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -29,7 +25,6 @@ android {
 
     buildTypes {
         release {
-            buildConfigField("String", "LOCAL_API_BASE_URL", "\"https://127.0.0.1/\"")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -67,29 +62,15 @@ dependencies {
     implementation(libs.androidx.material)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.converter.scalars)
-    implementation(libs.logging.interceptor)
-    implementation(libs.timber)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.accompanist.permissions)
     ksp(libs.kotlin.inject.compiler.ksp)
     implementation(libs.kotlin.inject.runtime)
     implementation(libs.kotlinx.datetime)
 
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    testImplementation(libs.mockito.kotlin)
 
     implementation(libs.material)
     implementation(libs.hilt.android)

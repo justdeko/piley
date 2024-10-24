@@ -1,19 +1,10 @@
 <resources>
-    <string name="app_name" translatable="false">piley</string>
-
     <!--Nav locations-->
-    <string name="pile" translatable="false">Pile</string>
-    <string name="piles" translatable="false">Piles</string>
     <string name="profile">Profil</string>
     <string name="settings">Ayarlar</string>
-    <string name="sign_in">Oturum aç</string>
-    <string name="splash_screen" translatable="false">Splash Screen</string>
-    <string name="introduction_screen" translatable="false">Introduction Screen</string>
     <string name="daily_pile_name">Günlük</string>
 
     <!--notifications-->
-    <string name="reminder_notification_channel_title" translatable="false">Reminder</string>
-    <string name="reminder_notification_channel_description" translatable="false">Reminder</string>
     <string name="reminder_complete_action">Tamamlandı</string>
     <string name="reminder_delay_action">Gecikme</string>
     <string name="reminder_custom_delay_action">Gecikme…</string>
@@ -84,52 +75,28 @@
     <string name="delete_pile_dialog_description">Bu yığını silmek istediğinizden emin misiniz? Bu, yığındaki tüm görevler silineceğinden kullanıcı istatistiklerini de etkileyecektir.</string>
     <string name="delete_pile_dialog_confirm_button">Evet</string>
 
-    <!-- profile screen -->
-    <string name="last_backup_label">Son yedekleme</string>
-    <string name="no_backup_text">Henüz yedekleme yok.\nİlk yedeklemenizi oluşturmak için sağ taraftaki simgeye tıklayın</string>
-
-    <!-- backup error dialog -->
-    <string name="backup_error_dialog_title">Yedek yüklenirken hata oluştu</string>
-    <string name="backup_error_dialog_description">Yedek yüklenirken bir hata oluştu. Yine de çıkış yapmak istiyor musunuz? Son değişiklikler kaybolabilir.</string>
-    <string name="backup_error_dialog_confirm_button">Çıkış yap</string>
-
     <!-- user profile sections -->
     <string name="user_statistics_section_title">İstatistikler</string>
     <string name="upcoming_tasks_section_title">Yaklaşan Görevler</string>
-    <string name="backup_section_title">Yedekle</string>
-    <string name="backup_upload_successful_message">Yedek yükleme başarılı</string>
-    <string name="backup_upload_error_message">Yedek yüklenemedi</string>
-    <string name="sign_out_successful_message">Oturum kapatıldı!</string>
     <string name="done_tasks_label">Bitti</string>
     <string name="current_tasks_label">Mevcut</string>
     <string name="deleted_tasks_label">Silindi</string>
     <string name="tasks_completed_past_days_label">Son 7 gün içinde tamamlanan görevler:</string>
     <string name="biggest_pile_label">Şu anda en büyük yığın:</string>
     <string name="no_upcoming_tasks_hint">Yaklaşan görev yok</string>
-    <string name="average_task_completion_duration_value">%1$dh</string>
     <string name="no_pile">Yok</string>
 
     <!-- delete user dialog -->
     <string name="delete_user_dialog_title">Kullanıcıyı sil</string>
     <string name="delete_user_dialog_description">Bu kullanıcıyı silmek istediğinizden emin misiniz?</string>
-    <string name="user_password_confirm_hint">Onaylamak için parolanızı girin</string>
     <string name="delete_user_dialog_cancel_button">İptal</string>
     <string name="delete_user_dialog_confirm_button">Sil</string>
 
     <!-- edit user dialog -->
     <string name="edit_user_dialog_title">Kişisel verilerinizi buradan değiştirin.</string>
     <string name="user_name_hint">Adınız</string>
-    <string name="user_new_password_hint">Yeni Şifre\n(değiştirilmediyse boş bırakın)</string>
-    <string name="user_current_password_hint">Onaylamak için mevcut şifre</string>
     <string name="edit_user_dialog_cancel_button">İptal</string>
     <string name="edit_user_dialog_confirm_button">Güncelle</string>
-
-    <!-- set base url dialog -->
-    <string name="base_url_dialog_title">İstek URL\'sini ayarla</string>
-    <string name="base_url_dialog_hint">ör. https://127.0.0.1/</string>
-    <string name="base_url_dialog_hint_2">URL eğik çizgi /ile bitmelidir</string>
-    <string name="base_url_dialog_confirm">URL\'yi Ayarla</string>
-    <string name="base_url_dialog_cancel">İptal</string>
 
     <!-- settings screen -->
     <string name="settings_screen_title">@string/settings</string>
@@ -159,13 +126,6 @@
     <string name="reminder_delay_duration_setting_title">Hatırlatma Gecikme Süresi</string>
     <string name="reminder_delay_duration_setting_description">Görev hatırlatıcılarınızdaki \"Gecikme\" düğmesinin süresini ayarlayın.</string>
 
-    <!-- backup settings section-->
-    <string name="settings_section_backup_title">Yedekle</string>
-    <string name="backup_frequency_setting_title">Yedekleme Sıklığı</string>
-    <string name="backup_frequency_setting_description">Yedekleme sıklığını gün olarak ayarlayın.</string>
-    <string name="backup_pull_after_title">Yedeklemeyi sonra indir…</string>
-    <string name="backup_pull_after_description">Uygulama yeniden başlatıldığında uzaktan yedeklemenin kaç gün sonra alınacağını ayarlayın. 0 Her zaman anlamına gelir</string>
-
     <!-- user settings section-->
     <string name="settings_section_user_title">Kullanıcı</string>
     <string name="update_user_setting_title">Kullanıcıyı Güncelle</string>
@@ -178,35 +138,6 @@
     <string name="user_update_success_info">Kullanıcı başarıyla güncellendi!</string>
     <string name="start_tutorial_setting_title">Öğreticiyi yeniden başlatın</string>
     <string name="start_tutorial_setting_description">Öğreticiyi tekrar görmek istiyorsanız buraya tıklayın.</string>
-    <string name="set_base_url_setting_title">İstek URL\'sini ayarla</string>
-    <string name="set_base_url_setting_description">Yedeklemeleri yüklemek ve almak için uygulamanın bağlandığı temel istek URL\'sini ayarlayın.</string>
-
-    <!-- make user online-->
-    <string name="make_user_online_setting_title">Kullanıcıyı çevrimiçi yap</string>
-    <string name="make_user_online_setting_description">Yedekleme sunucunuza bağlanarak bu kullanıcıyı çevrimiçi yapın.</string>
-    <string name="request_url_hint">Eğik çizgi ile biten istek URL\'si</string>
-    <string name="make_user_online_title">İlk yedeğinizi yüklemek için kalan verileri girin.</string>
-    <string name="make_user_online_confirm_button">Kullanıcı Oluştur</string>
-    <string name="error_make_user_online">Kullanıcı oluşturulurken hata oluştu</string>
-    <string name="make_user_online_backup_failed">Yedekleme başarısız. Profil sayfanızda manuel olarak yedeklemeyi deneyin.</string>
-    <string name="make_user_online_success">Kullanıcı oluşturuldu ve ilk yedek yüklendi!</string>
-
-    <!-- sign in screen -->
-    <string name="register_button_text">Kaydol</string>
-    <string name="sign_in_button_text">Oturum aç</string>
-    <string name="user_email_placeholder">E - posta</string>
-    <string name="invalid_email_hint">Geçerli bir e - posta değil</string>
-    <string name="username_placeholder">Kullanıcı adı</string>
-    <string name="password_placeholder">Parola</string>
-    <string name="user_offline_checkbox_label">Kullanıcıyı çevrimdışı yap</string>
-    <string name="navigate_to_sign_in_button_text">Bunun yerine oturum açın</string>
-    <string name="navigate_to_register_button_text">Hesap oluştur</string>
-    <string name="user_register_error_message">Kayıt olmaya çalışırken hata oluştu</string>
-    <string name="sign_in_success_message">Oturum açıldı!</string>
-    <string name="sign_in_error_message">Oturum açılırken hata oluştu</string>
-    <string name="api_base_url_info_message">API istek URL\'niz şimdi: %1$s</string>
-    <string name="use_offline_button_text">Çevrimdışı Kullan</string>
-    <string name="or">veya</string>
 
     <!-- add reminder sheet -->
     <string name="edit_reminder_title">Hatırlatıcıyı düzenle</string>

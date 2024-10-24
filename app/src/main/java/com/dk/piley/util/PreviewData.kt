@@ -5,10 +5,7 @@ import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
-import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
-import com.dk.piley.model.user.User
-import com.dk.piley.ui.reminder.DelayRange
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
@@ -52,24 +49,6 @@ val previewPileWithTasksList: List<PileWithTasks> = listOf(
         previewTaskList.subList(13, 17)
     ),
     PileWithTasks(Pile(pileId = 5, name = "Other"), previewTaskList.subList(17, 19))
-)
-
-val previewUser: User = User(
-    email = "paul@something.com",
-    name = "Paul",
-    password = "123456",
-    selectedPileId = 1,
-    defaultPileId = 1,
-    lastBackup = null,
-    lastBackupQuery = null,
-    nightMode = NightMode.SYSTEM,
-    dynamicColorOn = true,
-    pileMode = PileMode.FREE,
-    defaultReminderDelayRange = DelayRange.Minute,
-    defaultReminderDelayIndex = 0,
-    defaultBackupFrequency = 2,
-    autoHideKeyboard = true,
-    isOffline = false
 )
 
 val previewUpcomingTasksList = listOf(

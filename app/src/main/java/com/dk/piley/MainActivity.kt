@@ -15,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -36,10 +35,8 @@ import com.dk.piley.ui.piles.PileDetailScreen
 import com.dk.piley.ui.piles.PileOverviewScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
-import com.dk.piley.ui.signin.SignInScreen
 import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.ThemeHostScreen
 import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.isDarkMode
@@ -112,9 +109,6 @@ fun Home(
             composable(Screen.Splash.route) {
                 SplashScreen(navController = navController)
             }
-            composable(Screen.SignIn.route) {
-                SignInScreen(navController = navController, snackbarHostState = snackbarHostState)
-            }
             composable(route = Screen.Intro.route, arguments = Screen.Intro.optionalArguments) {
                 IntroScreen(navController = navController)
             }
@@ -173,13 +167,5 @@ fun Home(
                 PileDetailScreen(navController)
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun HomePreview() {
-    PileyTheme(useDarkTheme = true) {
-        Home()
     }
 }

@@ -1,15 +1,18 @@
 package com.dk.piley.ui.theme
 
+import android.app.Activity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dk.piley.R
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.util.isDarkMode
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 /**
  * Theme host screen for displaying themed content
@@ -20,7 +23,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 @Composable
 fun ThemeHostScreen(viewModel: ThemeViewModel = hiltViewModel(), content: @Composable () -> Unit) {
     val viewState by viewModel.state.collectAsState()
-    val systemUiController = rememberSystemUiController()
     val context = LocalContext.current
     val nightModeEnabled = when (viewState.nightModeEnabled) {
         NightMode.SYSTEM -> context.isDarkMode()
@@ -33,10 +35,12 @@ fun ThemeHostScreen(viewModel: ThemeViewModel = hiltViewModel(), content: @Compo
     // wrap content inside compose theme
     PileyTheme(nightModeEnabled, viewState.dynamicColorEnabled) {
         // set status bar color and icons color
-        systemUiController.setSystemBarsColor(
-            color = MaterialTheme.colorScheme.background,
-            darkIcons = !nightModeEnabled
-        )
+        val activity = LocalView.current.context as Activity
+        val window = activity.window
+        window.statusBarColor = MaterialTheme.colorScheme.background.toArgb()
+        window.navigationBarColor = MaterialTheme.colorScheme.surfaceContainer.toArgb()
+        val wic = WindowCompat.getInsetsController(window, window.decorView)
+        wic.isAppearanceLightStatusBars = !nightModeEnabled
         content()
     }
 }

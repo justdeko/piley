@@ -43,7 +43,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 /**
  * Splash screen
@@ -63,13 +62,8 @@ fun SplashScreen(
         modifier,
         viewState,
         onAnimFinished = {
-            Timber.d("splash anim finished")
             val destination =
                 when (viewModel.state.value.initState) {
-                    InitState.NOT_SIGNED_IN -> {
-                        Screen.SignIn.route
-                    }
-
                     InitState.FIRST_TIME -> {
                         Screen.Intro.route
                     }
@@ -156,13 +150,12 @@ private fun SplashAnimationLaunchedEffect(
     LaunchedEffect(key1 = true) {
         coroutineScope.launch {
             do {
-                Timber.d("loading animation triggered, init state: $splashViewState")
                 scaleFactor.animateTo(2f, tween(easing = FastOutSlowInEasing, durationMillis = 300))
                 scaleFactor.animateTo(
                     1.5f,
                     tween(easing = FastOutSlowInEasing, durationMillis = 400)
                 )
-            } while (splashViewState.initState == InitState.LOADING_BACKUP || splashViewState.initState == InitState.INIT)
+            } while (splashViewState.initState == InitState.INIT)
             awaitAll(
                 async {
                     scaleFactor.animateTo(

@@ -2,9 +2,7 @@ package com.dk.piley.model.task
 
 import com.dk.piley.reminder.NotificationManager
 import com.dk.piley.reminder.ReminderManager
-import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getNextReminderTime
-import com.dk.piley.util.toLocalDateTime
 import com.dk.piley.util.withNewCompletionTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
@@ -12,7 +10,6 @@ import kotlinx.coroutines.flow.take
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.plus
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -79,17 +76,11 @@ class TaskRepository @Inject constructor(
      * @return long representing db operation success
      */
     private suspend fun dismissAlarmAndNotificationAndInsert(task: Task): Long {
-        Timber.d("dismiss and start reminder from repository")
         reminderManager.cancelReminder(task.id)
         notificationManager.dismiss(task.id)
         // set next reminder if task is recurring
         if (task.status != TaskStatus.DELETED && task.isRecurring && task.reminder != null) {
             task.getNextReminderTime().let {
-                Timber.d(
-                    "set next reminder time for recurring reminder: ${
-                        it.toLocalDateTime().dateTimeString()
-                    }"
-                )
                 reminderManager.startReminder(
                     reminderTime = it,
                     taskId = task.id

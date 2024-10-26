@@ -15,8 +15,6 @@
     <a href="https://github.com/justdeko/piley/issues">report bug</a>
     ·
     <a href="https://github.com/justdeko/piley/issues">suggest feature</a>
-    ·
-    <a href="https://github.com/justdeko/piley-server">piley-server</a>
   </p>
 <a href='https://play.google.com/store/apps/details?id=com.dk.piley'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
 </div>
@@ -34,9 +32,6 @@
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#connect-to-piley-server">Connect to piley-server</a></li>
-      </ul>
     </li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -66,8 +61,6 @@ piley is a native Android app built with Jetpack Compose. The following librarie
 
 * [Hilt](https://dagger.dev/hilt/) for dependency injection
 * [Room](https://developer.android.com/training/data-storage/room) for data storage
-* [OkHttp](https://square.github.io/okhttp/) and [Retrofit](https://github.com/square/retrofit) for
-  remote calls
 * [Material3 UI Elements](https://developer.android.com/jetpack/androidx/releases/compose-material3)
   and Compose navigation
 * Various Jetpack Compose, AndroidX and Accompanist dependencies for specific functionality
@@ -79,33 +72,6 @@ piley is a native Android app built with Jetpack Compose. The following librarie
 To start using piley, you can just get the newest apk from the
 **[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [google
 play](https://play.google.com/store/apps/details?id=com.dk.piley)
-
-### Connect to [piley-server](https://github.com/justdeko/piley-server)
-
-If you want to connect your app to a self-hosted piley-server backend to upload backups, you can
-input the url when signing in. You can also change the endpoint URL later in the user settings if
-your server location changes. The application allows cleartext traffic, meaning your endpoint can
-also be http.
-
-The API url is by default `10.0.2.2` or `127.0.0.1` depending on the build type, which is used in
-emulators to connect to the localhost
-environment of the emulator host or the local computer api. You will need to change it unless you
-are running the app in an emulator. If your backup server is running on localhost for testing
-purposes, you can use `http://10.0.2.2:8081` inside the emulator to avoid having to install a custom
-root certificate to use the https equivalent.
-
-<img style="border-radius: 8px;" src="docs/assets/change_url.gif" width="200" />
-
-If you want to use an endpoint with a self-signed
-SSL certificate, you will have to manually add a
-network security config and include your certificate in `trust-anchors`. Then build the release apk
-as usual using Android Studio or the CLI. For more information about custom
-certificates, [read the official documentation](https://developer.android.com/training/articles/security-config#CustomTrust).
-
-For information on getting started with
-piley-server, [go here](https://github.com/justdeko/piley-server).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Planned features
 

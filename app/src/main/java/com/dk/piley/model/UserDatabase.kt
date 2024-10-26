@@ -29,8 +29,13 @@ const val USER_DATABASE_NAME = "piley-db-users"
             to = 3,
             spec = TwoToThreeMigrationSpec::class
         ),
+        AutoMigration(
+            from = 3,
+            to = 4,
+            spec = ThreeToFourMigrationSpec::class
+        ),
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -56,8 +61,13 @@ abstract class UserDatabase : RoomDatabase() {
     }
 }
 
-@DeleteColumn(
-    tableName = "User",
-    columnName = "defaultReminderDelay",
-)
+@DeleteColumn(tableName = "User", columnName = "defaultReminderDelay")
 private class TwoToThreeMigrationSpec : AutoMigrationSpec
+
+@DeleteColumn(tableName = "User", columnName = "password")
+@DeleteColumn(tableName = "User", columnName = "lastBackup")
+@DeleteColumn(tableName = "User", columnName = "lastBackupQuery")
+@DeleteColumn(tableName = "User", columnName = "defaultBackupFrequency")
+@DeleteColumn(tableName = "User", columnName = "isOffline")
+@DeleteColumn(tableName = "User", columnName = "loadBackupAfterDays")
+private class ThreeToFourMigrationSpec : AutoMigrationSpec

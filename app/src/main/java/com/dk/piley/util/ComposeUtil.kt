@@ -1,5 +1,8 @@
 package com.dk.piley.util
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
@@ -172,4 +175,13 @@ fun TinySpacer() {
 
 class BooleanProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean> = sequenceOf(false, true)
+}
+
+fun Context.getActivityOrNull(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    return null
 }

@@ -1,13 +1,8 @@
-@file:OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalPermissionsApi::class,
-)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.dk.piley.ui.task
 
-import android.Manifest
 import android.content.res.Configuration
-import android.os.Build
 import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -59,10 +54,6 @@ import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.timeString
 import com.dk.piley.util.toLocalDateTime
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -80,7 +71,7 @@ import kotlinx.datetime.LocalTime
  * @param useNowAsReminderDate whether to use current time as reminder date
  * @param onAddReminder on add or update reminder
  * @param onDeleteReminder on delete reminder
- * @param permissionState permission state for notifications
+ * @param notificationPermissionGranted whether the notification permission was granted
  */
 @Composable
 fun AddReminderDrawer(
@@ -93,12 +84,8 @@ fun AddReminderDrawer(
     useNowAsReminderDate: Boolean = false,
     onAddReminder: (ReminderState) -> Unit = {},
     onDeleteReminder: () -> Unit = {},
-    permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-    } else {
-        null
-    },
     onDismiss: () -> Unit = {},
+    notificationPermissionGranted: Boolean = false,
 ) {
     ModalBottomSheet(
         sheetState = sheetState,
@@ -118,7 +105,7 @@ fun AddReminderDrawer(
             recurringTimeRange = recurringTimeRange,
             recurringFrequency = recurringFrequency,
             useNowAsReminderTime = useNowAsReminderDate,
-            permissionState = permissionState
+            notificationPermissionGranted = notificationPermissionGranted
         )
     }
 }
@@ -134,7 +121,7 @@ fun AddReminderDrawer(
  * @param recurringTimeRange time range for recurring reminders
  * @param recurringFrequency frequency for recurring reminders
  * @param useNowAsReminderTime whether to use current time as reminder date
- * @param permissionState permission state for notifications
+ * @param notificationPermissionGranted whether the notification permission was granted
  */
 @Composable
 fun AddReminderContent(
@@ -146,11 +133,7 @@ fun AddReminderContent(
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
     useNowAsReminderTime: Boolean = false,
-    permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-    } else {
-        null
-    },
+    notificationPermissionGranted: Boolean = false
 ) {
     val context = LocalContext.current
     val dim = LocalDim.current
@@ -262,7 +245,7 @@ fun AddReminderContent(
                 enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
                 onClick = {
                     // if permission denied, do nothing and show toast
-                    if (permissionState != null && !permissionState.status.isGranted) {
+                    if (!notificationPermissionGranted) {
                         Toast.makeText(
                             context,
                             context.getString(R.string.no_notification_permission_reminder_warning),
@@ -370,10 +353,6 @@ data class ReminderState(
     val recurringFrequency: Int,
 )
 
-@OptIn(
-    ExperimentalPermissionsApi::class,
-    ExperimentalMaterial3Api::class
-)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AddReminderDrawerPreview() {
@@ -382,16 +361,11 @@ fun AddReminderDrawerPreview() {
             val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
             AddReminderDrawer(
                 sheetState = sheetState,
-                permissionState = null
             )
         }
     }
 }
 
-@OptIn(
-    ExperimentalPermissionsApi::class,
-    ExperimentalMaterial3Api::class
-)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun EditReminderDrawerPreview() {
@@ -402,7 +376,6 @@ fun EditReminderDrawerPreview() {
             AddReminderDrawer(
                 initialDate = initialDateTime,
                 sheetState = sheetState,
-                permissionState = null
             )
         }
     }
@@ -419,7 +392,6 @@ fun EditReminderDrawerRecurringPreview() {
                 initialDate = initialDateTime,
                 isRecurring = true,
                 sheetState = sheetState,
-                permissionState = null
             )
         }
     }

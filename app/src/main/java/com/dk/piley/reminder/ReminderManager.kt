@@ -8,7 +8,6 @@ import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.receiver.ReminderAlarmReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.datetime.Instant
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,7 +32,6 @@ class ReminderManager @Inject constructor(
     fun startReminder(
         reminderTime: Instant, taskId: Long
     ) {
-        Timber.i("Starting reminder with datetime $reminderTime for task id $taskId")
         val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW
             putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)
@@ -58,7 +56,6 @@ class ReminderManager @Inject constructor(
     fun cancelReminder(
         taskId: Long
     ) {
-        Timber.i("Cancelling reminder for task id $taskId")
         val intent = Intent(context, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW
         }.let { intent ->

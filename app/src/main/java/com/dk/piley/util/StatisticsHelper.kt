@@ -13,7 +13,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.periodUntil
 import kotlinx.datetime.toLocalDateTime
-import kotlin.math.roundToLong
 
 /**
  * Get frequencies of completed tasks for dates
@@ -95,17 +94,6 @@ fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>, context: Context): S
     pilesWithTasks.maxByOrNull { pileWithTasks ->
         pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }
     }?.pile?.name ?: context.getString(R.string.no_pile)
-
-/**
- * Get average task completion time in hours
- *
- * @param tasks list of tasks to calculate the average task completion time for
- * @return average completion time in hours or 0 if list is empty
- */
-fun getAverageTaskCompletionInHours(tasks: List<Task>): Long {
-    if (tasks.isEmpty()) return 0
-    return tasks.map { it.averageCompletionTimeInHours }.average().roundToLong()
-}
 
 /**
  * Get tasks completed in past n days

@@ -2,8 +2,6 @@ package com.dk.piley.ui.nav
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Login
-import androidx.compose.material.icons.automirrored.outlined.Login
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -53,26 +51,12 @@ sealed class Screen(
         "settings", R.string.settings, Pair(Icons.Outlined.Settings, Icons.Filled.Settings)
     )
 
-    data object SignIn : Screen(
-        "login",
-        R.string.sign_in,
-        Pair(Icons.AutoMirrored.Outlined.Login, Icons.AutoMirrored.Filled.Login)
-    )
-
     data object Splash : Screen(
         "splash", R.string.splash_screen, Pair(Icons.Outlined.Square, Icons.Filled.Square)
     )
 
     data object Intro : Screen(
-        "intro?name={name}",
-        R.string.introduction_screen,
-        Pair(Icons.Outlined.Start, Icons.Filled.Start),
-        optionalArguments = listOf(
-            navArgument("name") {
-                defaultValue = ""
-                type = NavType.StringType
-            }
-        )
+        "intro", R.string.introduction_screen, Pair(Icons.Outlined.Start, Icons.Filled.Start),
     )
 }
 

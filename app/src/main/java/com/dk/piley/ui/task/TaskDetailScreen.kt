@@ -1,7 +1,5 @@
 package com.dk.piley.ui.task
 
-import android.Manifest
-import android.os.Build
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,14 +36,11 @@ import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.reminder.DelayBottomSheet
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
-import com.dk.piley.util.RequestNotificationPermissionDialog
+import com.dk.piley.ui.common.NotificationPermissionHandler
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -55,7 +50,6 @@ import kotlinx.datetime.Clock
  * @param navController generic nav controller
  * @param viewModel task detail view model
  */
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController = rememberNavController(),
@@ -105,11 +99,8 @@ fun TaskDetailScreen(
  * @param onEditTitle on edit task title
  * @param onAddReminder on add reminder click
  * @param onCancelReminder on cancel reminder action
- * @param permissionState notification permission state
  */
-@OptIn(
-    ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskDetailScreen(
     modifier: Modifier = Modifier,
@@ -122,12 +113,7 @@ fun TaskDetailScreen(
     onAddReminder: (ReminderState) -> Unit = {},
     onCancelReminder: () -> Unit = {},
     onSelectPile: (Int) -> Unit = {},
-    onDelay: (Long) -> Unit = {},
-    permissionState: PermissionState? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-    } else {
-        null
-    },
+    onDelay: (Long) -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
@@ -138,13 +124,10 @@ fun TaskDetailScreen(
     val scrollState = rememberScrollState()
     var completeRecurringDialogOpen by remember { mutableStateOf(false) }
     var confirmDeleteDialogOpen by remember { mutableStateOf(false) }
+    var notificationPermissionGranted by remember { mutableStateOf(false) }
 
-    // notification permission
-    var rationaleOpen by remember { mutableStateOf(false) }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && sheetState.hasExpandedState) {
-        RequestNotificationPermissionDialog(rationaleOpen) {
-            rationaleOpen = false
-        }
+    NotificationPermissionHandler(sheetState.hasExpandedState) {
+        notificationPermissionGranted = it
     }
 
     LaunchedEffect(key1 = viewState.showDelaySection) {
@@ -207,9 +190,9 @@ fun TaskDetailScreen(
             isRecurring = viewState.task.isRecurring,
             recurringFrequency = viewState.task.recurringFrequency,
             recurringTimeRange = viewState.task.recurringTimeRange,
-            permissionState = permissionState,
             onDismiss = { showBottomSheet = false },
-            useNowAsReminderDate = viewState.task.nowAsReminderTime
+            useNowAsReminderDate = viewState.task.nowAsReminderTime,
+            notificationPermissionGranted = notificationPermissionGranted
         )
     }
 
@@ -300,7 +283,6 @@ fun TaskDetailScreen(
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @PreviewMainScreen
 @Composable
 fun TaskDetailScreenPreview() {
@@ -312,12 +294,11 @@ fun TaskDetailScreenPreview() {
                 piles = listOf(Pair(0, "pile1")),
                 selectedPileIndex = 0
             )
-            TaskDetailScreen(viewState = state, permissionState = null)
+            TaskDetailScreen(viewState = state)
         }
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @PreviewMainScreen
 @Composable
 fun TaskDetailScreenPreviewRecurring() {
@@ -329,7 +310,7 @@ fun TaskDetailScreenPreviewRecurring() {
                 piles = listOf(Pair(0, "pile1")),
                 selectedPileIndex = 0
             )
-            TaskDetailScreen(viewState = state, permissionState = null)
+            TaskDetailScreen(viewState = state)
         }
     }
 }

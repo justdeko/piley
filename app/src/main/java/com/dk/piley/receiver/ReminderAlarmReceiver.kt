@@ -3,20 +3,20 @@ package com.dk.piley.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.dk.piley.Piley
 import com.dk.piley.reminder.NotificationExecutor
 import com.dk.piley.reminder.ReminderAction
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * Reminder alarm receiver which receives alarm intents
  *
  */
-@AndroidEntryPoint
 class ReminderAlarmReceiver : BroadcastReceiver() {
 
-    @Inject
-    lateinit var taskNotificationExecutor: NotificationExecutor
+    // TODO fix this
+    private val taskNotificationExecutor: NotificationExecutor by lazy {
+        NotificationExecutor(Piley.appModule.reminderActionHandler)
+    }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val taskId = intent?.getLongExtra(EXTRA_TASK_ID, -1) ?: -1

@@ -13,12 +13,10 @@ import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.util.descriptionCharacterLimit
 import com.dk.piley.util.getCompletedTasksForWeekValues
 import com.dk.piley.util.pileTitleCharacterLimit
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Pile detail view model
@@ -29,8 +27,7 @@ import javax.inject.Inject
  *
  * @param savedStateHandle saved state handle to receive pile id passed through navigation
  */
-@HiltViewModel
-class PileDetailViewModel @Inject constructor(
+class PileDetailViewModel (
     private val pileRepository: PileRepository,
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,

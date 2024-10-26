@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose)
     alias(libs.plugins.kotlinAndroidKsp)
-    alias(libs.plugins.hiltAndroid)
 }
 
 android {
@@ -64,7 +63,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.kotlin.inject.compiler.ksp)
     implementation(libs.kotlin.inject.runtime)
     implementation(libs.kotlinx.datetime)
@@ -73,8 +71,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.material)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+
     // room
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)

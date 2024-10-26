@@ -24,25 +24,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.EditDescriptionField
+import com.dk.piley.ui.common.NotificationPermissionHandler
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.reminder.DelayBottomSheet
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.AlertDialogHelper
-import com.dk.piley.ui.common.NotificationPermissionHandler
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+
 
 /**
  * Task detail screen
@@ -53,7 +57,19 @@ import kotlinx.datetime.Clock
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController = rememberNavController(),
-    viewModel: TaskDetailViewModel = hiltViewModel(),
+    viewModel: TaskDetailViewModel = viewModel(
+        factory = viewModelFactory {
+            TaskDetailViewModel(
+                repository = Piley.appModule.taskRepository,
+                pileRepository = Piley.appModule.pileRepository,
+                taskRepository = Piley.appModule.taskRepository,
+                userRepository = Piley.appModule.userRepository,
+                reminderManager = Piley.appModule.reminderManager,
+                notificationManager = Piley.appModule.notificationManager,
+                savedStateHandle = SavedStateHandle() // TODO fix this
+            )
+        }
+    ),
     onFinish: () -> Unit = {},
 ) {
     val viewState by viewModel.state.collectAsState()

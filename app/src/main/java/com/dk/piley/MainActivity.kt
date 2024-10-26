@@ -40,9 +40,7 @@ import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.ThemeHostScreen
 import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.isDarkMode
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

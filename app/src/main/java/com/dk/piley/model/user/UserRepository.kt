@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
-import javax.inject.Inject
 
 /**
  * User repository for performing database operations regarding users
@@ -13,7 +12,7 @@ import javax.inject.Inject
  * @property userDao the user dao providing an interface to the database
  * @property userPrefsManager manager of user preferences
  */
-class UserRepository @Inject constructor(
+class UserRepository(
     private val userDao: UserDao,
     private val userPrefsManager: UserPrefsManager
 ) {

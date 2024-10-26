@@ -9,10 +9,8 @@ import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.signin.firstTimeUser
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Splash view model
@@ -22,8 +20,7 @@ import javax.inject.Inject
  * @property pileRepository pile repository instance
  * @constructor Create empty Splash view model
  */
-@HiltViewModel
-class SplashViewModel @Inject constructor(
+class SplashViewModel(
     private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,

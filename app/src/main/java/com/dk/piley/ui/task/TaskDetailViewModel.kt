@@ -18,11 +18,9 @@ import com.dk.piley.util.descriptionCharacterLimit
 import com.dk.piley.util.titleCharacterLimit
 import com.dk.piley.util.toInstantWithOffset
 import com.dk.piley.util.toLocalDateTime
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Task detail view model
@@ -33,8 +31,7 @@ import javax.inject.Inject
  *
  * @param savedStateHandle saved state handle to receive task id passed through navigation
  */
-@HiltViewModel
-class TaskDetailViewModel @Inject constructor(
+class TaskDetailViewModel(
     private val repository: TaskRepository,
     private val pileRepository: PileRepository,
     private val taskRepository: TaskRepository,

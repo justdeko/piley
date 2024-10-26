@@ -1,8 +1,19 @@
 package com.dk.piley
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
+import com.dk.piley.di.AppModule
+import com.dk.piley.di.AppModuleImpl
 
 
-@HiltAndroidApp
-class Piley : Application()
+class Piley : Application() {
+    companion object {
+        lateinit var appModule: AppModule
+        lateinit var application: Application
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        appModule = AppModuleImpl(this)
+        application = this
+    }
+}

@@ -31,15 +31,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
 
@@ -54,7 +56,13 @@ import com.dk.piley.util.previewPileWithTasksList
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: PilesViewModel = hiltViewModel()
+    viewModel: PilesViewModel = viewModel(
+        factory = viewModelFactory {
+            PilesViewModel(
+                pileRepository = Piley.appModule.pileRepository,
+                userRepository = Piley.appModule.userRepository
+            )
+        })
 ) {
     val viewState by viewModel.state.collectAsState()
     // animation transition states for pile visibility

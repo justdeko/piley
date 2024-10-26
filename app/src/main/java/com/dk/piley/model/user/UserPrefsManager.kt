@@ -5,17 +5,15 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.dk.piley.BuildConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Singleton
 
 /**
  * Manages user preferences file
  *
  * @property userPrefs instance of the user preferences data store
  */
-@Singleton
+// TODO is singleton
 class UserPrefsManager(
     private val userPrefs: DataStore<Preferences>
 ) {

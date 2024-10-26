@@ -9,9 +9,11 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.model.user.NightMode
+import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.isDarkMode
 
 /**
@@ -21,7 +23,10 @@ import com.dk.piley.util.isDarkMode
  * @param content themed to display
  */
 @Composable
-fun ThemeHostScreen(viewModel: ThemeViewModel = hiltViewModel(), content: @Composable () -> Unit) {
+fun ThemeHostScreen(
+    viewModel: ThemeViewModel = viewModel(factory = viewModelFactory { ThemeViewModel(Piley.appModule.userRepository) }),
+    content: @Composable () -> Unit
+) {
     val viewState by viewModel.state.collectAsState()
     val context = LocalContext.current
     val nightModeEnabled = when (viewState.nightModeEnabled) {

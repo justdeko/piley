@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.map
  *
  * @property userPrefs instance of the user preferences data store
  */
-// TODO is singleton
 class UserPrefsManager(
     private val userPrefs: DataStore<Preferences>
 ) {

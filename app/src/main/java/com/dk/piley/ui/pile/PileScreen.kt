@@ -46,7 +46,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -58,8 +57,8 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
+import com.dk.piley.ui.savedStateViewModelFactory
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getNextReminderTime
 import com.dk.piley.util.getPreviewTransitionStates
@@ -84,12 +83,12 @@ fun PileScreen(
     navController: NavHostController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: PileViewModel = viewModel(
-        factory = viewModelFactory {
+        factory = savedStateViewModelFactory(navController) {
             PileViewModel(
                 taskRepository = Piley.appModule.taskRepository,
                 pileRepository = Piley.appModule.pileRepository,
                 userRepository = Piley.appModule.userRepository,
-                savedStateHandle = SavedStateHandle() // TODO fix this
+                savedStateHandle = it
             )
         }
     )

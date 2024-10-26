@@ -63,8 +63,6 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.material.icons.extended)
-    ksp(libs.kotlin.inject.compiler.ksp)
-    implementation(libs.kotlin.inject.runtime)
     implementation(libs.kotlinx.datetime)
 
     debugImplementation(libs.androidx.ui.tooling)

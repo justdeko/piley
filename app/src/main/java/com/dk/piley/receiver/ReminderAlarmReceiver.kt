@@ -13,7 +13,6 @@ import com.dk.piley.reminder.ReminderAction
  */
 class ReminderAlarmReceiver : BroadcastReceiver() {
 
-    // TODO fix this
     private val taskNotificationExecutor: NotificationExecutor by lazy {
         NotificationExecutor(Piley.appModule.reminderActionHandler)
     }
@@ -25,15 +24,19 @@ class ReminderAlarmReceiver : BroadcastReceiver() {
             ACTION_SHOW -> {
                 taskNotificationExecutor.execute(ReminderAction.Show(taskId))
             }
+
             ACTION_COMPLETE -> {
                 taskNotificationExecutor.execute(ReminderAction.Complete(taskId))
             }
+
             ACTION_DELAY -> {
                 taskNotificationExecutor.execute(ReminderAction.Delay(taskId))
             }
+
             ACTION_CUSTOM_DELAY -> {
                 taskNotificationExecutor.execute(ReminderAction.CustomDelay(taskId))
             }
+
             Intent.ACTION_BOOT_COMPLETED -> {
                 taskNotificationExecutor.execute(ReminderAction.BootCompleted)
             }

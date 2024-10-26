@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -37,8 +36,8 @@ import com.dk.piley.ui.common.NotificationPermissionHandler
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.reminder.DelayBottomSheet
+import com.dk.piley.ui.savedStateViewModelFactory
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.defaultPadding
@@ -58,7 +57,7 @@ import kotlinx.datetime.Clock
 fun TaskDetailScreen(
     navController: NavHostController = rememberNavController(),
     viewModel: TaskDetailViewModel = viewModel(
-        factory = viewModelFactory {
+        factory = savedStateViewModelFactory(navController) {
             TaskDetailViewModel(
                 repository = Piley.appModule.taskRepository,
                 pileRepository = Piley.appModule.pileRepository,
@@ -66,7 +65,7 @@ fun TaskDetailScreen(
                 userRepository = Piley.appModule.userRepository,
                 reminderManager = Piley.appModule.reminderManager,
                 notificationManager = Piley.appModule.notificationManager,
-                savedStateHandle = SavedStateHandle() // TODO fix this
+                savedStateHandle = it
             )
         }
     ),

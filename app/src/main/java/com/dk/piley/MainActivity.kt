@@ -125,7 +125,8 @@ fun Home(
             }
             composable(Screen.Piles.route) {
                 PileOverviewScreen(
-                    Modifier.padding(bottom = defaultNavbarPadding), navController
+                    modifier = Modifier.padding(bottom = defaultNavbarPadding),
+                    navController = navController
                 )
             }
             composable(Screen.Profile.route) {
@@ -162,7 +163,9 @@ fun Home(
                 }),
                 arguments = listOf(navArgument(pileScreen.identifier) { type = NavType.LongType })
             ) {
-                PileDetailScreen(navController)
+                PileDetailScreen(
+                    navController = navController
+                )
             }
         }
     }

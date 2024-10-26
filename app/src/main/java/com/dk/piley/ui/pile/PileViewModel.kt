@@ -11,7 +11,6 @@ import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.nav.Screen
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +19,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import javax.inject.Inject
 
 /**
  * Pile view model
@@ -30,8 +28,7 @@ import javax.inject.Inject
  * @property userRepository user repository instance
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class PileViewModel @Inject constructor(
+class PileViewModel(
     private val taskRepository: TaskRepository,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,

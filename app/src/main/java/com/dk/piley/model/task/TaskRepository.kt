@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.take
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.plus
-import javax.inject.Inject
 
 /**
  * Task repository for performing database operations regarding tasks
@@ -19,7 +18,7 @@ import javax.inject.Inject
  * @property reminderManager entity of the reminder manager to set and cancel reminders
  * @property notificationManager entity of the notification manager to set and cancel notifications
  */
-class TaskRepository @Inject constructor(
+class TaskRepository(
     private val taskDao: TaskDao,
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,

@@ -45,11 +45,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
@@ -57,6 +57,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
+import com.dk.piley.ui.savedStateViewModelFactory
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getNextReminderTime
@@ -81,7 +82,16 @@ fun PileScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: PileViewModel = hiltViewModel()
+    viewModel: PileViewModel = viewModel(
+        factory = savedStateViewModelFactory(navController) {
+            PileViewModel(
+                taskRepository = Piley.appModule.taskRepository,
+                pileRepository = Piley.appModule.pileRepository,
+                userRepository = Piley.appModule.userRepository,
+                savedStateHandle = it
+            )
+        }
+    )
 ) {
     val context = LocalContext.current
     val viewState by viewModel.state.collectAsState()

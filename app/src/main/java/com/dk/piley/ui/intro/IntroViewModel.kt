@@ -3,12 +3,9 @@ package com.dk.piley.ui.intro
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.model.user.UserRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class IntroViewModel @Inject constructor(
+class IntroViewModel (
     private val userRepository: UserRepository,
 ) : ViewModel() {
 

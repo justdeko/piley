@@ -23,8 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
@@ -32,6 +33,7 @@ import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
+import com.dk.piley.ui.savedStateViewModelFactory
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
@@ -48,7 +50,16 @@ import kotlinx.datetime.Clock
 @Composable
 fun PileDetailScreen(
     navController: NavController,
-    viewModel: PileDetailViewModel = hiltViewModel()
+    viewModel: PileDetailViewModel = viewModel(
+        factory = savedStateViewModelFactory(navController) {
+            PileDetailViewModel(
+                pileRepository = Piley.appModule.pileRepository,
+                taskRepository = Piley.appModule.taskRepository,
+                userRepository = Piley.appModule.userRepository,
+                savedStateHandle = it
+            )
+        }
+    )
 ) {
     val viewState by viewModel.state.collectAsState()
     PileDetailScreen(

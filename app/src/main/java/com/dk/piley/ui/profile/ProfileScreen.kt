@@ -1,5 +1,6 @@
 package com.dk.piley.ui.profile
 
+import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,23 +26,24 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.InitialSlideIn
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.SlideDirection
 import com.dk.piley.util.previewUpcomingTasksList
-import com.dk.piley.util.toLocalDateTime
-import kotlinx.datetime.Clock
 
 
 /**
@@ -57,7 +59,15 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = viewModel(
+        factory = viewModelFactory {
+            ProfileViewModel(
+                application = Piley.application,
+                pileRepository = Piley.appModule.pileRepository,
+                userRepository = Piley.appModule.userRepository
+            )
+        }
+    )
 ) {
     val viewState by viewModel.state.collectAsState()
 

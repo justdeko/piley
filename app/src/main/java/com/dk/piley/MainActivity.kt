@@ -40,9 +40,7 @@ import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.ThemeHostScreen
 import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.isDarkMode
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,7 +125,8 @@ fun Home(
             }
             composable(Screen.Piles.route) {
                 PileOverviewScreen(
-                    Modifier.padding(bottom = defaultNavbarPadding), navController
+                    modifier = Modifier.padding(bottom = defaultNavbarPadding),
+                    navController = navController
                 )
             }
             composable(Screen.Profile.route) {
@@ -164,7 +163,9 @@ fun Home(
                 }),
                 arguments = listOf(navArgument(pileScreen.identifier) { type = NavType.LongType })
             ) {
-                PileDetailScreen(navController)
+                PileDetailScreen(
+                    navController = navController
+                )
             }
         }
     }

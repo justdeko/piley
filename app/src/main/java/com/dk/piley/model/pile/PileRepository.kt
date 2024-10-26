@@ -4,16 +4,13 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
-import javax.inject.Inject
 
 /**
  * Pile repository for performing database operations regarding piles
  *
  * @property pileDao the pile dao to use when performing operations
  */
-class PileRepository @Inject constructor(
-    private val pileDao: PileDao
-) {
+class PileRepository(private val pileDao: PileDao) {
     fun getPilesWithTasks(): Flow<List<PileWithTasks>> = pileDao.getPilesWithTasks()
 
     fun getPileById(pileId: Long): Flow<PileWithTasks> = pileDao.getPileById(pileId).filterNotNull()

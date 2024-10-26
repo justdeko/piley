@@ -6,20 +6,14 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.receiver.ReminderAlarmReceiver
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.datetime.Instant
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Reminder manager that handles task reminders
  *
  * @property context generic application context
  */
-@Singleton
-class ReminderManager @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class ReminderManager(private val context: Context) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
     private val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 

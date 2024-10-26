@@ -10,14 +10,12 @@ import com.dk.piley.model.user.UserRepository
 import com.dk.piley.util.getBiggestPileName
 import com.dk.piley.util.getTasksCompletedInPastDays
 import com.dk.piley.util.getUpcomingTasks
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 /**
  * Profile view model
@@ -26,8 +24,7 @@ import javax.inject.Inject
  * @property pileRepository pile repository instance
  * @property userRepository user repository instance
  */
-@HiltViewModel
-class ProfileViewModel @Inject constructor(
+class ProfileViewModel(
     private val application: Application,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,

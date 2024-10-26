@@ -4,18 +4,15 @@ import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.UserRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Theme view model
  *
  * @property userRepository user repository instance
  */
-@HiltViewModel
-class ThemeViewModel @Inject constructor(
+class ThemeViewModel(
     private val userRepository: UserRepository
 ) : StatefulViewModel<ThemeViewState>(ThemeViewState()) {
 

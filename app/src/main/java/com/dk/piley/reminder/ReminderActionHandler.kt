@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
-import javax.inject.Inject
 
 /**
  * Reminder action handler that performs the necessary operations given the specific action
@@ -23,7 +22,7 @@ import javax.inject.Inject
  * @property pileRepository instance of pile repository to perform db operations regarding piles
  * @property userRepository instance of user repository to perform db operations regarding user
  */
-class ReminderActionHandler @Inject constructor(
+class ReminderActionHandler(
     private val reminderManager: ReminderManager,
     private val notificationManager: NotificationManager,
     private val taskRepository: TaskRepository,

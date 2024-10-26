@@ -6,12 +6,10 @@ import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.user.UserRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Piles view model
@@ -19,8 +17,7 @@ import javax.inject.Inject
  * @property pileRepository pile repository instance
  * @property userRepository user repository instance
  */
-@HiltViewModel
-class PilesViewModel @Inject constructor(
+class PilesViewModel(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
 ) : StatefulViewModel<PilesViewState>(PilesViewState()) {

@@ -1,7 +1,6 @@
 package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -64,9 +63,7 @@ fun DropDown(
                 colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             )
         }
-        // TODO change back to ExposedDropDownMenu when width bug fixed
-        // https://issuetracker.google.com/issues/205589613
-        DropdownMenu(
+        ExposedDropdownMenu(
             modifier = Modifier.exposedDropdownSize(),
             expanded = expanded,
             onDismissRequest = onDismiss,

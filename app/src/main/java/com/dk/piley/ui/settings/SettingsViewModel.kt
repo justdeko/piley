@@ -10,11 +10,9 @@ import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.reminder.DelayRange
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Settings view model
@@ -23,8 +21,7 @@ import javax.inject.Inject
  * @property userRepository user repository instance
  * @property pileRepository pile repository instance
  */
-@HiltViewModel
-class SettingsViewModel @Inject constructor(
+class SettingsViewModel(
     private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,

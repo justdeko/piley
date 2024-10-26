@@ -15,19 +15,13 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.receiver.ReminderAlarmReceiver
 import com.dk.piley.ui.nav.DEEPLINK_ROOT
 import com.dk.piley.ui.nav.taskScreen
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Notification manager for handling notification actions and interactions
  *
  * @property context generic context of the application
  */
-@Singleton
-class NotificationManager @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class NotificationManager(private val context: Context) {
 
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?

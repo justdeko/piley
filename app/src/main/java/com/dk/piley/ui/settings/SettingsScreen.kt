@@ -26,9 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
@@ -42,6 +43,7 @@ import com.dk.piley.ui.profile.AppInfo
 import com.dk.piley.ui.reminder.DelayRange
 import com.dk.piley.ui.reminder.DelaySelection
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.navigateClearBackstack
 
@@ -58,7 +60,15 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = viewModel(
+        factory = viewModelFactory {
+            SettingsViewModel(
+                application = Piley.application,
+                userRepository = Piley.appModule.userRepository,
+                pileRepository = Piley.appModule.pileRepository
+            )
+        }
+    )
 ) {
     val viewState by viewModel.state.collectAsState()
 

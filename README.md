@@ -59,11 +59,10 @@ server, you can also back up your tasks and sync regularly to get the newest sta
 
 piley is a native Android app built with Jetpack Compose. The following libraries were used:
 
-* [Hilt](https://dagger.dev/hilt/) for dependency injection
 * [Room](https://developer.android.com/training/data-storage/room) for data storage
 * [Material3 UI Elements](https://developer.android.com/jetpack/androidx/releases/compose-material3)
   and Compose navigation
-* Various Jetpack Compose, AndroidX and Accompanist dependencies for specific functionality
+* Various Jetpack Compose and AndroidX dependencies for specific functionality
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

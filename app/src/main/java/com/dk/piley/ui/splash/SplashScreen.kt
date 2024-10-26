@@ -29,14 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.dk.piley.Piley
 import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.navigateClearBackstack
 import kotlinx.coroutines.CoroutineScope
@@ -55,7 +57,16 @@ import kotlinx.coroutines.launch
 fun SplashScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: SplashViewModel = hiltViewModel()
+    viewModel: SplashViewModel = viewModel(
+        factory = viewModelFactory {
+            SplashViewModel(
+                application = Piley.application,
+                userRepository = Piley.appModule.userRepository,
+                pileRepository = Piley.appModule.pileRepository,
+                taskRepository = Piley.appModule.taskRepository
+            )
+        }
+    )
 ) {
     val viewState by viewModel.state.collectAsState()
     SplashScreen(

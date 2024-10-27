@@ -37,11 +37,11 @@ class UserRepository(
 
     suspend fun getSignedInUserEntity(): User? = getSignedInUser().firstOrNull()
 
-    suspend fun insertUser(user: User): Void = userDao.insertUser(user)
+    suspend fun insertUser(user: User) = userDao.insertUser(user)
 
-    suspend fun deleteUser(user: User): Void = userDao.deleteUser(user)
+    suspend fun deleteUser(user: User) = userDao.deleteUser(user)
 
-    suspend fun deleteUserTable(): Void = userDao.deleteUserTable()
+    suspend fun deleteUserTable() = userDao.deleteUserTable()
 
     suspend fun setSignedInUser(userEmail: String) {
         userPrefsManager.setSignedInUser(userEmail)

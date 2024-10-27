@@ -35,17 +35,17 @@ interface PileDao {
     suspend fun updateAllPileModes(pileMode: PileMode): Int
 
     @Query("DELETE FROM Pile")
-    suspend fun deleteAllPiles(): Void
+    suspend fun deleteAllPiles()
 
     @Delete
-    suspend fun deletePile(pile: Pile): Void
+    suspend fun deletePile(pile: Pile)
 
     @Query("DELETE FROM Pile")
-    suspend fun deletePileTable(): Void
+    suspend fun deletePileTable()
 
 
     @Query("DELETE FROM Task")
-    suspend fun deleteTaskTable(): Void
+    suspend fun deleteTaskTable()
 
     @Query("DELETE FROM sqlite_sequence")
     suspend fun clearSequence()
@@ -62,7 +62,7 @@ interface PileDao {
 
     @Transaction
     @Query("DELETE FROM TASK WHERE status='DELETED'")
-    suspend fun deleteDeletedTasks(): Void
+    suspend fun deleteDeletedTasks()
 
     @RawQuery
     suspend fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int

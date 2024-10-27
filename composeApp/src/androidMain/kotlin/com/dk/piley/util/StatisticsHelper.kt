@@ -1,7 +1,5 @@
 package com.dk.piley.util
 
-import android.content.Context
-import com.dk.piley.R
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
@@ -88,10 +86,10 @@ fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Tas
  * @param context generic context to get string resources
  * @return name of the biggest pile or "None" if no pile found or list is empty
  */
-fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>, context: Context): String =
+fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>): String? =
     pilesWithTasks.maxByOrNull { pileWithTasks ->
         pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT }
-    }?.pile?.name ?: context.getString(R.string.no_pile)
+    }?.pile?.name
 
 /**
  * Get tasks completed in past n days

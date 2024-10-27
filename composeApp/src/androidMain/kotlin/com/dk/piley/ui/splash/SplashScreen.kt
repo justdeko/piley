@@ -60,7 +60,6 @@ fun SplashScreen(
     viewModel: SplashViewModel = viewModel(
         factory = viewModelFactory {
             SplashViewModel(
-                application = Piley.application,
                 userRepository = Piley.appModule.userRepository,
                 pileRepository = Piley.appModule.pileRepository,
                 taskRepository = Piley.appModule.taskRepository

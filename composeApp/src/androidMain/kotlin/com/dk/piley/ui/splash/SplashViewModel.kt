@@ -1,9 +1,7 @@
 package com.dk.piley.ui.splash
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
-import com.dk.piley.R
-import com.dk.piley.common.StatefulAndroidViewModel
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskRepository
@@ -15,17 +13,15 @@ import kotlinx.coroutines.launch
 /**
  * Splash view model
  *
- * @property application generic application object
  * @property userRepository user repository instance
  * @property pileRepository pile repository instance
  * @constructor Create empty Splash view model
  */
 class SplashViewModel(
-    private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,
     private val taskRepository: TaskRepository,
-) : StatefulAndroidViewModel<SplashViewState>(application, SplashViewState()) {
+) : StatefulViewModel<SplashViewState>(SplashViewState()) {
 
     init {
         viewModelScope.launch {
@@ -63,8 +59,9 @@ class SplashViewModel(
      */
     private suspend fun createAndSetUserPile() {
         // create default pile
+        // TODO: user kmp resource here
         val pile = Pile(
-            name = application.getString(R.string.daily_pile_name),
+            name = "Daily",
         )
         val pileId = pileRepository.insertPile(pile)
         // update assigned pile as selected and set signed in state

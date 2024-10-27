@@ -1,8 +1,7 @@
 package com.dk.piley.ui.profile
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
-import com.dk.piley.common.StatefulAndroidViewModel
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
@@ -20,15 +19,13 @@ import kotlinx.coroutines.withContext
 /**
  * Profile view model
  *
- * @property application generic application context
  * @property pileRepository pile repository instance
  * @property userRepository user repository instance
  */
 class ProfileViewModel(
-    private val application: Application,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
-) : StatefulAndroidViewModel<ProfileViewState>(application, ProfileViewState()) {
+) : StatefulViewModel<ProfileViewState>(ProfileViewState()) {
 
     init {
         viewModelScope.launch {
@@ -51,7 +48,7 @@ class ProfileViewModel(
                     deletedTasks = deleted,
                     currentTasks = current,
                     upcomingTaskList = getUpcomingTasks(pilesWithTasks),
-                    biggestPileName = getBiggestPileName(pilesWithTasks, application),
+                    biggestPileName = getBiggestPileName(pilesWithTasks),
                     tasksCompletedPastDays = getTasksCompletedInPastDays(tasks),
                 )
             }.collect { state.value = it }
@@ -95,7 +92,7 @@ data class ProfileViewState(
     val currentTasks: Int = 0,
     val upcomingTaskList: List<Pair<String, Task>> = emptyList(),
     val tasksCompletedPastDays: Int = 0,
-    val biggestPileName: String = "None",
+    val biggestPileName: String? = "None",
     val isLoading: Boolean = false,
     val message: String? = null,
     val userIsOffline: Boolean = false

@@ -1,6 +1,5 @@
 package com.dk.piley.ui.profile
 
-import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,7 +25,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -62,7 +60,6 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = viewModel(
         factory = viewModelFactory {
             ProfileViewModel(
-                application = Piley.application,
                 pileRepository = Piley.appModule.pileRepository,
                 userRepository = Piley.appModule.userRepository
             )
@@ -162,7 +159,7 @@ private fun ProfileScreen(
                         deletedCount = viewState.deletedTasks,
                         currentCount = viewState.currentTasks,
                         tasksCompletedPastDays = viewState.tasksCompletedPastDays,
-                        biggestPile = viewState.biggestPileName,
+                        biggestPile = viewState.biggestPileName ?: stringResource(R.string.no_pile),
                     )
                 }
                 MediumSpacer()

@@ -1,9 +1,7 @@
 package com.dk.piley.ui.settings
 
-import android.app.Application
 import androidx.lifecycle.viewModelScope
-import com.dk.piley.R
-import com.dk.piley.common.StatefulAndroidViewModel
+import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
@@ -17,15 +15,13 @@ import kotlinx.coroutines.launch
 /**
  * Settings view model
  *
- * @property application generic application context
  * @property userRepository user repository instance
  * @property pileRepository pile repository instance
  */
 class SettingsViewModel(
-    private val application: Application,
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,
-) : StatefulAndroidViewModel<SettingsViewState>(application, SettingsViewState()) {
+) : StatefulViewModel<SettingsViewState>(SettingsViewState()) {
 
     init {
         viewModelScope.launch {
@@ -131,7 +127,7 @@ class SettingsViewModel(
             if (existingUser != null) {
                 deleteUserLocally()
             } else {
-                state.update { it.copy(message = application.getString(R.string.delete_user_error_wrong_password)) }
+                state.update { it.copy(message = StatusMessage.USER_DELETED_ERROR) }
             }
         }
     }
@@ -148,7 +144,7 @@ class SettingsViewModel(
             it.copy(
                 loading = false,
                 userDeleted = true,
-                message = application.getString(R.string.delete_user_success_info)
+                message = StatusMessage.USER_DELETED
             )
         }
     }
@@ -176,7 +172,7 @@ class SettingsViewModel(
                 state.update {
                     it.copy(
                         loading = false,
-                        message = application.getString(R.string.update_user_error_wrong_password)
+                        message = StatusMessage.USER_UPDATE_ERROR
                     )
                 }
             }
@@ -198,7 +194,7 @@ class SettingsViewModel(
         state.update {
             it.copy(
                 loading = false,
-                message = application.getString(R.string.user_update_success_info)
+                message = StatusMessage.USER_UPDATE_SUCCESSFUL
             )
         }
     }
@@ -207,6 +203,13 @@ class SettingsViewModel(
 data class SettingsViewState(
     val user: User = User(),
     val loading: Boolean = false,
-    val message: String? = null,
+    val message: StatusMessage? = null,
     val userDeleted: Boolean = false,
 )
+
+enum class StatusMessage {
+    USER_UPDATE_SUCCESSFUL,
+    USER_UPDATE_ERROR,
+    USER_DELETED,
+    USER_DELETED_ERROR
+}

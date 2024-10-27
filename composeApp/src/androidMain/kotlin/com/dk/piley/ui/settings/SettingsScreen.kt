@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,7 +64,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = viewModel(
         factory = viewModelFactory {
             SettingsViewModel(
-                application = Piley.application,
                 userRepository = Piley.appModule.userRepository,
                 pileRepository = Piley.appModule.pileRepository
             )
@@ -71,11 +71,19 @@ fun SettingsScreen(
     )
 ) {
     val viewState by viewModel.state.collectAsState()
+    val context = LocalContext.current
 
     // snackbar handler
     viewState.message?.let { message ->
         LaunchedEffect(message, snackbarHostState) {
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showSnackbar(
+                when (message) {
+                    StatusMessage.USER_UPDATE_SUCCESSFUL -> context.getString(R.string.user_update_success_info)
+                    StatusMessage.USER_UPDATE_ERROR -> context.getString(R.string.update_user_error_wrong_password)
+                    StatusMessage.USER_DELETED -> context.getString(R.string.delete_user_success_info)
+                    StatusMessage.USER_DELETED_ERROR -> context.getString(R.string.delete_user_error_wrong_password)
+                }
+            )
             // reset message
             viewModel.resetMessage()
         }

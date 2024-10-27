@@ -1,5 +1,5 @@
 [versions]
-agp = "8.7.1"
+agp = "8.5.2"
 datastorePreferences = "1.1.1"
 kotlin = "2.0.21"
 coreKtx = "1.13.1"
@@ -47,4 +47,5 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlinAndroidKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }

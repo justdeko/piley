@@ -20,8 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
-import com.dk.piley.model.task.toRecurringTimeRange
-import com.dk.piley.model.task.toText
 import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
@@ -29,6 +27,8 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
+import toRecurringTimeRange
+import toText
 
 @Composable
 fun RecurringReminderSection(

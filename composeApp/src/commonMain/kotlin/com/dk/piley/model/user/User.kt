@@ -3,7 +3,7 @@ package com.dk.piley.model.user
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dk.piley.ui.reminder.DelayRange
+import com.dk.piley.reminder.DelayRange
 
 /**
  * User entity representing the user and its preferences

@@ -7,11 +7,9 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
-import kotlinx.datetime.periodUntil
 import kotlinx.datetime.toLocalDateTime
 
 /**
@@ -110,23 +108,4 @@ fun getTasksCompletedInPastDays(
             && (Clock.System.now().minus(days, DateTimeUnit.DAY, timeZone)
             < it.completionTimes.last()
             )
-}
-
-/**
- * Generates a copy of the given task with the new completion time and newly calculated
- * average completion time added to the copy.
- *
- * @param now generic [Instant.now] provider
- * @return copy of the new task
- */
-fun Task.withNewCompletionTime(now: Instant = Clock.System.now()): Task {
-    val timeZone = TimeZone.currentSystemDefault()
-    val comparisonTime = reminder ?: createdAt
-    val completionTimeHours = comparisonTime.periodUntil(now, timeZone).hours
-    val newCompletionTime =
-        averageCompletionTimeInHours + (completionTimeHours - averageCompletionTimeInHours) / (completionTimes.size + 1)
-    return copy(
-        completionTimes = completionTimes + now,
-        averageCompletionTimeInHours = if (newCompletionTime < 0) 0 else newCompletionTime
-    )
 }

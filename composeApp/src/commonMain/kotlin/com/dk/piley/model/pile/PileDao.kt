@@ -5,10 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
 
@@ -63,7 +61,4 @@ interface PileDao {
     @Transaction
     @Query("DELETE FROM TASK WHERE status='DELETED'")
     suspend fun deleteDeletedTasks()
-
-    @RawQuery
-    suspend fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int
 }

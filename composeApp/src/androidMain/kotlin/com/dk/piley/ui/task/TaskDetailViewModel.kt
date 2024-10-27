@@ -9,10 +9,10 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.reminder.DelayRange
 import com.dk.piley.reminder.INotificationManager
 import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.ui.nav.taskScreen
-import com.dk.piley.ui.reminder.DelayRange
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.descriptionCharacterLimit
 import com.dk.piley.util.titleCharacterLimit

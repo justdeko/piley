@@ -2,8 +2,8 @@ package com.dk.piley.model.task
 
 import com.dk.piley.reminder.INotificationManager
 import com.dk.piley.reminder.IReminderManager
-import com.dk.piley.util.getNextReminderTime
-import com.dk.piley.util.withNewCompletionTime
+import com.dk.piley.reminder.getNextReminderTime
+import com.dk.piley.reminder.withNewCompletionTime
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take

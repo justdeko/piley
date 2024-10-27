@@ -15,6 +15,6 @@ enum class PileMode(val value: Int) {
     LIFO(2);
 
     companion object {
-        fun fromValue(value: Int) = values().firstOrNull { it.value == value } ?: FREE
+        fun fromValue(value: Int) = entries.firstOrNull { it.value == value } ?: FREE
     }
 }

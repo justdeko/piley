@@ -14,7 +14,7 @@ enum class NightMode(val value: Int) {
     DISABLED(2);
 
     companion object {
-        fun fromValue(value: Int) = values().firstOrNull { it.value == value } ?: SYSTEM
+        fun fromValue(value: Int) = entries.firstOrNull { it.value == value } ?: SYSTEM
     }
 }
 

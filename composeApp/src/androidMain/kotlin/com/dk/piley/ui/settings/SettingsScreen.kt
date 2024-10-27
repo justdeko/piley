@@ -35,12 +35,12 @@ import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
+import com.dk.piley.reminder.DelayRange
 import com.dk.piley.ui.common.ContentAlertDialog
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.profile.AppInfo
-import com.dk.piley.ui.reminder.DelayRange
 import com.dk.piley.ui.reminder.DelaySelection
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.viewModelFactory

@@ -9,7 +9,7 @@ import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
-import com.dk.piley.ui.reminder.DelayRange
+import com.dk.piley.reminder.DelayRange
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

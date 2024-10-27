@@ -1,17 +1,17 @@
 package com.dk.piley.model
 
-import android.content.Context
 import androidx.room.AutoMigration
+import androidx.room.ConstructedBy
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskDao
 
-const val DATABASE_NAME = "piley-db"
+internal const val PILE_DATABASE_NAME = "piley-db"
 
 /**
  * Pile database containing user piles and tasks
@@ -37,27 +37,14 @@ const val DATABASE_NAME = "piley-db"
     exportSchema = true
 )
 @TypeConverters(Converters::class)
+@ConstructedBy(PileDatabaseConstructor::class)
 abstract class PileDatabase : RoomDatabase() {
     // DAOs
     abstract fun taskDao(): TaskDao
     abstract fun pileDao(): PileDao
+}
 
-    companion object {
-        // For Singleton instantiation
-        @Volatile
-        private var instance: PileDatabase? = null
-
-        fun getInstance(context: Context): PileDatabase {
-            return instance ?: synchronized(this) {
-                instance ?: buildDatabase(context).also { instance = it }
-            }
-        }
-
-        private fun buildDatabase(context: Context): PileDatabase {
-            return Room
-                .databaseBuilder(context, PileDatabase::class.java, DATABASE_NAME)
-                .setJournalMode(JournalMode.TRUNCATE)
-                .build()
-        }
-    }
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+expect object PileDatabaseConstructor : RoomDatabaseConstructor<PileDatabase> {
+    override fun initialize(): PileDatabase
 }

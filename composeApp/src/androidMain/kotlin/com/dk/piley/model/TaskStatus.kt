@@ -1,19 +1,8 @@
-package com.dk.piley.model.task
-
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringArrayResource
 import com.dk.piley.R
-
-/**
- * Task status representing the completion state of the task
- *
- */
-enum class TaskStatus {
-    DONE,
-    DELETED,
-    DEFAULT
-}
+import com.dk.piley.model.task.RecurringTimeRange
 
 /**
  * Convert recurring time range enum to a string

@@ -1,6 +1,5 @@
 package com.dk.piley.model.pile
 
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -42,16 +41,6 @@ class PileRepository(private val pileDao: PileDao) {
      *
      */
     suspend fun deletePileData() = pileDao.deletePileData()
-
-    /**
-     * Perform database checkpoint by forcing a write to the wal file and thus keeping the main
-     * database file up-to-date
-     *
-     */
-    suspend fun performDatabaseCheckpoint() {
-        // wal checkpoint with truncating wal file
-        pileDao.checkpoint(SimpleSQLiteQuery("pragma wal_checkpoint(truncate)"))
-    }
 
     /**
      * Delete all tasks with status DELETED

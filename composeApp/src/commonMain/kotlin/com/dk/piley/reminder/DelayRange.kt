@@ -1,4 +1,4 @@
-package com.dk.piley.ui.reminder
+package com.dk.piley.reminder
 
 enum class DelayRange {
     Minute,

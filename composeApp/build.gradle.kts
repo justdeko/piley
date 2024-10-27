@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.material)
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.sqlite.bundled.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

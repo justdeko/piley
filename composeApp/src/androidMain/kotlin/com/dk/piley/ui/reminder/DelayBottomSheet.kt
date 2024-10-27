@@ -18,9 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
+import com.dk.piley.reminder.DelayRange
+import com.dk.piley.reminder.calculateDelayDuration
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.util.calculateDelayDuration
 import com.dk.piley.util.defaultPadding
 
 @OptIn(ExperimentalMaterial3Api::class)

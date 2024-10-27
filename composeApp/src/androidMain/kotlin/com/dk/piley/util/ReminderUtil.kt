@@ -1,10 +1,12 @@
 package com.dk.piley.util
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
-import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.plural_s
+import piley.composeapp.generated.resources.reminder_repeat_frequency_value
 import toText
 
 /**
@@ -20,10 +22,10 @@ fun getFrequencyString(
     recurringTimeRange: RecurringTimeRange,
     recurringFrequency: Int
 ): String {
-    val pluralS = pluralStringResource(id = R.plurals.plural_s, count = recurringFrequency)
+    val pluralS = pluralStringResource(Res.plurals.plural_s, recurringFrequency)
     val frequency = if (recurringFrequency == 1) "" else "$recurringFrequency "
     return stringResource(
-        R.string.reminder_repeat_frequency_value,
+        Res.string.reminder_repeat_frequency_value,
         "$frequency${recurringTimeRange.toText()}$pluralS"
     )
 }

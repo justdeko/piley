@@ -27,7 +27,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -45,6 +44,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.app_name
 
 /**
  * Splash screen
@@ -127,7 +129,7 @@ fun SplashScreen(
         )
         BigSpacer()
         Text(
-            text = stringResource(R.string.app_name),
+            text = stringResource(Res.string.app_name),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.displayMedium,
             modifier = Modifier

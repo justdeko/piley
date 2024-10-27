@@ -11,12 +11,16 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.pileTitleCharacterLimit
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.create_pile_dialog_title
+import piley.composeapp.generated.resources.pile_create_dialog_confirm_button_text
+import piley.composeapp.generated.resources.pile_create_dialog_dismiss_button_text
+import piley.composeapp.generated.resources.pile_title_hint
 
 /**
  * Alert dialog for creating a new pile
@@ -39,7 +43,7 @@ fun CreatePileAlertDialog(
 ) {
     AlertDialog(
         modifier = modifier,
-        title = { Text(stringResource(R.string.create_pile_dialog_title)) },
+        title = { Text(stringResource(Res.string.create_pile_dialog_title)) },
         text = {
             val focusManager = LocalFocusManager.current // dialog has own focus manager
             OutlinedTextField(
@@ -50,7 +54,7 @@ fun CreatePileAlertDialog(
                         onTitleValueChange(it)
                     }
                 },
-                placeholder = { Text(stringResource(R.string.pile_title_hint)) },
+                placeholder = { Text(stringResource(Res.string.pile_title_hint)) },
                 shape = MaterialTheme.shapes.large,
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -66,11 +70,11 @@ fun CreatePileAlertDialog(
                 onClick = onConfirm,
                 enabled = confirmEnabled
             ) {
-                Text(stringResource(R.string.pile_create_dialog_confirm_button_text))
+                Text(stringResource(Res.string.pile_create_dialog_confirm_button_text))
             }
         }, dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.pile_create_dialog_dismiss_button_text))
+                Text(stringResource(Res.string.pile_create_dialog_dismiss_button_text))
             }
         })
 }

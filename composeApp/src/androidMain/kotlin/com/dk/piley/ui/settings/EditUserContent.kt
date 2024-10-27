@@ -15,15 +15,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.usernameCharacterLimit
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.edit_user_dialog_cancel_button
+import piley.composeapp.generated.resources.edit_user_dialog_confirm_button
+import piley.composeapp.generated.resources.edit_user_dialog_title
+import piley.composeapp.generated.resources.user_name_hint
 
 /**
  * Edit user dialog content
@@ -50,7 +54,7 @@ fun EditUserContent(
         verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
     ) {
         Text(
-            text = stringResource(R.string.edit_user_dialog_title),
+            text = stringResource(Res.string.edit_user_dialog_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
@@ -63,7 +67,7 @@ fun EditUserContent(
                     name = it
                 }
             },
-            placeholder = { Text(stringResource(R.string.user_name_hint)) },
+            placeholder = { Text(stringResource(Res.string.user_name_hint)) },
             shape = MaterialTheme.shapes.large,
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -77,8 +81,8 @@ fun EditUserContent(
                 )
             },
             onLeftClick = onCancel,
-            rightText = stringResource(R.string.edit_user_dialog_confirm_button),
-            leftText = stringResource(R.string.edit_user_dialog_cancel_button),
+            rightText = stringResource(Res.string.edit_user_dialog_confirm_button),
+            leftText = stringResource(Res.string.edit_user_dialog_cancel_button),
             rightEnabled = name.isNotBlank()
         )
     }

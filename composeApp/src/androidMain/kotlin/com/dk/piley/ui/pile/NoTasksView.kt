@@ -15,13 +15,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.no_tasks_left_message
+import piley.composeapp.generated.resources.no_tasks_yet_message
 
 /**
  * "No tasks" view
@@ -49,7 +52,7 @@ fun NoTasksView(
             BigSpacer()
             Text(
                 modifier = Modifier.padding(horizontal = LocalDim.current.large),
-                text = stringResource(if (noTasksYet) R.string.no_tasks_yet_message else R.string.no_tasks_left_message),
+                text = stringResource(if (noTasksYet) Res.string.no_tasks_yet_message else Res.string.no_tasks_left_message),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center

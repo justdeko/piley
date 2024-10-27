@@ -15,10 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
@@ -26,6 +24,11 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.roundedOutline
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.no_reminder_set_placeholder
+import piley.composeapp.generated.resources.reminder_info_title
+import piley.composeapp.generated.resources.reminder_recurring_label
 
 /**
  * Reminder info section
@@ -50,7 +53,7 @@ fun ReminderInfo(
     val dim = LocalDim.current
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.reminder_info_title),
+            text = stringResource(Res.string.reminder_info_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = dim.medium),
@@ -68,7 +71,7 @@ fun ReminderInfo(
             ) {
                 Text(
                     text = reminderDateTimeText
-                        ?: stringResource(R.string.no_reminder_set_placeholder),
+                        ?: stringResource(Res.string.no_reminder_set_placeholder),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(start = dim.large),
                     style = MaterialTheme.typography.bodyLarge,
@@ -91,7 +94,7 @@ fun ReminderInfo(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = dim.large, vertical = dim.medium),
-                description = stringResource(R.string.reminder_recurring_label),
+                description = stringResource(Res.string.reminder_recurring_label),
                 checked = isRecurring
             )
             if (isRecurring) {

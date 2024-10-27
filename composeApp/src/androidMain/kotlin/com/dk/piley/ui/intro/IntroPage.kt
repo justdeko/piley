@@ -1,8 +1,21 @@
 package com.dk.piley.ui.intro
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.dk.piley.R
+import org.jetbrains.compose.resources.StringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.end_page_description
+import piley.composeapp.generated.resources.end_page_title
+import piley.composeapp.generated.resources.pile_page_description
+import piley.composeapp.generated.resources.pile_page_title
+import piley.composeapp.generated.resources.piles_page_description
+import piley.composeapp.generated.resources.piles_page_title
+import piley.composeapp.generated.resources.profile_page_description
+import piley.composeapp.generated.resources.profile_page_title
+import piley.composeapp.generated.resources.recurring_pile_page_description
+import piley.composeapp.generated.resources.recurring_pile_page_title
+import piley.composeapp.generated.resources.welcome_page_description
+import piley.composeapp.generated.resources.welcome_page_title
 
 /**
  * Intro page representing pages for the welcome screen
@@ -15,55 +28,55 @@ import com.dk.piley.R
 sealed class IntroPage(
     @DrawableRes val imageResource: Int,
     @DrawableRes val imageNightResource: Int,
-    @StringRes val titleResource: Int,
-    @StringRes val descriptionResource: Int,
+    val titleResource: StringResource,
+    val descriptionResource: StringResource,
     val isScreenshot: Boolean
 ) {
     data object Welcome : IntroPage(
         imageResource = R.drawable.tasks,
         imageNightResource = R.drawable.tasks,
-        titleResource = R.string.welcome_page_title,
-        descriptionResource = R.string.welcome_page_description,
+        titleResource = Res.string.welcome_page_title,
+        descriptionResource = Res.string.welcome_page_description,
         isScreenshot = false
     )
 
     data object Pile : IntroPage(
         imageResource = R.drawable.pile_screen_demo,
         imageNightResource = R.drawable.pile_screen_night_demo,
-        titleResource = R.string.pile_page_title,
-        descriptionResource = R.string.pile_page_description,
+        titleResource = Res.string.pile_page_title,
+        descriptionResource = Res.string.pile_page_description,
         isScreenshot = true
     )
 
     data object RecurringPile : IntroPage(
         imageResource = R.drawable.recurring_pile_screen_demo,
         imageNightResource = R.drawable.recurring_pile_screen_night_demo,
-        titleResource = R.string.recurring_pile_page_title,
-        descriptionResource = R.string.recurring_pile_page_description,
+        titleResource = Res.string.recurring_pile_page_title,
+        descriptionResource = Res.string.recurring_pile_page_description,
         isScreenshot = true
     )
 
     data object Piles : IntroPage(
         imageResource = R.drawable.pile_overview_screen_demo,
         imageNightResource = R.drawable.pile_overview_screen_night_demo,
-        titleResource = R.string.piles_page_title,
-        descriptionResource = R.string.piles_page_description,
+        titleResource = Res.string.piles_page_title,
+        descriptionResource = Res.string.piles_page_description,
         isScreenshot = true
     )
 
     data object Profile : IntroPage(
         imageResource = R.drawable.profile_screen_demo,
         imageNightResource = R.drawable.profile_screen_night_demo,
-        titleResource = R.string.profile_page_title,
-        descriptionResource = R.string.profile_page_description,
+        titleResource = Res.string.profile_page_title,
+        descriptionResource = Res.string.profile_page_description,
         isScreenshot = true
     )
 
     data object End : IntroPage(
         imageResource = R.drawable.door,
         imageNightResource = R.drawable.door,
-        titleResource = R.string.end_page_title,
-        descriptionResource = R.string.end_page_description,
+        titleResource = Res.string.end_page_title,
+        descriptionResource = Res.string.end_page_description,
         isScreenshot = false
     )
 

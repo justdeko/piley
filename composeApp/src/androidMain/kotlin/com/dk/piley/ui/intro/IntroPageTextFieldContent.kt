@@ -21,17 +21,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.isDarkMode
 import com.dk.piley.util.roundedOutline
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.finish_intro_button
 
 /**
  * Intro page content containing a text field and a button
@@ -139,7 +140,7 @@ fun IntroPageTextFieldContentPreview() {
         IntroPageTextFieldContent(
             modifier = Modifier.fillMaxSize(),
             introPage = IntroPage.End,
-            buttonText = stringResource(R.string.finish_intro_button)
+            buttonText = stringResource(Res.string.finish_intro_button)
         )
     }
 }
@@ -151,7 +152,7 @@ fun IntroPageTextFieldContentPreviewHorizontal() {
         IntroPageTextFieldContent(
             modifier = Modifier.fillMaxSize(),
             introPage = IntroPage.End,
-            buttonText = stringResource(R.string.finish_intro_button)
+            buttonText = stringResource(Res.string.finish_intro_button)
         )
     }
 }
@@ -163,7 +164,7 @@ fun IntroPageTextFieldContentLightModePreview() {
         IntroPageTextFieldContent(
             modifier = Modifier.fillMaxSize(),
             introPage = IntroPage.End,
-            buttonText = stringResource(R.string.finish_intro_button)
+            buttonText = stringResource(Res.string.finish_intro_button)
         )
     }
 }

@@ -9,15 +9,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.delete_user_dialog_cancel_button
+import piley.composeapp.generated.resources.delete_user_dialog_confirm_button
+import piley.composeapp.generated.resources.delete_user_dialog_description
+import piley.composeapp.generated.resources.delete_user_dialog_title
 
 /**
  * Delete user content
@@ -32,21 +35,19 @@ fun DeleteUserContent(
     onConfirm: () -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
-    val focusManager = LocalFocusManager.current
-
     Column(
         modifier.defaultPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(LocalDim.current.large)
     ) {
         Text(
-            text = stringResource(R.string.delete_user_dialog_title),
+            text = stringResource(Res.string.delete_user_dialog_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center
         )
         Text(
-            text = stringResource(R.string.delete_user_dialog_description),
+            text = stringResource(Res.string.delete_user_dialog_description),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
@@ -54,8 +55,8 @@ fun DeleteUserContent(
         TwoButtonRow(
             onRightClick = onConfirm,
             onLeftClick = onCancel,
-            rightText = stringResource(R.string.delete_user_dialog_confirm_button),
-            leftText = stringResource(R.string.delete_user_dialog_cancel_button),
+            rightText = stringResource(Res.string.delete_user_dialog_confirm_button),
+            leftText = stringResource(Res.string.delete_user_dialog_cancel_button),
             rightColors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer

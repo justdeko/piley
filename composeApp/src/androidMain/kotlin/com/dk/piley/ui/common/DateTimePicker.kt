@@ -23,9 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.toLocalDateTime
@@ -35,6 +33,10 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.atStartOfDayIn
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.cancel_date_time_picker_button
+import piley.composeapp.generated.resources.confirm_date_time_picker_button
 
 /**
  * Reminder date picker
@@ -64,12 +66,12 @@ fun ReminderDatePicker(
                 },
                 enabled = confirmEnabled.value
             ) {
-                Text(stringResource(R.string.confirm_date_time_picker_button))
+                Text(stringResource(Res.string.confirm_date_time_picker_button))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.cancel_date_time_picker_button))
+                Text(stringResource(Res.string.cancel_date_time_picker_button))
             }
         }
     ) { DatePicker(state = datePickerState) }
@@ -132,8 +134,8 @@ fun ReminderTimePicker(
                 modifier = Modifier.padding(top = LocalDim.current.medium),
                 onRightClick = { onConfirm(LocalTime(state.hour, state.minute)) },
                 onLeftClick = onDismiss,
-                rightText = stringResource(R.string.confirm_date_time_picker_button),
-                leftText = stringResource(R.string.cancel_date_time_picker_button)
+                rightText = stringResource(Res.string.confirm_date_time_picker_button),
+                leftText = stringResource(Res.string.cancel_date_time_picker_button)
             )
         }
     }

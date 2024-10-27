@@ -11,10 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.LocalDim
@@ -23,6 +20,16 @@ import com.dk.piley.ui.settings.SettingsSection
 import com.dk.piley.ui.settings.SliderSettingsItem
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.roundedOutline
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.pile_limit_setting_description
+import piley.composeapp.generated.resources.pile_limit_setting_title
+import piley.composeapp.generated.resources.pile_mode_setting_description
+import piley.composeapp.generated.resources.pile_mode_setting_dropdown_label
+import piley.composeapp.generated.resources.pile_mode_setting_title
+import piley.composeapp.generated.resources.pile_modes
+import piley.composeapp.generated.resources.pile_settings_section_title
 
 /**
  * Pile detail settings section
@@ -42,19 +49,19 @@ fun PileDetailSettings(
     onSetPileLimit: (Int) -> Unit = {},
 ) {
     var sliderValue by remember { mutableIntStateOf(viewState.pile.pileLimit) }
-    val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
+    val pileModeValues = stringArrayResource(Res.array.pile_modes).toList()
     SettingsSection(
         modifier = modifier
             .padding(LocalDim.current.medium)
             .roundedOutline(),
-        title = stringResource(R.string.pile_settings_section_title),
+        title = stringResource(Res.string.pile_settings_section_title),
         icon = Icons.Default.Settings,
         expandedState = expandedState
     ) {
         DropdownSettingsItem(
-            title = stringResource(R.string.pile_mode_setting_title),
-            description = stringResource(R.string.pile_mode_setting_description),
-            optionLabel = stringResource(R.string.pile_mode_setting_dropdown_label),
+            title = stringResource(Res.string.pile_mode_setting_title),
+            description = stringResource(Res.string.pile_mode_setting_description),
+            optionLabel = stringResource(Res.string.pile_mode_setting_dropdown_label),
             selectedValue = pileModeValues[viewState.pile.pileMode.value],
             values = pileModeValues,
             onValueChange = {
@@ -62,8 +69,8 @@ fun PileDetailSettings(
             }
         )
         SliderSettingsItem(
-            title = stringResource(R.string.pile_limit_setting_title),
-            description = stringResource(R.string.pile_limit_setting_description),
+            title = stringResource(Res.string.pile_limit_setting_title),
+            description = stringResource(Res.string.pile_limit_setting_description),
             value = viewState.pile.pileLimit,
             range = Pair(0, 20),
             steps = 20,

@@ -8,7 +8,6 @@ import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
@@ -26,14 +25,13 @@ fun ReminderTimeSuggestions(
     modifier: Modifier = Modifier,
     onSelectTimeSuggestion: (LocalDateTime) -> Unit = {}
 ) {
-    val context = LocalContext.current
     FlowRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(LocalDim.current.medium)
     ) {
         val timeSuggestions = TimeSuggestion.entries.toTypedArray()
         timeSuggestions
-            .map { timeSuggestion -> timeSuggestion.getLabelAndDate(context) }
+            .map { timeSuggestion -> timeSuggestion.getLabelAndDate() }
             .sortedBy { (_, date) -> date }
             .map { (label, date) ->
                 ElevatedSuggestionChip(

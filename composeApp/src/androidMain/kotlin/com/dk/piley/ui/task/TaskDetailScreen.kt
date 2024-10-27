@@ -23,12 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.EditDescriptionField
@@ -45,6 +43,16 @@ import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.complete_recurring_task_dialog_confirm
+import piley.composeapp.generated.resources.complete_recurring_task_dialog_description
+import piley.composeapp.generated.resources.complete_recurring_task_dialog_title
+import piley.composeapp.generated.resources.complete_task_button
+import piley.composeapp.generated.resources.delete_task_button
+import piley.composeapp.generated.resources.delete_task_dialog_confirm_button
+import piley.composeapp.generated.resources.delete_task_dialog_description
+import piley.composeapp.generated.resources.delete_task_dialog_title
 
 
 /**
@@ -153,12 +161,12 @@ fun TaskDetailScreen(
 
     if (completeRecurringDialogOpen) {
         AlertDialogHelper(
-            title = stringResource(R.string.complete_recurring_task_dialog_title),
+            title = stringResource(Res.string.complete_recurring_task_dialog_title),
             description = stringResource(
-                R.string.complete_recurring_task_dialog_description,
+                Res.string.complete_recurring_task_dialog_description,
                 viewState.task.reminder?.toLocalDateTime()?.dateTimeString() ?: ""
             ),
-            confirmText = stringResource(R.string.complete_recurring_task_dialog_confirm),
+            confirmText = stringResource(Res.string.complete_recurring_task_dialog_confirm),
             onConfirm = {
                 onCompleteTask()
                 completeRecurringDialogOpen = false
@@ -169,9 +177,9 @@ fun TaskDetailScreen(
 
     if (confirmDeleteDialogOpen) {
         AlertDialogHelper(
-            title = stringResource(R.string.delete_task_dialog_title),
-            description = stringResource(R.string.delete_task_dialog_description),
-            confirmText = stringResource(R.string.delete_task_dialog_confirm_button),
+            title = stringResource(Res.string.delete_task_dialog_title),
+            description = stringResource(Res.string.delete_task_dialog_description),
+            confirmText = stringResource(Res.string.delete_task_dialog_confirm_button),
             onDismiss = { confirmDeleteDialogOpen = false },
             onConfirm = {
                 onDeleteTask()
@@ -283,8 +291,8 @@ fun TaskDetailScreen(
                     onCompleteTask()
                 }
             },
-            leftText = stringResource(R.string.delete_task_button),
-            rightText = stringResource(R.string.complete_task_button),
+            leftText = stringResource(Res.string.delete_task_button),
+            rightText = stringResource(Res.string.complete_task_button),
             arrangement = Arrangement.SpaceEvenly,
             leftColors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,

@@ -20,10 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
-import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.LocalDim
@@ -33,6 +31,14 @@ import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.complete_recurring_task_dialog_confirm
+import piley.composeapp.generated.resources.complete_recurring_task_dialog_description
+import piley.composeapp.generated.resources.complete_recurring_task_dialog_title
+import piley.composeapp.generated.resources.delete_recurring_dialog_confirm
+import piley.composeapp.generated.resources.delete_recurring_dialog_description
+import piley.composeapp.generated.resources.delete_recurring_dialog_title
 
 /**
  * Task pile view
@@ -62,12 +68,12 @@ fun TaskPile(
     var recurringTaskToComplete by rememberSaveable { mutableStateOf<Task?>(null) }
     if (recurringTaskToComplete != null) {
         AlertDialogHelper(
-            title = stringResource(R.string.complete_recurring_task_dialog_title),
+            title = stringResource(Res.string.complete_recurring_task_dialog_title),
             description = stringResource(
-                R.string.complete_recurring_task_dialog_description,
+                Res.string.complete_recurring_task_dialog_description,
                 recurringTaskToComplete?.reminder?.toLocalDateTime()?.dateTimeString() ?: ""
             ),
-            confirmText = stringResource(R.string.complete_recurring_task_dialog_confirm),
+            confirmText = stringResource(Res.string.complete_recurring_task_dialog_confirm),
             onConfirm = {
                 recurringTaskToComplete?.let {
                     onDone(it)
@@ -80,9 +86,9 @@ fun TaskPile(
     var recurringTaskToDelete by rememberSaveable { mutableStateOf<Task?>(null) }
     recurringTaskToDelete?.let { task ->
         AlertDialogHelper(
-            title = stringResource(R.string.delete_recurring_dialog_title),
-            description = stringResource(R.string.delete_recurring_dialog_description),
-            confirmText = stringResource(R.string.delete_recurring_dialog_confirm),
+            title = stringResource(Res.string.delete_recurring_dialog_title),
+            description = stringResource(Res.string.delete_recurring_dialog_description),
+            confirmText = stringResource(Res.string.delete_recurring_dialog_confirm),
             onDismiss = { recurringTaskToDelete = null },
             onConfirm = {
                 onDelete(task)

@@ -32,16 +32,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.ReminderDatePicker
@@ -54,10 +53,23 @@ import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.timeString
 import com.dk.piley.util.toLocalDateTime
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.add_reminder_title
+import piley.composeapp.generated.resources.date_selection_placeholder
+import piley.composeapp.generated.resources.delete_reminder_button
+import piley.composeapp.generated.resources.edit_reminder_title
+import piley.composeapp.generated.resources.no_notification_permission_reminder_warning
+import piley.composeapp.generated.resources.reminder_recurring_label
+import piley.composeapp.generated.resources.set_reminder_button
+import piley.composeapp.generated.resources.time_selection_placeholder
+import piley.composeapp.generated.resources.update_reminder_button
 
 /**
  * Bottom sheet with options to add a reminder.
@@ -135,6 +147,7 @@ fun AddReminderContent(
     useNowAsReminderTime: Boolean = false,
     notificationPermissionGranted: Boolean = false
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val dim = LocalDim.current
     var localDate: LocalDate? by remember { mutableStateOf(null) }
@@ -177,9 +190,9 @@ fun AddReminderContent(
         Text(
             modifier = Modifier.align(CenterHorizontally),
             text = if (initialDateTime != null) {
-                stringResource(R.string.edit_reminder_title)
+                stringResource(Res.string.edit_reminder_title)
             } else stringResource(
-                R.string.add_reminder_title
+                Res.string.add_reminder_title
             ),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.titleLarge,
@@ -189,7 +202,7 @@ fun AddReminderContent(
         PickerSection(
             modifier = Modifier.padding(horizontal = dim.large),
             text = localDate?.dateString() ?: (initialDateTime?.date?.dateString()
-                ?: stringResource(R.string.date_selection_placeholder)),
+                ?: stringResource(Res.string.date_selection_placeholder)),
             icon = Icons.Default.Event,
             onIconClick = { datePickerVisible = true },
             iconContentDescription = "set the date for a reminder"
@@ -206,7 +219,7 @@ fun AddReminderContent(
                                 this.second
                             )
                         }
-                    }?.timeString() ?: stringResource(R.string.time_selection_placeholder)),
+                    }?.timeString() ?: stringResource(Res.string.time_selection_placeholder)),
             icon = Icons.Default.Schedule,
             onIconClick = { timePickerVisible = true },
             iconContentDescription = "set the time for a reminder"
@@ -222,7 +235,7 @@ fun AddReminderContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = dim.large),
-            description = stringResource(R.string.reminder_recurring_label),
+            description = stringResource(Res.string.reminder_recurring_label),
             checked = recurring
         ) { recurring = it }
         AnimatedVisibility(recurring) {
@@ -246,11 +259,13 @@ fun AddReminderContent(
                 onClick = {
                     // if permission denied, do nothing and show toast
                     if (!notificationPermissionGranted) {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.no_notification_permission_reminder_warning),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        coroutineScope.launch {
+                            Toast.makeText(
+                                context,
+                                getString(Res.string.no_notification_permission_reminder_warning),
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                         return@Button
                     }
                     if (localTime != null && localDate != null) {
@@ -286,9 +301,9 @@ fun AddReminderContent(
             ) {
                 Text(
                     if (initialDateTime == null) {
-                        stringResource(R.string.set_reminder_button)
+                        stringResource(Res.string.set_reminder_button)
                     } else stringResource(
-                        R.string.update_reminder_button
+                        Res.string.update_reminder_button
                     )
                 )
             }
@@ -305,7 +320,7 @@ fun AddReminderContent(
                         onDeleteReminder()
                     }
                 ) {
-                    Text(stringResource(R.string.delete_reminder_button))
+                    Text(stringResource(Res.string.delete_reminder_button))
                 }
             }
         }

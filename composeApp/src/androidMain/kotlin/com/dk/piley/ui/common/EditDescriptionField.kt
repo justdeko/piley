@@ -7,12 +7,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.descriptionCharacterLimit
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.add_description_hint
 
 /**
  * Edit description field
@@ -43,7 +44,7 @@ fun EditDescriptionField(
         onValueChange = onChange,
         singleLine = false,
         maxLines = 6,
-        placeholder = { Text(stringResource(R.string.add_description_hint)) },
+        placeholder = { Text(stringResource(Res.string.add_description_hint)) },
     )
 }
 

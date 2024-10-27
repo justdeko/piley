@@ -15,14 +15,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.reminder.DelayRange
 import com.dk.piley.reminder.calculateDelayDuration
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.cancel_delay_button
+import piley.composeapp.generated.resources.confirm_delay_button
+import piley.composeapp.generated.resources.delay_title
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +54,7 @@ fun DelayBottomSheet(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(R.string.delay_title),
+                text = stringResource(Res.string.delay_title),
                 style = MaterialTheme.typography.headlineMedium
             )
             DelaySelection(
@@ -60,8 +63,8 @@ fun DelayBottomSheet(
                 onSetDelay = { delayTime = it }
             )
             TwoButtonRow(
-                leftText = stringResource(R.string.cancel_delay_button),
-                rightText = stringResource(R.string.confirm_delay_button),
+                leftText = stringResource(Res.string.cancel_delay_button),
+                rightText = stringResource(Res.string.confirm_delay_button),
                 onLeftClick = { onDelay(0) },
                 onRightClick = { onDelay(delayTime) }
             )

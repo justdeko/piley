@@ -25,12 +25,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
@@ -42,6 +40,11 @@ import com.dk.piley.util.InitialSlideIn
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.SlideDirection
 import com.dk.piley.util.previewUpcomingTasksList
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.no_pile
+import piley.composeapp.generated.resources.upcoming_tasks_section_title
+import piley.composeapp.generated.resources.user_statistics_section_title
 
 
 /**
@@ -151,7 +154,7 @@ private fun ProfileScreen(
             Column {
                 BigSpacer()
                 ProfileSection(
-                    title = stringResource(R.string.user_statistics_section_title),
+                    title = stringResource(Res.string.user_statistics_section_title),
                     icon = Icons.Default.BarChart
                 ) {
                     TaskStats(
@@ -159,12 +162,12 @@ private fun ProfileScreen(
                         deletedCount = viewState.deletedTasks,
                         currentCount = viewState.currentTasks,
                         tasksCompletedPastDays = viewState.tasksCompletedPastDays,
-                        biggestPile = viewState.biggestPileName ?: stringResource(R.string.no_pile),
+                        biggestPile = viewState.biggestPileName ?: stringResource(Res.string.no_pile),
                     )
                 }
                 MediumSpacer()
                 ProfileSection(
-                    title = stringResource(R.string.upcoming_tasks_section_title),
+                    title = stringResource(Res.string.upcoming_tasks_section_title),
                     icon = Icons.Default.Upcoming
                 ) {
                     UpcomingTasksList(

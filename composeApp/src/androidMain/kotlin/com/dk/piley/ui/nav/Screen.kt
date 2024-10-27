@@ -1,6 +1,5 @@
 package com.dk.piley.ui.nav
 
-import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -18,7 +17,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
-import com.dk.piley.R
+import org.jetbrains.compose.resources.StringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.introduction_screen
+import piley.composeapp.generated.resources.pile
+import piley.composeapp.generated.resources.piles
+import piley.composeapp.generated.resources.profile
+import piley.composeapp.generated.resources.settings
+import piley.composeapp.generated.resources.splash_screen
 
 /**
  * Represents a screen of the app in terms of destination
@@ -30,33 +36,33 @@ import com.dk.piley.R
  */
 sealed class Screen(
     val route: String,
-    @StringRes val titleResource: Int,
+    val titleResource: StringResource,
     val icon: Pair<ImageVector, ImageVector>,
     val argument: String = "",
     val optionalArguments: List<NamedNavArgument> = emptyList(),
 ) {
     data object Pile : Screen(
-        "taskPile", R.string.pile, Pair(Icons.Outlined.Home, Icons.Filled.Home), "pileId"
+        "taskPile", Res.string.pile, Pair(Icons.Outlined.Home, Icons.Filled.Home), "pileId"
     )
 
     data object Piles : Screen(
-        "piles", R.string.piles, Pair(Icons.Outlined.ViewAgenda, Icons.Filled.ViewAgenda)
+        "piles", Res.string.piles, Pair(Icons.Outlined.ViewAgenda, Icons.Filled.ViewAgenda)
     )
 
     data object Profile : Screen(
-        "profile", R.string.profile, Pair(Icons.Outlined.Person, Icons.Filled.Person)
+        "profile", Res.string.profile, Pair(Icons.Outlined.Person, Icons.Filled.Person)
     )
 
     data object Settings : Screen(
-        "settings", R.string.settings, Pair(Icons.Outlined.Settings, Icons.Filled.Settings)
+        "settings", Res.string.settings, Pair(Icons.Outlined.Settings, Icons.Filled.Settings)
     )
 
     data object Splash : Screen(
-        "splash", R.string.splash_screen, Pair(Icons.Outlined.Square, Icons.Filled.Square)
+        "splash", Res.string.splash_screen, Pair(Icons.Outlined.Square, Icons.Filled.Square)
     )
 
     data object Intro : Screen(
-        "intro", R.string.introduction_screen, Pair(Icons.Outlined.Start, Icons.Filled.Start),
+        "intro", Res.string.introduction_screen, Pair(Icons.Outlined.Start, Icons.Filled.Start),
     )
 }
 

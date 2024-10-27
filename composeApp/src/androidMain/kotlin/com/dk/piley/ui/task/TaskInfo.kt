@@ -7,10 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.FullWidthInfo
 import com.dk.piley.ui.common.LocalDim
@@ -22,6 +20,12 @@ import com.dk.piley.util.toLocalDateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.minus
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.task_created_at_label
+import piley.composeapp.generated.resources.task_info_title
+import piley.composeapp.generated.resources.task_last_completed_at_label
+import piley.composeapp.generated.resources.task_modified_at_label
 
 /**
  * Task info section
@@ -36,7 +40,7 @@ fun TaskInfo(
 ) {
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.task_info_title),
+            text = stringResource(Res.string.task_info_title),
             color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = LocalDim.current.medium),
@@ -44,19 +48,19 @@ fun TaskInfo(
         )
         OutlineCard(Modifier.padding(LocalDim.current.medium)) {
             FullWidthInfo(
-                label = stringResource(R.string.task_created_at_label),
+                label = stringResource(Res.string.task_created_at_label),
                 value = task.createdAt.toLocalDateTime().dateTimeString()
             )
             if (task.isRecurring && task.completionTimes.isNotEmpty()) {
                 BigSpacer()
                 FullWidthInfo(
-                    label = stringResource(R.string.task_last_completed_at_label),
+                    label = stringResource(Res.string.task_last_completed_at_label),
                     value = task.completionTimes.last().toLocalDateTime().dateTimeString()
                 )
             }
             BigSpacer()
             FullWidthInfo(
-                label = stringResource(R.string.task_modified_at_label),
+                label = stringResource(Res.string.task_modified_at_label),
                 value = task.modifiedAt.toLocalDateTime().dateTimeString()
             )
         }

@@ -11,14 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.LocalDim
@@ -27,6 +24,14 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.reminder_frequency_label
+import piley.composeapp.generated.resources.reminder_time_range_label
+import piley.composeapp.generated.resources.reminder_use_now_description
+import piley.composeapp.generated.resources.time_range
 import toRecurringTimeRange
 import toText
 
@@ -40,8 +45,8 @@ fun RecurringReminderSection(
     useNowAsReminderTime: Boolean = false,
     onUseNowAsReminderTimeChange: (Boolean) -> Unit = {}
 ) {
-    val context = LocalContext.current
-    val timeRanges = stringArrayResource(R.array.time_range).toList()
+    val coroutineScope = rememberCoroutineScope()
+    val timeRanges = stringArrayResource(Res.array.time_range).toList()
     var expandedTimeRange by remember { mutableStateOf(false) }
     var expandedFrequency by remember { mutableStateOf(false) }
 
@@ -56,11 +61,13 @@ fun RecurringReminderSection(
                 value = selectedTimeRange.toText(),
                 dropdownValues = timeRanges,
                 expanded = expandedTimeRange,
-                label = stringResource(R.string.reminder_time_range_label),
+                label = stringResource(Res.string.reminder_time_range_label),
                 onExpandedChange = { expandedTimeRange = !expandedTimeRange },
                 onValueClick = {
-                    expandedTimeRange = false
-                    onSelectTimeRange(it.toRecurringTimeRange(context))
+                    coroutineScope.launch {
+                        expandedTimeRange = false
+                        onSelectTimeRange(it.toRecurringTimeRange())
+                    }
                 },
                 onDismiss = { expandedTimeRange = false }
             )
@@ -70,7 +77,7 @@ fun RecurringReminderSection(
                 value = selectedFrequency.toString(),
                 dropdownValues = listOf(1, 2, 3, 4, 5).map { it.toString() },
                 expanded = expandedFrequency,
-                label = stringResource(R.string.reminder_frequency_label),
+                label = stringResource(Res.string.reminder_frequency_label),
                 onExpandedChange = { expandedFrequency = !expandedFrequency },
                 onValueClick = {
                     expandedFrequency = false
@@ -90,7 +97,7 @@ fun RecurringReminderSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = LocalDim.current.medium),
-            description = stringResource(R.string.reminder_use_now_description),
+            description = stringResource(Res.string.reminder_use_now_description),
             checked = useNowAsReminderTime,
             onChecked = onUseNowAsReminderTimeChange
         )

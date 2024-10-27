@@ -23,15 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
@@ -47,6 +43,43 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.navigateClearBackstack
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.automatically_hide_keyboard_setting_description
+import piley.composeapp.generated.resources.automatically_hide_keyboard_setting_title
+import piley.composeapp.generated.resources.default_pile_mode_setting_description
+import piley.composeapp.generated.resources.default_pile_mode_setting_option_label
+import piley.composeapp.generated.resources.default_pile_mode_setting_title
+import piley.composeapp.generated.resources.delete_user_error_wrong_password
+import piley.composeapp.generated.resources.delete_user_setting_description
+import piley.composeapp.generated.resources.delete_user_setting_title
+import piley.composeapp.generated.resources.delete_user_success_info
+import piley.composeapp.generated.resources.dynamic_color_enabled_setting_description
+import piley.composeapp.generated.resources.dynamic_color_enabled_setting_title
+import piley.composeapp.generated.resources.night_mode_enabled_setting_description
+import piley.composeapp.generated.resources.night_mode_enabled_setting_option_label
+import piley.composeapp.generated.resources.night_mode_enabled_setting_title
+import piley.composeapp.generated.resources.night_modes
+import piley.composeapp.generated.resources.pile_modes
+import piley.composeapp.generated.resources.reminder_delay_duration_setting_description
+import piley.composeapp.generated.resources.reminder_delay_duration_setting_title
+import piley.composeapp.generated.resources.reset_all_pile_modes_setting_description
+import piley.composeapp.generated.resources.reset_all_pile_modes_setting_title
+import piley.composeapp.generated.resources.settings_screen_title
+import piley.composeapp.generated.resources.settings_section_appearance_title
+import piley.composeapp.generated.resources.settings_section_notifications_title
+import piley.composeapp.generated.resources.settings_section_piles_title
+import piley.composeapp.generated.resources.settings_section_user_title
+import piley.composeapp.generated.resources.show_recurring_tasks_setting_description
+import piley.composeapp.generated.resources.show_recurring_tasks_setting_title
+import piley.composeapp.generated.resources.start_tutorial_setting_description
+import piley.composeapp.generated.resources.start_tutorial_setting_title
+import piley.composeapp.generated.resources.update_user_error_wrong_password
+import piley.composeapp.generated.resources.update_user_setting_description
+import piley.composeapp.generated.resources.update_user_setting_title
+import piley.composeapp.generated.resources.user_update_success_info
 
 /**
  * Settings screen
@@ -71,17 +104,16 @@ fun SettingsScreen(
     )
 ) {
     val viewState by viewModel.state.collectAsState()
-    val context = LocalContext.current
 
     // snackbar handler
     viewState.message?.let { message ->
         LaunchedEffect(message, snackbarHostState) {
             snackbarHostState.showSnackbar(
                 when (message) {
-                    StatusMessage.USER_UPDATE_SUCCESSFUL -> context.getString(R.string.user_update_success_info)
-                    StatusMessage.USER_UPDATE_ERROR -> context.getString(R.string.update_user_error_wrong_password)
-                    StatusMessage.USER_DELETED -> context.getString(R.string.delete_user_success_info)
-                    StatusMessage.USER_DELETED_ERROR -> context.getString(R.string.delete_user_error_wrong_password)
+                    StatusMessage.USER_UPDATE_SUCCESSFUL -> getString(Res.string.user_update_success_info)
+                    StatusMessage.USER_UPDATE_ERROR -> getString(Res.string.update_user_error_wrong_password)
+                    StatusMessage.USER_DELETED -> getString(Res.string.delete_user_success_info)
+                    StatusMessage.USER_DELETED_ERROR -> getString(Res.string.delete_user_error_wrong_password)
                 }
             )
             // reset message
@@ -146,8 +178,8 @@ private fun SettingsScreen(
     onShowRecurringTasks: (Boolean) -> Unit = {},
 ) {
     val dim = LocalDim.current
-    val nightModeValues = stringArrayResource(R.array.night_modes).toList()
-    val pileModeValues = stringArrayResource(R.array.pile_modes).toList()
+    val nightModeValues = stringArrayResource(Res.array.night_modes).toList()
+    val pileModeValues = stringArrayResource(Res.array.pile_modes).toList()
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
@@ -185,7 +217,7 @@ private fun SettingsScreen(
                 .fillMaxSize()
         ) {
             TitleTopAppBar(
-                textValue = stringResource(R.string.settings_screen_title),
+                textValue = stringResource(Res.string.settings_screen_title),
                 justTitle = true,
                 onButtonClick = onCloseSettings,
                 contentDescription = "close the task detail"
@@ -197,13 +229,13 @@ private fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(dim.medium)
             ) {
                 SettingsSection(
-                    title = stringResource(R.string.settings_section_appearance_title),
+                    title = stringResource(Res.string.settings_section_appearance_title),
                     icon = Icons.Filled.FormatPaint
                 ) {
                     DropdownSettingsItem(
-                        title = stringResource(R.string.night_mode_enabled_setting_title),
-                        description = stringResource(R.string.night_mode_enabled_setting_description),
-                        optionLabel = stringResource(R.string.night_mode_enabled_setting_option_label),
+                        title = stringResource(Res.string.night_mode_enabled_setting_title),
+                        description = stringResource(Res.string.night_mode_enabled_setting_description),
+                        optionLabel = stringResource(Res.string.night_mode_enabled_setting_option_label),
                         selectedValue = nightModeValues[viewState.user.nightMode.value],
                         values = nightModeValues,
                         onValueChange = {
@@ -211,21 +243,21 @@ private fun SettingsScreen(
                         }
                     )
                     SwitchSettingsItem(
-                        title = stringResource(R.string.dynamic_color_enabled_setting_title),
-                        description = stringResource(R.string.dynamic_color_enabled_setting_description),
+                        title = stringResource(Res.string.dynamic_color_enabled_setting_title),
+                        description = stringResource(Res.string.dynamic_color_enabled_setting_description),
                         value = viewState.user.dynamicColorOn,
                         onValueChange = onDynamicColorChange
                     )
                 }
                 HorizontalDivider()
                 SettingsSection(
-                    title = stringResource(R.string.settings_section_piles_title),
+                    title = stringResource(Res.string.settings_section_piles_title),
                     icon = Icons.Filled.ViewAgenda
                 ) {
                     DropdownSettingsItem(
-                        title = stringResource(R.string.default_pile_mode_setting_title),
-                        description = stringResource(R.string.default_pile_mode_setting_description),
-                        optionLabel = stringResource(R.string.default_pile_mode_setting_option_label),
+                        title = stringResource(Res.string.default_pile_mode_setting_title),
+                        description = stringResource(Res.string.default_pile_mode_setting_description),
+                        optionLabel = stringResource(Res.string.default_pile_mode_setting_option_label),
                         selectedValue = pileModeValues[viewState.user.pileMode.value],
                         values = pileModeValues,
                         onValueChange = {
@@ -233,31 +265,31 @@ private fun SettingsScreen(
                         }
                     )
                     SettingsItem(
-                        title = stringResource(R.string.reset_all_pile_modes_setting_title),
-                        description = stringResource(R.string.reset_all_pile_modes_setting_description),
+                        title = stringResource(Res.string.reset_all_pile_modes_setting_title),
+                        description = stringResource(Res.string.reset_all_pile_modes_setting_description),
                         onClick = onResetPileModes
                     )
                     SwitchSettingsItem(
-                        title = stringResource(R.string.automatically_hide_keyboard_setting_title),
-                        description = stringResource(R.string.automatically_hide_keyboard_setting_description),
+                        title = stringResource(Res.string.automatically_hide_keyboard_setting_title),
+                        description = stringResource(Res.string.automatically_hide_keyboard_setting_description),
                         value = viewState.user.autoHideKeyboard,
                         onValueChange = onAutoHideKeyboardChange
                     )
                     SwitchSettingsItem(
-                        title = stringResource(R.string.show_recurring_tasks_setting_title),
-                        description = stringResource(R.string.show_recurring_tasks_setting_description),
+                        title = stringResource(Res.string.show_recurring_tasks_setting_title),
+                        description = stringResource(Res.string.show_recurring_tasks_setting_description),
                         value = viewState.user.showRecurringTasks,
                         onValueChange = onShowRecurringTasks
                     )
                 }
                 HorizontalDivider()
                 SettingsSection(
-                    title = stringResource(R.string.settings_section_notifications_title),
+                    title = stringResource(Res.string.settings_section_notifications_title),
                     icon = Icons.Filled.Notifications
                 ) {
                     SettingsItem(
-                        title = stringResource(R.string.reminder_delay_duration_setting_title),
-                        description = stringResource(R.string.reminder_delay_duration_setting_description),
+                        title = stringResource(Res.string.reminder_delay_duration_setting_title),
+                        description = stringResource(Res.string.reminder_delay_duration_setting_description),
                     ) {
                         DelaySelection(
                             defaultRangeIndex = viewState.user.defaultReminderDelayRange.ordinal,
@@ -268,22 +300,22 @@ private fun SettingsScreen(
                 }
                 HorizontalDivider()
                 SettingsSection(
-                    title = stringResource(R.string.settings_section_user_title),
+                    title = stringResource(Res.string.settings_section_user_title),
                     icon = Icons.Filled.Person
                 ) {
                     SettingsItem(
-                        title = stringResource(R.string.update_user_setting_title),
-                        description = stringResource(R.string.update_user_setting_description),
+                        title = stringResource(Res.string.update_user_setting_title),
+                        description = stringResource(Res.string.update_user_setting_description),
                         onClick = { editUserDialogOpen = true }
                     )
                     SettingsItem(
-                        title = stringResource(R.string.delete_user_setting_title),
-                        description = stringResource(R.string.delete_user_setting_description),
+                        title = stringResource(Res.string.delete_user_setting_title),
+                        description = stringResource(Res.string.delete_user_setting_description),
                         onClick = { deleteUserDialogOpen = true }
                     )
                     SettingsItem(
-                        title = stringResource(R.string.start_tutorial_setting_title),
-                        description = stringResource(R.string.start_tutorial_setting_description),
+                        title = stringResource(Res.string.start_tutorial_setting_title),
+                        description = stringResource(Res.string.start_tutorial_setting_description),
                         onClick = { onStartTutorial() }
                     )
                     Box(

@@ -8,17 +8,19 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.usernameCharacterLimit
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.finish_intro_button
+import piley.composeapp.generated.resources.first_user_name_hint
 
 /**
  * Intro screen
@@ -77,9 +79,9 @@ fun IntroScreen(
             } else {
                 IntroPageTextFieldContent(
                     introPage = pages[position],
-                    textFieldHint = stringResource(R.string.first_user_name_hint),
+                    textFieldHint = stringResource(Res.string.first_user_name_hint),
                     textMaxLength = usernameCharacterLimit,
-                    buttonText = stringResource(R.string.finish_intro_button),
+                    buttonText = stringResource(Res.string.finish_intro_button),
                     onClickButton = onFinish
                 )
             }

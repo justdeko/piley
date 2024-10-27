@@ -25,12 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.cancel
+import piley.composeapp.generated.resources.ok
 
 /**
  * Alert dialog helper to display and handle alert dialogs
@@ -46,8 +48,8 @@ import com.dk.piley.ui.common.LocalDim
 fun AlertDialogHelper(
     title: String,
     description: String,
-    confirmText: String = stringResource(R.string.ok),
-    dismissText: String? = stringResource(R.string.cancel),
+    confirmText: String = stringResource(Res.string.ok),
+    dismissText: String? = stringResource(Res.string.cancel),
     onDismiss: () -> Unit = {},
     onConfirm: () -> Unit = {}
 ) {

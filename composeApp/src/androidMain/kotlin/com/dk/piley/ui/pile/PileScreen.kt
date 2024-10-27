@@ -40,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
@@ -50,7 +49,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.task.Task
@@ -68,6 +66,13 @@ import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.titleCharacterLimit
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.pile_full_warning
+import piley.composeapp.generated.resources.recurring_task_completed_info
+import piley.composeapp.generated.resources.task_deleted_message
+import piley.composeapp.generated.resources.task_empty_not_allowed_hint
+import piley.composeapp.generated.resources.undo_task_deleted
 
 /**
  * Pile screen
@@ -93,7 +98,7 @@ fun PileScreen(
         }
     )
 ) {
-    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val viewState by viewModel.state.collectAsState()
     val selectedPileViewState by viewModel.selectedPileIndex.collectAsState()
     // filter out recurring tasks, show if recurring enabled
@@ -135,14 +140,16 @@ fun PileScreen(
         selectedPileIndex = selectedPileViewState,
         onDone = { viewModel.done(it) },
         onDelete = {
-            viewModel.delete(it)
-            viewModel.setMessage(
-                MessageWithAction(
-                    message = context.getString(R.string.task_deleted_message),
-                    actionText = context.getString(R.string.undo_task_deleted),
-                    duration = SnackbarDuration.Short
-                ) { viewModel.undoDelete(it) }
-            )
+            coroutineScope.launch {
+                viewModel.delete(it)
+                viewModel.setMessage(
+                    MessageWithAction(
+                        message = getString(Res.string.task_deleted_message),
+                        actionText = getString(Res.string.undo_task_deleted),
+                        duration = SnackbarDuration.Short
+                    ) { viewModel.undoDelete(it) }
+                )
+            }
         },
         onAdd = { viewModel.add(it) },
         onClick = { navController.navigate(taskScreen.root + "/" + it.id) },
@@ -187,7 +194,6 @@ private fun PileScreen(
     onClickTitle: () -> Unit = {},
 ) {
     val dim = LocalDim.current
-    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
     val pileOffset = remember { Animatable(0f) }
@@ -228,18 +234,20 @@ private fun PileScreen(
                 pileMode = viewState.pile.pileMode,
                 taskTransitionStates = taskTransitionStates,
                 onDone = {
-                    // if task is recurring, display completion message and next due date
-                    if (it.isRecurring) {
-                        onSetMessage(
-                            MessageWithAction(
-                                context.getString(
-                                    R.string.recurring_task_completed_info,
-                                    it.getNextReminderTime().toLocalDateTime().dateTimeString()
+                    coroutineScope.launch {
+                        // if task is recurring, display completion message and next due date
+                        if (it.isRecurring) {
+                            onSetMessage(
+                                MessageWithAction(
+                                    getString(
+                                        Res.string.recurring_task_completed_info,
+                                        it.getNextReminderTime().toLocalDateTime().dateTimeString()
+                                    )
                                 )
                             )
-                        )
+                        }
+                        onDone(it)
                     }
-                    onDone(it)
                 },
                 onDelete = onDelete,
                 onTaskClick = onClick
@@ -277,30 +285,32 @@ private fun PileScreen(
                     }
                 },
                 onDone = {
-                    if (taskTextValue.text.isNotBlank()) {
-                        // if pile limit is not 0 (infinite) and task count above pile limit, don't add
-                        if (
-                            viewState.pile.pileLimit > 0
-                            && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
-                        ) {
-                            onSetMessage(MessageWithAction(context.getString(R.string.pile_full_warning)))
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            coroutineScope.launch {
-                                pileOffset.animateTo(
-                                    targetValue = 0f,
-                                    animationSpec = shakeAnimationSpec,
-                                )
+                    coroutineScope.launch {
+                        if (taskTextValue.text.isNotBlank()) {
+                            // if pile limit is not 0 (infinite) and task count above pile limit, don't add
+                            if (
+                                viewState.pile.pileLimit > 0
+                                && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
+                            ) {
+                                onSetMessage(MessageWithAction(getString(Res.string.pile_full_warning)))
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                coroutineScope.launch {
+                                    pileOffset.animateTo(
+                                        targetValue = 0f,
+                                        animationSpec = shakeAnimationSpec,
+                                    )
+                                }
+                            } else {
+                                onAdd(taskTextValue.text.trim())
+                                if (viewState.autoHideEnabled) {
+                                    focusManager.clearFocus()
+                                    defaultKeyboardAction(ImeAction.Done)
+                                }
+                                taskTextValue = TextFieldValue()
                             }
                         } else {
-                            onAdd(taskTextValue.text.trim())
-                            if (viewState.autoHideEnabled) {
-                                focusManager.clearFocus()
-                                defaultKeyboardAction(ImeAction.Done)
-                            }
-                            taskTextValue = TextFieldValue()
+                            onSetMessage(MessageWithAction(getString(Res.string.task_empty_not_allowed_hint)))
                         }
-                    } else {
-                        onSetMessage(MessageWithAction(context.getString(R.string.task_empty_not_allowed_hint)))
                     }
                 }
             )

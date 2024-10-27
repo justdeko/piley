@@ -12,10 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
@@ -23,6 +21,9 @@ import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateTimeStringNewLine
 import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.no_upcoming_tasks_hint
 
 /**
  * List of tasks with upcoming reminders
@@ -79,7 +80,7 @@ fun UpcomingTasksList(
         } else {
             Text(
                 modifier = Modifier.padding(horizontal = dim.large, vertical = dim.small),
-                text = stringResource(R.string.no_upcoming_tasks_hint),
+                text = stringResource(Res.string.no_upcoming_tasks_hint),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.titleMedium,
                 textAlign = TextAlign.Center

@@ -13,15 +13,16 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.reminder.DelayRange
 import com.dk.piley.reminder.calculateDelayDuration
 import com.dk.piley.reminder.delaySelectionMap
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.defaultPadding
+import org.jetbrains.compose.resources.stringArrayResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.delay_by
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -35,7 +36,7 @@ fun DelaySelection(
     val dim = LocalDim.current
     var rangeSelectionIndex by remember { mutableIntStateOf(defaultRangeIndex) }
     var durationSelectionIndex by remember { mutableIntStateOf(defaultDurationIndex) }
-    val delayRanges = stringArrayResource(R.array.delay_by).toList()
+    val delayRanges = stringArrayResource(Res.array.delay_by).toList()
 
     Column(modifier.defaultPadding()) {
         FlowRow(horizontalArrangement = Arrangement.spacedBy(dim.large)) {

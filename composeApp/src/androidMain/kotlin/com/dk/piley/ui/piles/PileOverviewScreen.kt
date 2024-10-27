@@ -29,13 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.Screen
@@ -44,6 +42,9 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.add_pile_button
 
 /**
  * Pile overview screen
@@ -137,7 +138,7 @@ fun PileOverviewScreen(
                     onClick = { createPileDialogOpen = true },
                     expanded = false,
                     icon = { Icon(Icons.Filled.Add, "Add Pile Icon") },
-                    text = { Text(text = stringResource(R.string.add_pile_button)) },
+                    text = { Text(text = stringResource(Res.string.add_pile_button)) },
                 )
             }
         },

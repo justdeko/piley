@@ -59,7 +59,6 @@ class SplashViewModel(
      */
     private suspend fun createAndSetUserPile() {
         // create default pile
-        // TODO: user kmp resource here
         val pile = Pile(
             name = "Daily",
         )

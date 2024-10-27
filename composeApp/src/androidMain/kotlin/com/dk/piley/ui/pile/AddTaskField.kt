@@ -8,12 +8,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.theme.PileyTheme
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.add_task_placeholder
 
 /**
  * Text field for adding a new task
@@ -34,7 +35,7 @@ fun AddTaskField(
         modifier = modifier,
         value = value,
         onValueChange = onChange,
-        placeholder = { Text(stringResource(R.string.add_task_placeholder)) },
+        placeholder = { Text(stringResource(Res.string.add_task_placeholder)) },
         shape = MaterialTheme.shapes.large,
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),

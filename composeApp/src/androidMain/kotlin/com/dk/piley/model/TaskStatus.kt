@@ -1,8 +1,9 @@
-import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringArrayResource
-import com.dk.piley.R
 import com.dk.piley.model.task.RecurringTimeRange
+import org.jetbrains.compose.resources.getStringArray
+import org.jetbrains.compose.resources.stringArrayResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.time_range
 
 /**
  * Convert recurring time range enum to a string
@@ -11,7 +12,7 @@ import com.dk.piley.model.task.RecurringTimeRange
  */
 @Composable
 fun RecurringTimeRange.toText(): String {
-    val timeRanges = stringArrayResource(id = R.array.time_range)
+    val timeRanges = stringArrayResource(Res.array.time_range)
     return when (this) {
         RecurringTimeRange.DAILY -> timeRanges[0]
         RecurringTimeRange.WEEKLY -> timeRanges[1]
@@ -23,12 +24,11 @@ fun RecurringTimeRange.toText(): String {
 /**
  * Convert time range string to recurring time range
  *
- * @param context generic context to fetch string resource
  * @return time range enum representing corresponding string
  * e.g. WEEKLY for "Weekly"
  */
-fun String.toRecurringTimeRange(context: Context): RecurringTimeRange {
-    val timeRanges = context.resources.getStringArray(R.array.time_range)
+suspend fun String.toRecurringTimeRange(): RecurringTimeRange {
+    val timeRanges = getStringArray(Res.array.time_range)
     return when (this) {
         timeRanges[0] -> RecurringTimeRange.DAILY
         timeRanges[1] -> RecurringTimeRange.WEEKLY

@@ -24,17 +24,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.lastSevenDays
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.no_pile_completed_hint
 
 /**
  * Frequency chart of completed tasks
@@ -140,7 +141,7 @@ fun FrequencyChart(
             }
             if (weekDayFrequencies.none { it > 0 }) {
                 Text(
-                    text = stringResource(R.string.no_pile_completed_hint),
+                    text = stringResource(Res.string.no_pile_completed_hint),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier

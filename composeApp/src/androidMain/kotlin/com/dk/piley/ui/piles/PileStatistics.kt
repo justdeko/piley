@@ -13,9 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.charts.FrequencyChart
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.OutlineCard
@@ -25,6 +23,10 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.clear_statistics_button_text
+import piley.composeapp.generated.resources.statistics_section_title
 
 /**
  * Pile statistics section
@@ -60,7 +62,7 @@ fun PileStatistics(
                 modifier = Modifier
                     .padding(horizontal = dim.medium)
                     .weight(1f),
-                title = stringResource(R.string.statistics_section_title),
+                title = stringResource(Res.string.statistics_section_title),
                 icon = Icons.Default.BarChart
             )
             TextButton(
@@ -69,7 +71,7 @@ fun PileStatistics(
                     contentColor = MaterialTheme.colorScheme.tertiary
                 )
             ) {
-                Text(stringResource(R.string.clear_statistics_button_text))
+                Text(stringResource(Res.string.clear_statistics_button_text))
             }
         }
         TaskStats(

@@ -22,11 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
@@ -40,6 +38,15 @@ import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.clear_statistics_dialog_confirm
+import piley.composeapp.generated.resources.clear_statistics_dialog_description
+import piley.composeapp.generated.resources.clear_statistics_dialog_title
+import piley.composeapp.generated.resources.delete_pile_button_text
+import piley.composeapp.generated.resources.delete_pile_dialog_confirm_button
+import piley.composeapp.generated.resources.delete_pile_dialog_description
+import piley.composeapp.generated.resources.delete_pile_dialog_title
 
 /**
  * Pile detail screen
@@ -113,9 +120,9 @@ fun PileDetailScreen(
 
     if (deletePileDialogOpen) {
         AlertDialogHelper(
-            title = stringResource(R.string.delete_pile_dialog_title),
-            description = stringResource(R.string.delete_pile_dialog_description),
-            confirmText = stringResource(R.string.delete_pile_dialog_confirm_button),
+            title = stringResource(Res.string.delete_pile_dialog_title),
+            description = stringResource(Res.string.delete_pile_dialog_description),
+            confirmText = stringResource(Res.string.delete_pile_dialog_confirm_button),
             onDismiss = { deletePileDialogOpen = false },
             onConfirm = {
                 onDeletePile()
@@ -126,9 +133,9 @@ fun PileDetailScreen(
 
     if (dialogOpen) {
         AlertDialogHelper(
-            title = stringResource(R.string.clear_statistics_dialog_title),
-            description = stringResource(R.string.clear_statistics_dialog_description),
-            confirmText = stringResource(R.string.clear_statistics_dialog_confirm),
+            title = stringResource(Res.string.clear_statistics_dialog_title),
+            description = stringResource(Res.string.clear_statistics_dialog_description),
+            confirmText = stringResource(Res.string.clear_statistics_dialog_confirm),
             onConfirm = {
                 onClearStatistics()
                 dialogOpen = false
@@ -183,7 +190,7 @@ fun PileDetailScreen(
                 contentColor = MaterialTheme.colorScheme.onErrorContainer
             )
         ) {
-            Text(text = stringResource(R.string.delete_pile_button_text))
+            Text(text = stringResource(Res.string.delete_pile_button_text))
         }
     }
 }

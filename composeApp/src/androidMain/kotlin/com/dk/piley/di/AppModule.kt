@@ -1,6 +1,7 @@
 package com.dk.piley.di
 
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
@@ -15,6 +16,7 @@ import com.dk.piley.reminder.INotificationManager
 import com.dk.piley.reminder.IReminderActionHandler
 import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.reminder.ReminderActionHandler
+import okio.Path.Companion.toPath
 
 interface AppModule {
     val pileDatabase: PileDatabase
@@ -35,9 +37,9 @@ interface AppModule {
 class AppModuleImpl(
     override val pileDatabase: PileDatabase,
     override val userDatabase: UserDatabase,
-    override val preferencesDataStore: DataStore<Preferences>,
     override val reminderManager: IReminderManager,
-    override val notificationManager: INotificationManager
+    override val notificationManager: INotificationManager,
+    dataStorePath: String,
 ) : AppModule {
 
     override val taskDao: TaskDao by lazy { pileDatabase.taskDao() }
@@ -67,6 +69,11 @@ class AppModuleImpl(
             userRepository
         )
     }
+    override val preferencesDataStore: DataStore<Preferences> by lazy {
+        PreferenceDataStoreFactory.createWithPath(
+            produceFile = { dataStorePath.toPath()}
+        )
+    }
 }
 
-const val USER_PREFERENCES = "user_preferences"
+internal const val USER_PREFERENCES_PATH = "user_preferences.preferences_pb"

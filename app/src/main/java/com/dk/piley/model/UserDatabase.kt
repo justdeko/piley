@@ -62,7 +62,7 @@ abstract class UserDatabase : RoomDatabase() {
 }
 
 @DeleteColumn(tableName = "User", columnName = "defaultReminderDelay")
-private class TwoToThreeMigrationSpec : AutoMigrationSpec
+class TwoToThreeMigrationSpec : AutoMigrationSpec
 
 @DeleteColumn(tableName = "User", columnName = "password")
 @DeleteColumn(tableName = "User", columnName = "lastBackup")
@@ -70,4 +70,4 @@ private class TwoToThreeMigrationSpec : AutoMigrationSpec
 @DeleteColumn(tableName = "User", columnName = "defaultBackupFrequency")
 @DeleteColumn(tableName = "User", columnName = "isOffline")
 @DeleteColumn(tableName = "User", columnName = "loadBackupAfterDays")
-private class ThreeToFourMigrationSpec : AutoMigrationSpec
+class ThreeToFourMigrationSpec : AutoMigrationSpec

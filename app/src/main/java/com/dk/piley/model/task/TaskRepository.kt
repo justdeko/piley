@@ -64,7 +64,7 @@ class TaskRepository(
     suspend fun insertTask(task: Task): Long =
         taskDao.insertTask(task.copy(modifiedAt = Clock.System.now()))
 
-    suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long): Void =
+    suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long) =
         taskDao.deleteCompletedDeletedForPile(pileId)
 
     /**

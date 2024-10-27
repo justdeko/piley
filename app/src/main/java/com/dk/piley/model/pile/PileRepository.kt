@@ -23,13 +23,9 @@ class PileRepository(private val pileDao: PileDao) {
         pileDao.updatePile(pile)
     }
 
-    suspend fun deletePile(pile: Pile): Void {
-        return pileDao.deletePile(pile)
-    }
+    suspend fun deletePile(pile: Pile) = pileDao.deletePile(pile)
 
-    suspend fun deleteAllPiles(): Void {
-        return pileDao.deleteAllPiles()
-    }
+    suspend fun deleteAllPiles() = pileDao.deleteAllPiles()
 
     /**
      * Reset pile modes to a specific default pile mode

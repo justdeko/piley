@@ -20,11 +20,11 @@ interface UserDao {
     suspend fun getUserByEmail(email: String): User?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUser(user: User): Void
+    suspend fun insertUser(user: User)
 
     @Delete
-    suspend fun deleteUser(user: User): Void
+    suspend fun deleteUser(user: User)
 
     @Query("DELETE FROM User")
-    suspend fun deleteUserTable(): Void
+    suspend fun deleteUserTable()
 }

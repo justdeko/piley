@@ -9,8 +9,8 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
-import com.dk.piley.reminder.NotificationManager
-import com.dk.piley.reminder.ReminderManager
+import com.dk.piley.reminder.INotificationManager
+import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.reminder.DelayRange
 import com.dk.piley.util.dateTimeString
@@ -36,8 +36,8 @@ class TaskDetailViewModel(
     private val pileRepository: PileRepository,
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
-    private val reminderManager: ReminderManager,
-    private val notificationManager: NotificationManager,
+    private val reminderManager: IReminderManager,
+    private val notificationManager: INotificationManager,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<TaskDetailViewState>(TaskDetailViewState()) {
 

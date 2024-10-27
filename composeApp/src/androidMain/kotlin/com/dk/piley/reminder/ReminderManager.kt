@@ -13,7 +13,7 @@ import kotlinx.datetime.Instant
  *
  * @property context generic application context
  */
-class ReminderManager(private val context: Context) {
+class ReminderManager(private val context: Context): IReminderManager {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
     private val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 
@@ -23,7 +23,7 @@ class ReminderManager(private val context: Context) {
      * @param reminderTime timestamp representing the reminder time
      * @param taskId task id of the task to show the reminder for
      */
-    fun startReminder(
+    override fun startReminder(
         reminderTime: Instant, taskId: Long
     ) {
         val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
@@ -47,7 +47,7 @@ class ReminderManager(private val context: Context) {
      *
      * @param taskId task id of the task to cancel the reminder for
      */
-    fun cancelReminder(
+    override fun cancelReminder(
         taskId: Long
     ) {
         val intent = Intent(context, ReminderAlarmReceiver::class.java).apply {

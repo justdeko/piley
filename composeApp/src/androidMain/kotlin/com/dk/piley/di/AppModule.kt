@@ -1,13 +1,7 @@
 package com.dk.piley.di
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.SharedPreferencesMigration
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
 import com.dk.piley.model.pile.PileDao
@@ -17,12 +11,10 @@ import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.user.UserDao
 import com.dk.piley.model.user.UserPrefsManager
 import com.dk.piley.model.user.UserRepository
-import com.dk.piley.reminder.NotificationManager
+import com.dk.piley.reminder.INotificationManager
+import com.dk.piley.reminder.IReminderActionHandler
+import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.reminder.ReminderActionHandler
-import com.dk.piley.reminder.ReminderManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 
 interface AppModule {
     val pileDatabase: PileDatabase
@@ -34,29 +26,20 @@ interface AppModule {
     val userDao: UserDao
     val userRepository: UserRepository
     val userPrefsManager: UserPrefsManager
-    val reminderActionHandler: ReminderActionHandler
+    val reminderActionHandler: IReminderActionHandler
     val preferencesDataStore: DataStore<Preferences>
-    val reminderManager: ReminderManager
-    val notificationManager: NotificationManager
+    val reminderManager: IReminderManager
+    val notificationManager: INotificationManager
 }
 
 class AppModuleImpl(
-    context: Context
+    override val pileDatabase: PileDatabase,
+    override val userDatabase: UserDatabase,
+    override val preferencesDataStore: DataStore<Preferences>,
+    override val reminderManager: IReminderManager,
+    override val notificationManager: INotificationManager
 ) : AppModule {
 
-    override val preferencesDataStore: DataStore<Preferences> by lazy {
-        PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler(
-                produceNewData = { emptyPreferences() }
-            ),
-            migrations = listOf(SharedPreferencesMigration(context, USER_PREFERENCES)),
-            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { context.preferencesDataStoreFile(USER_PREFERENCES) }
-        )
-    }
-
-    override val pileDatabase: PileDatabase by lazy { PileDatabase.getInstance(context) }
-    override val userDatabase: UserDatabase by lazy { UserDatabase.getInstance(context) }
     override val taskDao: TaskDao by lazy { pileDatabase.taskDao() }
     override val taskRepository: TaskRepository by lazy {
         TaskRepository(
@@ -75,7 +58,7 @@ class AppModuleImpl(
         )
     }
     override val userPrefsManager: UserPrefsManager by lazy { UserPrefsManager(preferencesDataStore) }
-    override val reminderActionHandler: ReminderActionHandler by lazy {
+    override val reminderActionHandler: IReminderActionHandler by lazy {
         ReminderActionHandler(
             reminderManager,
             notificationManager,
@@ -84,9 +67,6 @@ class AppModuleImpl(
             userRepository
         )
     }
-
-    override val reminderManager: ReminderManager by lazy { ReminderManager(context) }
-    override val notificationManager: NotificationManager by lazy { NotificationManager(context) }
 }
 
-private const val USER_PREFERENCES = "user_preferences"
+const val USER_PREFERENCES = "user_preferences"

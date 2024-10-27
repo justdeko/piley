@@ -23,8 +23,8 @@ import kotlinx.coroutines.flow.take
  * @property userRepository instance of user repository to perform db operations regarding user
  */
 class ReminderActionHandler(
-    private val reminderManager: ReminderManager,
-    private val notificationManager: NotificationManager,
+    private val reminderManager: IReminderManager,
+    private val notificationManager: INotificationManager,
     private val taskRepository: TaskRepository,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,

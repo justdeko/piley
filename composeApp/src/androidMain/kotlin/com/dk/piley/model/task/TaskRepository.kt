@@ -1,7 +1,7 @@
 package com.dk.piley.model.task
 
-import com.dk.piley.reminder.NotificationManager
-import com.dk.piley.reminder.ReminderManager
+import com.dk.piley.reminder.INotificationManager
+import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.util.getNextReminderTime
 import com.dk.piley.util.withNewCompletionTime
 import kotlinx.coroutines.flow.Flow
@@ -20,8 +20,8 @@ import kotlinx.datetime.plus
  */
 class TaskRepository(
     private val taskDao: TaskDao,
-    private val reminderManager: ReminderManager,
-    private val notificationManager: NotificationManager,
+    private val reminderManager: IReminderManager,
+    private val notificationManager: INotificationManager,
 ) {
     private fun getTasks(): Flow<List<Task>> = taskDao.getTasks()
 

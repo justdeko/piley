@@ -21,7 +21,7 @@ import com.dk.piley.ui.nav.taskScreen
  *
  * @property context generic context of the application
  */
-class NotificationManager(private val context: Context) {
+class NotificationManager(private val context: Context): INotificationManager {
 
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
@@ -55,7 +55,7 @@ class NotificationManager(private val context: Context) {
      * @param task the task to show the notification for
      * @param pileName the name of the parent pile
      */
-    fun showNotification(task: Task, pileName: String?) {
+    override fun showNotification(task: Task, pileName: String?) {
         val taskDetailIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
                 Intent(
@@ -143,7 +143,7 @@ class NotificationManager(private val context: Context) {
         return NotificationCompat.Action(0, actionTitle, intent)
     }
 
-    fun dismiss(taskId: Long) {
+    override fun dismiss(taskId: Long) {
         notificationManager?.cancel(taskId.toInt())
     }
 

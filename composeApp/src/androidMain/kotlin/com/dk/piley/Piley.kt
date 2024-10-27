@@ -2,7 +2,7 @@ package com.dk.piley
 
 import android.app.Application
 import com.dk.piley.di.AppModule
-import com.dk.piley.di.AppModuleImpl
+import com.dk.piley.di.instantiateAppModule
 
 
 class Piley : Application() {
@@ -13,7 +13,7 @@ class Piley : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        appModule = AppModuleImpl(this)
+        appModule = instantiateAppModule(this)
         application = this
     }
 }

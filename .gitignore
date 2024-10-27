@@ -18,3 +18,6 @@ local.properties
 /app/release
 *.keystore
 *.keystore.asc
+**/.build
+**/build
+.kotlin

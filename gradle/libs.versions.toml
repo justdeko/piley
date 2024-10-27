@@ -5,8 +5,8 @@ kotlin = "2.0.21"
 kotlinxDatetime = "0.6.1"
 activityCompose = "1.9.3"
 material = "1.12.0"
-navigationCompose = "2.8.3"
 ksp = "2.0.21-1.0.26"
+navigationCompose = "2.8.0-alpha10"
 room = "2.7.0-alpha10"
 compose-plugin = "1.6.11"
 androidx-lifecycle = "2.8.2"
@@ -19,10 +19,10 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -14,17 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.no_tasks_left_message
 import piley.composeapp.generated.resources.no_tasks_yet_message
+import piley.composeapp.generated.resources.tasks_completed
 
 /**
  * "No tasks" view
@@ -46,7 +46,7 @@ fun NoTasksView(
             Image(
                 modifier = Modifier.width(this@BoxWithConstraints.maxWidth / 2),
                 contentScale = ContentScale.Inside,
-                painter = painterResource(id = R.drawable.tasks_completed),
+                painter = painterResource(Res.drawable.tasks_completed),
                 contentDescription = "no tasks found"
             )
             BigSpacer()

@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +22,7 @@ import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.isDarkMode
 import com.dk.piley.util.roundedOutline
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -60,7 +60,7 @@ fun IntroPageContent(
                 .then(
                     if (introPage.isScreenshot) Modifier.roundedOutline() else Modifier
                 ),
-            painter = painterResource(id = resourceId),
+            painter = painterResource(resourceId),
             contentDescription = "intro page image"
         )
         Text(

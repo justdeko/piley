@@ -15,13 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.BuildConfig
 import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
+import org.jetbrains.compose.resources.painterResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.github
 
 
 /**
@@ -42,7 +44,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
     ) {
         IconButton(onClick = { uriHandler.openUri("https://github.com/justdeko/piley") }) {
             Icon(
-                painter = painterResource(id = R.drawable.github),
+                painter = painterResource(Res.drawable.github),
                 "github link",
                 tint = MaterialTheme.colorScheme.tertiary
             )

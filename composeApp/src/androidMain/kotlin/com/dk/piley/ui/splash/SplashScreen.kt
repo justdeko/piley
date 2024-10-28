@@ -26,13 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
@@ -44,9 +42,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.app_name
+import piley.composeapp.generated.resources.ic_launcher_foreground
 
 /**
  * Splash screen
@@ -123,7 +123,7 @@ fun SplashScreen(
             modifier = Modifier
                 .scale(scaleFactor.value)
                 .alpha(alphaFactor.value),
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            painter = painterResource(Res.drawable.ic_launcher_foreground),
             contentDescription = null,
             tint = Color.Unspecified
         )

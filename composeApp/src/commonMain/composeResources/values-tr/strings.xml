@@ -96,7 +96,7 @@
     <string name="edit_user_dialog_confirm_button">Güncelle</string>
 
     <!-- settings screen -->
-    <string name="settings_screen_title">@string/settings</string>
+    <string name="settings_screen_title">Ayarlar</string>
 
     <!-- appearance settings section-->
     <string name="settings_section_appearance_title">Görünüm</string>

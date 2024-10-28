@@ -9,6 +9,9 @@ import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.signin.firstTimeUser
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.daily_pile_name
 
 /**
  * Splash view model
@@ -60,7 +63,7 @@ class SplashViewModel(
     private suspend fun createAndSetUserPile() {
         // create default pile
         val pile = Pile(
-            name = "Daily",
+            name = getString(Res.string.daily_pile_name),
         )
         val pileId = pileRepository.insertPile(pile)
         // update assigned pile as selected and set signed in state

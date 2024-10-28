@@ -112,7 +112,7 @@
     <string name="default_pile_mode_setting_description">Yığınlar için varsayılan görev tamamlama modunu ayarlayın.</string>
     <string name="default_pile_mode_setting_option_label">Yığın Modu</string>
     <string name="reset_all_pile_modes_setting_title">Tüm yığın modlarını sıfırla</string>
-    <string name="reset_all_pile_modes_setting_description">Tüm yığın modlarını \"Serbest\" varsayılanına sıfırla</string>
+    <string name="reset_all_pile_modes_setting_description">Tüm yığın modlarını "Serbest" varsayılanına sıfırla</string>
     <string name="automatically_hide_keyboard_setting_title">Klavyeyi otomatik olarak gizle</string>
     <string name="automatically_hide_keyboard_setting_description">Yeni bir görev oluşturduktan sonra klavyeyi otomatik olarak gizle.</string>
     <string name="show_recurring_tasks_setting_title">Yinelenen görevleri göster</string>
@@ -121,7 +121,7 @@
     <!-- piles settings section-->
     <string name="settings_section_notifications_title">Bildirimler</string>
     <string name="reminder_delay_duration_setting_title">Hatırlatma Gecikme Süresi</string>
-    <string name="reminder_delay_duration_setting_description">Görev hatırlatıcılarınızdaki \"Gecikme\" düğmesinin süresini ayarlayın.</string>
+    <string name="reminder_delay_duration_setting_description">Görev hatırlatıcılarınızdaki "Gecikme" düğmesinin süresini ayarlayın.</string>
 
     <!-- user settings section-->
     <string name="settings_section_user_title">Kullanıcı</string>

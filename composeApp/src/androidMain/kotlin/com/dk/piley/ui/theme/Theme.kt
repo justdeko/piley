@@ -101,7 +101,7 @@ fun PileyTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = AppTypography,
+        typography = getAppTypography(),
         content = content
     )
 }

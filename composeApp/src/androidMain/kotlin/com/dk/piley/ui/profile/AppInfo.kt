@@ -13,16 +13,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.BuildConfig
-import com.dk.piley.R
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.app_name
 import piley.composeapp.generated.resources.github
 
 
@@ -34,7 +34,6 @@ import piley.composeapp.generated.resources.github
 @Composable
 fun AppInfo(modifier: Modifier = Modifier) {
     val uriHandler = LocalUriHandler.current
-    val context = LocalContext.current
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -50,7 +49,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME}",
+            text = "${stringResource(Res.string.app_name)} ${BuildConfig.VERSION_NAME}",
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center

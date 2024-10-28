@@ -55,12 +55,12 @@
     <string name="default_pile_mode_setting_description">Einstellen, was der standardmäßige Modus für das Abschließen von Tasks ist.</string>
     <string name="default_pile_mode_setting_option_label">Pile-Modus</string>
     <string name="reset_all_pile_modes_setting_title">Alle Pile-Modi zurücksetzen</string>
-    <string name="reset_all_pile_modes_setting_description">Setze alle Pile-Modi zu dem standardmäßigen \"Frei\" zurück.</string>
+    <string name="reset_all_pile_modes_setting_description">Setze alle Pile-Modi zu dem standardmäßigen "Frei" zurück.</string>
     <string name="automatically_hide_keyboard_setting_title">Tastatur automatisch verstecken</string>
     <string name="automatically_hide_keyboard_setting_description">Verstecke automatisch die Tastatur, nachdem ein Task erstellt wurde.</string>
     <string name="settings_section_notifications_title">Benachrichtigungen</string>
     <string name="reminder_delay_duration_setting_title">Reminder-Verzögerung-Dauer</string>
-    <string name="reminder_delay_duration_setting_description">Setze die Dauer für die Verzögerung beim \"Später\"-Button in deinen Reminder-Benachrichtigungen.</string>
+    <string name="reminder_delay_duration_setting_description">Setze die Dauer für die Verzögerung beim "Später"-Button in deinen Reminder-Benachrichtigungen.</string>
     <string name="settings_section_user_title">Benutzer</string>
     <string name="update_user_setting_title">Benutzerdaten aktualisieren</string>
     <string name="update_user_setting_description">Aktualisiere die Benutzerdaten</string>

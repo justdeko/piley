@@ -5,10 +5,11 @@ import com.dk.piley.di.AppModule
 import com.dk.piley.di.instantiateAppModule
 
 
-class Piley : Application() {
-    companion object {
+actual class Piley : Application() {
+    actual companion object {
         lateinit var appModule: AppModule
         lateinit var application: Application
+        actual fun getModule(): AppModule = appModule
     }
 
     override fun onCreate() {

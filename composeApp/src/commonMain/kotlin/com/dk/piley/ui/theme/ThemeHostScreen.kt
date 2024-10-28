@@ -8,11 +8,10 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dk.piley.Piley
 import com.dk.piley.model.user.NightMode
-import com.dk.piley.ui.viewModelFactory
 
 @Composable
 fun ThemeHostScreen(
-    viewModel: ThemeViewModel = viewModel(factory = viewModelFactory { ThemeViewModel(Piley.appModule.userRepository) }),
+    viewModel: ThemeViewModel = viewModel { ThemeViewModel(Piley.getModule().userRepository) },
     setSystemUsingTheme: @Composable (Boolean) -> Unit = {},
     customColorSchemeProvider: @Composable (ThemeViewState, Boolean) -> ColorScheme? = { _, _ -> null },
     content: @Composable () -> Unit

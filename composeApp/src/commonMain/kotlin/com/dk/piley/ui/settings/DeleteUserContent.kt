@@ -2,7 +2,6 @@ package com.dk.piley.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -10,10 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TwoButtonRow
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -61,26 +58,6 @@ fun DeleteUserContent(
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer
             )
-        )
-    }
-}
-
-@Preview
-@Composable
-fun DeleteUserContentPreview() {
-    PileyTheme(useDarkTheme = true) {
-        DeleteUserContent(
-            modifier = Modifier.fillMaxWidth(),
-        )
-    }
-}
-
-@Preview
-@Composable
-fun DeleteUserOfflineContentPreview() {
-    PileyTheme(useDarkTheme = true) {
-        DeleteUserContent(
-            modifier = Modifier.fillMaxWidth()
         )
     }
 }

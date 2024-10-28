@@ -17,10 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TwoButtonRow
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.usernameCharacterLimit
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -91,25 +89,3 @@ fun EditUserContent(
 data class EditUserResult(
     val name: String
 )
-
-@Preview
-@Composable
-fun EditUserContentPreview() {
-    PileyTheme(useDarkTheme = true) {
-        EditUserContent(
-            modifier = Modifier.fillMaxWidth(),
-            existingName = "Thomas"
-        )
-    }
-}
-
-@Preview
-@Composable
-fun EditUserContentOfflinePreview() {
-    PileyTheme(useDarkTheme = true) {
-        EditUserContent(
-            modifier = Modifier.fillMaxWidth(),
-            existingName = "Thomas"
-        )
-    }
-}

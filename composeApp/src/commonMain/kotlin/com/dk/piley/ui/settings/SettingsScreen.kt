@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,24 +22,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
-import com.dk.piley.model.user.User
 import com.dk.piley.reminder.DelayRange
 import com.dk.piley.ui.common.ContentAlertDialog
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.profile.AppInfo
 import com.dk.piley.ui.reminder.DelaySelection
-import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.navigateClearBackstack
 import org.jetbrains.compose.resources.getString
@@ -94,14 +87,12 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: SettingsViewModel = viewModel(
-        factory = viewModelFactory {
-            SettingsViewModel(
-                userRepository = Piley.appModule.userRepository,
-                pileRepository = Piley.appModule.pileRepository
-            )
-        }
-    )
+    viewModel: SettingsViewModel = viewModel {
+        SettingsViewModel(
+            userRepository = Piley.getModule().userRepository,
+            pileRepository = Piley.getModule().pileRepository
+        )
+    }
 ) {
     val viewState by viewModel.state.collectAsState()
 
@@ -162,7 +153,7 @@ fun SettingsScreen(
  * @param onShowRecurringTasks show recurring tasks by default
  */
 @Composable
-private fun SettingsScreen(
+internal fun SettingsScreen(
     modifier: Modifier = Modifier,
     viewState: SettingsViewState,
     onNightModeChange: (NightMode) -> Unit = {},
@@ -318,27 +309,15 @@ private fun SettingsScreen(
                         description = stringResource(Res.string.start_tutorial_setting_description),
                         onClick = { onStartTutorial() }
                     )
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        AppInfo()
-                    }
+                }
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    AppInfo()
                 }
             }
             IndefiniteProgressBar(visible = viewState.loading)
-        }
-    }
-}
-
-@PreviewMainScreen
-@Preview(heightDp = 1000)
-@Composable
-fun SettingsScreenPreview() {
-    PileyTheme {
-        Surface {
-            val state = SettingsViewState(User(), loading = true)
-            SettingsScreen(viewState = state)
         }
     }
 }

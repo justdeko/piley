@@ -5,9 +5,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -15,11 +13,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.reminder.DelayRange
 import com.dk.piley.reminder.calculateDelayDuration
 import com.dk.piley.ui.common.TwoButtonRow
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.defaultPadding
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -69,15 +65,5 @@ fun DelayBottomSheet(
                 onRightClick = { onDelay(delayTime) }
             )
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun DelayBottomSheetPreview() {
-    val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
-    PileyTheme {
-        DelayBottomSheet(sheetState = sheetState)
     }
 }

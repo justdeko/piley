@@ -1,4 +1,4 @@
-package com.dk.piley.ui.profile
+package com.dk.piley.ui.settings
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -15,10 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.BuildConfig
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
+import com.dk.piley.util.getVersionName
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -49,7 +47,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
             )
         }
         Text(
-            text = "${stringResource(Res.string.app_name)} ${BuildConfig.VERSION_NAME}",
+            text = "${stringResource(Res.string.app_name)} ${getVersionName()}",
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
@@ -61,13 +59,5 @@ fun AppInfo(modifier: Modifier = Modifier) {
                 tint = MaterialTheme.colorScheme.tertiary
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun AppInfoPreview() {
-    PileyTheme(useDarkTheme = true) {
-        AppInfo()
     }
 }

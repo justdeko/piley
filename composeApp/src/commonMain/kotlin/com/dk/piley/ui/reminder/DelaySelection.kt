@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.reminder.DelayRange
 import com.dk.piley.reminder.calculateDelayDuration
 import com.dk.piley.reminder.delaySelectionMap
@@ -87,10 +86,4 @@ fun DelaySelection(
                 }
         }
     }
-}
-
-@Preview
-@Composable
-fun DelaySelectionPreview() {
-    DelaySelection()
 }

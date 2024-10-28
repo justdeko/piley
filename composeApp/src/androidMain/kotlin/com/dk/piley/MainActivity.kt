@@ -39,7 +39,6 @@ import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.ThemeHostScreen
-import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.isDarkMode
 import com.dk.piley.util.setUiTheme
 
@@ -51,9 +50,6 @@ class MainActivity : AppCompatActivity() {
             setTheme(R.style.Theme_Piley_Dark)
         } else setTheme(R.style.Theme_Piley_Light)
 
-        // set initial user message
-        val initialMessage = intent.extras?.getString(INITIAL_MESSAGE)
-
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
@@ -61,7 +57,6 @@ class MainActivity : AppCompatActivity() {
                 setNonComposeTheme = { setUiTheme(context, it) }
             ) {
                 Home(
-                    initialMessage = initialMessage,
                     onFinishActivity = { this.finishAndRemoveTask() }
                 )
             }

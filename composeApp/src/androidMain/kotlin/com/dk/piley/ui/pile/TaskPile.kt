@@ -137,7 +137,7 @@ fun TaskPile(
             }
             PileTask(
                 modifier = Modifier
-                    .animateItemPlacement()
+                    .animateItemPlacement() // TODO use slide in anim here with animateItem
                     .padding(vertical = dim.mini),
                 dismissState = dismissState,
                 transitionState = taskTransitionStates[index],

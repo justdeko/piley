@@ -2,12 +2,12 @@ package com.dk.piley.util
 
 import androidx.compose.runtime.Composable
 import com.dk.piley.model.task.RecurringTimeRange
+import com.dk.piley.model.task.toText
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.plural_s
 import piley.composeapp.generated.resources.reminder_repeat_frequency_value
-import toText
 
 /**
  * Get frequency string given a recurring reminder time range and frequency

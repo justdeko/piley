@@ -3,8 +3,6 @@
 package com.dk.piley.ui.task
 
 import android.content.res.Configuration
-import android.text.format.DateFormat
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,13 +30,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.model.task.RecurringTimeRange
@@ -53,12 +49,10 @@ import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.timeString
 import com.dk.piley.util.toLocalDateTime
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.add_reminder_title
@@ -83,6 +77,7 @@ import piley.composeapp.generated.resources.update_reminder_button
  * @param useNowAsReminderDate whether to use current time as reminder date
  * @param onAddReminder on add or update reminder
  * @param onDeleteReminder on delete reminder
+ * @param onDismiss on dismiss drawer
  * @param notificationPermissionGranted whether the notification permission was granted
  */
 @Composable
@@ -117,24 +112,11 @@ fun AddReminderDrawer(
             recurringTimeRange = recurringTimeRange,
             recurringFrequency = recurringFrequency,
             useNowAsReminderTime = useNowAsReminderDate,
-            notificationPermissionGranted = notificationPermissionGranted
+            notificationPermissionGranted = notificationPermissionGranted,
         )
     }
 }
 
-/**
- * Add/edit reminder content
- *
- * @param modifier generic modifier
- * @param onAddReminder on add or update reminder
- * @param onDeleteReminder on delete reminder
- * @param initialDateTime initial reminder date time
- * @param isRecurring whether reminder is recurring
- * @param recurringTimeRange time range for recurring reminders
- * @param recurringFrequency frequency for recurring reminders
- * @param useNowAsReminderTime whether to use current time as reminder date
- * @param notificationPermissionGranted whether the notification permission was granted
- */
 @Composable
 fun AddReminderContent(
     modifier: Modifier = Modifier,
@@ -147,8 +129,6 @@ fun AddReminderContent(
     useNowAsReminderTime: Boolean = false,
     notificationPermissionGranted: Boolean = false
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
     val dim = LocalDim.current
     var localDate: LocalDate? by remember { mutableStateOf(null) }
     var localTime: LocalTime? by remember { mutableStateOf(null) }
@@ -174,7 +154,7 @@ fun AddReminderContent(
         ReminderTimePicker(
             initialTime = localTime ?: initialDateTime?.time,
             onDismiss = { timePickerVisible = false },
-            is24hFormat = DateFormat.is24HourFormat(context),
+            is24hFormat = true, // TODO: make this customizable or based on system
             onConfirm = {
                 localTime = it
                 timePickerVisible = false
@@ -248,6 +228,20 @@ fun AddReminderContent(
                 onUseNowAsReminderTimeChange = { nowAsReminderTime = it }
             )
         }
+        AnimatedVisibility(!notificationPermissionGranted) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .defaultPadding(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    stringResource(Res.string.no_notification_permission_reminder_warning),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -257,15 +251,8 @@ fun AddReminderContent(
             Button(
                 enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
                 onClick = {
-                    // if permission denied, do nothing and show toast
+                    // if permission denied, do nothing
                     if (!notificationPermissionGranted) {
-                        coroutineScope.launch {
-                            Toast.makeText(
-                                context,
-                                getString(Res.string.no_notification_permission_reminder_warning),
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
                         return@Button
                     }
                     if (localTime != null && localDate != null) {

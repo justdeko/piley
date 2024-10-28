@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.model.task.RecurringTimeRange
+import com.dk.piley.model.task.toRecurringTimeRange
+import com.dk.piley.model.task.toText
 import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
@@ -32,8 +34,6 @@ import piley.composeapp.generated.resources.reminder_frequency_label
 import piley.composeapp.generated.resources.reminder_time_range_label
 import piley.composeapp.generated.resources.reminder_use_now_description
 import piley.composeapp.generated.resources.time_range
-import toRecurringTimeRange
-import toText
 
 @Composable
 fun RecurringReminderSection(

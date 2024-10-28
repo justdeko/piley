@@ -1,6 +1,7 @@
 package com.dk.piley.ui.intro
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +14,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
-import com.dk.piley.util.isDarkMode
 import com.dk.piley.util.roundedOutline
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -43,9 +42,7 @@ fun IntroPageContent(
     onClickButton: () -> Unit = {}
 ) {
     val dim = LocalDim.current
-    val context = LocalContext.current
-    val resourceId =
-        if (context.isDarkMode()) introPage.imageNightResource else introPage.imageResource
+    val resourceId = if (isSystemInDarkTheme()) introPage.imageNightResource else introPage.imageResource
     Column(
         modifier = modifier
             .fillMaxWidth()

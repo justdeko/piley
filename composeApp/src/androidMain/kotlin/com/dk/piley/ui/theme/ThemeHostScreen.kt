@@ -1,20 +1,18 @@
 package com.dk.piley.ui.theme
 
 import android.app.Activity
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dk.piley.Piley
-import com.dk.piley.R
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.ui.viewModelFactory
-import com.dk.piley.util.isDarkMode
 
 /**
  * Theme host screen for displaying themed content
@@ -25,18 +23,16 @@ import com.dk.piley.util.isDarkMode
 @Composable
 fun ThemeHostScreen(
     viewModel: ThemeViewModel = viewModel(factory = viewModelFactory { ThemeViewModel(Piley.appModule.userRepository) }),
+    setNonComposeTheme: (Boolean) -> Unit = {},
     content: @Composable () -> Unit
 ) {
     val viewState by viewModel.state.collectAsState()
-    val context = LocalContext.current
     val nightModeEnabled = when (viewState.nightModeEnabled) {
-        NightMode.SYSTEM -> context.isDarkMode()
+        NightMode.SYSTEM -> isSystemInDarkTheme()
         NightMode.ENABLED -> true
         NightMode.DISABLED -> false
     }
-    // set theme for non-compose UI elements
-    val mainTheme = if (nightModeEnabled) R.style.Theme_Piley_Dark else R.style.Theme_Piley_Light
-    context.setTheme(mainTheme)
+    setNonComposeTheme(nightModeEnabled)
     // wrap content inside compose theme
     PileyTheme(nightModeEnabled, viewState.dynamicColorEnabled) {
         // set status bar color and icons color

@@ -159,7 +159,7 @@ fun PileOverviewScreen(
                     key = { _, pileWithTasks -> pileWithTasks.pile.pileId }
                 ) { index, pileWithTasks ->
                     PileCard(
-                        modifier = Modifier.animateItemPlacement(),
+                        modifier = Modifier.animateItemPlacement(), // TODO use slide in anim here with animateItem
                         pileWithTasks = pileWithTasks,
                         onSelectPile = onSelectPile,
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId,

@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,6 +41,7 @@ import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.ThemeHostScreen
 import com.dk.piley.util.INITIAL_MESSAGE
 import com.dk.piley.util.isDarkMode
+import com.dk.piley.util.setUiTheme
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,7 +56,10 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContent {
-            ThemeHostScreen {
+            val context = LocalContext.current
+            ThemeHostScreen(
+                setNonComposeTheme = { setUiTheme(context, it) }
+            ) {
                 Home(
                     initialMessage = initialMessage,
                     onFinishActivity = { this.finishAndRemoveTask() }

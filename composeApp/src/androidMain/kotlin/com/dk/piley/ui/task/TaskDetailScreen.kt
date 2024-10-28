@@ -122,6 +122,8 @@ fun TaskDetailScreen(
  * @param onEditTitle on edit task title
  * @param onAddReminder on add reminder click
  * @param onCancelReminder on cancel reminder action
+ * @param onSelectPile on select pile
+ * @param onDelay on set delay
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -10,8 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.add_task_placeholder
@@ -41,13 +39,4 @@ fun AddTaskField(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(onDone = onDone),
     )
-}
-
-@Preview
-@Composable
-fun AddTaskFieldPreview() {
-    PileyTheme(useDarkTheme = true) {
-        val text = TextFieldValue("hi there")
-        AddTaskField(value = text, onChange = {}, onDone = {})
-    }
 }

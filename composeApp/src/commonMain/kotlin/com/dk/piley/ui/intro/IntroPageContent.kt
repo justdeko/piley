@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -16,9 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.roundedOutline
 import org.jetbrains.compose.resources.painterResource
@@ -95,33 +92,5 @@ fun IntroPageContent(
     }
 }
 
-@Composable
-@Preview
-fun IntroPageContentPreview() {
-    PileyTheme(useDarkTheme = true) {
-        IntroPageContent(modifier = Modifier.fillMaxSize(), introPage = IntroPage.Welcome)
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun IntroPageContentScreenshotPreview() {
-    PileyTheme(useDarkTheme = false) {
-        IntroPageContent(modifier = Modifier.fillMaxSize(), introPage = IntroPage.Piles)
-    }
-}
-
-@Composable
-@Preview
-fun IntroPageContentWithButtonPreview() {
-    PileyTheme(useDarkTheme = true) {
-        IntroPageContent(
-            modifier = Modifier.fillMaxSize(),
-            introPage = IntroPage.End,
-            showButton = true,
-            buttonText = "Start Piling"
-        )
-    }
-}
 
 

@@ -12,10 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.FullWidthInfo
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -101,34 +99,5 @@ fun RowScope.StatsColumn(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun TaskStatsPreview() {
-    PileyTheme(useDarkTheme = true) {
-        TaskStats(
-            modifier = Modifier.fillMaxWidth(),
-            doneCount = 2,
-            deletedCount = 3,
-            currentCount = 1,
-            tasksCompletedPastDays = 4,
-            biggestPile = "Home",
-        )
-    }
-}
-
-@Preview
-@Composable
-fun TaskStatsTasksOnlyPreview() {
-    PileyTheme(useDarkTheme = true) {
-        TaskStats(
-            modifier = Modifier.fillMaxWidth(),
-            doneCount = 2,
-            deletedCount = 3,
-            currentCount = 1,
-            tasksOnly = true
-        )
     }
 }

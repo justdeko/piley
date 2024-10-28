@@ -18,17 +18,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.dateTimeString
-import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
@@ -64,7 +60,7 @@ fun TaskPile(
 ) {
     val haptic = LocalHapticFeedback.current
     val dim = LocalDim.current
-    val context = LocalContext.current
+    val density = LocalDensity.current
     var recurringTaskToComplete by rememberSaveable { mutableStateOf<Task?>(null) }
     if (recurringTaskToComplete != null) {
         AlertDialogHelper(
@@ -106,7 +102,7 @@ fun TaskPile(
             val dismissState = remember(tasks) {
                 SwipeToDismissBoxState(
                     initialValue = SwipeToDismissBoxValue.Settled,
-                    density = Density(context),
+                    density = density,
                     confirmValueChange = { swipeToDismissBoxValue ->
                         if (cannotDismiss(pileMode, index, tasks.lastIndex)
                             && swipeToDismissBoxValue == SwipeToDismissBoxValue.StartToEnd
@@ -150,18 +146,3 @@ fun TaskPile(
 
 fun cannotDismiss(pileMode: PileMode, index: Int, lastIndex: Int) =
     (pileMode == PileMode.FIFO && index != 0) || (pileMode == PileMode.LIFO && index != lastIndex)
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    PileyTheme(useDarkTheme = true) {
-        val taskList =
-            listOf(
-                Task(title = "hey there", id = 1),
-                Task(title = "sup", id = 2),
-                Task(title = "another task", id = 3),
-                Task(title = "fourth task", id = 4),
-            )
-        TaskPile(tasks = taskList, taskTransitionStates = taskList.getPreviewTransitionStates())
-    }
-}

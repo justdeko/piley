@@ -1,5 +1,6 @@
 package com.dk.piley.ui.intro
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,16 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 
 /**
  * Pager indicator for intro screen
@@ -26,6 +24,7 @@ import com.dk.piley.ui.theme.PileyTheme
  * @param modifier generic modifier
  * @param pagerState pager indicator state
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
     Row(
@@ -47,17 +46,5 @@ fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
 
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun PagerIndicatorPreview() {
-    val pagerState = rememberPagerState(
-        initialPage = 1,
-        initialPageOffsetFraction = 0f
-    ) { 4 }
-    PileyTheme(useDarkTheme = true) {
-        PagerIndicator(modifier = Modifier.fillMaxWidth(), pagerState = pagerState)
     }
 }

@@ -26,11 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.lastSevenDays
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
@@ -170,50 +168,6 @@ fun FrequencyChart(
                     textAlign = TextAlign.Center,
                 )
             }
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun FrequencyChartPreview() {
-    PileyTheme(useDarkTheme = true) {
-        val last7Days = listOf(10, 15, 20, 18, 13, 12, 8)
-        FrequencyChart(last7Days, LocalDate(2023, 4, 29))
-    }
-}
-
-@Preview
-@Composable
-fun FrequencyChartPreviewAllZeros() {
-    PileyTheme(useDarkTheme = true) {
-        val last7Days = listOf(0, 0, 0, 0, 0, 0, 0)
-        FrequencyChart(last7Days, LocalDate(2023, 4, 29))
-    }
-}
-
-
-@Preview
-@Composable
-fun FrequencyChartPreviewLargeContrast() {
-    PileyTheme(useDarkTheme = true) {
-        val last7Days = listOf(0, 0, 0, 20, 0, 0, 1)
-        FrequencyChart(last7Days, LocalDate(2023, 4, 29))
-    }
-}
-
-@Preview
-@Composable
-fun FrequencyChartPreviewLargeContrastSmallWidth() {
-    PileyTheme(useDarkTheme = true) {
-        val last7Days = listOf(0, 0, 0, 20, 0, 0, 1)
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(40.dp)
-        ) {
-            FrequencyChart(last7Days, LocalDate(2023, 4, 29))
         }
     }
 }

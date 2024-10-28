@@ -26,7 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,24 +44,17 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
-import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.task.Task
 import com.dk.piley.reminder.getNextReminderTime
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
-import com.dk.piley.ui.savedStateViewModelFactory
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.dateTimeString
-import com.dk.piley.util.getPreviewTransitionStates
-import com.dk.piley.util.previewPileWithTasksList
-import com.dk.piley.util.previewTaskList
-import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.titleCharacterLimit
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.launch
@@ -87,16 +79,15 @@ fun PileScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: PileViewModel = viewModel(
-        factory = savedStateViewModelFactory(navController) {
-            PileViewModel(
-                taskRepository = Piley.appModule.taskRepository,
-                pileRepository = Piley.appModule.pileRepository,
-                userRepository = Piley.appModule.userRepository,
-                savedStateHandle = it
-            )
-        }
-    )
+    viewModel: PileViewModel = viewModel {
+        val handle = createSavedStateHandle()
+        PileViewModel(
+            taskRepository = Piley.getModule().taskRepository,
+            pileRepository = Piley.getModule().pileRepository,
+            userRepository = Piley.getModule().userRepository,
+            savedStateHandle = handle
+        )
+    }
 ) {
     val coroutineScope = rememberCoroutineScope()
     val viewState by viewModel.state.collectAsState()
@@ -346,82 +337,5 @@ private val shakeAnimationSpec: AnimationSpec<Float> = keyframes {
             1 -> -8f
             else -> 0f
         } at 500 / 10 * i using FastOutLinearInEasing
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun PileScreenPreview() {
-    PileyTheme {
-        Surface {
-            val pilesWithTasks = previewPileWithTasksList
-            val state = PileViewState(
-                pile = pilesWithTasks[0].pile,
-                tasks = pilesWithTasks[0].tasks,
-                pileIdTitleList = pilesWithTasks.map { Pair(it.pile.pileId, it.pile.name) }
-            )
-            PileScreen(
-                viewState = state,
-                shownTasks = pilesWithTasks[0].tasks,
-                taskTransitionStates = pilesWithTasks[0].tasks.getPreviewTransitionStates()
-            )
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun PileScreenRecurringPreview() {
-    PileyTheme {
-        Surface {
-            val pilesWithTasks = previewPileWithTasksList
-            val upcomingTasks = previewUpcomingTasksList.map { it.second }
-            val state = PileViewState(
-                pile = pilesWithTasks[0].pile,
-                tasks = upcomingTasks,
-                pileIdTitleList = pilesWithTasks.map { Pair(it.pile.pileId, it.pile.name) },
-                showRecurring = true
-            )
-            PileScreen(
-                viewState = state,
-                shownTasks = upcomingTasks,
-                taskTransitionStates = upcomingTasks.getPreviewTransitionStates()
-            )
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun PileScreenNoTasksPreview() {
-    PileyTheme {
-        Surface {
-            val state = PileViewState(
-                pile = Pile(name = "Daily"),
-                tasks = emptyList(),
-                pileIdTitleList = listOf(Pair(1, "Pile1"), Pair(2, "Pile2"))
-            )
-            PileScreen(viewState = state, taskTransitionStates = emptyList())
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun PileScreenManyTasksPreview() {
-    PileyTheme {
-        Surface {
-            val pilesWithTasks = previewPileWithTasksList
-            val state = PileViewState(
-                pile = pilesWithTasks[0].pile,
-                tasks = previewTaskList,
-                pileIdTitleList = pilesWithTasks.map { Pair(it.pile.pileId, it.pile.name) }
-            )
-            PileScreen(
-                viewState = state,
-                taskTransitionStates = previewTaskList.getPreviewTransitionStates(),
-                shownTasks = previewTaskList
-            )
-        }
     }
 }

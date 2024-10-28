@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,17 +28,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.taskScreen
-import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.InitialSlideIn
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.SlideDirection
-import com.dk.piley.util.previewUpcomingTasksList
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.no_pile
@@ -60,14 +55,12 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: ProfileViewModel = viewModel(
-        factory = viewModelFactory {
-            ProfileViewModel(
-                pileRepository = Piley.appModule.pileRepository,
-                userRepository = Piley.appModule.userRepository
-            )
-        }
-    )
+    viewModel: ProfileViewModel = viewModel {
+        ProfileViewModel(
+            pileRepository = Piley.getModule().pileRepository,
+            userRepository = Piley.getModule().userRepository
+        )
+    }
 ) {
     val viewState by viewModel.state.collectAsState()
 
@@ -162,7 +155,8 @@ private fun ProfileScreen(
                         deletedCount = viewState.deletedTasks,
                         currentCount = viewState.currentTasks,
                         tasksCompletedPastDays = viewState.tasksCompletedPastDays,
-                        biggestPile = viewState.biggestPileName ?: stringResource(Res.string.no_pile),
+                        biggestPile = viewState.biggestPileName
+                            ?: stringResource(Res.string.no_pile),
                     )
                 }
                 MediumSpacer()
@@ -178,44 +172,6 @@ private fun ProfileScreen(
                 }
                 MediumSpacer()
             }
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun ProfileScreenPreview() {
-    PileyTheme {
-        Surface {
-            val state = ProfileViewState(
-                userName = "Thomas",
-                doneTasks = 0,
-                deletedTasks = 2,
-                currentTasks = 3,
-                biggestPileName = "Daily",
-                upcomingTaskList = previewUpcomingTasksList,
-                tasksCompletedPastDays = 9,
-                isLoading = true
-            )
-            ProfileScreen(viewState = state)
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun ProfileScreenUserOfflinePreview() {
-    PileyTheme {
-        Surface {
-            val state = ProfileViewState(
-                userName = "Thomas",
-                doneTasks = 0,
-                deletedTasks = 2,
-                currentTasks = 3,
-                upcomingTaskList = previewUpcomingTasksList,
-                userIsOffline = true
-            )
-            ProfileScreen(viewState = state)
         }
     }
 }

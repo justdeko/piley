@@ -5,8 +5,8 @@ import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskRepository
+import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
-import com.dk.piley.ui.signin.firstTimeUser
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -49,6 +49,10 @@ class SplashViewModel(
      *
      */
     private fun doFirstTimeRegister() {
+        val firstTimeUser = User(
+            name = "John Doe",
+            email = "john.doe@email2931238.com",
+        )
         viewModelScope.launch {
             userRepository.insertUser(firstTimeUser)
             userRepository.setSignedInUser(firstTimeUser.email)

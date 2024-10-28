@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,11 +30,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.navigateClearBackstack
 import kotlinx.coroutines.CoroutineScope
@@ -59,15 +55,13 @@ import piley.composeapp.generated.resources.ic_launcher_foreground
 fun SplashScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: SplashViewModel = viewModel(
-        factory = viewModelFactory {
-            SplashViewModel(
-                userRepository = Piley.appModule.userRepository,
-                pileRepository = Piley.appModule.pileRepository,
-                taskRepository = Piley.appModule.taskRepository
-            )
-        }
-    )
+    viewModel: SplashViewModel = viewModel {
+        SplashViewModel(
+            userRepository = Piley.getModule().userRepository,
+            pileRepository = Piley.getModule().pileRepository,
+            taskRepository = Piley.getModule().taskRepository
+        )
+    }
 ) {
     val viewState by viewModel.state.collectAsState()
     SplashScreen(
@@ -187,12 +181,3 @@ private fun SplashAnimationLaunchedEffect(
     }
 }
 
-@PreviewMainScreen
-@Composable
-fun SplashScreenPreview() {
-    PileyTheme {
-        Surface {
-            SplashScreen(viewState = SplashViewState())
-        }
-    }
-}

@@ -30,9 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 
 /**
  * Pile title pager
@@ -116,40 +114,3 @@ fun titleSlideAnimation(duration: Int = 500, leftToRight: Boolean = true): Conte
     } + fadeOut(
         animationSpec = tween(durationMillis = duration)
     ))
-
-
-@Preview(showBackground = false)
-@Composable
-fun PileTitlePagerPreview() {
-    PileyTheme(useDarkTheme = true) {
-        PileTitlePager(
-            modifier = Modifier.fillMaxWidth(),
-            pileTitleList = listOf("Pile1", "Pile2", "Pile3", "Pile4"),
-            selectedPageIndex = 2
-        )
-    }
-}
-
-@Preview(showBackground = false)
-@Composable
-fun PileTitlePagerPreviewLeftDisabled() {
-    PileyTheme(useDarkTheme = true) {
-        PileTitlePager(
-            modifier = Modifier.fillMaxWidth(),
-            pileTitleList = listOf("Pile1", "Pile2", "Pile3", "Pile4"),
-            selectedPageIndex = 0
-        )
-    }
-}
-
-@Preview(showBackground = false)
-@Composable
-fun PileTitlePagerPreviewRightDisabled() {
-    PileyTheme(useDarkTheme = true) {
-        PileTitlePager(
-            modifier = Modifier.fillMaxWidth(),
-            pileTitleList = listOf("Pile1", "Pile2", "Pile3", "Pile4"),
-            selectedPageIndex = 3
-        )
-    }
-}

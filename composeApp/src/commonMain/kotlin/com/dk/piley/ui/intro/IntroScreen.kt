@@ -1,10 +1,10 @@
 package com.dk.piley.ui.intro
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,10 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.viewModelFactory
 import com.dk.piley.util.usernameCharacterLimit
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -33,7 +30,7 @@ import piley.composeapp.generated.resources.first_user_name_hint
 fun IntroScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
-    viewModel: IntroViewModel = viewModel(factory = viewModelFactory { IntroViewModel(Piley.appModule.userRepository) })
+    viewModel: IntroViewModel = viewModel {  IntroViewModel(Piley.getModule().userRepository) }
 ) {
     IntroScreen(
         modifier = modifier,
@@ -51,6 +48,7 @@ fun IntroScreen(
  * @param modifier generic modifier
  * @param onFinish on intro screen completion
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IntroScreen(
     modifier: Modifier = Modifier,
@@ -92,15 +90,5 @@ fun IntroScreen(
                 .weight(1f),
             pagerState = pagerState
         )
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun IntroScreenPreview() {
-    PileyTheme {
-        Surface {
-            IntroScreen(onFinish = {})
-        }
     }
 }

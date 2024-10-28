@@ -13,13 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateTimeStringNewLine
-import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -86,27 +83,5 @@ fun UpcomingTasksList(
                 textAlign = TextAlign.Center
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun UpcomingTasksListPreview() {
-    PileyTheme(useDarkTheme = true) {
-        UpcomingTasksList(
-            modifier = Modifier.fillMaxWidth(),
-            pileNameTaskList = previewUpcomingTasksList
-        )
-    }
-}
-
-@Preview
-@Composable
-fun UpcomingTasksListEmptyPreview() {
-    PileyTheme(useDarkTheme = true) {
-        UpcomingTasksList(
-            modifier = Modifier.fillMaxWidth(),
-            pileNameTaskList = emptyList()
-        )
     }
 }

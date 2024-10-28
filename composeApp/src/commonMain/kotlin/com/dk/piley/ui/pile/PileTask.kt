@@ -37,11 +37,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.ui.theme.confirm_green
 import com.dk.piley.util.MediumSpacer
 
@@ -160,32 +158,5 @@ fun PileEntry(modifier: Modifier = Modifier, taskText: String, isRecurring: Bool
                 textAlign = TextAlign.Center
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PileEntryPreview() {
-    PileyTheme(useDarkTheme = true) {
-        PileEntry(modifier = Modifier.fillMaxWidth(), taskText = "Hey there")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PileEntryRecurringPreview() {
-    PileyTheme(useDarkTheme = true) {
-        PileEntry(modifier = Modifier.fillMaxWidth(), taskText = "Hey there", isRecurring = true)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PileEntryLongTextPreview() {
-    PileyTheme(useDarkTheme = true) {
-        PileEntry(
-            modifier = Modifier.fillMaxWidth(),
-            taskText = "Hey there with some very long text that spans multiple lines"
-        )
     }
 }

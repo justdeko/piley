@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,15 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.roundedOutline
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import piley.composeapp.generated.resources.Res
-import piley.composeapp.generated.resources.finish_intro_button
 
 /**
  * Intro page content containing a text field and a button
@@ -130,40 +125,5 @@ fun IntroPageTextFieldContent(
     }
 }
 
-@Composable
-@Preview
-fun IntroPageTextFieldContentPreview() {
-    PileyTheme(useDarkTheme = true) {
-        IntroPageTextFieldContent(
-            modifier = Modifier.fillMaxSize(),
-            introPage = IntroPage.End,
-            buttonText = stringResource(Res.string.finish_intro_button)
-        )
-    }
-}
-
-@Composable
-@Preview(device = "spec:parent=pixel_5,orientation=landscape")
-fun IntroPageTextFieldContentPreviewHorizontal() {
-    PileyTheme(useDarkTheme = true) {
-        IntroPageTextFieldContent(
-            modifier = Modifier.fillMaxSize(),
-            introPage = IntroPage.End,
-            buttonText = stringResource(Res.string.finish_intro_button)
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun IntroPageTextFieldContentLightModePreview() {
-    PileyTheme(useDarkTheme = false) {
-        IntroPageTextFieldContent(
-            modifier = Modifier.fillMaxSize(),
-            introPage = IntroPage.End,
-            buttonText = stringResource(Res.string.finish_intro_button)
-        )
-    }
-}
 
 

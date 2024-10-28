@@ -175,3 +175,6 @@ fun TinySpacer() {
 class BooleanProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean> = sequenceOf(false, true)
 }
+
+@Composable
+expect fun getScreenHeight(): Dp

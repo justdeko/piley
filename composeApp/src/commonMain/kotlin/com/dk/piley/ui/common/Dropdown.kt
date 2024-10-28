@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
 
 /**
  * Generic drop down element
@@ -79,13 +77,5 @@ fun DropDown(
                 )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewDropdown() {
-    PileyTheme(useDarkTheme = true) {
-        DropDown(value = "a", dropdownValues = listOf("a", "b", "c"), label = "select a letter")
     }
 }

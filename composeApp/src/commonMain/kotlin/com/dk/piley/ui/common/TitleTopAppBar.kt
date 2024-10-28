@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
 
 /**
  * Top app bar with title
@@ -61,20 +59,4 @@ fun TitleTopAppBar(
             }
         }
     )
-}
-
-@Composable
-@Preview
-fun TitleTopAppBarPreview() {
-    PileyTheme(useDarkTheme = true) {
-        TitleTopAppBar(textValue = "some title", justTitle = true, onButtonClick = {})
-    }
-}
-
-@Composable
-@Preview
-fun TitleTopAppBarDisabledPreview() {
-    PileyTheme(useDarkTheme = true) {
-        TitleTopAppBar(textValue = "some title", canDeleteOrEdit = false, onButtonClick = {})
-    }
 }

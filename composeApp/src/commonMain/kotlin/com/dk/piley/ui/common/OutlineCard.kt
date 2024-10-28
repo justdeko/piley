@@ -7,12 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
 
 /**
  * Outline card
@@ -29,17 +26,6 @@ fun OutlineCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.
     ) {
         Column(Modifier.padding(LocalDim.current.medium)) {
             content()
-        }
-    }
-}
-
-@Preview
-@Composable
-fun OutlineCardPreview() {
-    PileyTheme(useDarkTheme = true) {
-        OutlineCard {
-            Text(text = "Some text", color = MaterialTheme.colorScheme.onBackground)
-            Text(text = "Some other text", color = MaterialTheme.colorScheme.onBackground)
         }
     }
 }

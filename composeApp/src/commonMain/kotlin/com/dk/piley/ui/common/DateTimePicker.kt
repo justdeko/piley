@@ -21,11 +21,11 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
+import androidx.compose.ui.unit.dp
 import com.dk.piley.util.defaultPadding
+import com.dk.piley.util.getScreenHeight
 import com.dk.piley.util.toLocalDateTime
 import com.dk.piley.util.utcZone
 import kotlinx.datetime.Clock
@@ -85,7 +85,7 @@ fun ReminderDatePicker(
  * @param onDismiss on dialog dismiss
  * @param onConfirm on time confirm
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ReminderTimePicker(
     initialTime: LocalTime?,
@@ -101,19 +101,19 @@ fun ReminderTimePicker(
             is24Hour = is24hFormat
         )
     val showingPicker = remember { mutableStateOf(true) }
-    val configuration = LocalConfiguration.current
+    val screenHeight = getScreenHeight()
 
     ContentAlertDialog(onDismiss = onDismiss) {
         Column(
             Modifier.defaultPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (showingPicker.value && configuration.screenHeightDp > 400) {
+            if (showingPicker.value && screenHeight > 400.dp) {
                 TimePicker(state = state)
             } else {
                 TimeInput(state = state)
             }
-            if (configuration.screenHeightDp > 400) {
+            if (screenHeight > 400.dp) {
                 IconButton(onClick = { showingPicker.value = !showingPicker.value }) {
                     val icon = if (showingPicker.value) {
                         Icons.Outlined.Keyboard
@@ -138,21 +138,5 @@ fun ReminderTimePicker(
                 leftText = stringResource(Res.string.cancel_date_time_picker_button)
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun ReminderDatePickerPreview() {
-    PileyTheme(useDarkTheme = true) {
-        ReminderDatePicker(initialDate = LocalDate(2024, 10, 13), onDismiss = {}, onConfirm = {})
-    }
-}
-
-@Preview
-@Composable
-fun ReminderTimePickerPreview() {
-    PileyTheme(useDarkTheme = true) {
-        ReminderTimePicker(initialTime = LocalTime(13, 24), onDismiss = {}, onConfirm = {})
     }
 }

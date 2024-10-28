@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.theme.PileyTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Editable title text element

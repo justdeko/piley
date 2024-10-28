@@ -2,9 +2,6 @@ package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Abc
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,8 +12,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 
 /**
@@ -51,18 +46,6 @@ fun TitleHeader(
             color = titleColor,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Start
-        )
-    }
-}
-
-@Preview
-@Composable
-fun TitleHeaderPreview() {
-    PileyTheme(useDarkTheme = true) {
-        TitleHeader(
-            modifier = Modifier.fillMaxWidth(),
-            title = "Some title",
-            icon = Icons.Default.Abc
         )
     }
 }

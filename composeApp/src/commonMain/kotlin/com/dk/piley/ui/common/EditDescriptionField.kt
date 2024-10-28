@@ -8,8 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.descriptionCharacterLimit
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -46,13 +44,4 @@ fun EditDescriptionField(
         maxLines = 6,
         placeholder = { Text(stringResource(Res.string.add_description_hint)) },
     )
-}
-
-@Preview
-@Composable
-fun EditDescriptionFieldPreview() {
-    PileyTheme(useDarkTheme = true) {
-        val text = "hi there\nsdf\nsdf\nsdfiu\ndf\n6\n7 alsodo"
-        EditDescriptionField(value = text, onChange = {})
-    }
 }

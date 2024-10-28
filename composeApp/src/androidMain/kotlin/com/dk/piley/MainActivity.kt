@@ -1,5 +1,6 @@
 package com.dk.piley
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +16,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -39,22 +42,30 @@ import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.theme.ThemeHostScreen
-import com.dk.piley.util.isDarkMode
-import com.dk.piley.util.setUiTheme
+import com.dk.piley.util.getDynamicColorScheme
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // set initial theme
-        if (isDarkMode()) {
-            setTheme(R.style.Theme_Piley_Dark)
-        } else setTheme(R.style.Theme_Piley_Light)
-
         super.onCreate(savedInstanceState)
         setContent {
             val context = LocalContext.current
             ThemeHostScreen(
-                setNonComposeTheme = { setUiTheme(context, it) }
+                setSystemUsingTheme = {
+                    // set status bar color and icons color
+                    val activity = context as Activity
+                    val window = activity.window
+                    window.statusBarColor = MaterialTheme.colorScheme.background.toArgb()
+                    window.navigationBarColor = MaterialTheme.colorScheme.surfaceContainer.toArgb()
+                    val wic = WindowCompat.getInsetsController(window, window.decorView)
+                    wic.isAppearanceLightStatusBars = !it
+                },
+                customColorSchemeProvider = { state, nightModeEnabled ->
+                    getDynamicColorScheme(
+                        state,
+                        nightModeEnabled
+                    )
+                }
             ) {
                 Home(
                     onFinishActivity = { this.finishAndRemoveTask() }

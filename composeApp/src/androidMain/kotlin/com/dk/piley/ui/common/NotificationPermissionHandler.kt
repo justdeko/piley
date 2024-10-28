@@ -14,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.dk.piley.util.RequestNotificationPermissionDialog
 import com.dk.piley.util.getActivityOrNull
 
 /**
@@ -24,7 +23,7 @@ import com.dk.piley.util.getActivityOrNull
  * @param setPermissionGranted callback function when the permission result is returned
  */
 @Composable
-fun NotificationPermissionHandler(
+actual fun NotificationPermissionHandler(
     launch: Boolean,
     setPermissionGranted: (Boolean) -> Unit,
 ) {

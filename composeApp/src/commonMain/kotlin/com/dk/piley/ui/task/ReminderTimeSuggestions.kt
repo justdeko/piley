@@ -8,9 +8,7 @@ import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import kotlinx.datetime.LocalDateTime
 
 /**
@@ -39,13 +37,5 @@ fun ReminderTimeSuggestions(
                     label = { Text(text = label) }
                 )
             }
-    }
-}
-
-@Preview
-@Composable
-fun ReminderTimeSuggestionsPreview() {
-    PileyTheme(useDarkTheme = true) {
-        ReminderTimeSuggestions()
     }
 }

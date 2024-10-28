@@ -80,12 +80,11 @@ fun PileScreen(
     navController: NavHostController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     viewModel: PileViewModel = viewModel {
-        val handle = createSavedStateHandle()
         PileViewModel(
             taskRepository = Piley.getModule().taskRepository,
             pileRepository = Piley.getModule().pileRepository,
             userRepository = Piley.getModule().userRepository,
-            savedStateHandle = handle
+            savedStateHandle = createSavedStateHandle()
         )
     }
 ) {

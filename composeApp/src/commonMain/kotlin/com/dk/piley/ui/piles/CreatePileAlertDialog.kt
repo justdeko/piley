@@ -12,8 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.pileTitleCharacterLimit
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -77,18 +75,4 @@ fun CreatePileAlertDialog(
                 Text(stringResource(Res.string.pile_create_dialog_dismiss_button_text))
             }
         })
-}
-
-@Preview
-@Composable
-fun CreatePileAlertDialogPreview() {
-    PileyTheme {
-        CreatePileAlertDialog(
-            pileTitleValue = "some pile name",
-            onTitleValueChange = {},
-            onDismiss = {},
-            onConfirm = {},
-            confirmEnabled = true
-        )
-    }
 }

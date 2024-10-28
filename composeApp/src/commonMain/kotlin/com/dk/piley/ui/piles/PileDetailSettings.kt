@@ -11,14 +11,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.settings.DropdownSettingsItem
 import com.dk.piley.ui.settings.SettingsSection
 import com.dk.piley.ui.settings.SliderSettingsItem
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.roundedOutline
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
@@ -78,22 +75,6 @@ fun PileDetailSettings(
                 sliderValue = it
                 onSetPileLimit(it)
             }
-        )
-    }
-}
-
-@Preview
-@Composable
-fun PileDetailSettingsPreview() {
-    PileyTheme(useDarkTheme = true) {
-        PileDetailSettings(
-            viewState = PileDetailViewState(
-                Pile(
-                    pileMode = PileMode.FIFO,
-                    pileLimit = 15
-                )
-            ),
-            expandedState = remember { mutableStateOf(true) }
         )
     }
 }

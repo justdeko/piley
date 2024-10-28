@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,23 +22,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.NotificationPermissionHandler
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoButtonRow
 import com.dk.piley.ui.reminder.DelayBottomSheet
-import com.dk.piley.ui.savedStateViewModelFactory
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.defaultPadding
-import com.dk.piley.util.previewUpcomingTasksList
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -64,19 +60,17 @@ import piley.composeapp.generated.resources.delete_task_dialog_title
 @Composable
 fun TaskDetailScreen(
     navController: NavHostController = rememberNavController(),
-    viewModel: TaskDetailViewModel = viewModel(
-        factory = savedStateViewModelFactory(navController) {
-            TaskDetailViewModel(
-                repository = Piley.appModule.taskRepository,
-                pileRepository = Piley.appModule.pileRepository,
-                taskRepository = Piley.appModule.taskRepository,
-                userRepository = Piley.appModule.userRepository,
-                reminderManager = Piley.appModule.reminderManager,
-                notificationManager = Piley.appModule.notificationManager,
-                savedStateHandle = it
-            )
-        }
-    ),
+    viewModel: TaskDetailViewModel = viewModel {
+        TaskDetailViewModel(
+            repository = Piley.getModule().taskRepository,
+            pileRepository = Piley.getModule().pileRepository,
+            taskRepository = Piley.getModule().taskRepository,
+            userRepository = Piley.getModule().userRepository,
+            reminderManager = Piley.getModule().reminderManager,
+            notificationManager = Piley.getModule().notificationManager,
+            savedStateHandle = createSavedStateHandle()
+        )
+    },
     onFinish: () -> Unit = {},
 ) {
     val viewState by viewModel.state.collectAsState()
@@ -305,37 +299,5 @@ fun TaskDetailScreen(
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer
             )
         )
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun TaskDetailScreenPreview() {
-    PileyTheme {
-        Surface {
-            val state = TaskDetailViewState(
-                task = previewUpcomingTasksList[1].second,
-                titleTextValue = "Hello",
-                piles = listOf(Pair(0, "pile1")),
-                selectedPileIndex = 0
-            )
-            TaskDetailScreen(viewState = state)
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun TaskDetailScreenPreviewRecurring() {
-    PileyTheme {
-        Surface {
-            val state = TaskDetailViewState(
-                task = previewUpcomingTasksList[0].second,
-                titleTextValue = "Hello",
-                piles = listOf(Pair(0, "pile1")),
-                selectedPileIndex = 0
-            )
-            TaskDetailScreen(viewState = state)
-        }
     }
 }

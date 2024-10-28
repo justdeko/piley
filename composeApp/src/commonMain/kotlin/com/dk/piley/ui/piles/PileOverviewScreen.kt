@@ -18,7 +18,6 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,14 +33,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.pileScreen
-import com.dk.piley.ui.theme.PileyTheme
-import com.dk.piley.ui.viewModelFactory
-import com.dk.piley.util.getPreviewTransitionStates
-import com.dk.piley.util.previewPileWithTasksList
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.add_pile_button
@@ -57,13 +51,12 @@ import piley.composeapp.generated.resources.add_pile_button
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    viewModel: PilesViewModel = viewModel(
-        factory = viewModelFactory {
-            PilesViewModel(
-                pileRepository = Piley.appModule.pileRepository,
-                userRepository = Piley.appModule.userRepository
-            )
-        })
+    viewModel: PilesViewModel = viewModel {
+        PilesViewModel(
+            pileRepository = Piley.getModule().pileRepository,
+            userRepository = Piley.getModule().userRepository
+        )
+    }
 ) {
     val viewState by viewModel.state.collectAsState()
     // animation transition states for pile visibility
@@ -184,18 +177,6 @@ fun PileOverviewScreen(
                 confirmEnabled = !viewState.piles.map { it.pile.name }
                     .contains(pileTitle) && pileTitle.isNotBlank()
             )
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun PileOverviewScreenPreview() {
-    PileyTheme {
-        Surface {
-            val pilesViewState = PilesViewState(previewPileWithTasksList)
-            val transitionStates = previewPileWithTasksList.getPreviewTransitionStates()
-            PileOverviewScreen(viewState = pilesViewState, pileTransitionStates = transitionStates)
         }
     }
 }

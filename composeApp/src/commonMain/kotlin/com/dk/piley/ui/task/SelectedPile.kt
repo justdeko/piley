@@ -12,10 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 
 /**
  * Pile selection menu
@@ -54,13 +52,5 @@ fun SelectedPile(
             },
             onDismiss = { expanded = false }
         )
-    }
-}
-
-@Preview
-@Composable
-fun SelectedPilePreview() {
-    PileyTheme(useDarkTheme = true) {
-        SelectedPile(pileNames = listOf("a", "b", "c"), selectedPileIndex = 2)
     }
 }

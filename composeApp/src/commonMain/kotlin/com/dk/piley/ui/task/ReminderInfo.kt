@@ -16,11 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
 import com.dk.piley.util.roundedOutline
@@ -114,26 +112,5 @@ fun ReminderInfo(
             }
             MediumSpacer()
         }
-    }
-}
-
-@Preview
-@Composable
-fun ReminderInfoPreview() {
-    PileyTheme(useDarkTheme = true) {
-        ReminderInfo(Modifier.fillMaxWidth())
-    }
-}
-
-@Preview
-@Composable
-fun ReminderInfoSetPreview() {
-    PileyTheme(useDarkTheme = true) {
-        ReminderInfo(
-            modifier = Modifier.fillMaxWidth(),
-            reminderDateTimeText = "08.02.2020 13:34",
-            isRecurring = true,
-            recurringFrequency = 2
-        )
     }
 }

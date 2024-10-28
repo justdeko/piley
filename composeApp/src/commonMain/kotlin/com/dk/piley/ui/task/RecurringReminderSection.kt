@@ -15,14 +15,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.toRecurringTimeRange
 import com.dk.piley.model.task.toText
 import com.dk.piley.ui.common.DropDown
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.getFrequencyString
@@ -81,7 +79,7 @@ fun RecurringReminderSection(
                 onExpandedChange = { expandedFrequency = !expandedFrequency },
                 onValueClick = {
                     expandedFrequency = false
-                    onSelectFrequency(Integer.parseInt(it))
+                    onSelectFrequency(it.toInt())
                 },
                 onDismiss = { expandedFrequency = false }
             )
@@ -100,17 +98,6 @@ fun RecurringReminderSection(
             description = stringResource(Res.string.reminder_use_now_description),
             checked = useNowAsReminderTime,
             onChecked = onUseNowAsReminderTimeChange
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun PreviewRecurringReminderSection() {
-    PileyTheme(useDarkTheme = true) {
-        RecurringReminderSection(
-            selectedTimeRange = RecurringTimeRange.WEEKLY,
-            selectedFrequency = 2
         )
     }
 }

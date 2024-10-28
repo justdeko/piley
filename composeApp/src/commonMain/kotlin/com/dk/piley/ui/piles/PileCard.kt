@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.CheckCircle
@@ -33,14 +32,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
-import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.LocalDim
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.TinySpacer
 
 /**
@@ -157,48 +151,5 @@ fun PileCard(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun PileCardPreview() {
-    PileyTheme(useDarkTheme = true) {
-        val pileWithTasks = PileWithTasks(
-            pile = Pile(name = "Default"),
-            tasks = listOf(Task(title = "hey"), Task(title = "hey too"))
-        )
-        PileCard(
-            modifier = Modifier.width(200.dp), pileWithTasks = pileWithTasks
-        )
-    }
-}
-
-@Preview
-@Composable
-fun PileCardLongTitlePreview() {
-    PileyTheme(useDarkTheme = true) {
-        val pileWithTasks = PileWithTasks(
-            pile = Pile(name = "A very long pile name"),
-            tasks = listOf(Task(title = "hey"), Task(title = "hey too"))
-        )
-        PileCard(
-            modifier = Modifier.width(200.dp), pileWithTasks = pileWithTasks
-        )
-    }
-}
-
-
-@Preview
-@Composable
-fun PileCardLongWordPreview() {
-    PileyTheme(useDarkTheme = true) {
-        val pileWithTasks = PileWithTasks(
-            pile = Pile(name = "Organizational"),
-            tasks = listOf(Task(title = "hey"), Task(title = "hey too"))
-        )
-        PileCard(
-            modifier = Modifier.width(200.dp), pileWithTasks = pileWithTasks
-        )
     }
 }

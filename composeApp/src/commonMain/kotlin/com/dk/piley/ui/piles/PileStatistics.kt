@@ -13,13 +13,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.ui.charts.FrequencyChart
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.OutlineCard
 import com.dk.piley.ui.common.TitleHeader
 import com.dk.piley.ui.profile.TaskStats
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
@@ -85,27 +83,6 @@ fun PileStatistics(
             weekDayFrequencies = completedTaskCounts,
             currentDay = currentDay,
             initialTransitionValue = initialGraphTransitionValue
-        )
-    }
-}
-
-@Preview
-@Composable
-fun PileStatisticsEmptyPreview() {
-    PileyTheme(useDarkTheme = true) {
-        PileStatistics()
-    }
-}
-
-@Preview
-@Composable
-fun PileStatisticsPreview() {
-    PileyTheme(useDarkTheme = true) {
-        PileStatistics(
-            completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4),
-            doneCount = 2,
-            deletedCount = 4,
-            currentCount = 1
         )
     }
 }

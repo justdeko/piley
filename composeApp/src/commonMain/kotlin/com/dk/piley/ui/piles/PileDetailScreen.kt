@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,17 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dk.piley.Piley
-import com.dk.piley.compose.PreviewMainScreen
-import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.savedStateViewModelFactory
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.navigateClearBackstack
@@ -57,16 +53,14 @@ import piley.composeapp.generated.resources.delete_pile_dialog_title
 @Composable
 fun PileDetailScreen(
     navController: NavController,
-    viewModel: PileDetailViewModel = viewModel(
-        factory = savedStateViewModelFactory(navController) {
-            PileDetailViewModel(
-                pileRepository = Piley.appModule.pileRepository,
-                taskRepository = Piley.appModule.taskRepository,
-                userRepository = Piley.appModule.userRepository,
-                savedStateHandle = it
-            )
-        }
-    )
+    viewModel: PileDetailViewModel = viewModel {
+        PileDetailViewModel(
+            pileRepository = Piley.getModule().pileRepository,
+            taskRepository = Piley.getModule().taskRepository,
+            userRepository = Piley.getModule().userRepository,
+            savedStateHandle = createSavedStateHandle()
+        )
+    }
 ) {
     val viewState by viewModel.state.collectAsState()
     PileDetailScreen(
@@ -191,30 +185,6 @@ fun PileDetailScreen(
             )
         ) {
             Text(text = stringResource(Res.string.delete_pile_button_text))
-        }
-    }
-}
-
-@PreviewMainScreen
-@Composable
-fun PileDetailScreenPreview() {
-    PileyTheme {
-        Surface {
-            val viewState = PileDetailViewState(
-                Pile(
-                    name = "Some Pile",
-                    description = "Some description",
-                    pileMode = PileMode.FIFO,
-                    pileLimit = 14
-                ),
-                titleTextValue = "some text",
-                descriptionTextValue = "some description",
-                completedTaskCounts = listOf(2, 3, 0, 0, 2, 3, 4),
-                doneCount = 2,
-                deletedCount = 4,
-                currentCount = 1
-            )
-            PileDetailScreen(viewState = viewState)
         }
     }
 }

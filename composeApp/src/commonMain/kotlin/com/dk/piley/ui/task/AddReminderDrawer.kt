@@ -2,7 +2,6 @@
 
 package com.dk.piley.ui.task
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,10 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -36,20 +32,16 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.ReminderDatePicker
 import com.dk.piley.ui.common.ReminderTimePicker
 import com.dk.piley.ui.common.TextWithCheckbox
-import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.timeString
-import com.dk.piley.util.toLocalDateTime
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -354,47 +346,3 @@ data class ReminderState(
     val nowAsReminderTime: Boolean,
     val recurringFrequency: Int,
 )
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-fun AddReminderDrawerPreview() {
-    PileyTheme(useDarkTheme = true) {
-        Surface {
-            val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
-            AddReminderDrawer(
-                sheetState = sheetState,
-            )
-        }
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-fun EditReminderDrawerPreview() {
-    PileyTheme(useDarkTheme = true) {
-        Surface {
-            val initialDateTime = Clock.System.now().toLocalDateTime()
-            val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
-            AddReminderDrawer(
-                initialDate = initialDateTime,
-                sheetState = sheetState,
-            )
-        }
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-fun EditReminderDrawerRecurringPreview() {
-    PileyTheme(useDarkTheme = true) {
-        Surface {
-            val initialDateTime = Clock.System.now().toLocalDateTime()
-            val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
-            AddReminderDrawer(
-                initialDate = initialDateTime,
-                isRecurring = true,
-                sheetState = sheetState,
-            )
-        }
-    }
-}

@@ -8,10 +8,11 @@ material = "1.12.0"
 ksp = "2.0.21-1.0.26"
 navigationCompose = "2.8.0-alpha10"
 room = "2.7.0-alpha10"
-compose-plugin = "1.6.11"
-androidx-lifecycle = "2.8.2"
+compose-plugin = "1.7.0"
+androidx-lifecycle = "2.8.3"
 kotlinx-coroutines = "1.9.0"
 sqliteBundledAndroid = "2.5.0-alpha10"
+sqliteBundledJvm = "2.5.0-alpha10"
 
 [libraries]
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -26,6 +27,7 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-sqlite-bundled-android = { group = "androidx.sqlite", name = "sqlite-bundled-android", version.ref = "sqliteBundledAndroid" }
+androidx-sqlite-bundled-jvm = { group = "androidx.sqlite", name = "sqlite-bundled-jvm", version.ref = "sqliteBundledJvm" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.compose)
+    alias(libs.plugins.jetbrains.compose) version "1.7.0"
     alias(libs.plugins.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
@@ -60,6 +60,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.androidx.sqlite.bundled.jvm)
         }
     }
 }

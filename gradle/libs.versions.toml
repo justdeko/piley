@@ -12,6 +12,7 @@ compose-plugin = "1.7.0"
 androidx-lifecycle = "2.8.3"
 kotlinx-coroutines = "1.9.0"
 sqliteBundledAndroid = "2.5.0-alpha10"
+sqliteBundled = "2.5.0-alpha10"
 sqliteBundledJvm = "2.5.0-alpha10"
 
 [libraries]
@@ -28,6 +29,8 @@ kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-sqlite-bundled-android = { group = "androidx.sqlite", name = "sqlite-bundled-android", version.ref = "sqliteBundledAndroid" }
 androidx-sqlite-bundled-jvm = { group = "androidx.sqlite", name = "sqlite-bundled-jvm", version.ref = "sqliteBundledJvm" }
+androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "sqliteBundled" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

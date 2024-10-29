@@ -1,6 +1,5 @@
 package com.dk.piley.ui.intro
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
@@ -48,7 +47,6 @@ fun IntroScreen(
  * @param modifier generic modifier
  * @param onFinish on intro screen completion
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IntroScreen(
     modifier: Modifier = Modifier,

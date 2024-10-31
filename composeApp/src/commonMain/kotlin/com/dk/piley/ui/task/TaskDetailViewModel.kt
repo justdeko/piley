@@ -129,7 +129,7 @@ class TaskDetailViewModel(
             // start new reminder
             reminderManager.startReminder(
                 reminderState.reminder.toInstantWithOffset(),
-                state.value.task.id
+                state.value.task
             )
         }
     }

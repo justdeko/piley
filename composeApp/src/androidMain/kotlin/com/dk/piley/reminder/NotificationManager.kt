@@ -15,6 +15,11 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.receiver.ReminderAlarmReceiver
 import com.dk.piley.ui.nav.DEEPLINK_ROOT
 import com.dk.piley.ui.nav.taskScreen
+import org.jetbrains.compose.resources.getString
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.reminder_complete_action
+import piley.composeapp.generated.resources.reminder_custom_delay_action
+import piley.composeapp.generated.resources.reminder_delay_action
 
 /**
  * Notification manager for handling notification actions and interactions
@@ -55,7 +60,7 @@ class NotificationManager(private val context: Context): INotificationManager {
      * @param task the task to show the notification for
      * @param pileName the name of the parent pile
      */
-    override fun showNotification(task: Task, pileName: String?) {
+    override suspend fun showNotification(task: Task, pileName: String?) {
         val taskDetailIntent = TaskStackBuilder.create(context).run {
             addNextIntentWithParentStack(
                 Intent(
@@ -100,14 +105,14 @@ class NotificationManager(private val context: Context): INotificationManager {
      * @param notificationActionType the notification action type
      * @return notification action
      */
-    private fun getNotificationAction(
+    private suspend fun getNotificationAction(
         taskId: Long,
         notificationActionType: NotificationActionType
     ): NotificationCompat.Action {
         val actionTitle = when (notificationActionType) {
-            NotificationActionType.Done -> context.getString(R.string.reminder_complete_action)
-            NotificationActionType.Delay -> context.getString(R.string.reminder_delay_action)
-            NotificationActionType.CustomDelay -> context.getString(R.string.reminder_custom_delay_action)
+            NotificationActionType.Done -> getString(Res.string.reminder_complete_action)
+            NotificationActionType.Delay -> getString(Res.string.reminder_delay_action)
+            NotificationActionType.CustomDelay -> getString(Res.string.reminder_custom_delay_action)
         }
         // action intent
         val receiverIntent = Intent(context, ReminderAlarmReceiver::class.java).apply {

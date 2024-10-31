@@ -1,9 +1,10 @@
 package com.dk.piley.reminder
 
+import com.dk.piley.model.task.Task
 import kotlinx.datetime.Instant
 
 class ReminderManager: IReminderManager {
-    override fun startReminder(reminderTime: Instant, taskId: Long) {
+    override suspend fun startReminder(reminderTime: Instant, task: Task) {
         // TODO("Not yet implemented")
     }
 

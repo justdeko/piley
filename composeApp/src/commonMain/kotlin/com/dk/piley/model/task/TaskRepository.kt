@@ -46,7 +46,7 @@ class TaskRepository(
         if (task.status == TaskStatus.DEFAULT && undo && task.reminder != null) {
             reminderManager.startReminder(
                 reminderTime = task.reminder,
-                taskId = task.id
+                task = task
             )
         }
         // remove notification or scheduled alarms if task is set to done/deleted
@@ -82,7 +82,7 @@ class TaskRepository(
             task.getNextReminderTime().let {
                 reminderManager.startReminder(
                     reminderTime = it,
-                    taskId = task.id
+                    task = task
                 )
                 // set new reminder time inside task
                 return taskDao.insertTask(
@@ -111,7 +111,7 @@ class TaskRepository(
                     )
         }.forEach { task ->
             task.reminder?.let { reminder ->
-                reminderManager.startReminder(reminder, task.id)
+                reminderManager.startReminder(reminder, task)
             }
         }
     }
@@ -123,7 +123,7 @@ class TaskRepository(
             insertTask(task.copy(reminder = newReminderTime))
         }
         // start new reminder
-        reminderManager.startReminder(newReminderTime, task.id)
+        reminderManager.startReminder(newReminderTime, task)
         notificationManager.dismiss(task.id)
     }
 }

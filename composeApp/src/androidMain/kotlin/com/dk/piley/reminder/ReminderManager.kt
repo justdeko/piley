@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
+import com.dk.piley.model.task.Task
 import com.dk.piley.receiver.ReminderAlarmReceiver
 import kotlinx.datetime.Instant
 
@@ -21,17 +22,17 @@ class ReminderManager(private val context: Context): IReminderManager {
      * Start reminder for a task
      *
      * @param reminderTime timestamp representing the reminder time
-     * @param taskId task id of the task to show the reminder for
+     * @param task task to show the reminder for
      */
-    override fun startReminder(
-        reminderTime: Instant, taskId: Long
+    override suspend fun startReminder(
+        reminderTime: Instant, task: Task
     ) {
         val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW
-            putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, taskId)
+            putExtra(ReminderAlarmReceiver.EXTRA_TASK_ID, task.id)
         }.let { intent ->
             PendingIntent.getBroadcast(
-                context.applicationContext, taskId.toInt(), intent, flags
+                context.applicationContext, task.id.toInt(), intent, flags
             )
         }
 

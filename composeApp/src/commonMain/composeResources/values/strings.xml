@@ -14,6 +14,10 @@
     <string name="cancel_delay_button">Don\'t Delay</string>
     <string name="confirm_delay_button">Delay</string>
     <string name="delay_title">Delay this Task</string>
+
+    <string name="reminder_complete_action">Complete</string>
+    <string name="reminder_delay_action">Delay</string>
+    <string name="reminder_custom_delay_action">Delay by…</string>
     <!-- common strings -->
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

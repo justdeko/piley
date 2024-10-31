@@ -176,4 +176,7 @@
         <item>Wochen</item>
         <item>Monate</item>
     </string-array>
+    <string name="reminder_complete_action">Fertig</string>
+    <string name="reminder_delay_action">Später</string>
+    <string name="reminder_custom_delay_action">Später um…</string>
 </resources>

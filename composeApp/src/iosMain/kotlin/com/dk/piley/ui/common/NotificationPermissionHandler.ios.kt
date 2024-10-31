@@ -1,6 +1,11 @@
 package com.dk.piley.ui.common
 
 import androidx.compose.runtime.Composable
+import platform.UserNotifications.UNAuthorizationOptionAlert
+import platform.UserNotifications.UNAuthorizationOptionBadge
+import platform.UserNotifications.UNAuthorizationOptionSound
+import platform.UserNotifications.UNAuthorizationStatusAuthorized
+import platform.UserNotifications.UNUserNotificationCenter
 
 /**
  * Notification permission handler that requests the permission and shows a dialog if denied
@@ -13,5 +18,23 @@ actual fun NotificationPermissionHandler(
     launch: Boolean,
     setPermissionGranted: (Boolean) -> Unit
 ) {
-    // TODO not yet implemented
+    if (launch) {
+        val notificationCenter = UNUserNotificationCenter.currentNotificationCenter()
+        notificationCenter.getNotificationSettingsWithCompletionHandler {
+            if (it?.authorizationStatus != UNAuthorizationStatusAuthorized) {
+                notificationCenter.requestAuthorizationWithOptions(NOTIFICATION_PERMISSIONS) { isGranted, _ ->
+                    setPermissionGranted(isGranted)
+                }
+            } else {
+                setPermissionGranted(true)
+            }
+        }
+
+    }
 }
+
+
+private val NOTIFICATION_PERMISSIONS =
+    UNAuthorizationOptionAlert or
+            UNAuthorizationOptionSound or
+            UNAuthorizationOptionBadge

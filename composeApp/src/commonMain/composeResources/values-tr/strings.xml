@@ -13,6 +13,10 @@
         <item>Aylar</item>
     </string-array>
 
+    <string name="reminder_complete_action">Tamamlandı</string>
+    <string name="reminder_delay_action">Gecikme</string>
+    <string name="reminder_custom_delay_action">Gecikme…</string>
+
     <!-- common strings -->
     <string name="cancel_delay_button">Geciktirmeyin</string>
     <string name="confirm_delay_button">Gecikme</string>

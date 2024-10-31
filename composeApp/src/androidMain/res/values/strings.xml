@@ -3,8 +3,4 @@
     <string name="app_name" translatable="false">piley</string>
     <string name="reminder_notification_channel_title" translatable="false">Reminder</string>
     <string name="reminder_notification_channel_description" translatable="false">Reminder</string>
-
-    <string name="reminder_complete_action">Complete</string>
-    <string name="reminder_delay_action">Delay</string>
-    <string name="reminder_custom_delay_action">Delay by…</string>
 </resources>

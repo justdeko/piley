@@ -12,6 +12,7 @@ import piley.composeapp.generated.resources.reminder_delay_action
 import platform.UserNotifications.UNCalendarNotificationTrigger
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationAction
+import platform.UserNotifications.UNNotificationActionOptionForeground
 import platform.UserNotifications.UNNotificationActionOptionNone
 import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationCategoryOptionNone
@@ -24,17 +25,17 @@ class ReminderManager : IReminderManager {
         val notificationCenter = UNUserNotificationCenter.currentNotificationCenter()
         // set actions and categories
         val delayAction = UNNotificationAction.actionWithIdentifier(
-            identifier = "DELAY_ACTION",
+            identifier = NotificationAction.DELAY.identifier,
             title = getString(Res.string.reminder_delay_action),
             options = UNNotificationActionOptionNone
         )
         val delayByAction = UNNotificationAction.actionWithIdentifier(
-            identifier = "DELAY_BY_ACTION",
+            identifier = NotificationAction.DELAY_BY.identifier,
             title = getString(Res.string.reminder_custom_delay_action),
-            options = UNNotificationActionOptionNone
+            options = UNNotificationActionOptionForeground
         )
         val doneAction = UNNotificationAction.actionWithIdentifier(
-            identifier = "DONE_ACTION",
+            identifier = NotificationAction.DONE.identifier,
             title = getString(Res.string.reminder_complete_action),
             options = UNNotificationActionOptionNone
         )
@@ -79,3 +80,15 @@ class ReminderManager : IReminderManager {
 }
 
 private const val ACTION_CATEGORY = "REMINDER_NOTIFICATION_ACTIONS"
+
+enum class NotificationAction(val identifier: String) {
+    DELAY("DELAY_ACTION"),
+    DELAY_BY("DELAY_BY_ACTION"),
+    DONE("DONE_ACTION");
+
+    companion object {
+        fun fromIdentifier(identifier: String): NotificationAction {
+            return entries.first { it.identifier == identifier }
+        }
+    }
+}

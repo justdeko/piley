@@ -16,15 +16,17 @@ class NotificationActionHandler {
     private val taskRepository: TaskRepository by lazy { Piley.getModule().taskRepository }
     private val userRepository: UserRepository by lazy { Piley.getModule().userRepository }
 
+    // TODO fix this not working when app is killed
     @OptIn(DelicateCoroutinesApi::class)
     fun handleNotificationAction(
         actionIdentifier: String,
         taskId: Long,
         withCompletionHandler: () -> Unit
     ) {
+        val action = NotificationAction.fromIdentifier(actionIdentifier)
         println("Handling notification action $actionIdentifier for task $taskId")
-        when (actionIdentifier) {
-            "DELAY_ACTION" -> {
+        when (action) {
+            NotificationAction.DELAY -> {
                 GlobalScope.launch(Dispatchers.Main) {
                     taskRepository.getTaskById(taskId).firstOrNull()?.let { task ->
                         userRepository.getSignedInUser().first()?.let { user ->
@@ -39,12 +41,12 @@ class NotificationActionHandler {
                 }
             }
 
-            "DELAY_BY_ACTION" -> {
-                // TODO implement delay by action
+            NotificationAction.DELAY_BY -> {
+
                 withCompletionHandler()
             }
 
-            "DONE_ACTION" -> {
+            NotificationAction.DONE -> {
                 // set task to done
                 GlobalScope.launch(Dispatchers.Main) {
                     taskRepository.getTaskById(taskId).firstOrNull()?.let { task ->

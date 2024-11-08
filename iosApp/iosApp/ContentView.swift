@@ -13,7 +13,7 @@ struct ComposeView: UIViewControllerRepresentable {
 struct ContentView: View {
     var body: some View {
         ComposeView()
-                .ignoresSafeArea(edges: .all)
+                .ignoresSafeArea(edges: .all) // TODO do this in a better way so splash animation works
                 .ignoresSafeArea(.keyboard) // Compose has own keyboard handler
     }
 }

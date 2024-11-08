@@ -12,7 +12,6 @@ import piley.composeapp.generated.resources.reminder_delay_action
 import platform.UserNotifications.UNCalendarNotificationTrigger
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationAction
-import platform.UserNotifications.UNNotificationActionOptionForeground
 import platform.UserNotifications.UNNotificationActionOptionNone
 import platform.UserNotifications.UNNotificationCategory
 import platform.UserNotifications.UNNotificationCategoryOptionNone
@@ -37,7 +36,7 @@ class ReminderManager : IReminderManager {
         val doneAction = UNNotificationAction.actionWithIdentifier(
             identifier = "DONE_ACTION",
             title = getString(Res.string.reminder_complete_action),
-            options = UNNotificationActionOptionForeground
+            options = UNNotificationActionOptionNone
         )
         // Create category with actions
         val category = UNNotificationCategory.categoryWithIdentifier(
@@ -63,6 +62,7 @@ class ReminderManager : IReminderManager {
             content,
             notificationTrigger
         )
+        println("attempting to start notification for time $reminderTime")
         notificationCenter.addNotificationRequest(request) {
             it?.let {
                 println(it)

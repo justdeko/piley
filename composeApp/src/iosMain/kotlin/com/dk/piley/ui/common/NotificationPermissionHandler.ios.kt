@@ -1,6 +1,7 @@
 package com.dk.piley.ui.common
 
 import androidx.compose.runtime.Composable
+import com.dk.piley.reminder.setupNotificationDelegate
 import platform.UserNotifications.UNAuthorizationOptionAlert
 import platform.UserNotifications.UNAuthorizationOptionBadge
 import platform.UserNotifications.UNAuthorizationOptionSound
@@ -24,9 +25,13 @@ actual fun NotificationPermissionHandler(
             if (it?.authorizationStatus != UNAuthorizationStatusAuthorized) {
                 notificationCenter.requestAuthorizationWithOptions(NOTIFICATION_PERMISSIONS) { isGranted, _ ->
                     setPermissionGranted(isGranted)
+                    if (isGranted) {
+                        setupNotificationDelegate()
+                    }
                 }
             } else {
                 setPermissionGranted(true)
+                setupNotificationDelegate()
             }
         }
 
@@ -34,7 +39,7 @@ actual fun NotificationPermissionHandler(
 }
 
 
-private val NOTIFICATION_PERMISSIONS =
+internal val NOTIFICATION_PERMISSIONS =
     UNAuthorizationOptionAlert or
             UNAuthorizationOptionSound or
             UNAuthorizationOptionBadge

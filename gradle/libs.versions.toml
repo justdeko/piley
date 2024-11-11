@@ -13,7 +13,7 @@ androidx-lifecycle = "2.8.3"
 kotlinx-coroutines = "1.9.0"
 sqliteBundledAndroid = "2.5.0-alpha11"
 sqliteBundled = "2.5.0-alpha11"
-sqliteBundledJvm = "2.5.0-alpha10"
+sqliteBundledJvm = "2.5.0-alpha11"
 
 [libraries]
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }

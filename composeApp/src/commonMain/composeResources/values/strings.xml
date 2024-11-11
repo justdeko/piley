@@ -11,7 +11,7 @@
     <string name="daily_pile_name">Daily</string>
 
     <!--notifications-->
-    <string name="cancel_delay_button">Don\'t Delay</string>
+    <string name="cancel_delay_button">Don't Delay</string>
     <string name="confirm_delay_button">Delay</string>
     <string name="delay_title">Delay this Task</string>
 
@@ -23,12 +23,12 @@
     <string name="cancel">Cancel</string>
 
     <!-- generic ui views -->
-    <string name="no_pile_completed_hint">Looks like you haven\'t completed any tasks for this pile in a while…</string>
+    <string name="no_pile_completed_hint">Looks like you haven't completed any tasks for this pile in a while…</string>
     <string name="add_description_hint">Click here to add a description</string>
 
     <!-- pile screen -->
     <string name="add_task_placeholder">Add your task here</string>
-    <string name="task_empty_not_allowed_hint">Task can\'t be empty</string>
+    <string name="task_empty_not_allowed_hint">Task can't be empty</string>
     <string name="pile_full_warning">This pile is already full!</string>
     <string name="no_tasks_left_message">Looks like there are no tasks left.\nClick on the field below to create a new one</string>
     <string name="no_tasks_yet_message">Looks like there are no tasks yet.\nClick on the field below to create a new one</string>
@@ -150,7 +150,7 @@
     <string name="time_selection_placeholder">Pick a time</string>
     <string name="reminder_recurring_label">Recurring</string>
     <string name="reminder_frequency_label">Frequency</string>
-    <string name="no_notification_permission_reminder_warning">This reminder won\'t show up because you haven\'t enabled notifications.</string>
+    <string name="no_notification_permission_reminder_warning">This reminder won't show up because you haven't enabled notifications.</string>
     <string name="set_reminder_button">Set Reminder</string>
     <string name="update_reminder_button">Update</string>
     <string name="delete_reminder_button">Delete</string>
@@ -229,6 +229,6 @@
     <string name="profile_page_title">Profile</string>
     <string name="profile_page_description">You can also see general statistics and upcoming tasks by going to the profile section.</string>
     <string name="end_page_title">Almost there</string>
-    <string name="end_page_description">That\'s it! Click on the button to start using the app, and have fun with piley!</string>
+    <string name="end_page_description">That's it! Click on the button to start using the app, and have fun with piley!</string>
     <string name="first_user_name_hint">e.g. John Doe</string>
 </resources>

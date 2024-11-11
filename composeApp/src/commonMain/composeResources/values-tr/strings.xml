@@ -207,7 +207,7 @@
 
     <!-- intro screen pages -->
     <string name="welcome_page_title">Merhaba</string>
-    <string name="welcome_page_description">Piley\'e hoş geldiniz! Bu uygulama, düzenli ve tek seferlik görevleri yığınlar halinde görüntüleyerek yönetmenizi sağlar.</string>
+    <string name="welcome_page_description">Piley'e hoş geldiniz! Bu uygulama, düzenli ve tek seferlik görevleri yığınlar halinde görüntüleyerek yönetmenizi sağlar.</string>
     <string name="pile_page_title">Pile</string>
     <string name="pile_page_description">Bir yığın, adından da anlaşılacağı gibi - görevlerinizin bir yığınıdır. Yeni bir görev oluşturmak için alta tıklayın veya görevleri tamamlamak için kaydırın.</string>
     <string name="piles_page_title">Yığınlar</string>

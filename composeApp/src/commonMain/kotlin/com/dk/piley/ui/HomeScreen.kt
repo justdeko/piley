@@ -7,12 +7,14 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.dk.piley.Piley
 import com.dk.piley.ui.intro.IntroScreen
 import com.dk.piley.ui.nav.BottomNavigationBar
 import com.dk.piley.ui.nav.DEEPLINK_ROOT
@@ -46,8 +49,16 @@ import com.dk.piley.ui.task.TaskDetailScreen
 fun HomeScreen(
     modifier: Modifier = Modifier,
     initialMessage: String? = null,
+    viewModel: HomeViewModel = viewModel {
+        HomeViewModel(
+            taskRepository = Piley.getModule().taskRepository,
+            notificationRepository = Piley.getModule().notificationRepository,
+            navigationEventRepository = Piley.getModule().navigationEventRepository
+        )
+    },
     onFinishActivity: () -> Unit = {}
 ) {
+    val homeState by viewModel.state.collectAsState()
     val navController = rememberNavController()
     val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
     // override scaffold padding due to animated visibility bug with flicker
@@ -63,6 +74,16 @@ fun HomeScreen(
     // display initial message if not null
     if (initialMessage != null) {
         LaunchedEffect(true) { snackbarHostState.showSnackbar(initialMessage) }
+    }
+
+    homeState.message?.let {
+        LaunchedEffect(it, snackbarHostState) { snackbarHostState.showSnackbar(it) }
+    }
+
+    homeState.navigationEvent?.let {
+        LaunchedEffect(it, navController) {
+            navController.navigate(it)
+        }
     }
 
     Scaffold(

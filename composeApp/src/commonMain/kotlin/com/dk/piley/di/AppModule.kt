@@ -5,6 +5,8 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
+import com.dk.piley.model.navigation.NavigationEventRepository
+import com.dk.piley.model.notification.NotificationRepository
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskDao
@@ -32,6 +34,8 @@ interface AppModule {
     val preferencesDataStore: DataStore<Preferences>
     val reminderManager: IReminderManager
     val notificationManager: INotificationManager
+    val notificationRepository: NotificationRepository
+    val navigationEventRepository: NavigationEventRepository
 }
 
 class AppModuleImpl(
@@ -71,9 +75,12 @@ class AppModuleImpl(
     }
     override val preferencesDataStore: DataStore<Preferences> by lazy {
         PreferenceDataStoreFactory.createWithPath(
-            produceFile = { dataStorePath.toPath()}
+            produceFile = { dataStorePath.toPath() }
         )
     }
+
+    override val notificationRepository: NotificationRepository by lazy { NotificationRepository() }
+    override val navigationEventRepository: NavigationEventRepository by lazy { NavigationEventRepository() }
 }
 
 internal const val USER_PREFERENCES_PATH = "user_preferences.preferences_pb"

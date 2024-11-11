@@ -19,7 +19,11 @@ class NotificationDelegate : UNUserNotificationCenterDelegateProtocol, NSObject(
     ) {
         val actionIdentifier = didReceiveNotificationResponse.actionIdentifier
         val taskId = didReceiveNotificationResponse.notification.request.identifier.toLong()
-        notificationActionHandler.handleNotificationAction(actionIdentifier, taskId, withCompletionHandler)
+        notificationActionHandler.handleNotificationAction(
+            actionIdentifier,
+            taskId,
+            withCompletionHandler
+        )
     }
 
     override fun userNotificationCenter(
@@ -27,7 +31,6 @@ class NotificationDelegate : UNUserNotificationCenterDelegateProtocol, NSObject(
         willPresentNotification: UNNotification,
         withCompletionHandler: (UNNotificationPresentationOptions) -> Unit
     ) {
-        println("Will present notification")
         withCompletionHandler(NOTIFICATION_PERMISSIONS)
     }
 }

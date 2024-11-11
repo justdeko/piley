@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">piley</string>
+    <string name="reminder_notification_channel_title" translatable="false">Reminder</string>
+    <string name="reminder_notification_channel_description" translatable="false">Reminder</string>
+</resources>

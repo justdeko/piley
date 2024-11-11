@@ -12,7 +12,7 @@ compose-plugin = "1.7.0"
 androidx-lifecycle = "2.8.3"
 kotlinx-coroutines = "1.9.0"
 sqliteBundledAndroid = "2.5.0-alpha11"
-sqliteBundled = "2.5.0-alpha10"
+sqliteBundled = "2.5.0-alpha11"
 sqliteBundledJvm = "2.5.0-alpha10"
 
 [libraries]

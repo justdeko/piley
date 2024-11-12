@@ -23,8 +23,8 @@ class HomeViewModel(
             collectState(
                 notificationFlow.combine(navigationEventFlow) { notification, navigationEvent ->
                     HomeViewState(
-                        notification?.let { transformNotificationToMessage(it) },
-                        navigationEvent?.destination
+                        message = notification?.let { transformNotificationToMessage(it) },
+                        navigationEvent = navigationEvent?.destination
                     )
                 }
             )
@@ -34,6 +34,12 @@ class HomeViewModel(
     private suspend fun transformNotificationToMessage(notification: UiNotification): String {
         val task: Task = taskRepository.getTaskById(notification.taskId).firstOrNull() ?: return ""
         return task.title + if (task.description.isNotBlank()) " - ${task.description}" else ""
+    }
+
+    fun onConsumeNavEvent() {
+        viewModelScope.launch {
+            navigationEventRepository.clear()
+        }
     }
 }
 

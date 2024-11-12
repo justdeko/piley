@@ -56,7 +56,7 @@ fun HomeScreen(
             navigationEventRepository = Piley.getModule().navigationEventRepository
         )
     },
-    onFinishActivity: () -> Unit = {}
+    onFinishActivity: () -> Unit = {},
 ) {
     val homeState by viewModel.state.collectAsState()
     val navController = rememberNavController()
@@ -79,10 +79,16 @@ fun HomeScreen(
     homeState.message?.let {
         LaunchedEffect(it, snackbarHostState) { snackbarHostState.showSnackbar(it) }
     }
-
     homeState.navigationEvent?.let {
         LaunchedEffect(it, navController) {
-            navController.navigate(it)
+            println("incoming nav event: $it")
+            // prevent navigating twice if the app is currently on the task screen
+            if (navBackStackEntry?.destination?.route?.startsWith(taskScreen.route) == false
+                || it.contains(taskScreen.optionalArguments.first().name)
+            ) {
+                navController.navigate(it)
+                viewModel.onConsumeNavEvent()
+            }
         }
     }
 

@@ -87,8 +87,8 @@ enum class NotificationAction(val identifier: String) {
     DONE("DONE_ACTION");
 
     companion object {
-        fun fromIdentifier(identifier: String): NotificationAction {
-            return entries.first { it.identifier == identifier }
+        fun fromIdentifier(identifier: String): NotificationAction? {
+            return entries.firstOrNull { it.identifier == identifier }
         }
     }
 }

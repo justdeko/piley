@@ -10,4 +10,8 @@ class NavigationEventRepository {
     fun addNavigationEvent(event: NavigationEvent) {
         _navigationEventFlow.value = event
     }
+
+    fun clear() {
+        _navigationEventFlow.value = null
+    }
 }

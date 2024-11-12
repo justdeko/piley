@@ -28,7 +28,7 @@ class NotificationActionHandler {
         withCompletionHandler: () -> Unit
     ) {
         val action = NotificationAction.fromIdentifier(actionIdentifier)
-        println("Handling notification action $actionIdentifier for task $taskId")
+        println("Handling notification action $action for task $taskId")
         when (action) {
             NotificationAction.DELAY -> {
                 GlobalScope.launch(Dispatchers.Main) {
@@ -60,6 +60,12 @@ class NotificationActionHandler {
                     }
                     withCompletionHandler()
                 }
+            }
+
+            // if no action mapping, do default navigation to task
+            else -> {
+                navigationEventRepository.addNavigationEvent(NavigationEvent("${taskScreen.root}/${taskId}"))
+                withCompletionHandler()
             }
         }
     }

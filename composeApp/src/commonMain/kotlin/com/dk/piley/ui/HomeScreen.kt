@@ -1,6 +1,9 @@
 package com.dk.piley.ui
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -59,7 +62,7 @@ fun HomeScreen(
     onFinishActivity: () -> Unit = {},
 ) {
     val homeState by viewModel.state.collectAsState()
-    val navController = rememberNavController()
+    val navController = rememberNavController() // TODO prevent double navigation on same location
     val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
     // override scaffold padding due to animated visibility bug with flicker
     val defaultNavbarPadding = 80.dp
@@ -93,7 +96,11 @@ fun HomeScreen(
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.then(
+            // safe padding on all screens except splash screen
+            if (navBackStackEntry?.destination?.route == Screen.Splash.route) Modifier
+            else Modifier.windowInsetsPadding(WindowInsets.safeDrawing) // TODO ios only use status bar
+        ),
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             BottomNavigationBar(

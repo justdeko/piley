@@ -11,6 +11,10 @@ import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.nunitosans_variable
 
 
+// TODO fix variable fonts for ios
+// https://github.com/JetBrains/compose-multiplatform/issues/3127
+// https://markonovakovic.medium.com/from-android-to-multiplatform-real-100-jetpack-compose-app-part-1-resources-a5db60f1ed73
+// https://github.com/JetBrains/compose-multiplatform-core/pull/1623
 @Composable
 private fun getFontFamily(): FontFamily {
     val fonts = listOf(400, 500, 600, 700).map {

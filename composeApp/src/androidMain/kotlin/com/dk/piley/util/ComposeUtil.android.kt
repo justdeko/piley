@@ -9,3 +9,5 @@ import androidx.compose.ui.unit.dp
 actual fun getScreenHeight(): Dp = LocalConfiguration.current
     .screenHeightDp
     .dp
+
+actual val defaultNavBarPadding: Dp = 80.dp

@@ -103,7 +103,7 @@ fun PileScreen(
                 targetState = true
             }
         }
-    } // TODO fix disappearance animation
+    }
 
     // snackbar handler
     viewState.messageWithAction?.let { message ->

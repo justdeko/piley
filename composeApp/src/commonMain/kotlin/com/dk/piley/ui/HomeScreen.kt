@@ -2,7 +2,7 @@ package com.dk.piley.ui
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,6 +39,7 @@ import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
+import com.dk.piley.util.defaultNavBarPadding
 
 
 /**
@@ -64,8 +64,6 @@ fun HomeScreen(
     val homeState by viewModel.state.collectAsState()
     val navController = rememberNavController()
     val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
-    // override scaffold padding due to animated visibility bug with flicker
-    val defaultNavbarPadding = 80.dp
     val snackbarHostState = remember { SnackbarHostState() }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -99,7 +97,7 @@ fun HomeScreen(
         modifier = modifier.then(
             // safe padding on all screens except splash screen
             if (navBackStackEntry?.destination?.route == Screen.Splash.route) Modifier
-            else Modifier.windowInsetsPadding(WindowInsets.safeDrawing) // TODO ios only use status bar
+            else Modifier.windowInsetsPadding(WindowInsets.statusBars)
         ),
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
@@ -124,20 +122,21 @@ fun HomeScreen(
                 })
             ) {
                 PileScreen(
-                    modifier = Modifier.padding(bottom = defaultNavbarPadding),
+                    // override scaffold padding due to animated visibility bug with flicker
+                    modifier = Modifier.padding(bottom = defaultNavBarPadding),
                     navController = navController, // TODO: don't pass navController
                     snackbarHostState = snackbarHostState
                 )
             }
             composable(Screen.Piles.route) {
                 PileOverviewScreen(
-                    modifier = Modifier.padding(bottom = defaultNavbarPadding),
+                    modifier = Modifier.padding(bottom = defaultNavBarPadding),
                     navController = navController
                 )
             }
             composable(Screen.Profile.route) {
                 ProfileScreen(
-                    modifier = Modifier.padding(bottom = defaultNavbarPadding),
+                    modifier = Modifier.padding(bottom = defaultNavBarPadding),
                     navController = navController,
                     snackbarHostState = snackbarHostState
                 )

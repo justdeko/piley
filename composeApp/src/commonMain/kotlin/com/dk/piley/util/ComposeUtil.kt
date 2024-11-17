@@ -180,3 +180,5 @@ class BooleanProvider : PreviewParameterProvider<Boolean> {
 
 @Composable
 expect fun getScreenHeight(): Dp
+
+expect val defaultNavBarPadding: Dp

@@ -97,7 +97,7 @@ fun HomeScreen(
         modifier = modifier.then(
             // safe padding on all screens except splash screen
             if (navBackStackEntry?.destination?.route == Screen.Splash.route) Modifier
-            else Modifier.windowInsetsPadding(WindowInsets.statusBars)
+            else Modifier.windowInsetsPadding(WindowInsets.statusBars) // TODO fix this for ios with box and surfaceContainer color on the lower bottom half
         ),
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {

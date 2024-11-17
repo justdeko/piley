@@ -9,6 +9,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -24,21 +28,20 @@ import piley.composeapp.generated.resources.pile_title_hint
  * Alert dialog for creating a new pile
  *
  * @param modifier generic modifier
- * @param pileTitleValue title text value
- * @param onTitleValueChange on title text change
+ * @param existingPileTitles list of existing pile titles
  * @param onDismiss on dialog dismiss
- * @param onConfirm on confirm button click
+ * @param onConfirm on confirm button click with title text
  * @param confirmEnabled whether  confirm button enabled
  */
 @Composable
 fun CreatePileAlertDialog(
     modifier: Modifier = Modifier,
-    pileTitleValue: String,
-    onTitleValueChange: (String) -> Unit,
+    existingPileTitles: List<String>,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
-    confirmEnabled: Boolean
+    onConfirm: (String) -> Unit,
+    confirmEnabled: Boolean = true
 ) {
+    var title by rememberSaveable { mutableStateOf("") }
     AlertDialog(
         modifier = modifier,
         title = { Text(stringResource(Res.string.create_pile_dialog_title)) },
@@ -46,10 +49,10 @@ fun CreatePileAlertDialog(
             val focusManager = LocalFocusManager.current // dialog has own focus manager
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = pileTitleValue,
+                value = title,
                 onValueChange = {
                     if (it.length <= pileTitleCharacterLimit) {
-                        onTitleValueChange(it)
+                        title = it
                     }
                 },
                 placeholder = { Text(stringResource(Res.string.pile_title_hint)) },
@@ -65,8 +68,11 @@ fun CreatePileAlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
-                onClick = onConfirm,
-                enabled = confirmEnabled
+                onClick = {
+                    onConfirm(title)
+                    title = ""
+                },
+                enabled = confirmEnabled && title.isNotBlank() && !existingPileTitles.contains(title)
             ) {
                 Text(stringResource(Res.string.pile_create_dialog_confirm_button_text))
             }

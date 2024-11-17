@@ -107,7 +107,6 @@ fun PileOverviewScreen(
 ) {
     val gridState = rememberLazyStaggeredGridState()
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
-    var pileTitle by rememberSaveable { mutableStateOf("") }
     val expandedFab by remember {
         derivedStateOf {
             gridState.firstVisibleItemScrollOffset <= 0
@@ -163,17 +162,12 @@ fun PileOverviewScreen(
         }
         if (createPileDialogOpen) {
             CreatePileAlertDialog(
-                pileTitleValue = pileTitle,
-                onTitleValueChange = { pileTitle = it },
                 onDismiss = { createPileDialogOpen = false },
+                existingPileTitles = viewState.piles.map { it.pile.name },
                 onConfirm = {
-                    onCreatePile(pileTitle)
+                    onCreatePile(it)
                     createPileDialogOpen = false
-                    pileTitle = ""
-                },
-                // pile name can't exist yet
-                confirmEnabled = !viewState.piles.map { it.pile.name }
-                    .contains(pileTitle) && pileTitle.isNotBlank()
+                }
             )
         }
     }

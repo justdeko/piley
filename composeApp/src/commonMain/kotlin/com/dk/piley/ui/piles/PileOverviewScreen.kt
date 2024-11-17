@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -95,7 +94,6 @@ fun PileOverviewScreen(
  * @param onPileClick on click pile with id
  * @param onPileLongClick on double click pile with id
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
@@ -152,7 +150,7 @@ fun PileOverviewScreen(
                     key = { _, pileWithTasks -> pileWithTasks.pile.pileId }
                 ) { index, pileWithTasks ->
                     PileCard(
-                        modifier = Modifier.animateItemPlacement(), // TODO use slide in anim here with animateItem
+                        modifier = Modifier.animateItem(),
                         pileWithTasks = pileWithTasks,
                         onSelectPile = onSelectPile,
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId,

@@ -89,6 +89,7 @@ enum class SlideDirection { UP, DOWN, LEFT, RIGHT }
  */
 @Composable
 fun InitialSlideIn(
+    modifier: Modifier = Modifier,
     direction: SlideDirection,
     pathLengthInDp: Int,
     initialAlpha: Float = 0f,
@@ -104,6 +105,7 @@ fun InitialSlideIn(
         SlideDirection.RIGHT -> slideInHorizontally { with(density) { -pathLengthInDp.dp.roundToPx() } }
     }
     AnimatedVisibility(
+        modifier = modifier,
         visibleState = remember {
             MutableTransitionState(initialTransitionStateValue).apply {
                 targetState = true

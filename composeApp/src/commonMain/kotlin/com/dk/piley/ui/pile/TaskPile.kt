@@ -1,12 +1,12 @@
 package com.dk.piley.ui.pile
 
 import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.runtime.Composable
@@ -47,7 +47,6 @@ import piley.composeapp.generated.resources.delete_recurring_dialog_title
  * @param onDone on task done
  * @param onTaskClick on task click
  */
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TaskPile(
     modifier: Modifier = Modifier,
@@ -133,7 +132,12 @@ fun TaskPile(
             }
             PileTask(
                 modifier = Modifier
-                    .animateItemPlacement() // TODO use slide in anim here with animateItem
+                    .animateItem(
+                        fadeInSpec = spring(
+                            stiffness = Spring.StiffnessMediumLow,
+                            visibilityThreshold = 1f
+                        )
+                    )
                     .padding(vertical = dim.mini),
                 dismissState = dismissState,
                 transitionState = taskTransitionStates[index],

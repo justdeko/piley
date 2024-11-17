@@ -59,15 +59,18 @@ fun BottomNavigationBar(
                         },
                         selected = selected,
                         onClick = {
-                            navController.navigate(screen.route) {
-                                // Pop up to start destination to prevent navigation stack up
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
+                            if (currentDestination?.route?.startsWith(screen.route) == false) {
                                 // avoid navigation when same destination
-                                launchSingleTop = true
-                                // restore state when navigating to previous item
-                                restoreState = true
+                                navController.navigate(screen.route) {
+                                    // Pop up to start destination to prevent navigation stack up
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    // avoid repeated launch when same destination
+                                    launchSingleTop = true
+                                    // restore state when navigating to previous item
+                                    restoreState = true
+                                }
                             }
                         }
                     )

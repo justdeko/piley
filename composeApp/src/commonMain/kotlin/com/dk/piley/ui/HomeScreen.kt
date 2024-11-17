@@ -62,7 +62,7 @@ fun HomeScreen(
     onFinishActivity: () -> Unit = {},
 ) {
     val homeState by viewModel.state.collectAsState()
-    val navController = rememberNavController() // TODO prevent double navigation on same location
+    val navController = rememberNavController()
     val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
     // override scaffold padding due to animated visibility bug with flicker
     val defaultNavbarPadding = 80.dp

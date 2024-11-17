@@ -4,10 +4,10 @@ import com.dk.piley.model.task.Task
 
 class NotificationManager: INotificationManager {
     override suspend fun showNotification(task: Task, pileName: String?) {
-        // TODO("Not yet implemented")
+        // do nothing
     }
 
     override fun dismiss(taskId: Long) {
-        // TODO("Not yet implemented")
+        // do nothing
     }
 }

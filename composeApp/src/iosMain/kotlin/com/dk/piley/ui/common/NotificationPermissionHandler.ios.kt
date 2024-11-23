@@ -26,12 +26,12 @@ actual fun NotificationPermissionHandler(
                 notificationCenter.requestAuthorizationWithOptions(NOTIFICATION_PERMISSIONS) { isGranted, _ ->
                     setPermissionGranted(isGranted)
                     if (isGranted) {
-                        setupNotificationDelegate()
+                        setupNotificationDelegate(notificationCenter)
                     }
                 }
             } else {
                 setPermissionGranted(true)
-                setupNotificationDelegate()
+                setupNotificationDelegate(notificationCenter)
             }
         }
 

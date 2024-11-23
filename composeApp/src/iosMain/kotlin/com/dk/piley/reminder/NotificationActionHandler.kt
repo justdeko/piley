@@ -20,7 +20,6 @@ class NotificationActionHandler {
     private val userRepository: UserRepository by lazy { Piley.getModule().userRepository }
     private val navigationEventRepository: NavigationEventRepository by lazy { Piley.getModule().navigationEventRepository }
 
-    // TODO fix this not working when app is killed
     @OptIn(DelicateCoroutinesApi::class)
     fun handleNotificationAction(
         actionIdentifier: String,
@@ -46,7 +45,9 @@ class NotificationActionHandler {
             }
 
             NotificationAction.DELAY_BY -> {
-                navigationEventRepository.addNavigationEvent(NavigationEvent("${taskScreen.root}/${taskId}?delay=true"))
+                GlobalScope.launch(Dispatchers.Main) {
+                    navigationEventRepository.addNavigationEvent(NavigationEvent("${taskScreen.root}/${taskId}?delay=true"))
+                }
                 withCompletionHandler()
             }
 
@@ -64,7 +65,9 @@ class NotificationActionHandler {
 
             // if no action mapping, do default navigation to task
             else -> {
-                navigationEventRepository.addNavigationEvent(NavigationEvent("${taskScreen.root}/${taskId}"))
+                GlobalScope.launch(Dispatchers.Main) {
+                    navigationEventRepository.addNavigationEvent(NavigationEvent("${taskScreen.root}/${taskId}"))
+                }
                 withCompletionHandler()
             }
         }

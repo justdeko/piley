@@ -35,7 +35,9 @@ class NotificationDelegate : UNUserNotificationCenterDelegateProtocol, NSObject(
     }
 }
 
-fun setupNotificationDelegate() {
-    println("Setting up notification delegate")
-    UNUserNotificationCenter.currentNotificationCenter().delegate = Piley.notificationDelegate
+fun setupNotificationDelegate(notificationCenter: UNUserNotificationCenter) {
+    if (notificationCenter.delegate == null) {
+        println("setting up notification delegate on reminder setup")
+        notificationCenter.delegate = Piley.notificationDelegate
+    }
 }

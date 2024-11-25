@@ -8,7 +8,7 @@ import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.reminder.DelayRange
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -26,9 +26,13 @@ class SettingsViewModel(
     init {
         viewModelScope.launch {
             val userFlow = userRepository.getSignedInUserNotNullFlow()
+            val skipSplashScreenFlow = userRepository.getSkipSplashScreenFlow()
             collectState(
-                userFlow.map {
-                    state.value.copy(user = it)
+                userFlow.combine(skipSplashScreenFlow) { user, skipSplashScreen ->
+                    state.value.copy(
+                        user = user,
+                        skipSplashScreen = skipSplashScreen
+                    )
                 }
             )
         }
@@ -53,6 +57,17 @@ class SettingsViewModel(
     fun updateDynamicColorEnabled(enabled: Boolean) {
         viewModelScope.launch {
             userRepository.insertUser(state.value.user.copy(dynamicColorOn = enabled))
+        }
+    }
+
+    /**
+     * Update skip splash screen setting
+     *
+     * @param skip whether the splash screen should be skipped
+     */
+    fun updateSkipSplashScreen(skip: Boolean) {
+        viewModelScope.launch {
+            userRepository.setSkipSplashScreen(skip)
         }
     }
 
@@ -205,6 +220,7 @@ data class SettingsViewState(
     val loading: Boolean = false,
     val message: StatusMessage? = null,
     val userDeleted: Boolean = false,
+    val skipSplashScreen: Boolean = false,
 )
 
 enum class StatusMessage {

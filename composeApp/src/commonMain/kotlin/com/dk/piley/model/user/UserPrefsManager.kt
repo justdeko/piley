@@ -19,6 +19,7 @@ class UserPrefsManager(
     private val signedInUserKey = stringPreferencesKey("signed_in_user_id")
     private val hasSeenTutorialKey = booleanPreferencesKey("tutorial_shown")
     private val tasksDeletedKey = booleanPreferencesKey("tasksDeleted")
+    private val skipSplashScreenKey = booleanPreferencesKey("skip_splash_screen")
 
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUserKey] = email
@@ -32,6 +33,10 @@ class UserPrefsManager(
         prefs[tasksDeletedKey] = tasksDeleted
     }
 
+    suspend fun setSkipSplashScreen(skip: Boolean) = userPrefs.edit { prefs ->
+        prefs[skipSplashScreenKey] = skip
+    }
+
     fun getUserPrefsEmail(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[signedInUserKey] ?: "" }
 
@@ -40,4 +45,7 @@ class UserPrefsManager(
 
     fun getTasksDeleted(): Flow<Boolean> =
         userPrefs.data.map { prefs -> prefs[tasksDeletedKey] ?: false }
+
+    fun getSkipSplashScreen(): Flow<Boolean> =
+        userPrefs.data.map { prefs -> prefs[skipSplashScreenKey] ?: false }
 }

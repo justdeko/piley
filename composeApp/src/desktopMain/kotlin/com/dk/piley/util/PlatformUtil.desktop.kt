@@ -12,3 +12,5 @@ actual fun getVersionName(): String {
 }
 
 const val VERSION_NUMBER = "0.7.0"
+
+actual val appPlatform: Platform = Platform.DESKTOP

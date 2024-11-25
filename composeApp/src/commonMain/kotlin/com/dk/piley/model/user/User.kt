@@ -37,5 +37,5 @@ data class User(
     @ColumnInfo(defaultValue = "Minute")
     val defaultReminderDelayRange: DelayRange = DelayRange.Minute,
     @ColumnInfo(defaultValue = "0")
-    val defaultReminderDelayIndex: Int = 0
+    val defaultReminderDelayIndex: Int = 0,
 )

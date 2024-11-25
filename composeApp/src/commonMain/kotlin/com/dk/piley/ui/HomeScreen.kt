@@ -56,7 +56,8 @@ fun HomeScreen(
         HomeViewModel(
             taskRepository = Piley.getModule().taskRepository,
             notificationRepository = Piley.getModule().notificationRepository,
-            navigationEventRepository = Piley.getModule().navigationEventRepository
+            navigationEventRepository = Piley.getModule().navigationEventRepository,
+            userRepository = Piley.getModule().userRepository
         )
     },
     onFinishActivity: () -> Unit = {},
@@ -107,7 +108,9 @@ fun HomeScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
-        NavHost(navController, startDestination = Screen.Splash.route) {
+        val startDestination =
+            if (homeState.skipSplashScreen) Screen.Pile.route else Screen.Splash.route
+        NavHost(navController, startDestination = startDestination) {
             composable(Screen.Splash.route) {
                 SplashScreen(navController = navController)
             }

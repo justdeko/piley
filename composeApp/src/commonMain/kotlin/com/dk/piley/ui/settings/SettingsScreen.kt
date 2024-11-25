@@ -35,6 +35,8 @@ import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.reminder.DelaySelection
 import com.dk.piley.util.IndefiniteProgressBar
+import com.dk.piley.util.Platform
+import com.dk.piley.util.appPlatform
 import com.dk.piley.util.navigateClearBackstack
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringArrayResource
@@ -67,6 +69,8 @@ import piley.composeapp.generated.resources.settings_section_piles_title
 import piley.composeapp.generated.resources.settings_section_user_title
 import piley.composeapp.generated.resources.show_recurring_tasks_setting_description
 import piley.composeapp.generated.resources.show_recurring_tasks_setting_title
+import piley.composeapp.generated.resources.skip_splash_screen_setting_description
+import piley.composeapp.generated.resources.skip_splash_screen_setting_title
 import piley.composeapp.generated.resources.start_tutorial_setting_description
 import piley.composeapp.generated.resources.start_tutorial_setting_title
 import piley.composeapp.generated.resources.update_user_error_wrong_password
@@ -123,6 +127,7 @@ fun SettingsScreen(
         viewState = viewState,
         onNightModeChange = { viewModel.updateNightMode(it) },
         onDynamicColorChange = { viewModel.updateDynamicColorEnabled(it) },
+        onSkipSplashScreen = { viewModel.updateSkipSplashScreen(it) },
         onPileModeChange = { viewModel.updateDefaultPileMode(it) },
         onResetPileModes = { viewModel.onResetPileModes() },
         onAutoHideKeyboardChange = { viewModel.updateHideKeyboardEnabled(it) },
@@ -142,6 +147,7 @@ fun SettingsScreen(
  * @param viewState settings view state
  * @param onNightModeChange on change night mode setting
  * @param onDynamicColorChange on change dynamic color enabled setting
+ * @param onSkipSplashScreen on change skip splash screen setting
  * @param onPileModeChange on change default pile mode setting
  * @param onResetPileModes on reset pile modes for all piles to free
  * @param onAutoHideKeyboardChange on change auto hide keyboard enabled setting
@@ -158,6 +164,7 @@ internal fun SettingsScreen(
     viewState: SettingsViewState,
     onNightModeChange: (NightMode) -> Unit = {},
     onDynamicColorChange: (Boolean) -> Unit = {},
+    onSkipSplashScreen: (Boolean) -> Unit = {},
     onPileModeChange: (PileMode) -> Unit = {},
     onResetPileModes: () -> Unit = {},
     onAutoHideKeyboardChange: (Boolean) -> Unit = {},
@@ -233,11 +240,19 @@ internal fun SettingsScreen(
                             onNightModeChange(NightMode.fromValue(nightModeValues.indexOf(it)))
                         }
                     )
+                    if (appPlatform == Platform.ANDROID) {
+                        SwitchSettingsItem(
+                            title = stringResource(Res.string.dynamic_color_enabled_setting_title),
+                            description = stringResource(Res.string.dynamic_color_enabled_setting_description),
+                            value = viewState.user.dynamicColorOn,
+                            onValueChange = onDynamicColorChange
+                        )
+                    }
                     SwitchSettingsItem(
-                        title = stringResource(Res.string.dynamic_color_enabled_setting_title),
-                        description = stringResource(Res.string.dynamic_color_enabled_setting_description),
-                        value = viewState.user.dynamicColorOn,
-                        onValueChange = onDynamicColorChange
+                        title = stringResource(Res.string.skip_splash_screen_setting_title),
+                        description = stringResource(Res.string.skip_splash_screen_setting_description),
+                        value = viewState.skipSplashScreen,
+                        onValueChange = onSkipSplashScreen
                     )
                 }
                 HorizontalDivider()

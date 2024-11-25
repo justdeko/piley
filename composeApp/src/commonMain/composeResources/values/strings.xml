@@ -112,6 +112,8 @@
     <string name="night_mode_enabled_setting_option_label">Night Mode</string>
     <string name="dynamic_color_enabled_setting_title">Dynamic Color enabled</string>
     <string name="dynamic_color_enabled_setting_description">Set whether dynamic color is enabled.</string>
+    <string name="skip_splash_screen_setting_title">Skip Splash Screen</string>
+    <string name="skip_splash_screen_setting_description">Skip the splash screen on app start.</string>
 
     <!-- piles settings section-->
     <string name="settings_section_piles_title">Piles</string>

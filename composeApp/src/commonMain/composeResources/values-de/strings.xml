@@ -50,6 +50,8 @@
     <string name="night_mode_enabled_setting_option_label">Nachtmodus</string>
     <string name="dynamic_color_enabled_setting_title">Dynamisches Theming</string>
     <string name="dynamic_color_enabled_setting_description">Einstellen, ob dynamisches Theming aktiviert ist.</string>
+    <string name="skip_splash_screen_setting_title">Splash-Screen überspringen</string>
+    <string name="skip_splash_screen_setting_description">Einstellen, ob der Splash-Screen bei App-Start übersprungen wird.</string>
     <string name="settings_section_piles_title">Piles</string>
     <string name="default_pile_mode_setting_title">Standard-Pile-Modus</string>
     <string name="default_pile_mode_setting_description">Einstellen, was der standardmäßige Modus für das Abschließen von Tasks ist.</string>

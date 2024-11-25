@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.runBlocking
 
 /**
  * User repository for performing database operations regarding users
@@ -26,6 +27,11 @@ class UserRepository(
 
     suspend fun getTasksDeleted(): Boolean =
         userPrefsManager.getTasksDeleted().firstOrNull() ?: false
+
+    fun getSkipSplashScreen(): Boolean =
+        runBlocking { userPrefsManager.getSkipSplashScreen().firstOrNull() ?: false }
+
+    fun getSkipSplashScreenFlow(): Flow<Boolean> = userPrefsManager.getSkipSplashScreen()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getSignedInUser(): Flow<User?> =
@@ -53,5 +59,9 @@ class UserRepository(
 
     suspend fun setTasksDeleted(deleted: Boolean = false) {
         userPrefsManager.setTasksDeleted(deleted)
+    }
+
+    suspend fun setSkipSplashScreen(skip: Boolean = false) {
+        userPrefsManager.setSkipSplashScreen(skip)
     }
 }

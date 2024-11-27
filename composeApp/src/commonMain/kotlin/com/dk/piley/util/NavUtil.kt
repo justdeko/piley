@@ -1,6 +1,9 @@
 package com.dk.piley.util
 
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import com.dk.piley.ui.nav.Screen
 
 /**
  * Navigate to route and clear navigation backstack
@@ -24,3 +27,9 @@ fun NavController.navigateClearBackstack(route: String) = navigate(route) {
  */
 fun String.withArgument(argument: String, value: String): String =
     replace("{$argument}", value)
+
+fun Screen.isCurrentDestination(navDestination: NavDestination?): Boolean {
+    return navDestination?.hierarchy?.any {
+        it.route?.contains(route) ?: false
+    } == true
+}

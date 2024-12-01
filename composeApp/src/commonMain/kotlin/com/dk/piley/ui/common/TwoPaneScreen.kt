@@ -11,14 +11,14 @@ import androidx.window.core.layout.WindowWidthSizeClass
 @Composable
 fun TwoPaneScreen(
     modifier: Modifier = Modifier,
-    masterContent: @Composable () -> Unit,
+    mainContent: @Composable () -> Unit,
     detailContent: @Composable () -> Unit
 ) {
     val isTabletWide =
         currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
     Row(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
-            masterContent()
+            mainContent()
         }
         if (isTabletWide) {
             Column(modifier = Modifier.weight(1f)) {

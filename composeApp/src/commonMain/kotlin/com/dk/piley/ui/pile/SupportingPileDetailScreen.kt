@@ -2,6 +2,8 @@ package com.dk.piley.ui.pile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.dk.piley.model.pile.PileWithTasks
@@ -21,7 +23,7 @@ import com.dk.piley.util.getUpcomingTasks
 fun SupportingPileDetailScreen(
     pile: PileWithTasks,
 ) {
-    Column {
+    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         PileStatistics(
             doneCount = pile.tasks.count { it.status == TaskStatus.DONE },
             deletedCount = pile.pile.deletedCount,

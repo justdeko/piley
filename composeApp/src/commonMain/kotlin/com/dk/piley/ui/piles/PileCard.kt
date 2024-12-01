@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ReplayCircleFilled
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
@@ -141,6 +142,22 @@ fun PileCard(
                                     contentDescription = "completed tasks",
                                     tint = MaterialTheme.colorScheme.tertiary
                                 )
+                            }
+                            val recurringTasks = pileWithTasks.tasks.count { it.isRecurring }
+                            if (recurringTasks > 0) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        textAlign = TextAlign.End,
+                                        text = "$recurringTasks"
+                                    )
+                                    TinySpacer()
+                                    Icon(
+                                        modifier = Modifier.scale(0.8f),
+                                        imageVector = Icons.Filled.ReplayCircleFilled,
+                                        contentDescription = "recurring tasks",
+                                        tint = MaterialTheme.colorScheme.tertiary
+                                    )
+                                }
                             }
                         }
                     }

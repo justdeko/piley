@@ -52,6 +52,7 @@ import com.dk.piley.Piley
 import com.dk.piley.model.task.Task
 import com.dk.piley.reminder.getNextReminderTime
 import com.dk.piley.ui.common.LocalDim
+import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.util.dateTimeString
@@ -122,31 +123,36 @@ fun PileScreen(
         }
     }
 
-    PileScreen(
-        modifier = modifier,
-        shownTasks = shownTasks,
-        viewState = viewState,
-        taskTransitionStates = taskTransitionStates,
-        selectedPileIndex = selectedPileViewState,
-        onDone = { viewModel.done(it) },
-        onDelete = {
-            coroutineScope.launch {
-                viewModel.delete(it)
-                viewModel.setMessage(
-                    MessageWithAction(
-                        message = getString(Res.string.task_deleted_message),
-                        actionText = getString(Res.string.undo_task_deleted),
-                        duration = SnackbarDuration.Short
-                    ) { viewModel.undoDelete(it) }
-                )
-            }
+    TwoPaneScreen(
+        masterContent = {
+            PileScreen(
+                modifier = modifier,
+                shownTasks = shownTasks,
+                viewState = viewState,
+                taskTransitionStates = taskTransitionStates,
+                selectedPileIndex = selectedPileViewState,
+                onDone = { viewModel.done(it) },
+                onDelete = {
+                    coroutineScope.launch {
+                        viewModel.delete(it)
+                        viewModel.setMessage(
+                            MessageWithAction(
+                                message = getString(Res.string.task_deleted_message),
+                                actionText = getString(Res.string.undo_task_deleted),
+                                duration = SnackbarDuration.Short
+                            ) { viewModel.undoDelete(it) }
+                        )
+                    }
+                },
+                onAdd = { viewModel.add(it) },
+                onClick = { navController.navigate(taskScreen.root + "/" + it.id) },
+                onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
+                onSetMessage = { viewModel.setMessage(it) },
+                onToggleRecurring = { viewModel.setShowRecurring(it) },
+                onClickTitle = { navController.navigate(pileScreen.root + "/" + viewState.pileWithTasks.pile.pileId) }
+            )
         },
-        onAdd = { viewModel.add(it) },
-        onClick = { navController.navigate(taskScreen.root + "/" + it.id) },
-        onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
-        onSetMessage = { viewModel.setMessage(it) },
-        onToggleRecurring = { viewModel.setShowRecurring(it) },
-        onClickTitle = { navController.navigate(pileScreen.root + "/" + viewState.pile.pileId) }
+        detailContent = { SupportingPileDetailScreen(pile = viewState.pileWithTasks) }
     )
 }
 
@@ -221,7 +227,7 @@ private fun PileScreen(
                     .fillMaxSize()
                     .offset(pileOffset.value.dp, 0.dp),
                 tasks = shownTasks,
-                pileMode = viewState.pile.pileMode,
+                pileMode = viewState.pileWithTasks.pile.pileMode,
                 taskTransitionStates = taskTransitionStates,
                 onDone = {
                     coroutineScope.launch {
@@ -279,8 +285,9 @@ private fun PileScreen(
                         if (taskTextValue.text.isNotBlank()) {
                             // if pile limit is not 0 (infinite) and task count above pile limit, don't add
                             if (
-                                viewState.pile.pileLimit > 0
-                                && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
+                                viewState.pileWithTasks.pile.pileLimit > 0
+                                && (viewState.tasks?.size
+                                    ?: 0) >= viewState.pileWithTasks.pile.pileLimit
                             ) {
                                 onSetMessage(MessageWithAction(getString(Res.string.pile_full_warning)))
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)

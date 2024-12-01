@@ -1,6 +1,5 @@
 [versions]
 adaptive = "1.0.1"
-adaptiveLayout = "1.0.0-alpha03"
 agp = "8.7.2"
 datastorePreferences = "1.1.1"
 kotlin = "2.1.0"
@@ -18,8 +17,6 @@ sqliteBundled = "2.5.0-alpha11"
 
 [libraries]
 adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "adaptiveLayout" }
-adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptiveLayout" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

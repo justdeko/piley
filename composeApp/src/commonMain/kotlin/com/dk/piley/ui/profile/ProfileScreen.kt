@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +36,6 @@ import com.dk.piley.util.SlideDirection
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.no_pile
-import piley.composeapp.generated.resources.upcoming_tasks_section_title
 import piley.composeapp.generated.resources.user_statistics_section_title
 
 
@@ -165,16 +163,11 @@ private fun ProfileScreen(
                     )
                 }
                 MediumSpacer()
-                ProfileSection(
-                    title = stringResource(Res.string.upcoming_tasks_section_title),
-                    icon = Icons.Default.Upcoming
-                ) {
-                    UpcomingTasksList(
-                        modifier = Modifier.fillMaxWidth(),
-                        pileNameTaskList = viewState.upcomingTaskList,
-                        onTaskClick = onUpcomingTaskClick
-                    )
-                }
+                UpcomingTasksSection(
+                    modifier = Modifier.fillMaxWidth(),
+                    pileNameTaskList = viewState.upcomingTaskList,
+                    onTaskClick = onUpcomingTaskClick
+                )
                 MediumSpacer()
             }
         }

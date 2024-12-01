@@ -35,6 +35,7 @@ import piley.composeapp.generated.resources.statistics_section_title
  * @param currentCount current tasks in pile count
  * @param completedTaskCounts 7-day list of completed task frequencies
  * @param currentDay current date of today
+ * @param clearStatisticsVisible whether the clear statistics button is visible
  * @param onClearStatistics on clear pile statistics
  * @param initialGraphTransitionValue initial graph animation transition value
  */
@@ -46,6 +47,7 @@ fun PileStatistics(
     currentCount: Int = 0,
     completedTaskCounts: List<Int> = emptyList(),
     currentDay: LocalDate = Clock.System.now().toLocalDateTime().date,
+    clearStatisticsVisible: Boolean = true,
     onClearStatistics: () -> Unit = {},
     initialGraphTransitionValue: Boolean = true
 ) {
@@ -63,13 +65,15 @@ fun PileStatistics(
                 title = stringResource(Res.string.statistics_section_title),
                 icon = Icons.Default.BarChart
             )
-            TextButton(
-                onClick = onClearStatistics,
-                colors = ButtonDefaults.textButtonColors(
-                    contentColor = MaterialTheme.colorScheme.tertiary
-                )
-            ) {
-                Text(stringResource(Res.string.clear_statistics_button_text))
+            if (clearStatisticsVisible) {
+                TextButton(
+                    onClick = onClearStatistics,
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.tertiary
+                    )
+                ) {
+                    Text(stringResource(Res.string.clear_statistics_button_text))
+                }
             }
         }
         TaskStats(

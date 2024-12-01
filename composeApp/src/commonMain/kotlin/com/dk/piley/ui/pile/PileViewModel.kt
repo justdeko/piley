@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
@@ -83,7 +84,7 @@ class PileViewModel(
                             .find { it.pile.pileId == selectedPileId }
                             ?.let { pileWithTasks ->
                                 state.value.copy(
-                                    pile = pileWithTasks.pile,
+                                    pileWithTasks = pileWithTasks,
                                     // only show non-completed tasks and non-deleted recurring tasks
                                     tasks = pileWithTasks.tasks.filter { task ->
                                         (task.status == TaskStatus.DEFAULT)
@@ -114,7 +115,7 @@ class PileViewModel(
             taskRepository.insertTaskWithStatus(
                 Task(
                     title = text.trim(),
-                    pileId = state.value.pile.pileId,
+                    pileId = state.value.pileWithTasks.pile.pileId,
                     createdAt = Clock.System.now(),
                     modifiedAt = Clock.System.now()
                 )
@@ -186,7 +187,7 @@ class PileViewModel(
 }
 
 data class PileViewState(
-    val pile: Pile = Pile(),
+    val pileWithTasks: PileWithTasks = PileWithTasks(Pile(), emptyList()),
     val tasks: List<Task>? = null,
     val autoHideEnabled: Boolean = true,
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),

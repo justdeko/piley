@@ -28,6 +28,7 @@ import com.dk.piley.Piley
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
+import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.defaultPadding
@@ -141,7 +142,6 @@ fun PileDetailScreen(
         modifier = modifier
             .fillMaxSize()
             .defaultPadding()
-            .verticalScroll(scrollState)
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
@@ -149,7 +149,7 @@ fun PileDetailScreen(
             },
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().weight(1f)) {
             TitleTopAppBar(
                 textValue = viewState.titleTextValue,
                 onEdit = onEditTitle,
@@ -157,22 +157,41 @@ fun PileDetailScreen(
                 contentDescription = "close the pile detail",
                 onButtonClick = onClose
             )
-            EditDescriptionField(value = viewState.descriptionTextValue,
-                onChange = { onEditDescription(it) }
-            )
-            PileStatistics(
-                doneCount = viewState.doneCount,
-                deletedCount = viewState.deletedCount,
-                currentCount = viewState.currentCount,
-                completedTaskCounts = viewState.completedTaskCounts,
-                currentDay = today,
-                onClearStatistics = { dialogOpen = true },
-                initialGraphTransitionValue = initialStatisticsGraphTransitionValue
-            )
-            PileDetailSettings(
-                viewState = viewState,
-                onSetPileMode = onSetPileMode,
-                onSetPileLimit = onSetPileLimit
+            TwoPaneScreen(
+                mainContent = { isTablet ->
+                    Column(Modifier.verticalScroll(rememberScrollState())) {
+                        EditDescriptionField(value = viewState.descriptionTextValue,
+                            onChange = { onEditDescription(it) }
+                        )
+                        PileStatistics(
+                            doneCount = viewState.doneCount,
+                            deletedCount = viewState.deletedCount,
+                            currentCount = viewState.currentCount,
+                            completedTaskCounts = viewState.completedTaskCounts,
+                            currentDay = today,
+                            onClearStatistics = { dialogOpen = true },
+                            initialGraphTransitionValue = initialStatisticsGraphTransitionValue
+                        )
+                        if (!isTablet) {
+                            PileDetailSettings(
+                                viewState = viewState,
+                                onSetPileMode = onSetPileMode,
+                                onSetPileLimit = onSetPileLimit
+                            )
+                        }
+                    }
+                },
+                detailContent = {
+                    val expandedState = remember { mutableStateOf(true) }
+                    Column(Modifier.verticalScroll(rememberScrollState())) {
+                        PileDetailSettings(
+                            viewState = viewState,
+                            onSetPileMode = onSetPileMode,
+                            onSetPileLimit = onSetPileLimit,
+                            expandedState = expandedState
+                        )
+                    }
+                }
             )
         }
         Button(

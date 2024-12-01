@@ -1,7 +1,8 @@
 package com.dk.piley.ui
 
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -26,8 +28,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.dk.piley.Piley
 import com.dk.piley.ui.intro.IntroScreen
-import com.dk.piley.ui.nav.BottomNavigationBar
 import com.dk.piley.ui.nav.DEEPLINK_ROOT
+import com.dk.piley.ui.nav.NavigationBar
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.navItems
 import com.dk.piley.ui.nav.pileScreen
@@ -39,7 +41,6 @@ import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.splash.SplashScreen
 import com.dk.piley.ui.task.TaskDetailScreen
-import com.dk.piley.util.defaultNavBarPadding
 
 
 /**
@@ -64,13 +65,13 @@ fun HomeScreen(
 ) {
     val homeState by viewModel.state.collectAsState()
     val navController = rememberNavController()
-    val navigationBarShown = rememberSaveable { (mutableStateOf(false)) }
+    var navigationBarShown by rememberSaveable { (mutableStateOf(false)) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     // hide navigation bar on screens that are not in the main view
-    navigationBarShown.value = navItems.map { it.route }
+    navigationBarShown = navItems.map { it.route }
         .any { navBackStackEntry?.destination?.route?.contains(it) ?: false }
 
     // display initial message if not null
@@ -101,79 +102,78 @@ fun HomeScreen(
             else Modifier.windowInsetsPadding(WindowInsets.statusBars) // TODO fix this for ios with box and surfaceContainer color on the lower bottom half
         ),
         containerColor = MaterialTheme.colorScheme.background,
-        bottomBar = {
-            BottomNavigationBar(
-                isVisible = navigationBarShown.value, navController = navController
-            )
-        },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         val startDestination =
             if (homeState.skipSplashScreen) Screen.Pile.route else Screen.Splash.route
-        NavHost(navController, startDestination = startDestination) {
-            composable(Screen.Splash.route) {
-                SplashScreen(navController = navController)
-            }
-            composable(route = Screen.Intro.route, arguments = Screen.Intro.optionalArguments) {
-                IntroScreen(navController = navController)
-            }
-            composable(
-                "${Screen.Pile.route}?${Screen.Pile.argument}={${Screen.Pile.argument}}",
-                arguments = listOf(navArgument(Screen.Pile.argument) {
-                    type = NavType.LongType
-                    defaultValue = -1L // default value representing no pile passed
-                })
-            ) {
-                PileScreen(
-                    // override scaffold padding due to animated visibility bug with flicker
-                    modifier = Modifier.padding(bottom = defaultNavBarPadding),
-                    navController = navController, // TODO: don't pass navController
-                    snackbarHostState = snackbarHostState
-                )
-            }
-            composable(Screen.Piles.route) {
-                PileOverviewScreen(
-                    modifier = Modifier.padding(bottom = defaultNavBarPadding),
-                    navController = navController
-                )
-            }
-            composable(Screen.Profile.route) {
-                ProfileScreen(
-                    modifier = Modifier.padding(bottom = defaultNavBarPadding),
-                    navController = navController,
-                    snackbarHostState = snackbarHostState
-                )
-            }
-            composable(Screen.Settings.route) {
-                SettingsScreen(
-                    navController = navController,
-                    snackbarHostState = snackbarHostState
-                )
-            }
-            composable(
-                taskScreen.route,
-                deepLinks = listOf(navDeepLink {
-                    uriPattern = "$DEEPLINK_ROOT/${taskScreen.route}"
-                }),
-                arguments = listOf(navArgument(taskScreen.identifier) {
-                    type = NavType.LongType
-                }) + taskScreen.optionalArguments
-            ) {
-                TaskDetailScreen(
-                    navController = navController,
-                    onFinish = onFinishActivity
-                )
-            }
-            composable(
-                pileScreen.route,
-                deepLinks = listOf(navDeepLink {
-                    uriPattern = "$DEEPLINK_ROOT/${pileScreen.route}"
-                }),
-                arguments = listOf(navArgument(pileScreen.identifier) { type = NavType.LongType })
-            ) {
-                PileDetailScreen(
-                    navController = navController
-                )
+        NavigationBar(
+            modifier = Modifier.fillMaxSize().consumeWindowInsets(padding),
+            isVisible = navigationBarShown,
+            navController = navController
+        ) {
+            NavHost(navController, startDestination = startDestination) {
+                composable(Screen.Splash.route) {
+                    SplashScreen(navController = navController)
+                }
+                composable(route = Screen.Intro.route, arguments = Screen.Intro.optionalArguments) {
+                    IntroScreen(navController = navController)
+                }
+                composable(
+                    "${Screen.Pile.route}?${Screen.Pile.argument}={${Screen.Pile.argument}}",
+                    arguments = listOf(navArgument(Screen.Pile.argument) {
+                        type = NavType.LongType
+                        defaultValue = -1L // default value representing no pile passed
+                    })
+                ) {
+                    PileScreen(
+                        navController = navController, // TODO: don't pass navController
+                        snackbarHostState = snackbarHostState
+                    )
+                }
+                composable(Screen.Piles.route) {
+                    PileOverviewScreen(
+                        navController = navController
+                    )
+                }
+                composable(Screen.Profile.route) {
+                    ProfileScreen(
+                        navController = navController,
+                        snackbarHostState = snackbarHostState
+                    )
+                }
+                composable(Screen.Settings.route) {
+                    SettingsScreen(
+                        navController = navController,
+                        snackbarHostState = snackbarHostState
+                    )
+                }
+                composable(
+                    taskScreen.route,
+                    deepLinks = listOf(navDeepLink {
+                        uriPattern = "$DEEPLINK_ROOT/${taskScreen.route}"
+                    }),
+                    arguments = listOf(navArgument(taskScreen.identifier) {
+                        type = NavType.LongType
+                    }) + taskScreen.optionalArguments
+                ) {
+                    TaskDetailScreen(
+                        navController = navController,
+                        onFinish = onFinishActivity
+                    )
+                }
+                composable(
+                    pileScreen.route,
+                    deepLinks = listOf(navDeepLink {
+                        uriPattern = "$DEEPLINK_ROOT/${pileScreen.route}"
+                    }),
+                    arguments = listOf(navArgument(pileScreen.identifier) {
+                        type = NavType.LongType
+                    })
+                ) {
+                    PileDetailScreen(
+                        navController = navController
+                    )
+                }
             }
         }
     }

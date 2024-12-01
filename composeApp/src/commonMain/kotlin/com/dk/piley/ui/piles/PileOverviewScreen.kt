@@ -35,6 +35,7 @@ import com.dk.piley.Piley
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.pileScreen
+import com.dk.piley.util.isTabletWide
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.add_pile_button
@@ -106,6 +107,7 @@ fun PileOverviewScreen(
     onPileLongClick: (Long) -> Unit = {}
 ) {
     val gridState = rememberLazyStaggeredGridState()
+    val isTabletWide = isTabletWide()
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
     val expandedFab by remember {
         derivedStateOf {
@@ -142,7 +144,7 @@ fun PileOverviewScreen(
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.fillMaxSize(),
                 state = gridState,
-                columns = StaggeredGridCells.Adaptive(150.dp),
+                columns = StaggeredGridCells.Adaptive(if (isTabletWide) 200.dp else 150.dp),
             ) {
                 itemsIndexed(
                     viewState.piles,
@@ -150,6 +152,7 @@ fun PileOverviewScreen(
                 ) { index, pileWithTasks ->
                     PileCard(
                         modifier = Modifier.animateItem(),
+                        expandedMode = isTabletWide,
                         pileWithTasks = pileWithTasks,
                         onSelectPile = onSelectPile,
                         selected = viewState.selectedPileId == pileWithTasks.pile.pileId,

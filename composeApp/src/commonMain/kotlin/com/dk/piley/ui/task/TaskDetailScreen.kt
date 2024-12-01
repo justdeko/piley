@@ -3,6 +3,7 @@ package com.dk.piley.ui.task
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
@@ -32,6 +33,7 @@ import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.NotificationPermissionHandler
 import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoButtonRow
+import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.reminder.DelayBottomSheet
 import com.dk.piley.util.AlertDialogHelper
 import com.dk.piley.util.dateTimeString
@@ -140,7 +142,6 @@ fun TaskDetailScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     val delaySheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showDelaySheet by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
     var completeRecurringDialogOpen by remember { mutableStateOf(false) }
     var confirmDeleteDialogOpen by remember { mutableStateOf(false) }
     var notificationPermissionGranted by remember { mutableStateOf(false) }
@@ -238,43 +239,61 @@ fun TaskDetailScreen(
             },
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(scrollState)
-        ) {
-            TitleTopAppBar(
-                textValue = viewState.titleTextValue,
-                canDeleteOrEdit = true,
-                onEdit = onEditTitle,
-                contentDescription = "close the task detail",
-                onButtonClick = onClose
-            )
-            EditDescriptionField(
-                value = viewState.descriptionTextValue,
-                onChange = {
-                    onEditDesc(it)
+        TwoPaneScreen(
+            modifier = Modifier.weight(1f),
+            mainContent = { isTablet ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    TitleTopAppBar(
+                        textValue = viewState.titleTextValue,
+                        canDeleteOrEdit = true,
+                        onEdit = onEditTitle,
+                        contentDescription = "close the task detail",
+                        onButtonClick = onClose
+                    )
+                    EditDescriptionField(
+                        value = viewState.descriptionTextValue,
+                        onChange = {
+                            onEditDesc(it)
+                        }
+                    )
+                    ReminderInfo(
+                        reminderDateTimeText = viewState.reminderDateTimeText,
+                        onAddReminder = { showBottomSheet = true },
+                        addReminderButtonEnabled = !isTablet,
+                        isRecurring = viewState.task.isRecurring,
+                        recurringTimeRange = viewState.task.recurringTimeRange,
+                        recurringFrequency = viewState.task.recurringFrequency
+                    )
+                    TaskInfo(
+                        modifier = Modifier.fillMaxWidth(),
+                        task = viewState.task
+                    )
+                    SelectedPile(
+                        pileNames = viewState.piles.map { it.second },
+                        selectedPileIndex = viewState.selectedPileIndex,
+                        onSelect = onSelectPile
+                    )
                 }
-            )
-            ReminderInfo(
-                reminderDateTimeText = viewState.reminderDateTimeText,
-                onAddReminder = { showBottomSheet = true },
-                isRecurring = viewState.task.isRecurring,
-                recurringTimeRange = viewState.task.recurringTimeRange,
-                recurringFrequency = viewState.task.recurringFrequency
-            )
-            TaskInfo(
-                modifier = Modifier.fillMaxWidth(),
-                task = viewState.task
-            )
-            SelectedPile(
-                pileNames = viewState.piles.map { it.second },
-                selectedPileIndex = viewState.selectedPileIndex,
-                onSelect = onSelectPile
-            )
-        }
+            },
+            detailContent = {
+                AddReminderContent(
+                    modifier = Modifier.fillMaxHeight().verticalScroll(rememberScrollState()),
+                    onAddReminder = onAddReminder,
+                    onDeleteReminder = onCancelReminder,
+                    initialDateTime = viewState.task.reminder?.toLocalDateTime(),
+                    isRecurring = viewState.task.isRecurring,
+                    recurringTimeRange = viewState.task.recurringTimeRange,
+                    recurringFrequency = viewState.task.recurringFrequency,
+                    useNowAsReminderTime = viewState.task.nowAsReminderTime,
+                    notificationPermissionGranted = notificationPermissionGranted
+                )
+            }
+        )
         TwoButtonRow(
-            modifier = Modifier.weight(1f, false),
             onLeftClick = { confirmDeleteDialogOpen = true },
             onRightClick = {
                 // if task is recurring and reminder is in the future, show dialog first

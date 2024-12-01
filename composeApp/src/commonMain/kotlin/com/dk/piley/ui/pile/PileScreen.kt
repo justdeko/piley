@@ -52,6 +52,7 @@ import com.dk.piley.Piley
 import com.dk.piley.model.task.Task
 import com.dk.piley.reminder.getNextReminderTime
 import com.dk.piley.ui.common.LocalDim
+import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.util.dateTimeString
@@ -146,7 +147,7 @@ fun PileScreen(
         onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
         onSetMessage = { viewModel.setMessage(it) },
         onToggleRecurring = { viewModel.setShowRecurring(it) },
-        onClickTitle = { navController.navigate(pileScreen.root + "/" + viewState.pile.pileId) }
+        onClickTitle = { navController.navigate(pileScreen.root + "/" + viewState.pileWithTasks.pile.pileId) }
     )
 }
 
@@ -211,121 +212,130 @@ private fun PileScreen(
             selectedPageIndex = selectedPileIndex,
             onClickTitle = onClickTitle,
         )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            TaskPile(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .offset(pileOffset.value.dp, 0.dp),
-                tasks = shownTasks,
-                pileMode = viewState.pile.pileMode,
-                taskTransitionStates = taskTransitionStates,
-                onDone = {
-                    coroutineScope.launch {
-                        // if task is recurring, display completion message and next due date
-                        if (it.isRecurring) {
-                            onSetMessage(
-                                MessageWithAction(
-                                    getString(
-                                        Res.string.recurring_task_completed_info,
-                                        it.getNextReminderTime().toLocalDateTime().dateTimeString()
+        TwoPaneScreen(
+            mainContent = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    TaskPile(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset(pileOffset.value.dp, 0.dp),
+                        tasks = shownTasks,
+                        pileMode = viewState.pileWithTasks.pile.pileMode,
+                        taskTransitionStates = taskTransitionStates,
+                        onDone = {
+                            coroutineScope.launch {
+                                // if task is recurring, display completion message and next due date
+                                if (it.isRecurring) {
+                                    onSetMessage(
+                                        MessageWithAction(
+                                            getString(
+                                                Res.string.recurring_task_completed_info,
+                                                it.getNextReminderTime().toLocalDateTime()
+                                                    .dateTimeString()
+                                            )
+                                        )
                                     )
-                                )
+                                }
+                                onDone(it)
+                            }
+                        },
+                        onDelete = onDelete,
+                        onTaskClick = onClick
+                    )
+                    Column(Modifier.fillMaxSize()) {
+                        AnimatedVisibility(
+                            visible = viewState.tasks?.isEmpty() ?: false,
+                            enter = fadeIn(),
+                            exit = fadeOut()
+                        ) {
+                            NoTasksView(
+                                Modifier.fillMaxSize(),
+                                viewState.noTasksYet
                             )
                         }
-                        onDone(it)
                     }
-                },
-                onDelete = onDelete,
-                onTaskClick = onClick
-            )
-            Column(Modifier.fillMaxSize()) {
-                AnimatedVisibility(
-                    visible = viewState.tasks?.isEmpty() ?: false,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    NoTasksView(
-                        Modifier.fillMaxSize(),
-                        viewState.noTasksYet
-                    )
                 }
-            }
-        }
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(
-                    bottom = dim.large,
-                    start = dim.large,
-                    end = dim.large,
-                    top = dim.medium
-                ),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AddTaskField(
-                modifier = Modifier.weight(1f),
-                value = taskTextValue,
-                onChange = {
-                    if (it.text.length <= titleCharacterLimit) {
-                        taskTextValue = it
-                    }
-                },
-                onDone = {
-                    coroutineScope.launch {
-                        if (taskTextValue.text.isNotBlank()) {
-                            // if pile limit is not 0 (infinite) and task count above pile limit, don't add
-                            if (
-                                viewState.pile.pileLimit > 0
-                                && (viewState.tasks?.size ?: 0) >= viewState.pile.pileLimit
-                            ) {
-                                onSetMessage(MessageWithAction(getString(Res.string.pile_full_warning)))
-                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                coroutineScope.launch {
-                                    pileOffset.animateTo(
-                                        targetValue = 0f,
-                                        animationSpec = shakeAnimationSpec,
-                                    )
-                                }
-                            } else {
-                                onAdd(taskTextValue.text.trim())
-                                if (viewState.autoHideEnabled) {
-                                    focusManager.clearFocus()
-                                    defaultKeyboardAction(ImeAction.Done)
-                                }
-                                taskTextValue = TextFieldValue()
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            bottom = dim.large,
+                            start = dim.large,
+                            end = dim.large,
+                            top = dim.medium
+                        ),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AddTaskField(
+                        modifier = Modifier.weight(1f),
+                        value = taskTextValue,
+                        onChange = {
+                            if (it.text.length <= titleCharacterLimit) {
+                                taskTextValue = it
                             }
-                        } else {
-                            onSetMessage(MessageWithAction(getString(Res.string.task_empty_not_allowed_hint)))
+                        },
+                        onDone = {
+                            coroutineScope.launch {
+                                if (taskTextValue.text.isNotBlank()) {
+                                    // if pile limit is not 0 (infinite) and task count above pile limit, don't add
+                                    if (
+                                        viewState.pileWithTasks.pile.pileLimit > 0
+                                        && (viewState.tasks?.size
+                                            ?: 0) >= viewState.pileWithTasks.pile.pileLimit
+                                    ) {
+                                        onSetMessage(MessageWithAction(getString(Res.string.pile_full_warning)))
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        coroutineScope.launch {
+                                            pileOffset.animateTo(
+                                                targetValue = 0f,
+                                                animationSpec = shakeAnimationSpec,
+                                            )
+                                        }
+                                    } else {
+                                        onAdd(taskTextValue.text.trim())
+                                        if (viewState.autoHideEnabled) {
+                                            focusManager.clearFocus()
+                                            defaultKeyboardAction(ImeAction.Done)
+                                        }
+                                        taskTextValue = TextFieldValue()
+                                    }
+                                } else {
+                                    onSetMessage(MessageWithAction(getString(Res.string.task_empty_not_allowed_hint)))
+                                }
+                            }
+                        }
+                    )
+                    // show recurring tasks filter only if there are recurring tasks
+                    AnimatedVisibility(viewState.tasks?.any { it.isRecurring } == true) {
+                        IconToggleButton(
+                            checked = viewState.showRecurring,
+                            onCheckedChange = onToggleRecurring
+                        ) {
+                            if (viewState.showRecurring) {
+                                Icon(
+                                    Icons.Default.AccessTimeFilled,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    contentDescription = "toggle recurring tasks"
+                                )
+                            } else {
+                                Icon(
+                                    Icons.Outlined.AccessTime,
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    contentDescription = "toggle recurring tasks"
+                                )
+                            }
                         }
                     }
                 }
-            )
-            // show recurring tasks filter only if there are recurring tasks
-            AnimatedVisibility(viewState.tasks?.any { it.isRecurring } == true) {
-                IconToggleButton(
-                    checked = viewState.showRecurring,
-                    onCheckedChange = onToggleRecurring
-                ) {
-                    if (viewState.showRecurring) {
-                        Icon(
-                            Icons.Default.AccessTimeFilled,
-                            tint = MaterialTheme.colorScheme.primary,
-                            contentDescription = "toggle recurring tasks"
-                        )
-                    } else {
-                        Icon(
-                            Icons.Outlined.AccessTime,
-                            tint = MaterialTheme.colorScheme.secondary,
-                            contentDescription = "toggle recurring tasks"
-                        )
-                    }
-                }
+            },
+            detailContent = {
+                SupportingPileDetailScreen(viewState.pileWithTasks)
             }
-        }
+        )
     }
 }
 

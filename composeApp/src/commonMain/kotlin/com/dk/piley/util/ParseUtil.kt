@@ -65,8 +65,9 @@ fun LocalDateTime.dateTimeStringNewLine(): String {
 /**
  * Convert [LocalTime] entity to string
  *
- * @return localized time string
+ * @return time string with format "HH:mm"
  */
+// TODO consider locale
 fun LocalTime.timeString(): String {
     return this.format(LocalTime.Format { hour();char(':');minute() })
 }
@@ -74,10 +75,11 @@ fun LocalTime.timeString(): String {
 /**
  * Convert [LocalDate] entity to string
  *
- * @return localized date string
+ * @return date string with format "dd.MM.yyyy"
  */
+// TODO consider locale
 fun LocalDate.dateString(): String {
-    return this.format(LocalDate.Formats.ISO)
+    return this.format(LocalDate.Format { dayOfMonth();char('.');monthNumber();char('.');year() })
 }
 
 /**
@@ -86,10 +88,7 @@ fun LocalDate.dateString(): String {
  * @param date the starting date for the last seven days
  * @return localized list of days of week in abbreviated form
  */
-fun lastSevenDays(
-    date: LocalDate,
-    timeZone: TimeZone = TimeZone.UTC
-): List<String> = (0..6)
+fun lastSevenDays(date: LocalDate): List<String> = (0..6)
     .map {
         date.minus(it, DateTimeUnit.DAY).dayOfWeek.name.substring(0..1)
     }

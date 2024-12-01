@@ -1,5 +1,6 @@
 package com.dk.piley.util
 
+import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileWithTasks
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
@@ -60,6 +61,19 @@ fun pileFrequenciesForDatesWithZerosForLast7Days(
 fun getCompletedTasksForWeekValues(pileWithTasks: PileWithTasks): List<Int> =
     pileFrequenciesForDatesWithZerosForLast7Days(
         pileFrequenciesForDates(pileWithTasks)
+    ).values.toList().reversed()
+
+/**
+ * Get completed task counts for week values
+ *
+ * @param tasks list of tasks to calculate the completion counts for
+ * @return a list of completion frequencies for each of the past 7 days in reverse (starting with today)
+ */
+fun getCompletedTasksForWeekValues(
+    tasks: List<Task>
+): List<Int> =
+    pileFrequenciesForDatesWithZerosForLast7Days(
+        pileFrequenciesForDates(PileWithTasks(Pile(), tasks))
     ).values.toList().reversed()
 
 

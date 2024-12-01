@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.util.isCurrentDestination
+import com.dk.piley.util.isTabletWide
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -33,8 +34,9 @@ fun NavigationBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val isTabletWide = isTabletWide()
     NavigationSuiteScaffold(
-        layoutType = if (!isVisible) { // TODO on large screens, always show the navigation bar
+        layoutType = if (!isVisible && !isTabletWide) {
             NavigationSuiteType.None
         } else {
             NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())

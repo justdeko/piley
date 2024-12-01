@@ -166,7 +166,7 @@ fun PileCard(
                                     end = LocalDim.current.medium
                                 ),
                                 text = pileWithTasks.pile.description,
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = MaterialTheme.typography.bodyMedium,
                             )
                         }
                         BigSpacer()

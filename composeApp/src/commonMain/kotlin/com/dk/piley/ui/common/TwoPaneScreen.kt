@@ -2,10 +2,9 @@ package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.window.core.layout.WindowWidthSizeClass
+import com.dk.piley.util.isTabletWide
 
 // TODO see if it makes sense to replace with SupportingPaneScaffold
 @Composable
@@ -14,8 +13,7 @@ fun TwoPaneScreen(
     mainContent: @Composable () -> Unit,
     detailContent: @Composable () -> Unit
 ) {
-    val isTabletWide =
-        currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
+    val isTabletWide = isTabletWide()
     Row(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
             mainContent()

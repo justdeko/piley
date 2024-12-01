@@ -33,15 +33,25 @@ import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import com.dk.piley.model.pile.PileWithTasks
+import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.ui.common.LocalDim
+import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.TinySpacer
+import com.dk.piley.util.dateTimeString
+import com.dk.piley.util.getUpcomingTasks
+import com.dk.piley.util.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.no_upcoming_tasks_hint
+import piley.composeapp.generated.resources.upcoming_tasks_section_title
 
 /**
  * Pile card
  *
  * @param modifier generic modifier
  * @param pileWithTasks pile entity with tasks
+ * @param expandedMode whether the pile is in expanded mode that displays more information
  * @param selected whether this pile is selected
  * @param onSelectPile on pile selection
  * @param onClick on card click
@@ -53,6 +63,7 @@ import com.dk.piley.util.TinySpacer
 fun PileCard(
     modifier: Modifier = Modifier,
     pileWithTasks: PileWithTasks,
+    expandedMode: Boolean = false,
     selected: Boolean = false,
     onSelectPile: (Long) -> Unit = {},
     onClick: () -> Unit = {},
@@ -138,7 +149,6 @@ fun PileCard(
                             .align(Alignment.Start)
                             .padding(
                                 start = LocalDim.current.large,
-                                bottom = LocalDim.current.large,
                                 end = LocalDim.current.medium
                             ),
                         text = pileWithTasks.pile.name,
@@ -148,8 +158,62 @@ fun PileCard(
                         ),
                         color = MaterialTheme.colorScheme.onBackground,
                     )
+                    if (expandedMode) {
+                        if (pileWithTasks.pile.description.isNotBlank()) {
+                            Text(
+                                modifier = Modifier.padding(
+                                    start = LocalDim.current.large,
+                                    end = LocalDim.current.medium
+                                ),
+                                text = pileWithTasks.pile.description,
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
+                        BigSpacer()
+                        UpcomingTaskItem(
+                            modifier = Modifier.padding(
+                                start = LocalDim.current.large,
+                                end = LocalDim.current.medium
+                            ),
+                            task = getUpcomingTasks(listOf(pileWithTasks)).firstOrNull()?.second
+                        )
+                    }
+                    BigSpacer()
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun UpcomingTaskItem(
+    modifier: Modifier = Modifier,
+    task: Task?
+) {
+    Column(modifier = modifier) {
+        if (task != null) {
+            Text(
+                text = stringResource(Res.string.upcoming_tasks_section_title),
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.primary
+            )
+            TinySpacer()
+            Text(
+                text = task.title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = task.reminder?.toLocalDateTime()?.dateTimeString() ?: "",
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.secondary
+            )
+        } else {
+            Text(
+                text = stringResource(Res.string.no_upcoming_tasks_hint),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
     }
 }

@@ -155,9 +155,10 @@ fun AddReminderContent(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
+        modifier = Modifier
             .defaultPadding()
+            .then(modifier)
+            .fillMaxWidth()
     ) {
         Text(
             modifier = Modifier.align(CenterHorizontally),
@@ -241,7 +242,7 @@ fun AddReminderContent(
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button(
-                enabled = (((localTime != null && localDate != null) || (initialDateTime != null))),
+                enabled = (((localTime != null && localDate != null) || (initialDateTime != null)) && notificationPermissionGranted),
                 onClick = {
                     // if permission denied, do nothing
                     if (!notificationPermissionGranted) {

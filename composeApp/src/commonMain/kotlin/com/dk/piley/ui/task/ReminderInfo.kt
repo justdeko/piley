@@ -37,6 +37,7 @@ import piley.composeapp.generated.resources.reminder_recurring_label
  * @param recurringTimeRange time range of recurring reminder
  * @param recurringFrequency frequency of recurring reminder
  * @param onAddReminder on add reminder click
+ * @param addReminderButtonEnabled whether add reminder button is enabled
  */
 @Composable
 fun ReminderInfo(
@@ -46,6 +47,7 @@ fun ReminderInfo(
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
     onAddReminder: () -> Unit = {},
+    addReminderButtonEnabled: Boolean = true
 ) {
     val reminderSet = reminderDateTimeText != null
     val dim = LocalDim.current
@@ -77,6 +79,7 @@ fun ReminderInfo(
                 )
                 IconButton(
                     onClick = onAddReminder,
+                    enabled = addReminderButtonEnabled,
                     modifier = Modifier.padding(vertical = dim.medium, horizontal = dim.small)
                 ) {
                     Icon(

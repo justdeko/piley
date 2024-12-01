@@ -7,7 +7,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.util.getBiggestPileName
-import com.dk.piley.util.getTasksCompletedInPastDays
+import com.dk.piley.util.getCompletedTasksForWeekValues
 import com.dk.piley.util.getUpcomingTasks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -42,6 +42,7 @@ class ProfileViewModel(
                 val done = tasks.count { it.status == TaskStatus.DONE }
                 val deleted = pilesWithTasks.sumOf { it.pile.deletedCount }
                 val current = tasks.count { it.status == TaskStatus.DEFAULT }
+                val completedTasksForWeekValues = getCompletedTasksForWeekValues(tasks)
 
                 state.value.copy(
                     userName = user.name,
@@ -50,7 +51,8 @@ class ProfileViewModel(
                     currentTasks = current,
                     upcomingTaskList = getUpcomingTasks(pilesWithTasks),
                     biggestPileName = getBiggestPileName(pilesWithTasks),
-                    tasksCompletedPastDays = getTasksCompletedInPastDays(tasks),
+                    tasksCompletedPastDays = completedTasksForWeekValues.sum(),
+                    completedTaskFrequencies = completedTasksForWeekValues,
                 )
             }.collect { state.value = it }
         }
@@ -93,6 +95,7 @@ data class ProfileViewState(
     val currentTasks: Int = 0,
     val upcomingTaskList: List<Pair<String, Task>> = emptyList(),
     val tasksCompletedPastDays: Int = 0,
+    val completedTaskFrequencies: List<Int> = emptyList(),
     val biggestPileName: String? = "None",
     val isLoading: Boolean = false,
     val message: String? = null,

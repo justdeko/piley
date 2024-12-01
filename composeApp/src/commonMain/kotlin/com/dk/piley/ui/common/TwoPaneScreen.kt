@@ -10,13 +10,13 @@ import com.dk.piley.util.isTabletWide
 @Composable
 fun TwoPaneScreen(
     modifier: Modifier = Modifier,
-    mainContent: @Composable () -> Unit,
+    mainContent: @Composable (Boolean) -> Unit,
     detailContent: @Composable () -> Unit
 ) {
     val isTabletWide = isTabletWide()
     Row(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
-            mainContent()
+            mainContent(isTabletWide)
         }
         if (isTabletWide) {
             Column(modifier = Modifier.weight(1f)) {

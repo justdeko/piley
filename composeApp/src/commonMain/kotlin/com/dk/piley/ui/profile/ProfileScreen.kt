@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
 import com.dk.piley.ui.common.LocalDim
+import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.util.BigSpacer
@@ -98,78 +99,99 @@ private fun ProfileScreen(
     onUpcomingTaskClick: (Long) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
-
-    Column(
-        modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = LocalDim.current.large,
-                    end = LocalDim.current.large,
-                    top = LocalDim.current.large
-                )
-        ) {
-            InitialSlideIn(
-                direction = SlideDirection.RIGHT,
-                pathLengthInDp = 40,
-                initialTransitionStateValue = initialTransitionStateValue
+    TwoPaneScreen(
+        mainContent = { isTabletWide ->
+            Column(
+                modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
             ) {
-                IconButton(onClick = onClickSettings) {
-                    Icon(
-                        Icons.Filled.Settings,
-                        tint = MaterialTheme.colorScheme.secondary,
-                        contentDescription = "go to settings"
-                    )
-                }
-            }
-            InitialSlideIn(
-                modifier = Modifier.weight(1f),
-                direction = SlideDirection.DOWN,
-                pathLengthInDp = 40,
-                initialTransitionStateValue = initialTransitionStateValue
-            ) {
-                UserInfo(modifier = Modifier.padding(top = 40.dp), name = viewState.userName)
-            }
-            IconButton(onClick = {}) {
-                Icon(
-                    Icons.Filled.Settings,
-                    tint = Color.Transparent,
-                    contentDescription = "placeholder"
-                )
-            }
-        }
-        InitialSlideIn(
-            direction = SlideDirection.UP,
-            pathLengthInDp = 20,
-            initialTransitionStateValue = initialTransitionStateValue
-        ) {
-            Column {
-                BigSpacer()
-                ProfileSection(
-                    title = stringResource(Res.string.user_statistics_section_title),
-                    icon = Icons.Default.BarChart
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = LocalDim.current.large,
+                            end = LocalDim.current.large,
+                            top = LocalDim.current.large
+                        )
                 ) {
-                    TaskStats(
-                        doneCount = viewState.doneTasks,
-                        deletedCount = viewState.deletedTasks,
-                        currentCount = viewState.currentTasks,
-                        tasksCompletedPastDays = viewState.tasksCompletedPastDays,
-                        biggestPile = viewState.biggestPileName
-                            ?: stringResource(Res.string.no_pile),
-                    )
+                    InitialSlideIn(
+                        direction = SlideDirection.RIGHT,
+                        pathLengthInDp = 40,
+                        initialTransitionStateValue = initialTransitionStateValue
+                    ) {
+                        IconButton(onClick = onClickSettings) {
+                            Icon(
+                                Icons.Filled.Settings,
+                                tint = MaterialTheme.colorScheme.secondary,
+                                contentDescription = "go to settings"
+                            )
+                        }
+                    }
+                    InitialSlideIn(
+                        modifier = Modifier.weight(1f),
+                        direction = SlideDirection.DOWN,
+                        pathLengthInDp = 40,
+                        initialTransitionStateValue = initialTransitionStateValue
+                    ) {
+                        UserInfo(
+                            modifier = Modifier.padding(top = 40.dp),
+                            name = viewState.userName
+                        )
+                    }
+                    IconButton(onClick = {}) {
+                        Icon(
+                            Icons.Filled.Settings,
+                            tint = Color.Transparent,
+                            contentDescription = "placeholder"
+                        )
+                    }
                 }
-                MediumSpacer()
+                InitialSlideIn(
+                    direction = SlideDirection.UP,
+                    pathLengthInDp = 20,
+                    initialTransitionStateValue = initialTransitionStateValue
+                ) {
+                    Column {
+                        BigSpacer()
+                        ProfileSection(
+                            title = stringResource(Res.string.user_statistics_section_title),
+                            icon = Icons.Default.BarChart
+                        ) {
+                            TaskStats(
+                                doneCount = viewState.doneTasks,
+                                deletedCount = viewState.deletedTasks,
+                                currentCount = viewState.currentTasks,
+                                tasksCompletedPastDays = viewState.tasksCompletedPastDays,
+                                biggestPile = viewState.biggestPileName
+                                    ?: stringResource(Res.string.no_pile),
+                                chartFrequencies = if (isTabletWide) viewState.completedTaskFrequencies else null
+                            )
+                        }
+                        MediumSpacer()
+                        if (!isTabletWide) {
+                            UpcomingTasksSection(
+                                modifier = Modifier.fillMaxWidth(),
+                                pileNameTaskList = viewState.upcomingTaskList,
+                                onTaskClick = onUpcomingTaskClick
+                            )
+                            MediumSpacer()
+                        }
+                    }
+                }
+            }
+        }, detailContent = {
+            Column(
+                Modifier
+                    .padding(top = LocalDim.current.large)
+                    .verticalScroll(rememberScrollState())
+            ) {
                 UpcomingTasksSection(
                     modifier = Modifier.fillMaxWidth(),
                     pileNameTaskList = viewState.upcomingTaskList,
                     onTaskClick = onUpcomingTaskClick
                 )
-                MediumSpacer()
             }
         }
-    }
+    )
 }

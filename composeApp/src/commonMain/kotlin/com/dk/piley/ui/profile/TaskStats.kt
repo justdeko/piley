@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import com.dk.piley.ui.charts.FrequencyChart
 import com.dk.piley.ui.common.FullWidthInfo
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.util.MediumSpacer
@@ -33,6 +34,7 @@ import piley.composeapp.generated.resources.tasks_completed_past_days_label
  * @param tasksCompletedPastDays number of tasks completed in the last n days
  * @param biggestPile name of the pile with the largest amount of tasks
  * @param tasksOnly whether only statistics about the tasks themselves should be shown
+ * @param chartFrequencies list of task completion frequencies for the past 7 days, if null, no chart will be shown
  */
 @Composable
 fun TaskStats(
@@ -42,7 +44,8 @@ fun TaskStats(
     currentCount: Int,
     tasksCompletedPastDays: Int = 0,
     biggestPile: String = "",
-    tasksOnly: Boolean = false
+    tasksOnly: Boolean = false,
+    chartFrequencies: List<Int>? = null
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -75,6 +78,13 @@ fun TaskStats(
             FullWidthInfo(
                 label = stringResource(Res.string.biggest_pile_label),
                 value = biggestPile
+            )
+        }
+        chartFrequencies?.let {
+            MediumSpacer()
+            FrequencyChart(
+                weekDayFrequencies = it,
+                initialTransitionValue = false
             )
         }
     }

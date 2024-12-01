@@ -134,6 +134,7 @@ fun TaskDetailScreen(
     onSelectPile: (Int) -> Unit = {},
     onDelay: (Long) -> Unit = {}
 ) {
+    // TODO: reminder on right side on tablet
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)

@@ -47,6 +47,7 @@
 
     <!-- pile detail screen -->
     <string name="delete_pile_button_text">Delete</string>
+    <string name="recently_deleted_section_title">Recently Completed or Deleted</string>
 
     <!-- clear statistics dialog -->
     <string name="clear_statistics_dialog_title">Clear all pile statistics</string>

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.PileMode
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
  *
  * @param savedStateHandle saved state handle to receive pile id passed through navigation
  */
-class PileDetailViewModel (
+class PileDetailViewModel(
     private val pileRepository: PileRepository,
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
@@ -55,6 +56,15 @@ class PileDetailViewModel (
                         pileDetailViewState.copy(
                             pile = pileWithTasks.pile,
                             completedTaskCounts = getCompletedTasksForWeekValues(pileWithTasks),
+                            modifiedTasks = pileWithTasks.tasks
+                                // TODO  || it.isRecurring && it.status == TaskStatus.DELETED
+                                // option to recover reminder as well
+                                .filter {
+                                    !it.isRecurring
+                                            && (it.status == TaskStatus.DONE
+                                            || it.status == TaskStatus.DELETED
+                                            )
+                                }.sortedByDescending { it.modifiedAt }.take(3),
                             doneCount = pileWithTasks.tasks.count { it.status == TaskStatus.DONE },
                             deletedCount = pileWithTasks.pile.deletedCount,
                             currentCount = pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT },
@@ -113,11 +123,21 @@ class PileDetailViewModel (
             pileRepository.updatePile(state.value.pile.copy(deletedCount = 0))
         }
     }
+
+    fun undoTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.insertTaskWithStatus(
+                task = task.copy(status = TaskStatus.DEFAULT),
+                undo = true
+            )
+        }
+    }
 }
 
 data class PileDetailViewState(
     val pile: Pile = Pile(),
     val completedTaskCounts: List<Int> = emptyList(),
+    val modifiedTasks: List<Task> = emptyList(),
     val doneCount: Int = 0,
     val deletedCount: Int = 0,
     val currentCount: Int = 0,

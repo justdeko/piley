@@ -25,6 +25,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dk.piley.Piley
+import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.EditDescriptionField
 import com.dk.piley.ui.common.TitleTopAppBar
@@ -76,6 +77,7 @@ fun PileDetailScreen(
         onSetPileLimit = { viewModel.setPileLimit(it) },
         onClose = { navController.popBackStack() },
         onClearStatistics = { viewModel.clearStatistics() },
+        onTaskUndo = { viewModel.undoTask(it) },
         initialStatisticsGraphTransitionValue = false
     )
 }
@@ -92,6 +94,7 @@ fun PileDetailScreen(
  * @param onSetPileLimit on set pile task limit
  * @param onClearStatistics on clear pile statistics
  * @param onClose on close pile screen
+ * @param onTaskUndo on undo task completion or removal
  * @param initialStatisticsGraphTransitionValue initial animation transition value of statistics graph
  */
 @Composable
@@ -105,11 +108,11 @@ fun PileDetailScreen(
     onSetPileLimit: (Int) -> Unit = {},
     onClearStatistics: () -> Unit = {},
     onClose: () -> Unit = {},
+    onTaskUndo: (Task) -> Unit = {},
     initialStatisticsGraphTransitionValue: Boolean = true
 ) {
     val today = Clock.System.now().toLocalDateTime().date
     var dialogOpen by remember { mutableStateOf(false) }
-    val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
     var deletePileDialogOpen by remember { mutableStateOf(false) }
 
@@ -178,12 +181,14 @@ fun PileDetailScreen(
                                 onSetPileMode = onSetPileMode,
                                 onSetPileLimit = onSetPileLimit
                             )
+                            RecentlyModifiedTasks(tasks = viewState.modifiedTasks, onUndo = onTaskUndo)
                         }
                     }
                 },
                 detailContent = {
                     val expandedState = remember { mutableStateOf(true) }
                     Column(Modifier.verticalScroll(rememberScrollState())) {
+                        RecentlyModifiedTasks(tasks = viewState.modifiedTasks, onUndo = onTaskUndo)
                         PileDetailSettings(
                             viewState = viewState,
                             onSetPileMode = onSetPileMode,

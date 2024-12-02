@@ -70,7 +70,6 @@ fun UpcomingTasksSection(
                         }
                         MediumSpacer()
                         Text(
-                            modifier = Modifier.weight(1f),
                             text = task.reminder?.toLocalDateTime()?.dateTimeStringNewLine() ?: "",
                             color = MaterialTheme.colorScheme.onBackground,
                             style = MaterialTheme.typography.labelLarge,

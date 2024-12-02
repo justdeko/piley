@@ -181,4 +181,5 @@
     <string name="reminder_complete_action">Fertig</string>
     <string name="reminder_delay_action">Später</string>
     <string name="reminder_custom_delay_action">Später um…</string>
+    <string name="recently_deleted_section_title">Kürzlich gelöscht oder abgeschlossen</string>
 </resources>

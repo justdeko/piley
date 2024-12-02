@@ -39,7 +39,7 @@ jobs:
         with:
           name: piley
       - name: Rename APK
-        run: mv app-debug.apk piley-${{ github.ref_name }}-debug.apk
+        run: mv composeApp-debug.apk piley-${{ github.ref_name }}-debug.apk
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2

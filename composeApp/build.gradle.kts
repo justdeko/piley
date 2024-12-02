@@ -1,5 +1,5 @@
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -13,7 +13,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -75,8 +74,8 @@ android {
         applicationId = "com.dk.piley"
         minSdk = 26
         targetSdk = 34
-        versionCode = 14
-        versionName = "0.7.0"
+        versionCode = 15
+        versionName = "0.8.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

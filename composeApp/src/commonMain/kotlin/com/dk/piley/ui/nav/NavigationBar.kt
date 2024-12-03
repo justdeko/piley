@@ -34,7 +34,8 @@ fun NavigationBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val showOnTablet = isTabletWide() && currentDestination?.route != Screen.Intro.route
+    val showOnTablet =
+        isTabletWide() && currentDestination?.route != Screen.Intro.route && currentDestination?.route != Screen.Splash.route
     NavigationSuiteScaffold(
         layoutType = if (!isVisible && !showOnTablet) {
             NavigationSuiteType.None

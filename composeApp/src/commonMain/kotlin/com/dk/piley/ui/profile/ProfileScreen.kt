@@ -91,7 +91,7 @@ fun ProfileScreen(
  * @param onUpcomingTaskClick on click upcoming task
  */
 @Composable
-private fun ProfileScreen(
+fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewState: ProfileViewState,
     initialTransitionStateValue: Boolean = true,

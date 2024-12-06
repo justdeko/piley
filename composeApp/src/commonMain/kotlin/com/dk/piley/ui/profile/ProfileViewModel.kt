@@ -97,7 +97,5 @@ data class ProfileViewState(
     val tasksCompletedPastDays: Int = 0,
     val completedTaskFrequencies: List<Int> = emptyList(),
     val biggestPileName: String? = "None",
-    val isLoading: Boolean = false,
     val message: String? = null,
-    val userIsOffline: Boolean = false
 )

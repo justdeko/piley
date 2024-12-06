@@ -30,7 +30,6 @@ fun SupportingPileDetailScreen(
             currentCount = pile.tasks.count { it.status == TaskStatus.DEFAULT },
             completedTaskCounts = getCompletedTasksForWeekValues(pile),
             clearStatisticsVisible = false,
-            initialGraphTransitionValue = false
         )
         MediumSpacer()
         UpcomingTasksSection(

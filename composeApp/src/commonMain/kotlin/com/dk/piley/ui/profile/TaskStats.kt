@@ -82,10 +82,7 @@ fun TaskStats(
         }
         chartFrequencies?.let {
             MediumSpacer()
-            FrequencyChart(
-                weekDayFrequencies = it,
-                initialTransitionValue = false
-            )
+            FrequencyChart(weekDayFrequencies = it)
         }
     }
 }

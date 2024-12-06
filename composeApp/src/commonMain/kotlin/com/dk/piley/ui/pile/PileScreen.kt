@@ -169,7 +169,7 @@ fun PileScreen(
  * @param onClickTitle on pile title click
  */
 @Composable
-private fun PileScreen(
+fun PileScreen(
     modifier: Modifier = Modifier,
     viewState: PileViewState,
     shownTasks: List<Task> = emptyList(),

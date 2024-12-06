@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -43,14 +44,14 @@ import piley.composeapp.generated.resources.no_pile_completed_hint
  * @param weekDayFrequencies list of frequencies for the past 7 days
  * @param currentDay date of the current day
  * @param modifier generic modifier
- * @param initialTransitionValue initial animation transition value
+ * @param initialTransitionValue initial animation transition value, default is true if in inspection mode and false otherwise
  */
 @Composable
 fun FrequencyChart(
     weekDayFrequencies: List<Int>,
     currentDay: LocalDate = Clock.System.now().toLocalDateTime().date,
     modifier: Modifier = Modifier,
-    initialTransitionValue: Boolean = true
+    initialTransitionValue: Boolean = LocalInspectionMode.current
 ) {
     val max = weekDayFrequencies.maxOrNull() ?: 0
     val dim = LocalDim.current

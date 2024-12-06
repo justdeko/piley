@@ -3,7 +3,7 @@ package com.dk.piley.ui
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -96,28 +96,24 @@ fun HomeScreen(
     }
 
     Scaffold(
-        modifier = modifier.then(
-            // safe padding on all screens except splash screen
-            if (navBackStackEntry?.destination?.route == Screen.Splash.route) Modifier
-            // TODO adapt for sdk 35
-            else Modifier.windowInsetsPadding(WindowInsets.statusBars) // TODO fix this for ios with box and surfaceContainer color on the lower bottom half
-        ),
+        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         val startDestination =
             if (homeState.skipSplashScreen) Screen.Pile.route else Screen.Splash.route
         NavigationBar(
-            modifier = Modifier.fillMaxSize().consumeWindowInsets(padding),
+            modifier = Modifier.fillMaxSize(),
             isVisible = navigationBarShown,
             navController = navController
         ) {
+            val contentPadding = Modifier.windowInsetsPadding(WindowInsets.systemBars).consumeWindowInsets(padding)
             NavHost(navController, startDestination = startDestination) {
                 composable(Screen.Splash.route) {
                     SplashScreen(navController = navController)
                 }
                 composable(route = Screen.Intro.route, arguments = Screen.Intro.optionalArguments) {
-                    IntroScreen(navController = navController)
+                    IntroScreen(navController = navController, modifier = contentPadding)
                 }
                 composable(
                     "${Screen.Pile.route}?${Screen.Pile.argument}={${Screen.Pile.argument}}",
@@ -127,23 +123,27 @@ fun HomeScreen(
                     })
                 ) {
                     PileScreen(
+                        modifier = contentPadding,
                         navController = navController, // TODO: don't pass navController
                         snackbarHostState = snackbarHostState
                     )
                 }
                 composable(Screen.Piles.route) {
                     PileOverviewScreen(
+                        modifier = contentPadding,
                         navController = navController
                     )
                 }
                 composable(Screen.Profile.route) {
                     ProfileScreen(
+                        modifier = contentPadding,
                         navController = navController,
                         snackbarHostState = snackbarHostState
                     )
                 }
                 composable(Screen.Settings.route) {
                     SettingsScreen(
+                        modifier = contentPadding,
                         navController = navController,
                         snackbarHostState = snackbarHostState
                     )
@@ -158,6 +158,7 @@ fun HomeScreen(
                     }) + taskScreen.optionalArguments
                 ) {
                     TaskDetailScreen(
+                        modifier = contentPadding,
                         navController = navController,
                         onFinish = onFinishActivity
                     )
@@ -172,6 +173,7 @@ fun HomeScreen(
                     })
                 ) {
                     PileDetailScreen(
+                        modifier = contentPadding,
                         navController = navController
                     )
                 }

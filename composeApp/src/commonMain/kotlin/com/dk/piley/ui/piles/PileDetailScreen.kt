@@ -49,11 +49,13 @@ import piley.composeapp.generated.resources.delete_pile_dialog_title
 /**
  * Pile detail screen
  *
+ * @param modifier generic modifier
  * @param navController generic nav controller
  * @param viewModel pile detail view model
  */
 @Composable
 fun PileDetailScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: PileDetailViewModel = viewModel {
         PileDetailViewModel(
@@ -66,6 +68,7 @@ fun PileDetailScreen(
 ) {
     val viewState by viewModel.state.collectAsState()
     PileDetailScreen(
+        modifier = modifier,
         viewState = viewState,
         onDeletePile = {
             navController.navigateClearBackstack(Screen.Piles.route)

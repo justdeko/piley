@@ -68,12 +68,12 @@ kotlin {
 
 android {
     namespace = "com.dk.piley"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.dk.piley"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 15
         versionName = "0.8.0"
 

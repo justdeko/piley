@@ -56,11 +56,13 @@ import piley.composeapp.generated.resources.delete_task_dialog_title
 /**
  * Task detail screen
  *
+ * @param modifier generic modifier
  * @param navController generic nav controller
  * @param viewModel task detail view model
  */
 @Composable
 fun TaskDetailScreen(
+    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     viewModel: TaskDetailViewModel = viewModel {
         TaskDetailViewModel(
@@ -93,6 +95,7 @@ fun TaskDetailScreen(
     }
 
     TaskDetailScreen(
+        modifier = modifier,
         viewState = viewState,
         onDeleteTask = { viewModel.deleteTask() },
         onCompleteTask = { viewModel.completeTask() },

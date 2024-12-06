@@ -16,6 +16,7 @@ local.properties
 .idea/
 /keystore
 /app/release
+/composeApp/release
 *.keystore
 *.keystore.asc
 **/.build

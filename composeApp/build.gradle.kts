@@ -118,8 +118,15 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            jvmArgs(
+                "-Dapple.awt.application.appearance=system"
+            )
             packageName = "com.dk.piley"
             packageVersion = "1.0.0"
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
+            macOS {
+                iconFile.set(project.file("icon.icns"))
+            }
         }
     }
 }

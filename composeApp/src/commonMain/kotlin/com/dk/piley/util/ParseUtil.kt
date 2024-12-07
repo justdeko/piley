@@ -23,6 +23,23 @@ fun Instant.toLocalDateTime(timeZone: TimeZone = TimeZone.currentSystemDefault()
 }
 
 /**
+ * Convert instant to local date time with minutes precision
+ *
+ * @param timeZone the time zone
+ * @return local date time with minutes precision, ignoring seconds and milliseconds
+ */
+fun Instant.toLocalDateTimeMinutes(timeZone: TimeZone = TimeZone.currentSystemDefault()): LocalDateTime {
+    val localDateTime = toLocalDateTime(timeZone)
+    return LocalDateTime(
+        localDateTime.year,
+        localDateTime.month,
+        localDateTime.dayOfMonth,
+        localDateTime.hour,
+        localDateTime.minute
+    )
+}
+
+/**
  * Convert local date time to an instant with offset
  *
  * @param timeZone timezone to calculate the offset with

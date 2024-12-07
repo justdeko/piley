@@ -23,7 +23,7 @@ class TaskRepository(
     private val reminderManager: IReminderManager,
     private val notificationManager: INotificationManager,
 ) {
-    private fun getTasks(): Flow<List<Task>> = taskDao.getTasks()
+    fun getTasks(): Flow<List<Task>> = taskDao.getTasks()
 
     fun getTaskById(taskId: Long): Flow<Task?> = taskDao.getTaskById(taskId)
 

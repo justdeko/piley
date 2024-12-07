@@ -123,6 +123,8 @@ compose.desktop {
             )
             packageName = "piley"
             packageVersion = "1.0.0"
+            // fixes datastore unsafe issue: https://github.com/JetBrains/compose-multiplatform/issues/2686
+            modules("jdk.unsupported")
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
             macOS {
                 iconFile.set(project.file("icon.icns"))

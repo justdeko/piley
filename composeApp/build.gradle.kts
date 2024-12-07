@@ -121,7 +121,7 @@ compose.desktop {
             jvmArgs(
                 "-Dapple.awt.application.appearance=system"
             )
-            packageName = "com.dk.piley"
+            packageName = "piley"
             packageVersion = "1.0.0"
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))
             macOS {

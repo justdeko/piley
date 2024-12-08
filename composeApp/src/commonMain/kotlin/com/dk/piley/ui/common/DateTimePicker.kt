@@ -21,9 +21,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.dk.piley.util.Platform
+import com.dk.piley.util.appPlatform
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.getScreenHeight
 import com.dk.piley.util.toLocalDateTime
@@ -85,7 +86,7 @@ fun ReminderDatePicker(
  * @param onDismiss on dialog dismiss
  * @param onConfirm on time confirm
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReminderTimePicker(
     initialTime: LocalTime?,
@@ -108,12 +109,12 @@ fun ReminderTimePicker(
             Modifier.defaultPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (showingPicker.value && screenHeight > 400.dp) {
+            if (showingPicker.value && screenHeight > 400.dp && appPlatform != Platform.DESKTOP) {
                 TimePicker(state = state)
             } else {
                 TimeInput(state = state)
             }
-            if (screenHeight > 400.dp) {
+            if (screenHeight > 400.dp && appPlatform != Platform.DESKTOP) {
                 IconButton(onClick = { showingPicker.value = !showingPicker.value }) {
                     val icon = if (showingPicker.value) {
                         Icons.Outlined.Keyboard

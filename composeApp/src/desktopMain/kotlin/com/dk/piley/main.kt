@@ -14,6 +14,7 @@ import com.dk.piley.ui.theme.ThemeHostScreen
 import org.jetbrains.compose.resources.painterResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.icon_transparent
+import java.awt.Dimension
 
 fun main() = application {
     // di init
@@ -27,6 +28,7 @@ fun main() = application {
         state = windowState,
         icon = painterResource(Res.drawable.icon_transparent)
     ) {
+        window.minimumSize = Dimension(400, 600)
         MenuBar {
             Menu("Navigation") {
                 Item(

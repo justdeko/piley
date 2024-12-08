@@ -123,6 +123,8 @@ compose.desktop {
             )
             packageName = "piley"
             packageVersion = "1.0.0"
+            // copyright with copyright symbol
+            copyright = "© 2024 Denis Koljada. All rights reserved."
             // fixes datastore unsafe issue: https://github.com/JetBrains/compose-multiplatform/issues/2686
             modules("jdk.unsupported")
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))

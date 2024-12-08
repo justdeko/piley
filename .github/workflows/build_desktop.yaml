@@ -9,7 +9,7 @@ on: # manual action or new tag
 jobs:
   build_desktop:
     name: Build Desktop
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK

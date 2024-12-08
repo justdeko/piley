@@ -31,8 +31,8 @@ jobs:
           name: piley
           path: composeApp/compose/binaries/main/dmg/*.dmg
 
-      - name: Upload Problems Report
+      - name: Upload Directory
         uses: actions/upload-artifact@v4.4.3
         with:
           name: problems-report
-          path: "**/problems-report.html"
+          path: composeApp

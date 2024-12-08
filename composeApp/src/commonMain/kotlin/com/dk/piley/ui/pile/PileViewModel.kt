@@ -4,6 +4,8 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
+import com.dk.piley.model.navigation.Shortcut
+import com.dk.piley.model.navigation.ShortcutEventRepository
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.pile.PileWithTasks
@@ -33,8 +35,11 @@ class PileViewModel(
     private val taskRepository: TaskRepository,
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
+    private val shortcutEventRepository: ShortcutEventRepository,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<PileViewState>(PileViewState()) {
+
+    private var taskToUndo: Task? = null
 
     private val _selectedPileIndex = MutableStateFlow(-1)
     val selectedPileIndex: StateFlow<Int>
@@ -102,6 +107,51 @@ class PileViewModel(
                     state.value = viewState
                 }
             }
+        }
+        observeKeyEvents()
+    }
+
+    private fun observeKeyEvents() {
+        viewModelScope.launch {
+            shortcutEventRepository.keyEventFlow
+                .collect { keyEvent ->
+                    when (keyEvent) {
+                        Shortcut.NavigateLeft -> {
+                            if (_selectedPileIndex.value > 0) {
+                                onPileChanged(_selectedPileIndex.value - 1)
+                            }
+                        }
+
+                        Shortcut.NavigateRight -> {
+                            if (_selectedPileIndex.value < state.value.pileIdTitleList.lastIndex) {
+                                onPileChanged(_selectedPileIndex.value + 1)
+                            }
+                        }
+
+                        Shortcut.Done -> {
+                            state.value.tasks?.last()?.let {
+                                taskToUndo = it
+                                done(it)
+                            }
+                        }
+
+                        Shortcut.Delete -> {
+                            state.value.tasks?.last()?.let {
+                                taskToUndo = it
+                                delete(it)
+                            }
+                        }
+
+                        Shortcut.Undo -> {
+                            taskToUndo?.let {
+                                undoDelete(it)
+                                taskToUndo = null
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
         }
     }
 

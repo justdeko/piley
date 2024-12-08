@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
 import com.dk.piley.model.navigation.NavigationEventRepository
+import com.dk.piley.model.navigation.ShortcutEventRepository
 import com.dk.piley.model.notification.NotificationRepository
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
@@ -36,6 +37,7 @@ interface AppModule {
     val notificationManager: INotificationManager
     val notificationRepository: NotificationRepository
     val navigationEventRepository: NavigationEventRepository
+    val shortcutEventRepository: ShortcutEventRepository
 }
 
 class AppModuleImpl(
@@ -81,6 +83,7 @@ class AppModuleImpl(
 
     override val notificationRepository: NotificationRepository by lazy { NotificationRepository() }
     override val navigationEventRepository: NavigationEventRepository by lazy { NavigationEventRepository() }
+    override val shortcutEventRepository: ShortcutEventRepository by lazy { ShortcutEventRepository() }
 }
 
 internal const val USER_PREFERENCES_PATH = "user_preferences.preferences_pb"

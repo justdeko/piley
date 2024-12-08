@@ -58,7 +58,8 @@ fun HomeScreen(
             taskRepository = Piley.getModule().taskRepository,
             notificationRepository = Piley.getModule().notificationRepository,
             navigationEventRepository = Piley.getModule().navigationEventRepository,
-            userRepository = Piley.getModule().userRepository
+            userRepository = Piley.getModule().userRepository,
+            shortcutEventRepository = Piley.getModule().shortcutEventRepository
         )
     },
     onFinishActivity: () -> Unit = {},

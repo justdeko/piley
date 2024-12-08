@@ -13,5 +13,5 @@ actual fun NotificationPermissionHandler(
     launch: Boolean,
     setPermissionGranted: (Boolean) -> Unit
 ) {
-    // TODO maybe implement something here
+    setPermissionGranted(true)
 }

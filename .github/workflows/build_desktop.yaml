@@ -1,0 +1,30 @@
+on: # manual action or new tag
+    push:
+        tags:
+        - 'v*'
+    workflow_dispatch:
+
+jobs:
+    build_desktop:
+        name: Build Desktop
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+          - name: Set up JDK
+            uses: actions/setup-java@v4
+            with:
+              java-version: '17'
+              distribution: 'corretto'
+              cache: gradle
+
+          - name: Grant execute permission for gradlew
+            run: chmod +x gradlew
+
+          - name: Build Desktop dmg
+            run: ./gradlew packageDmg
+
+          - name: Upload Desktop dmg
+            uses: actions/upload-artifact@v4.4.3
+            with:
+              name: piley
+              path: composeApp/compose/binaries/main/dmg/*.dmg

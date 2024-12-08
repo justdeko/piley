@@ -140,7 +140,7 @@ fun PileCard(
                                     modifier = Modifier.scale(0.8f),
                                     imageVector = Icons.Filled.CheckCircle,
                                     contentDescription = "completed tasks",
-                                    tint = MaterialTheme.colorScheme.tertiary
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
                             }
                             val recurringTasks = pileWithTasks.tasks.count { it.isRecurring }

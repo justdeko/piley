@@ -85,6 +85,7 @@ fun PileScreen(
             taskRepository = Piley.getModule().taskRepository,
             pileRepository = Piley.getModule().pileRepository,
             userRepository = Piley.getModule().userRepository,
+            shortcutEventRepository = Piley.getModule().shortcutEventRepository,
             savedStateHandle = createSavedStateHandle()
         )
     }

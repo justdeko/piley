@@ -1,6 +1,5 @@
 package com.dk.piley.ui.intro
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,9 +23,8 @@ import com.dk.piley.ui.common.LocalDim
  * @param modifier generic modifier
  * @param pagerState pager indicator state
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PagerIndicator(modifier: Modifier, pagerState: PagerState) {
+fun PagerIndicator(modifier: Modifier = Modifier, pagerState: PagerState) {
     Row(
         modifier
             .height(LocalDim.current.extraLarge)

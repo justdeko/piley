@@ -28,11 +28,5 @@ jobs:
       - name: Upload Desktop dmg
         uses: actions/upload-artifact@v4.4.3
         with:
-          name: piley
-          path: composeApp/compose/binaries/main/dmg/*.dmg
-
-      - name: Upload Directory
-        uses: actions/upload-artifact@v4.4.3
-        with:
-          name: problems-report
-          path: build
+          name: piley-desktop
+          path: composeApp/build/compose/binaries/main/dmg/*.dmg

@@ -18,6 +18,7 @@ import kotlinx.datetime.Instant
  * @property createdAt represents when the pile was created
  * @property modifiedAt represents when the pile was last modified
  * @property deletedCount number of deleted tasks from this pile
+ * @property color color of the pile, none by default
  */
 @Entity
 data class Pile(
@@ -30,4 +31,6 @@ data class Pile(
     val modifiedAt: Instant = Clock.System.now(),
     @ColumnInfo(defaultValue = "0")
     val deletedCount: Int = 0,
+    @ColumnInfo(defaultValue = "")
+    val color: PileColor = PileColor.NONE
 )

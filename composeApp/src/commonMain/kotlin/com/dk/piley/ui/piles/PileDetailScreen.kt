@@ -25,6 +25,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.dk.piley.Piley
+import com.dk.piley.model.pile.PileColor
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.ui.common.EditDescriptionField
@@ -32,6 +33,7 @@ import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.util.AlertDialogHelper
+import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.toLocalDateTime
@@ -81,6 +83,7 @@ fun PileDetailScreen(
         onClose = { navController.popBackStack() },
         onClearStatistics = { viewModel.clearStatistics() },
         onTaskUndo = { viewModel.undoTask(it) },
+        onSelectColor = { viewModel.selectColor(it) },
         initialStatisticsGraphTransitionValue = false
     )
 }
@@ -98,6 +101,7 @@ fun PileDetailScreen(
  * @param onClearStatistics on clear pile statistics
  * @param onClose on close pile screen
  * @param onTaskUndo on undo task completion or removal
+ * @param onSelectColor on select pile color
  * @param initialStatisticsGraphTransitionValue initial animation transition value of statistics graph
  */
 @Composable
@@ -112,6 +116,7 @@ fun PileDetailScreen(
     onClearStatistics: () -> Unit = {},
     onClose: () -> Unit = {},
     onTaskUndo: (Task) -> Unit = {},
+    onSelectColor: (PileColor) -> Unit = {},
     initialStatisticsGraphTransitionValue: Boolean = true
 ) {
     val today = Clock.System.now().toLocalDateTime().date
@@ -169,6 +174,12 @@ fun PileDetailScreen(
                         EditDescriptionField(value = viewState.descriptionTextValue,
                             onChange = { onEditDescription(it) }
                         )
+                        ColorPicker(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            selectedColor = viewState.pile.color,
+                            onSelected = onSelectColor
+                        )
+                        MediumSpacer()
                         PileStatistics(
                             doneCount = viewState.doneCount,
                             deletedCount = viewState.deletedCount,

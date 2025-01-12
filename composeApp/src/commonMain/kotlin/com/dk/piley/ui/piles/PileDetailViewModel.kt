@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.pile.Pile
+import com.dk.piley.model.pile.PileColor
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
@@ -130,6 +131,12 @@ class PileDetailViewModel(
                 task = task.copy(status = TaskStatus.DEFAULT),
                 undo = true
             )
+        }
+    }
+
+    fun selectColor(color: PileColor) {
+        viewModelScope.launch {
+            pileRepository.updatePile(state.value.pile.copy(color = color))
         }
     }
 }

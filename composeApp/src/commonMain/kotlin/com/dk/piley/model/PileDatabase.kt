@@ -31,9 +31,13 @@ internal const val PILE_DATABASE_NAME = "piley-db"
         AutoMigration(
             from = 3,
             to = 4
+        ),
+        AutoMigration(
+            from = 4,
+            to = 5
         )
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

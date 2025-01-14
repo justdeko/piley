@@ -24,7 +24,7 @@ jobs:
         run: ./gradlew :composeApp:assembleDebug -x test --stacktrace
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: piley
           path: composeApp/build/outputs/apk/debug/composeApp-debug.apk

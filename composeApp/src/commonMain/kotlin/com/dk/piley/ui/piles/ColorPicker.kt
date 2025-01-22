@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,7 +26,6 @@ fun ColorPicker(
     selectedColor: PileColor,
     onSelected: (PileColor) -> Unit
 ) {
-    var selected by remember { mutableStateOf(selectedColor) } // TODO fix this
     FlowRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(LocalDim.current.large)
@@ -38,11 +33,8 @@ fun ColorPicker(
         PileColor.entries.forEach { color ->
             ColorButton(
                 color = color,
-                isSelected = color == selected,
-                onClick = {
-                    selected = color
-                    onSelected(color)
-                }
+                isSelected = color == selectedColor,
+                onClick = { onSelected(color) }
             )
         }
     }
@@ -67,7 +59,7 @@ fun ColorButton(color: PileColor, isSelected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun PileColor.toColor(): Color {
+fun PileColor.toColor(): Color {
     return when (this) {
         PileColor.NONE -> MaterialTheme.colorScheme.surfaceContainerLow
         PileColor.RED -> Color(0xFFEF476F)

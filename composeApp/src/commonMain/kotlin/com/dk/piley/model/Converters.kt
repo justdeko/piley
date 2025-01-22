@@ -2,7 +2,7 @@ package com.dk.piley.model
 
 import androidx.room.TypeConverter
 import com.dk.piley.model.pile.PileColor
-import com.dk.piley.model.pile.hexToEnum
+import com.dk.piley.model.pile.hexToPileColor
 import kotlinx.datetime.Instant
 
 /**
@@ -38,6 +38,6 @@ class Converters {
 
     @TypeConverter
     fun fromStringToPileColor(pileColorString: String?): PileColor? {
-        return pileColorString?.hexToEnum()
+        return pileColorString?.hexToPileColor()
     }
 }

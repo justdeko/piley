@@ -9,7 +9,7 @@ enum class PileColor(val hexCode: String) {
     DARK_BLUE("#073B4C");
 }
 
-fun String.hexToEnum(): PileColor {
+fun String.hexToPileColor(): PileColor {
     return when (this) {
         PileColor.NONE.hexCode -> PileColor.NONE
         PileColor.RED.hexCode -> PileColor.RED

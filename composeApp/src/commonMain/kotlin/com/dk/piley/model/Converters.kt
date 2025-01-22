@@ -1,6 +1,8 @@
 package com.dk.piley.model
 
 import androidx.room.TypeConverter
+import com.dk.piley.model.pile.PileColor
+import com.dk.piley.model.pile.hexToPileColor
 import kotlinx.datetime.Instant
 
 /**
@@ -27,5 +29,15 @@ class Converters {
     fun fromStringToInstantList(instantListString: String?): List<Instant> {
         if (instantListString == "[]" || instantListString.isNullOrBlank()) return emptyList()
         return instantListString.drop(1).dropLast(1).split(", ").map { Instant.parse(it) }
+    }
+
+    @TypeConverter
+    fun pileColorToString(pileColor: PileColor?): String? {
+        return pileColor?.hexCode
+    }
+
+    @TypeConverter
+    fun fromStringToPileColor(pileColorString: String?): PileColor? {
+        return pileColorString?.hexToPileColor()
     }
 }

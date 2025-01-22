@@ -1,6 +1,7 @@
 package com.dk.piley.ui.pile
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutLinearInEasing
@@ -8,6 +9,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,8 +17,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTimeFilled
 import androidx.compose.material.icons.outlined.AccessTime
@@ -37,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -49,12 +54,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
+import com.dk.piley.model.pile.PileColor
 import com.dk.piley.model.task.Task
 import com.dk.piley.reminder.getNextReminderTime
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
+import com.dk.piley.ui.piles.toColor
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.titleCharacterLimit
 import com.dk.piley.util.toLocalDateTime
@@ -204,14 +211,29 @@ fun PileScreen(
                     focusManager.clearFocus()
                 })
             },
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PileTitlePager(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(start = LocalDim.current.medium, end = LocalDim.current.medium, top = LocalDim.current.medium),
             pileTitleList = viewState.pileIdTitleList.map { it.second },
             onPageChanged = onTitlePageChanged,
             selectedPageIndex = selectedPileIndex,
             onClickTitle = onClickTitle,
+        )
+        val pileColor by animateColorAsState(
+            if (viewState.pileWithTasks.pile.color != PileColor.NONE) {
+                viewState.pileWithTasks.pile.color.toColor()
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
+        )
+        Box(
+            modifier = Modifier
+                .width(16.dp)
+                .height(8.dp)
+                .clip(MaterialTheme.shapes.small)
+                .background(pileColor)
         )
         TwoPaneScreen(
             mainContent = {

@@ -69,7 +69,7 @@ jobs:
       - name: Rename APK
         run: mv composeApp-debug.apk piley-${{ github.ref_name }}-debug.apk
       - name: Rename DMG
-        run: mv composeApp/build/compose/binaries/main/dmg/*.dmg piley-${{ github.ref_name }}.dmg
+        run: mv *.dmg piley-${{ github.ref_name }}.dmg
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2

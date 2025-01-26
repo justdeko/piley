@@ -31,15 +31,21 @@ jobs:
 
   release:
     name: Create Release Draft
-    needs: build_debug
+    needs: [build_debug, build_desktop]
     runs-on: ubuntu-latest
     steps:
-      - name: Download Artifacts
+      - name: Download apk
         uses: actions/download-artifact@v4
         with:
           name: piley
+      - name: Download dmg
+        uses: actions/download-artifact@v4
+        with:
+          name: piley-desktop
       - name: Rename APK
         run: mv composeApp-debug.apk piley-${{ github.ref_name }}-debug.apk
+      - name: Rename DMG
+        run: mv composeApp/build/compose/binaries/main/dmg/*.dmg piley-${{ github.ref_name }}.dmg
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
@@ -49,4 +55,6 @@ jobs:
           name: Release ${{ github.ref_name }}
           draft: true
           prerelease: false
-          files: piley-${{ github.ref_name }}-debug.apk
+          files: |
+            piley-${{ github.ref_name }}-debug.apk
+            piley-${{ github.ref_name }}.dmg

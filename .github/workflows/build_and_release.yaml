@@ -5,7 +5,7 @@ on:
       - 'v*'
 
 jobs:
-  build_debug:
+  build_debug_apk:
     name: Build Debug APK
     runs-on: ubuntu-latest
     steps:
@@ -29,7 +29,31 @@ jobs:
           name: piley
           path: composeApp/build/outputs/apk/debug/composeApp-debug.apk
 
-  release:
+  build_desktop:
+    name: Build Desktop
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Desktop dmg
+        run: ./gradlew packageDmg
+
+      - name: Upload Desktop dmg
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: piley-desktop
+          path: composeApp/build/compose/binaries/main/dmg/*.dmg
+
+  release_draft:
     name: Create Release Draft
     needs: [build_debug, build_desktop]
     runs-on: ubuntu-latest

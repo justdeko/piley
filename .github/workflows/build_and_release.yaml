@@ -55,7 +55,7 @@ jobs:
 
   release_draft:
     name: Create Release Draft
-    needs: [build_debug, build_desktop]
+    needs: [build_debug_apk, build_desktop]
     runs-on: ubuntu-latest
     steps:
       - name: Download apk

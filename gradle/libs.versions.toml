@@ -13,7 +13,7 @@ room = "2.7.0-alpha12"
 compose-plugin = "1.7.3"
 androidx-lifecycle = "2.8.4"
 kotlinx-coroutines = "1.10.1"
-sqliteBundled = "2.5.0-alpha12"
+sqliteBundled = "2.5.0-alpha13"
 
 [libraries]
 adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptive" }

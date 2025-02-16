@@ -252,7 +252,7 @@ fun TaskDetailScreen(
                 ) {
                     TitleTopAppBar(
                         textValue = viewState.titleTextValue,
-                        canDeleteOrEdit = true,
+                        canEdit = true,
                         onEdit = onEditTitle,
                         contentDescription = "close the task detail",
                         onButtonClick = onClose

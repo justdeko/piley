@@ -69,7 +69,7 @@ class PileDetailViewModel(
                             doneCount = pileWithTasks.tasks.count { it.status == TaskStatus.DONE },
                             deletedCount = pileWithTasks.pile.deletedCount,
                             currentCount = pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT },
-                            canDeleteOrEdit = id != user.defaultPileId
+                            canDelete = id != user.defaultPileId
                         )
                     }
                 }
@@ -87,7 +87,7 @@ class PileDetailViewModel(
     }
 
     fun editTitle(title: String) {
-        if (title.length > pileTitleCharacterLimit) return
+        if (title.length > pileTitleCharacterLimit || title.isEmpty()) return
         viewModelScope.launch {
             state.update {
                 it.copy(titleTextValue = title)
@@ -150,5 +150,5 @@ data class PileDetailViewState(
     val currentCount: Int = 0,
     val titleTextValue: String = "",
     val descriptionTextValue: String = "",
-    val canDeleteOrEdit: Boolean = true
+    val canDelete: Boolean = true
 )

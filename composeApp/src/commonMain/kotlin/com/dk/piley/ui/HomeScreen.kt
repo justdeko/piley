@@ -2,6 +2,7 @@ package com.dk.piley.ui
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -99,7 +100,8 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { padding ->
         val startDestination =
             if (homeState.skipSplashScreen) Screen.Pile.route else Screen.Splash.route
@@ -108,7 +110,10 @@ fun HomeScreen(
             isVisible = navigationBarShown,
             navController = navController
         ) {
-            val contentPadding = Modifier.windowInsetsPadding(WindowInsets.systemBars).consumeWindowInsets(padding)
+            val contentPadding =
+                Modifier.windowInsetsPadding(WindowInsets.systemBars)
+                    .windowInsetsPadding(WindowInsets.displayCutout)
+                    .consumeWindowInsets(padding)
             NavHost(navController, startDestination = startDestination) {
                 composable(Screen.Splash.route) {
                     SplashScreen(navController = navController)

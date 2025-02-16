@@ -48,7 +48,12 @@ fun NavigationBar(
                     icon = { Icon(it.icon.first, contentDescription = null) },
                     label = { Text(stringResource(it.titleResource)) },
                     selected = it.isCurrentDestination(currentDestination),
-                    onClick = { navController.navigate(it.route) }
+                    onClick = {
+                        // Only navigate if the current destination is not the same as the destination
+                        if (currentDestination?.route != it.route) {
+                            navController.navigate(it.route)
+                        }
+                    }
                 )
             }
         },

@@ -164,7 +164,7 @@ fun PileDetailScreen(
             TitleTopAppBar(
                 textValue = viewState.titleTextValue,
                 onEdit = onEditTitle,
-                canDeleteOrEdit = viewState.canDeleteOrEdit,
+                canEdit = true,
                 contentDescription = "close the pile detail",
                 onButtonClick = onClose
             )
@@ -215,7 +215,7 @@ fun PileDetailScreen(
         }
         Button(
             onClick = { deletePileDialogOpen = true },
-            enabled = viewState.canDeleteOrEdit,
+            enabled = viewState.canDelete,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.errorContainer,

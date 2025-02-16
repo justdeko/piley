@@ -121,7 +121,7 @@ fun TitleTopAppBarPreview() {
 @Preview
 fun TitleTopAppBarDisabledPreview() {
     PileyTheme(useDarkTheme = true) {
-        TitleTopAppBar(textValue = "some title", canDeleteOrEdit = false, onButtonClick = {})
+        TitleTopAppBar(textValue = "some title", canEdit = false, onButtonClick = {})
     }
 }
 

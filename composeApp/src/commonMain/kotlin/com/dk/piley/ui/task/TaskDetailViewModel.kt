@@ -187,7 +187,7 @@ class TaskDetailViewModel(
      * @param title title text value
      */
     fun editTitle(title: String) {
-        if (title.length > titleCharacterLimit) return
+        if (title.length > titleCharacterLimit || title.isEmpty()) return
         state.update {
             it.copy(titleTextValue = title)
         }

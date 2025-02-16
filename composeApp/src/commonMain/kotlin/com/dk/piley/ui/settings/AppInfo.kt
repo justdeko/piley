@@ -52,7 +52,7 @@ fun AppInfo(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
-        IconButton(onClick = { uriHandler.openUri("https://justdeko.github.io/piley/") }) {
+        IconButton(onClick = { uriHandler.openUri("https://denisk.dev/piley/") }) {
             Icon(
                 Icons.Filled.Info,
                 "website link",

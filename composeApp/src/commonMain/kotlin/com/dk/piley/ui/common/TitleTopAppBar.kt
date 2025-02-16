@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * Top app bar with title
  *
  * @param textValue title text
- * @param canDeleteOrEdit if title should be displayed as editable (enabled vs. disabled)
+ * @param canEdit if title should be displayed as editable (enabled vs. disabled)
  * @param justTitle whether it is just the title or an editable title
  * @param onEdit on title edit
  * @param icon title icon
@@ -28,7 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 @Composable
 fun TitleTopAppBar(
     textValue: String,
-    canDeleteOrEdit: Boolean = false,
+    canEdit: Boolean = false,
     justTitle: Boolean = false,
     onEdit: (String) -> Unit = {},
     icon: ImageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -43,7 +43,7 @@ fun TitleTopAppBar(
                     style = MaterialTheme.typography.headlineMedium
                 )
             } else {
-                EditableTitleText(textValue, canDeleteOrEdit, onEdit)
+                EditableTitleText(textValue, canEdit, onEdit)
             }
         },
         navigationIcon = {

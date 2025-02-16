@@ -1,5 +1,6 @@
 package com.dk.piley.ui.profile
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,9 +20,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -100,26 +100,33 @@ fun ProfileScreen(
 ) {
     val scrollState = rememberScrollState()
     TwoPaneScreen(
+        modifier = modifier,
         mainContent = { isTabletWide ->
             Column(
-                modifier
+                Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
             ) {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = LocalDim.current.large,
-                            end = LocalDim.current.large,
-                            top = LocalDim.current.large
-                        )
+                InitialSlideIn(
+                    direction = SlideDirection.DOWN,
+                    pathLengthInDp = 40,
+                    initialTransitionStateValue = initialTransitionStateValue
                 ) {
-                    InitialSlideIn(
-                        direction = SlideDirection.RIGHT,
-                        pathLengthInDp = 40,
-                        initialTransitionStateValue = initialTransitionStateValue
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = LocalDim.current.large,
+                                end = LocalDim.current.large,
+                                top = LocalDim.current.large
+                            ),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        UserInfo(
+                            modifier = Modifier.weight(1f),
+                            name = viewState.userName
+                        )
                         IconButton(onClick = onClickSettings) {
                             Icon(
                                 Icons.Filled.Settings,
@@ -127,24 +134,6 @@ fun ProfileScreen(
                                 contentDescription = "go to settings"
                             )
                         }
-                    }
-                    InitialSlideIn(
-                        modifier = Modifier.weight(1f),
-                        direction = SlideDirection.DOWN,
-                        pathLengthInDp = 40,
-                        initialTransitionStateValue = initialTransitionStateValue
-                    ) {
-                        UserInfo(
-                            modifier = Modifier.padding(top = 40.dp),
-                            name = viewState.userName
-                        )
-                    }
-                    IconButton(onClick = {}) {
-                        Icon(
-                            Icons.Filled.Settings,
-                            tint = Color.Transparent,
-                            contentDescription = "placeholder"
-                        )
                     }
                 }
                 InitialSlideIn(

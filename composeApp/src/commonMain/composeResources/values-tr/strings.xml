@@ -211,8 +211,6 @@
     <string name="pile_page_title">Pile</string>
     <string name="pile_page_description">Bir yığın, adından da anlaşılacağı gibi - görevlerinizin bir yığınıdır. Yeni bir görev oluşturmak için alta tıklayın veya görevleri tamamlamak için kaydırın.</string>
     <string name="piles_page_title">Yığınlar</string>
-    <string name="recurring_pile_page_title">Yinelenen Görevler</string>
-    <string name="recurring_pile_page_description">Bir görev için yinelenen bir anımsatıcı ayarlarsanız, yığınınızdaki bu görevleri değiştirmek için sağ altta bir saat düğmesi görünecektir.</string>
     <string name="piles_page_description">Uzun basma ile yığın detaylarına giderek yığınlarınızı yönetin veya hemen bir tıklama ile o kazığa atlayın.</string>
     <string name="profile_page_title">Profil</string>
     <string name="profile_page_description">Ayrıca profil bölümüne giderek genel istatistikleri ve yaklaşan görevleri de görebilirsiniz.</string>

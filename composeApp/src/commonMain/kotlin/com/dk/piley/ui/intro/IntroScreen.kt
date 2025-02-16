@@ -79,8 +79,8 @@ fun IntroScreen(
     val pages = listOf(
         IntroPage.Welcome,
         IntroPage.Pile,
-        IntroPage.RecurringPile,
         IntroPage.Piles,
+        IntroPage.PileDetails,
         IntroPage.Profile,
         IntroPage.End
     )

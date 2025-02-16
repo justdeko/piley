@@ -13,10 +13,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.util.BigSpacer
+import com.dk.piley.util.isTabletWide
 import com.dk.piley.util.roundedOutline
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -39,7 +41,12 @@ fun IntroPageContent(
     onClickButton: () -> Unit = {}
 ) {
     val dim = LocalDim.current
-    val resourceId = if (isSystemInDarkTheme()) introPage.imageNightResource else introPage.imageResource
+    val resourceId =
+        when {
+            isTabletWide() -> introPage.tabletResource
+            isSystemInDarkTheme() -> introPage.imageNightResource
+            else -> introPage.imageResource
+        }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -55,6 +62,7 @@ fun IntroPageContent(
                     if (introPage.isScreenshot) Modifier.roundedOutline() else Modifier
                 ),
             painter = painterResource(resourceId),
+            contentScale = if (introPage.isScreenshot) ContentScale.Crop else ContentScale.Fit,
             contentDescription = "intro page image"
         )
         Text(

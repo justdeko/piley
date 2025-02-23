@@ -19,6 +19,6 @@ fun resourcesPath(): String? {
     }.getOrNull()
 }
 
-const val VERSION_NUMBER = "0.8.1"
+const val VERSION_NUMBER = "0.8.2"
 
 actual val appPlatform: Platform = Platform.DESKTOP

@@ -1,6 +1,7 @@
 package com.dk.piley.ui.common
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,8 +11,8 @@ import com.dk.piley.util.isTabletWide
 @Composable
 fun TwoPaneScreen(
     modifier: Modifier = Modifier,
-    mainContent: @Composable (Boolean) -> Unit,
-    detailContent: @Composable () -> Unit
+    mainContent: @Composable ColumnScope.(Boolean) -> Unit,
+    detailContent: @Composable ColumnScope.() -> Unit
 ) {
     val isTabletWide = isTabletWide()
     Row(modifier = modifier) {

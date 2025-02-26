@@ -1,6 +1,6 @@
 [versions]
 adaptive = "1.0.1"
-agp = "8.8.1"
+agp = "8.8.2"
 datastorePreferences = "1.1.2"
 kotlin = "2.1.10"
 kotlinxDatetime = "0.6.2"

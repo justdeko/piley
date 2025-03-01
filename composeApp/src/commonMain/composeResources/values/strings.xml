@@ -85,7 +85,7 @@
     <string name="upcoming_tasks_section_title">Upcoming Tasks</string>
     <string name="done_tasks_label">Done</string>
     <string name="current_tasks_label">Current</string>
-    <string name="deleted_tasks_label">Deleted</string>
+    <string name="recurring_tasks_label">Recurring</string>
     <string name="tasks_completed_past_days_label">Tasks completed in the last 7 days:</string>
     <string name="biggest_pile_label">Biggest Pile right now:</string>
     <string name="no_upcoming_tasks_hint">No upcoming tasks</string>

@@ -31,7 +31,7 @@
     <string name="upcoming_tasks_section_title">Anstehende Tasks</string>
     <string name="done_tasks_label">Fertig</string>
     <string name="current_tasks_label">Aktuell</string>
-    <string name="deleted_tasks_label">Gelöscht</string>
+    <string name="recurring_tasks_label">Wiederholend</string>
     <string name="tasks_completed_past_days_label">Aufgaben in den letzten 7 Tagen abgeschlossen:</string>
     <string name="biggest_pile_label">Größter Pile aktuell:</string>
     <string name="no_upcoming_tasks_hint">Keine anstehenden Tasks</string>

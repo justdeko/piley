@@ -182,7 +182,7 @@ fun PileDetailScreen(
                         MediumSpacer()
                         PileStatistics(
                             doneCount = viewState.doneCount,
-                            deletedCount = viewState.deletedCount,
+                            recurringCount = viewState.recurringCount,
                             currentCount = viewState.currentCount,
                             completedTaskCounts = viewState.completedTaskCounts,
                             currentDay = today,

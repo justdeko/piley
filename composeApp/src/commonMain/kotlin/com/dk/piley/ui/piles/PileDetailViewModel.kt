@@ -67,8 +67,8 @@ class PileDetailViewModel(
                                             )
                                 }.sortedByDescending { it.modifiedAt }.take(3),
                             doneCount = pileWithTasks.tasks.count { it.status == TaskStatus.DONE },
-                            deletedCount = pileWithTasks.pile.deletedCount,
                             currentCount = pileWithTasks.tasks.count { it.status == TaskStatus.DEFAULT },
+                            recurringCount = pileWithTasks.tasks.count { it.isRecurring },
                             canDelete = id != user.defaultPileId
                         )
                     }
@@ -121,7 +121,6 @@ class PileDetailViewModel(
     fun clearStatistics() {
         viewModelScope.launch {
             taskRepository.deleteAllCompletedDeletedTasksForPile(state.value.pile.pileId)
-            pileRepository.updatePile(state.value.pile.copy(deletedCount = 0))
         }
     }
 
@@ -146,8 +145,8 @@ data class PileDetailViewState(
     val completedTaskCounts: List<Int> = emptyList(),
     val modifiedTasks: List<Task> = emptyList(),
     val doneCount: Int = 0,
-    val deletedCount: Int = 0,
     val currentCount: Int = 0,
+    val recurringCount: Int = 0,
     val titleTextValue: String = "",
     val descriptionTextValue: String = "",
     val canDelete: Boolean = true

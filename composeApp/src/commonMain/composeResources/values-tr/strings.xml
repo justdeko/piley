@@ -81,7 +81,7 @@
     <string name="upcoming_tasks_section_title">Yaklaşan Görevler</string>
     <string name="done_tasks_label">Bitti</string>
     <string name="current_tasks_label">Mevcut</string>
-    <string name="deleted_tasks_label">Silindi</string>
+    <string name="recurring_tasks_label">Yinelenme</string>
     <string name="tasks_completed_past_days_label">Son 7 gün içinde tamamlanan görevler:</string>
     <string name="biggest_pile_label">Şu anda en büyük yığın:</string>
     <string name="no_upcoming_tasks_hint">Yaklaşan görev yok</string>

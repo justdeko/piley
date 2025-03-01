@@ -26,7 +26,7 @@ fun SupportingPileDetailScreen(
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         PileStatistics(
             doneCount = pile.tasks.count { it.status == TaskStatus.DONE },
-            deletedCount = pile.pile.deletedCount,
+            recurringCount = pile.tasks.count { it.isRecurring },
             currentCount = pile.tasks.count { it.status == TaskStatus.DEFAULT },
             completedTaskCounts = getCompletedTasksForWeekValues(pile),
             clearStatisticsVisible = false,

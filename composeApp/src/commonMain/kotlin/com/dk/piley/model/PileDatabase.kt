@@ -3,9 +3,11 @@ package com.dk.piley.model
 import androidx.room.AutoMigration
 import androidx.room.ConstructedBy
 import androidx.room.Database
+import androidx.room.DeleteColumn
 import androidx.room.RoomDatabase
 import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
 import com.dk.piley.model.pile.Pile
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.task.Task
@@ -35,9 +37,14 @@ internal const val PILE_DATABASE_NAME = "piley-db"
         AutoMigration(
             from = 4,
             to = 5
+        ),
+        AutoMigration(
+            from = 5,
+            to = 6,
+            spec = FiveToSixMigrationSpec::class
         )
     ],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -52,3 +59,6 @@ abstract class PileDatabase : RoomDatabase() {
 expect object PileDatabaseConstructor : RoomDatabaseConstructor<PileDatabase> {
     override fun initialize(): PileDatabase
 }
+
+@DeleteColumn(tableName = "Pile", columnName = "deletedCount")
+class FiveToSixMigrationSpec : AutoMigrationSpec

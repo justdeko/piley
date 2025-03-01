@@ -12,7 +12,6 @@ import com.dk.piley.util.getUpcomingTasks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -40,14 +39,15 @@ class ProfileViewModel(
             userFlow.combine(pileFlow) { user, pilesWithTasks ->
                 val tasks = pilesWithTasks.flatMap { it.tasks }
                 val done = tasks.count { it.status == TaskStatus.DONE }
-                val deleted = pilesWithTasks.sumOf { it.pile.deletedCount }
+                val recurring =
+                    pilesWithTasks.sumOf { pileWithTasks -> pileWithTasks.tasks.count { it.isRecurring } }
                 val current = tasks.count { it.status == TaskStatus.DEFAULT }
                 val completedTasksForWeekValues = getCompletedTasksForWeekValues(tasks)
 
                 state.value.copy(
                     userName = user.name,
                     doneTasks = done,
-                    deletedTasks = deleted,
+                    recurringTasks = recurring,
                     currentTasks = current,
                     upcomingTaskList = getUpcomingTasks(pilesWithTasks),
                     biggestPileName = getBiggestPileName(pilesWithTasks),
@@ -65,13 +65,6 @@ class ProfileViewModel(
     private suspend fun deleteDeletedTasks() {
         // launch in io thread to prevent view blocking
         withContext(Dispatchers.IO) {
-            val piles = pileRepository.getPilesWithTasks().firstOrNull()
-            // updated all piles with deleted count
-            piles?.forEach { pileWithTasks ->
-                val deletedCount =
-                    pileWithTasks.pile.deletedCount + pileWithTasks.tasks.count { it.status == TaskStatus.DELETED }
-                pileRepository.updatePile(pileWithTasks.pile.copy(deletedCount = deletedCount))
-            }
             // delete all deleted tasks
             pileRepository.deleteDeletedTasks()
             // set preference to true
@@ -91,7 +84,7 @@ class ProfileViewModel(
 data class ProfileViewState(
     val userName: String = "",
     val doneTasks: Int = 0,
-    val deletedTasks: Int = 0,
+    val recurringTasks: Int = 0,
     val currentTasks: Int = 0,
     val upcomingTaskList: List<Pair<String, Task>> = emptyList(),
     val tasksCompletedPastDays: Int = 0,

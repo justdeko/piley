@@ -149,7 +149,7 @@ fun ProfileScreen(
                         ) {
                             TaskStats(
                                 doneCount = viewState.doneTasks,
-                                deletedCount = viewState.deletedTasks,
+                                recurringCount = viewState.recurringTasks,
                                 currentCount = viewState.currentTasks,
                                 tasksCompletedPastDays = viewState.tasksCompletedPastDays,
                                 biggestPile = viewState.biggestPileName

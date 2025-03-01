@@ -20,8 +20,8 @@ import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.biggest_pile_label
 import piley.composeapp.generated.resources.current_tasks_label
-import piley.composeapp.generated.resources.deleted_tasks_label
 import piley.composeapp.generated.resources.done_tasks_label
+import piley.composeapp.generated.resources.recurring_tasks_label
 import piley.composeapp.generated.resources.tasks_completed_past_days_label
 
 /**
@@ -29,7 +29,7 @@ import piley.composeapp.generated.resources.tasks_completed_past_days_label
  *
  * @param modifier generic modifier
  * @param doneCount completed task count
- * @param deletedCount deleted task count
+ * @param recurringCount recurring task count
  * @param currentCount current task count
  * @param tasksCompletedPastDays number of tasks completed in the last n days
  * @param biggestPile name of the pile with the largest amount of tasks
@@ -40,7 +40,7 @@ import piley.composeapp.generated.resources.tasks_completed_past_days_label
 fun TaskStats(
     modifier: Modifier = Modifier,
     doneCount: Int,
-    deletedCount: Int,
+    recurringCount: Int,
     currentCount: Int,
     tasksCompletedPastDays: Int = 0,
     biggestPile: String = "",
@@ -64,8 +64,8 @@ fun TaskStats(
                 contentStyle = MaterialTheme.typography.headlineLarge
             )
             StatsColumn(
-                description = stringResource(Res.string.deleted_tasks_label),
-                content = deletedCount.toString()
+                description = stringResource(Res.string.recurring_tasks_label),
+                content = recurringCount.toString()
             )
         }
         if (!tasksOnly) {

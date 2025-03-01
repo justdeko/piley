@@ -31,7 +31,7 @@ import piley.composeapp.generated.resources.statistics_section_title
  *
  * @param modifier generic modifier
  * @param doneCount completed tasks in pile count
- * @param deletedCount deleted tasks in pile count
+ * @param recurringCount recurring tasks in pile count
  * @param currentCount current tasks in pile count
  * @param completedTaskCounts 7-day list of completed task frequencies
  * @param currentDay current date of today
@@ -43,7 +43,7 @@ import piley.composeapp.generated.resources.statistics_section_title
 fun PileStatistics(
     modifier: Modifier = Modifier,
     doneCount: Int = 0,
-    deletedCount: Int = 0,
+    recurringCount: Int = 0,
     currentCount: Int = 0,
     completedTaskCounts: List<Int> = emptyList(),
     currentDay: LocalDate = Clock.System.now().toLocalDateTime().date,
@@ -78,7 +78,7 @@ fun PileStatistics(
         }
         TaskStats(
             doneCount = doneCount,
-            deletedCount = deletedCount,
+            recurringCount = recurringCount,
             currentCount = currentCount,
             tasksOnly = true
         )

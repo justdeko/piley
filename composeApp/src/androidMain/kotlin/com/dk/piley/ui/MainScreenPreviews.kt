@@ -64,7 +64,7 @@ private fun ProfileScreenPreview() {
                     userName = "John Doe",
                     doneTasks = 244,
                     currentTasks = 13,
-                    deletedTasks = 3,
+                    recurringTasks = 3,
                     upcomingTaskList = previewUpcomingTasksList,
                     tasksCompletedPastDays = 27,
                     completedTaskFrequencies = listOf(1, 7, 8, 2, 5, 3, 1),
@@ -106,7 +106,7 @@ private fun PileDetailScreenPreview() {
                     completedTaskCounts = listOf(2, 6, 7, 3, 1, 1, 3),
                     doneCount = 3,
                     currentCount = 4,
-                    deletedCount = 1,
+                    recurringCount = 1,
                 )
             )
         }

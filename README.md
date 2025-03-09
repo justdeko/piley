@@ -18,7 +18,7 @@
   </p>
 <a href='https://play.google.com/store/apps/details?id=com.dk.piley'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
 <p align="center">
-    <a href="https://testflight.apple.com/join/zVQVUXFb">iOS Testflight Beta</a>
+    iOS Testflight Beta (coming soon)
     ·
     <a href="https://github.com/justdeko/piley/releases">Mac release</a>
   </p>

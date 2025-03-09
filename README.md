@@ -18,7 +18,7 @@
   </p>
 <a href='https://play.google.com/store/apps/details?id=com.dk.piley'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
 <p align="center">
-    iOS Testflight Beta (coming soon)
+    <a href="https://testflight.apple.com/join/zVQVUXFb">iOS Testflight Beta</a>
     ·
     <a href="https://github.com/justdeko/piley/releases">Mac release</a>
   </p>
@@ -46,8 +46,7 @@
 ## About piley
 
 piley is a small To-Do app that uses piles to manage your tasks. You can stack up tasks within a
-pile, create and manage your piles and also set reminders and recurring tasks. If you set up a
-server, you can also back up your tasks and sync regularly to get the newest state.
+pile, create new piles and also set reminders and recurring tasks. piley was built using Compose Multiplatform and is available on Android, iOS and Desktop. 
 
 <div align="center">
   <p>

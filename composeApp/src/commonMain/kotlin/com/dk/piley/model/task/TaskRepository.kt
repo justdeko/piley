@@ -4,6 +4,8 @@ import com.dk.piley.reminder.INotificationManager
 import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.reminder.getNextReminderTime
 import com.dk.piley.reminder.withNewCompletionTime
+import com.dk.piley.util.Platform
+import com.dk.piley.util.appPlatform
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
@@ -61,8 +63,14 @@ class TaskRepository(
      * @param task the task entity
      * @return long representing db operation success
      */
-    suspend fun insertTask(task: Task): Long =
-        taskDao.insertTask(task.copy(modifiedAt = Clock.System.now()))
+    suspend fun insertTask(task: Task): Long {
+        val taskId = taskDao.insertTask(task.copy(modifiedAt = Clock.System.now()))
+        if (appPlatform == Platform.IOS && task.reminder != null) {
+            // for ios, we need to restart the reminder specifically to update task changes
+            reminderManager.startReminder(task.reminder, task)
+        }
+        return taskId
+    }
 
     suspend fun deleteAllCompletedDeletedTasksForPile(pileId: Long) =
         taskDao.deleteCompletedDeletedForPile(pileId)

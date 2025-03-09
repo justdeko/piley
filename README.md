@@ -72,9 +72,19 @@ piley is a native Android app built with Jetpack Compose. The following librarie
 
 ## Getting Started
 
-To start using piley, you can just get the newest apk from the
-**[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [google
-play](https://play.google.com/store/apps/details?id=com.dk.piley)
+### Android
+
+To start using piley on Android, you can just get the newest apk from the
+**[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [Google
+Play](https://play.google.com/store/apps/details?id=com.dk.piley).
+
+### iOS
+
+piley is currently in open testing beta for iOS, [you can sign up here](https://testflight.apple.com/join/zVQVUXFb).
+
+### Desktop
+
+piley for desktop is currently only available for Mac as an unsigned `.dmg` file. Get it under "Assets" of the [latest release](https://github.com/justdeko/piley/releases) in the releases section.
 
 ## Planned features
 

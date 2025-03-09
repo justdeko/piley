@@ -74,7 +74,7 @@ android {
         applicationId = "com.dk.piley"
         minSdk = 26
         targetSdk = 35
-        versionCode = 16
+        versionCode = 17
         versionName = "0.8.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -122,9 +122,9 @@ compose.desktop {
                 "-Dapple.awt.application.appearance=system"
             )
             packageName = "piley"
-            packageVersion = "1.8.1"
+            packageVersion = "1.8.2"
             // copyright with copyright symbol
-            copyright = "© 2024 Denis Koljada. All rights reserved."
+            copyright = "© 2025 Denis Koljada. All rights reserved."
             // fixes datastore unsafe issue: https://github.com/JetBrains/compose-multiplatform/issues/2686
             modules("jdk.unsupported")
             appResourcesRootDir.set(project.layout.projectDirectory.dir("resources"))

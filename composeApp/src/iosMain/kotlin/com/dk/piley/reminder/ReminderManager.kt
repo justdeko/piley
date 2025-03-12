@@ -4,11 +4,6 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toNSDateComponents
-import org.jetbrains.compose.resources.getString
-import piley.composeapp.generated.resources.Res
-import piley.composeapp.generated.resources.reminder_complete_action
-import piley.composeapp.generated.resources.reminder_custom_delay_action
-import piley.composeapp.generated.resources.reminder_delay_action
 import platform.UserNotifications.UNCalendarNotificationTrigger
 import platform.UserNotifications.UNMutableNotificationContent
 import platform.UserNotifications.UNNotificationAction
@@ -21,22 +16,22 @@ import platform.UserNotifications.UNNotificationSound
 import platform.UserNotifications.UNUserNotificationCenter
 
 class ReminderManager : IReminderManager {
-    override suspend fun startReminder(reminderTime: Instant, task: Task) {
+    override suspend fun startReminder(reminderTime: Instant, task: Task, actionTitles: Triple<String, String, String>) {
         val notificationCenter = UNUserNotificationCenter.currentNotificationCenter()
         // set actions and categories
         val delayAction = UNNotificationAction.actionWithIdentifier(
             identifier = NotificationAction.DELAY.identifier,
-            title = getString(Res.string.reminder_delay_action),
+            title = actionTitles.first,
             options = UNNotificationActionOptionNone
         )
         val delayByAction = UNNotificationAction.actionWithIdentifier(
             identifier = NotificationAction.DELAY_BY.identifier,
-            title = getString(Res.string.reminder_custom_delay_action),
+            title = actionTitles.second,
             options = UNNotificationActionOptionForeground
         )
         val doneAction = UNNotificationAction.actionWithIdentifier(
             identifier = NotificationAction.DONE.identifier,
-            title = getString(Res.string.reminder_complete_action),
+            title = actionTitles.third,
             options = UNNotificationActionOptionNone
         )
         // Create category with actions

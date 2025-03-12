@@ -23,9 +23,12 @@ class ReminderManager(private val context: Context): IReminderManager {
      *
      * @param reminderTime timestamp representing the reminder time
      * @param task task to show the reminder for
+     * @param actionTitles reminder action titles
      */
     override suspend fun startReminder(
-        reminderTime: Instant, task: Task
+        reminderTime: Instant,
+        task: Task,
+        actionTitles: Triple<String, String, String>
     ) {
         val intent = Intent(context.applicationContext, ReminderAlarmReceiver::class.java).apply {
             action = ReminderAlarmReceiver.ACTION_SHOW

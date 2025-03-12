@@ -12,6 +12,11 @@ import kotlinx.coroutines.flow.take
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.plus
+import org.jetbrains.compose.resources.getString
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.reminder_complete_action
+import piley.composeapp.generated.resources.reminder_custom_delay_action
+import piley.composeapp.generated.resources.reminder_delay_action
 
 /**
  * Task repository for performing database operations regarding tasks
@@ -48,7 +53,8 @@ class TaskRepository(
         if (task.status == TaskStatus.DEFAULT && undo && task.reminder != null) {
             reminderManager.startReminder(
                 reminderTime = task.reminder,
-                task = task
+                task = task,
+                actionTitles = getReminderActionTitles()
             )
         }
         // remove notification or scheduled alarms if task is set to done/deleted
@@ -67,7 +73,7 @@ class TaskRepository(
         val taskId = taskDao.insertTask(task.copy(modifiedAt = Clock.System.now()))
         if (appPlatform == Platform.IOS && task.reminder != null) {
             // for ios, we need to restart the reminder specifically to update task changes
-            reminderManager.startReminder(task.reminder, task)
+            reminderManager.startReminder(task.reminder, task, getReminderActionTitles())
         }
         return taskId
     }
@@ -90,7 +96,8 @@ class TaskRepository(
             task.getNextReminderTime().let {
                 reminderManager.startReminder(
                     reminderTime = it,
-                    task = task
+                    task = task,
+                    actionTitles = getReminderActionTitles()
                 )
                 // set new reminder time inside task
                 return taskDao.insertTask(
@@ -119,7 +126,7 @@ class TaskRepository(
                     )
         }.forEach { task ->
             task.reminder?.let { reminder ->
-                reminderManager.startReminder(reminder, task)
+                reminderManager.startReminder(reminder, task, getReminderActionTitles())
             }
         }
     }
@@ -131,7 +138,14 @@ class TaskRepository(
             insertTask(task.copy(reminder = newReminderTime))
         }
         // start new reminder
-        reminderManager.startReminder(newReminderTime, task)
+        reminderManager.startReminder(newReminderTime, task, getReminderActionTitles())
         notificationManager.dismiss(task.id)
     }
+
+    // TODO see if this is still needed, workaround for iOS
+    suspend fun getReminderActionTitles() = Triple(
+        getString(Res.string.reminder_delay_action),
+        getString(Res.string.reminder_custom_delay_action),
+        getString(Res.string.reminder_complete_action)
+    )
 }

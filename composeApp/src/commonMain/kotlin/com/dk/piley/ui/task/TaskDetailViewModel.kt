@@ -128,8 +128,9 @@ class TaskDetailViewModel(
             dismissAlarmAndNotification()
             // start new reminder
             reminderManager.startReminder(
-                reminderState.reminder.toInstantWithOffset(),
-                state.value.task
+                reminderTime = reminderState.reminder.toInstantWithOffset(),
+                task = state.value.task,
+                actionTitles = taskRepository.getReminderActionTitles()
             )
         }
     }

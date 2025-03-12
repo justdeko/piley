@@ -17,7 +17,11 @@
     <a href="https://github.com/justdeko/piley/issues">suggest feature</a>
   </p>
 <a href='https://play.google.com/store/apps/details?id=com.dk.piley'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
-<div>Coming soon to iOS and desktop!</div>
+<p align="center">
+    <a href="https://testflight.apple.com/join/zVQVUXFb">iOS Testflight Beta</a>
+    ·
+    <a href="https://github.com/justdeko/piley/releases">Mac release</a>
+  </p>
 </div>
 
 
@@ -42,8 +46,7 @@
 ## About piley
 
 piley is a small To-Do app that uses piles to manage your tasks. You can stack up tasks within a
-pile, create and manage your piles and also set reminders and recurring tasks. If you set up a
-server, you can also back up your tasks and sync regularly to get the newest state.
+pile, create new piles and also set reminders and recurring tasks. piley was built using Compose Multiplatform and is available on Android, iOS and Desktop. 
 
 <div align="center">
   <p>
@@ -69,9 +72,19 @@ piley is a native Android app built with Jetpack Compose. The following librarie
 
 ## Getting Started
 
-To start using piley, you can just get the newest apk from the
-**[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [google
-play](https://play.google.com/store/apps/details?id=com.dk.piley)
+### Android
+
+To start using piley on Android, you can just get the newest apk from the
+**[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [Google
+Play](https://play.google.com/store/apps/details?id=com.dk.piley).
+
+### iOS
+
+piley is currently in open testing beta for iOS, [you can sign up here](https://testflight.apple.com/join/zVQVUXFb).
+
+### Desktop
+
+piley for desktop is currently only available for Mac as an unsigned `.dmg` file. Get it under "Assets" of the [latest release](https://github.com/justdeko/piley/releases) in the releases section.
 
 ## Planned features
 

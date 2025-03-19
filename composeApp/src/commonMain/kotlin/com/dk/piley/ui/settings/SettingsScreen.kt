@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -94,7 +95,8 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = viewModel {
         SettingsViewModel(
             userRepository = Piley.getModule().userRepository,
-            pileRepository = Piley.getModule().pileRepository
+            pileRepository = Piley.getModule().pileRepository,
+            databaseExporter = Piley.getModule().databaseExporter
         )
     }
 ) {
@@ -103,14 +105,19 @@ fun SettingsScreen(
     // snackbar handler
     viewState.message?.let { message ->
         LaunchedEffect(message, snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                when (message) {
-                    StatusMessage.USER_UPDATE_SUCCESSFUL -> getString(Res.string.user_update_success_info)
-                    StatusMessage.USER_UPDATE_ERROR -> getString(Res.string.update_user_error_wrong_password)
-                    StatusMessage.USER_DELETED -> getString(Res.string.delete_user_success_info)
-                    StatusMessage.USER_DELETED_ERROR -> getString(Res.string.delete_user_error_wrong_password)
+            when (message) {
+                StatusMessage.UserUpdateSuccessful -> snackbarHostState.showSnackbar(getString(Res.string.user_update_success_info))
+                StatusMessage.UserUpdateError -> snackbarHostState.showSnackbar(getString(Res.string.update_user_error_wrong_password))
+                StatusMessage.UserDeleted -> snackbarHostState.showSnackbar(getString(Res.string.delete_user_success_info))
+                StatusMessage.UserDeletedError -> snackbarHostState.showSnackbar(getString(Res.string.delete_user_error_wrong_password))
+                is StatusMessage.BackupError -> snackbarHostState.showSnackbar("Error exporting database")
+                is StatusMessage.BackupSuccess -> {
+                    val result = snackbarHostState.showSnackbar("Database exported", "Share")
+                    if (result == SnackbarResult.ActionPerformed) {
+                        viewModel.shareFile(message.path)
+                    }
                 }
-            )
+            }
             // reset message
             viewModel.resetMessage()
         }
@@ -136,7 +143,8 @@ fun SettingsScreen(
         onDeleteUser = { viewModel.deleteUser() },
         onCloseSettings = { navController.popBackStack() },
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
-        onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) }
+        onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) },
+        onExportDatabase = { viewModel.exportDatabase() }
     )
 }
 
@@ -157,6 +165,7 @@ fun SettingsScreen(
  * @param onCloseSettings on close settings screen
  * @param onStartTutorial on restart tutorial
  * @param onShowRecurringTasks show recurring tasks by default
+ * @param onExportDatabase export database backup
  */
 @Composable
 internal fun SettingsScreen(
@@ -174,6 +183,7 @@ internal fun SettingsScreen(
     onCloseSettings: () -> Unit = {},
     onStartTutorial: () -> Unit = {},
     onShowRecurringTasks: (Boolean) -> Unit = {},
+    onExportDatabase: () -> Unit = {}
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(Res.array.night_modes).toList()
@@ -318,6 +328,11 @@ internal fun SettingsScreen(
                         title = stringResource(Res.string.delete_user_setting_title),
                         description = stringResource(Res.string.delete_user_setting_description),
                         onClick = { deleteUserDialogOpen = true }
+                    )
+                    SettingsItem(
+                        title = "Export Database Backup",
+                        description = "Export your data as a backup file",
+                        onClick = onExportDatabase
                     )
                     SettingsItem(
                         title = stringResource(Res.string.start_tutorial_setting_title),

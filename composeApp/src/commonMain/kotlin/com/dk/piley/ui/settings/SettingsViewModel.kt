@@ -2,12 +2,16 @@ package com.dk.piley.ui.settings
 
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
+import com.dk.piley.model.backup.ExportResult
+import com.dk.piley.model.backup.IDatabaseExporter
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.reminder.DelayRange
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -17,10 +21,12 @@ import kotlinx.coroutines.launch
  *
  * @property userRepository user repository instance
  * @property pileRepository pile repository instance
+ * @property databaseExporter database exporter instance
  */
 class SettingsViewModel(
     private val userRepository: UserRepository,
     private val pileRepository: PileRepository,
+    private val databaseExporter: IDatabaseExporter,
 ) : StatefulViewModel<SettingsViewState>(SettingsViewState()) {
 
     init {
@@ -142,7 +148,7 @@ class SettingsViewModel(
             if (existingUser != null) {
                 deleteUserLocally()
             } else {
-                state.update { it.copy(message = StatusMessage.USER_DELETED_ERROR) }
+                state.update { it.copy(message = StatusMessage.UserDeletedError) }
             }
         }
     }
@@ -159,7 +165,7 @@ class SettingsViewModel(
             it.copy(
                 loading = false,
                 userDeleted = true,
-                message = StatusMessage.USER_DELETED
+                message = StatusMessage.UserDeleted
             )
         }
     }
@@ -187,7 +193,7 @@ class SettingsViewModel(
                 state.update {
                     it.copy(
                         loading = false,
-                        message = StatusMessage.USER_UPDATE_ERROR
+                        message = StatusMessage.UserUpdateError
                     )
                 }
             }
@@ -209,10 +215,34 @@ class SettingsViewModel(
         state.update {
             it.copy(
                 loading = false,
-                message = StatusMessage.USER_UPDATE_SUCCESSFUL
+                message = StatusMessage.UserUpdateSuccessful
             )
         }
     }
+
+    fun exportDatabase() {
+        state.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseExporter.exportPileDatabase().collect { exportResult ->
+                when (exportResult) {
+                    is ExportResult.Error -> state.update {
+                        it.copy(
+                            message = StatusMessage.BackupError(exportResult.message)
+                        )
+                    }
+
+                    is ExportResult.Success -> state.update {
+                        it.copy(
+                            message = StatusMessage.BackupSuccess(exportResult.path)
+                        )
+                    }
+                }
+                state.update { it.copy(loading = false) }
+            }
+        }
+    }
+
+    fun shareFile(filePath: String) = databaseExporter.shareFile(filePath)
 }
 
 data class SettingsViewState(
@@ -223,9 +253,11 @@ data class SettingsViewState(
     val skipSplashScreen: Boolean = false,
 )
 
-enum class StatusMessage {
-    USER_UPDATE_SUCCESSFUL,
-    USER_UPDATE_ERROR,
-    USER_DELETED,
-    USER_DELETED_ERROR
+sealed interface StatusMessage {
+    data object UserUpdateSuccessful : StatusMessage
+    data object UserUpdateError : StatusMessage
+    data object UserDeleted : StatusMessage
+    data object UserDeletedError : StatusMessage
+    data class BackupSuccess(val path: String) : StatusMessage
+    data class BackupError(val message: String) : StatusMessage
 }

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalForeignApi::class)
+
 package com.dk.piley.model.backup
 
 import com.dk.piley.model.PILE_DATABASE_NAME
@@ -9,7 +11,6 @@ import kotlinx.coroutines.flow.flow
 import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
-import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIActivityViewController
@@ -18,53 +19,45 @@ import platform.UIKit.popoverPresentationController
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 
-class DatabaseExporter(
-    private val rootController: UIViewController? = IosUiUtils.getRootViewController()
-) : IDatabaseExporter {
+class DatabaseExporter : IDatabaseExporter {
+    private val rootController by lazy { IosUiUtils.getRootViewController() }
+
     override fun exportPileDatabase(): Flow<ExportResult> = flow {
         try {
             val dbPath = getDatabasePath()
-            val fileURL = NSURL.fileURLWithPath(dbPath)
-
-            if (rootController != null) {
-                val success = shareFile(fileURL, rootController)
-                if (success) {
-                    emit(ExportResult.Success(dbPath))
-                } else {
-                    emit(ExportResult.Error("Failed to share file"))
-                }
-            } else {
-                emit(ExportResult.Error("No view controller provided for sharing"))
-            }
+            emit(ExportResult.Success(dbPath, showAction = true))
         } catch (e: Exception) {
             emit(ExportResult.Error(e.toString()))
         }
     }
 
     override fun getDatabasePath(): String {
-        val paths = NSSearchPathForDirectoriesInDomains(
-            NSDocumentDirectory, NSUserDomainMask, true
+        val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
+            directory = NSDocumentDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = false,
+            error = null,
         )
-        val documentsDirectory = paths.firstOrNull() as? String ?: ""
-        return "$documentsDirectory/$PILE_DATABASE_NAME.sqlite"
+        return requireNotNull(documentDirectory?.path) + "/$PILE_DATABASE_NAME"
     }
 
     override fun shareFile(filePath: String) {
         if (rootController != null) {
-            shareFile(NSURL(filePath), rootController)
+            shareFile(filePath, rootController!!)
         }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun shareFile(fileURL: NSURL, viewController: UIViewController): Boolean {
-        if (!NSFileManager.defaultManager.fileExistsAtPath(fileURL.path ?: return false)) {
+    private fun shareFile(path: String, viewController: UIViewController): Boolean {
+        if (!NSFileManager.defaultManager.fileExistsAtPath(path)) {
             return false
         }
 
         // Dispatch to the main thread because UI operations must happen there
         dispatch_async(dispatch_get_main_queue()) {
             val activityViewController = UIActivityViewController(
-                activityItems = listOf(fileURL),
+                activityItems = listOf(NSURL(fileURLWithPath = path)),
                 applicationActivities = null
             )
 

@@ -3,26 +3,30 @@ package com.dk.piley.model.backup
 import com.dk.piley.model.PILE_DATABASE_NAME
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.awt.FileDialog
+import java.awt.Frame
 import java.io.File
-import javax.swing.JFileChooser
-import javax.swing.filechooser.FileNameExtensionFilter
 
 class DatabaseExporter : IDatabaseExporter {
     override fun exportPileDatabase(): Flow<ExportResult> = flow {
         try {
-            val dbPath = getDatabasePath()
-            val dbFile = File(dbPath)
+            val dbFile = File(System.getProperty("java.io.tmpdir"), PILE_DATABASE_NAME)
 
-            val fileChooser = JFileChooser()
-            fileChooser.dialogTitle = "Save Database File"
-            fileChooser.fileFilter = FileNameExtensionFilter("Database Files", "db", "sqlite")
-            fileChooser.selectedFile = File("$PILE_DATABASE_NAME.db")
+            // Use AWT FileDialog instead of JFileChooser for native look and feel
+            val fileDialog = FileDialog(null as Frame?, "Save Database File", FileDialog.SAVE)
+            fileDialog.file = "$PILE_DATABASE_NAME.db"
+            fileDialog.isVisible = true
 
-            val result = fileChooser.showSaveDialog(null)
-            if (result == JFileChooser.APPROVE_OPTION) {
-                val selectedFile = fileChooser.selectedFile
+            // Check if a file was selected or if the dialog was canceled
+            val selectedFile = if (fileDialog.file != null && fileDialog.directory != null) {
+                File(fileDialog.directory, fileDialog.file)
+            } else {
+                null
+            }
+
+            if (selectedFile != null) {
                 dbFile.copyTo(selectedFile, overwrite = true)
-                emit(ExportResult.Success(selectedFile.absolutePath))
+                emit(ExportResult.Success(path = selectedFile.absolutePath, showAction = false))
             } else {
                 emit(ExportResult.Error("Export cancelled"))
             }

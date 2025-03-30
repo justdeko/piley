@@ -110,7 +110,7 @@ fun SettingsScreen(
                 StatusMessage.UserUpdateError -> snackbarHostState.showSnackbar(getString(Res.string.update_user_error_wrong_password))
                 StatusMessage.UserDeleted -> snackbarHostState.showSnackbar(getString(Res.string.delete_user_success_info))
                 StatusMessage.UserDeletedError -> snackbarHostState.showSnackbar(getString(Res.string.delete_user_error_wrong_password))
-                is StatusMessage.BackupError -> snackbarHostState.showSnackbar("Error exporting database")
+                is StatusMessage.BackupError -> snackbarHostState.showSnackbar(message.message)
                 is StatusMessage.BackupSuccess -> {
                     val result = snackbarHostState.showSnackbar("Database exported", "Share")
                     if (result == SnackbarResult.ActionPerformed) {

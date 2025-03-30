@@ -26,6 +26,6 @@ interface IDatabaseExporter {
 }
 
 sealed interface ExportResult {
-    data class Success(val path: String) : ExportResult
+    data class Success(val path: String, val showAction: Boolean) : ExportResult
     data class Error(val message: String) : ExportResult
 }

@@ -12,10 +12,13 @@ import androidx.core.view.WindowCompat
 import com.dk.piley.ui.HomeScreen
 import com.dk.piley.ui.theme.ThemeHostScreen
 import com.dk.piley.util.getDynamicColorScheme
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.init
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        FileKit.init(this)
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {

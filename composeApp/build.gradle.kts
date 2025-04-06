@@ -58,6 +58,8 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.androidx.sqlite.bundled)
             implementation(libs.material3.window.size)
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

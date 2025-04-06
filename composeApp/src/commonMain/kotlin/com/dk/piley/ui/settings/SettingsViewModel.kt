@@ -4,12 +4,14 @@ import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
 import com.dk.piley.model.backup.ExportResult
 import com.dk.piley.model.backup.IDatabaseExporter
+import com.dk.piley.model.backup.ImportResult
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.user.NightMode
 import com.dk.piley.model.user.PileMode
 import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.reminder.DelayRange
+import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.combine
@@ -243,6 +245,24 @@ class SettingsViewModel(
     }
 
     fun shareFile(filePath: String) = databaseExporter.shareFile(filePath)
+
+    fun importDatabase(file: PlatformFile) {
+        state.update { it.copy(loading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseExporter.importPileDatabase(file).collect { importResult ->
+                when (importResult) {
+                    is ImportResult.Error -> state.update {
+                        it.copy(message = StatusMessage.ImportError(importResult.message))
+                    }
+
+                    is ImportResult.Success -> state.update {
+                        it.copy(message = StatusMessage.ImportSuccess)
+                    }
+                }
+                state.update { it.copy(loading = false) }
+            }
+        }
+    }
 }
 
 data class SettingsViewState(
@@ -260,4 +280,6 @@ sealed interface StatusMessage {
     data object UserDeletedError : StatusMessage
     data class BackupSuccess(val path: String) : StatusMessage
     data class BackupError(val message: String) : StatusMessage
+    data object ImportSuccess : StatusMessage
+    data class ImportError(val message: String) : StatusMessage
 }

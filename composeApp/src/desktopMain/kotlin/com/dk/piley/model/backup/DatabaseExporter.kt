@@ -1,6 +1,7 @@
 package com.dk.piley.model.backup
 
 import com.dk.piley.model.PILE_DATABASE_NAME
+import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.awt.FileDialog
@@ -11,7 +12,7 @@ class DatabaseExporter : IDatabaseExporter {
     override fun exportPileDatabase(): Flow<ExportResult> = flow {
         try {
             val dbFile = File(System.getProperty("java.io.tmpdir"), PILE_DATABASE_NAME)
-
+            println("file path: ${dbFile.absolutePath}")
             // Use AWT FileDialog instead of JFileChooser for native look and feel
             val fileDialog = FileDialog(null as Frame?, "Save Database File", FileDialog.SAVE)
             fileDialog.file = "$PILE_DATABASE_NAME.db"
@@ -33,6 +34,10 @@ class DatabaseExporter : IDatabaseExporter {
         } catch (e: Exception) {
             emit(ExportResult.Error(e.message ?: "Unknown error exporting database"))
         }
+    }
+
+    override fun importPileDatabase(file: PlatformFile): Flow<ImportResult> {
+        TODO("Not yet implemented")
     }
 
     override fun getDatabasePath(): String {

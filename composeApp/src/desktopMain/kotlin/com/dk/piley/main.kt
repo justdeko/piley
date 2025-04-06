@@ -11,6 +11,7 @@ import androidx.compose.ui.window.rememberWindowState
 import com.dk.piley.model.navigation.Shortcut
 import com.dk.piley.ui.HomeScreen
 import com.dk.piley.ui.theme.ThemeHostScreen
+import io.github.vinceglb.filekit.FileKit
 import org.jetbrains.compose.resources.painterResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.icon_transparent
@@ -18,6 +19,7 @@ import java.awt.Dimension
 
 fun main() = application {
     // di init
+    FileKit.init(appId = "com.dk.piley")
     Piley().init()
     // main content
     val windowState = rememberWindowState(size = DpSize(900.dp, 600.dp))

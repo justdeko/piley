@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,10 @@ import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.Platform
 import com.dk.piley.util.appPlatform
 import com.dk.piley.util.navigateClearBackstack
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.openFilePicker
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
@@ -117,6 +122,9 @@ fun SettingsScreen(
                         viewModel.shareFile(message.path)
                     }
                 }
+
+                is StatusMessage.ImportError -> snackbarHostState.showSnackbar(message.message)
+                StatusMessage.ImportSuccess -> snackbarHostState.showSnackbar("Database imported")
             }
             // reset message
             viewModel.resetMessage()
@@ -144,7 +152,8 @@ fun SettingsScreen(
         onCloseSettings = { navController.popBackStack() },
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
         onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) },
-        onExportDatabase = { viewModel.exportDatabase() }
+        onExportDatabase = { viewModel.exportDatabase() },
+        onImportDatabase = { viewModel.importDatabase(it) }
     )
 }
 
@@ -166,6 +175,7 @@ fun SettingsScreen(
  * @param onStartTutorial on restart tutorial
  * @param onShowRecurringTasks show recurring tasks by default
  * @param onExportDatabase export database backup
+ * @param onImportDatabase import database from a file
  */
 @Composable
 internal fun SettingsScreen(
@@ -183,7 +193,8 @@ internal fun SettingsScreen(
     onCloseSettings: () -> Unit = {},
     onStartTutorial: () -> Unit = {},
     onShowRecurringTasks: (Boolean) -> Unit = {},
-    onExportDatabase: () -> Unit = {}
+    onExportDatabase: () -> Unit = {},
+    onImportDatabase: (PlatformFile) -> Unit = {}
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(Res.array.night_modes).toList()
@@ -191,6 +202,7 @@ internal fun SettingsScreen(
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     if (editUserDialogOpen) {
         ContentAlertDialog(onDismiss = { editUserDialogOpen = false }) {
@@ -333,6 +345,16 @@ internal fun SettingsScreen(
                         title = "Export Database Backup",
                         description = "Export your data as a backup file",
                         onClick = onExportDatabase
+                    )
+                    SettingsItem(
+                        title = "Import Database",
+                        description = "Import your database from a file",
+                        onClick = {
+                            coroutineScope.launch {
+                                val file = FileKit.openFilePicker()
+                                file?.let { onImportDatabase(it) }
+                            }
+                        }
                     )
                     SettingsItem(
                         title = stringResource(Res.string.start_tutorial_setting_title),

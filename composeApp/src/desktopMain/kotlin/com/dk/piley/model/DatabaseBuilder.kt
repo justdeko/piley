@@ -23,6 +23,7 @@ fun getUserDatabaseBuilder(): RoomDatabase.Builder<UserDatabase> {
 fun getPileDatabase(): PileDatabase {
     return getPileDatabaseBuilder()
         .setDriver(BundledSQLiteDriver())
+        .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()
 }

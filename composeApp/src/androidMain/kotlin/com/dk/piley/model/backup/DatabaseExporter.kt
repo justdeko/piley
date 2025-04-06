@@ -6,11 +6,11 @@ import android.os.Environment
 import androidx.core.content.FileProvider
 import com.dk.piley.model.PILE_DATABASE_NAME
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.File
+
 
 class DatabaseExporter(
     private val context: Context
@@ -58,11 +58,7 @@ class DatabaseExporter(
 
     override fun importPileDatabase(file: PlatformFile): Flow<ImportResult> = flow {
         try {
-            // Source file to import
-            val sourceFile = File(file.path)
-            println("Importing from: ${sourceFile.path}")
             val bytes = file.readBytes()
-            println("Read bytes: ${bytes.size}")
 
             // Target database file to overwrite
             val targetDbPath = context.getDatabasePath(PILE_DATABASE_NAME).absolutePath
@@ -74,7 +70,14 @@ class DatabaseExporter(
 
             // Copy the source file to the database location
             targetDbFile.writeBytes(bytes)
-
+            // restart app
+            val packageManager = context.packageManager
+            val intent = packageManager.getLaunchIntentForPackage(context.packageName)
+            val componentName = intent?.component
+            val mainIntent = Intent.makeRestartActivityTask(componentName)
+            mainIntent.setPackage(context.packageName)
+            context.startActivity(mainIntent)
+            Runtime.getRuntime().exit(0)
             emit(ImportResult.Success)
         } catch (e: Exception) {
             emit(ImportResult.Error(e.localizedMessage ?: "Error importing database"))

@@ -20,7 +20,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,10 +39,9 @@ import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.Platform
 import com.dk.piley.util.appPlatform
 import com.dk.piley.util.navigateClearBackstack
-import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.dialogs.openFilePicker
-import kotlinx.coroutines.launch
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
@@ -117,9 +115,12 @@ fun SettingsScreen(
                 StatusMessage.UserDeletedError -> snackbarHostState.showSnackbar(getString(Res.string.delete_user_error_wrong_password))
                 is StatusMessage.BackupError -> snackbarHostState.showSnackbar(message.message)
                 is StatusMessage.BackupSuccess -> {
-                    val result = snackbarHostState.showSnackbar("Database exported", "Share")
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Database exported",
+                        actionLabel = if (message.path != null) "Share" else null
+                    )
                     if (result == SnackbarResult.ActionPerformed) {
-                        viewModel.shareFile(message.path)
+                        message.path?.let { viewModel.shareFile(it) }
                     }
                 }
 
@@ -202,7 +203,6 @@ internal fun SettingsScreen(
     val scrollState = rememberScrollState()
     var editUserDialogOpen by remember { mutableStateOf(false) }
     var deleteUserDialogOpen by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
 
     if (editUserDialogOpen) {
         ContentAlertDialog(onDismiss = { editUserDialogOpen = false }) {
@@ -230,6 +230,10 @@ internal fun SettingsScreen(
             )
         }
     }
+
+    val filePicker = rememberFilePickerLauncher(
+        type = FileKitType.File(listOf("db"))
+    ) { it?.let { onImportDatabase(it) } }
 
     Box(Modifier.fillMaxSize()) {
         Column(
@@ -349,12 +353,7 @@ internal fun SettingsScreen(
                     SettingsItem(
                         title = "Import Database",
                         description = "Import your database from a file",
-                        onClick = {
-                            coroutineScope.launch {
-                                val file = FileKit.openFilePicker()
-                                file?.let { onImportDatabase(it) }
-                            }
-                        }
+                        onClick = { filePicker.launch() }
                     )
                     SettingsItem(
                         title = stringResource(Res.string.start_tutorial_setting_title),

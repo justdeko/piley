@@ -228,15 +228,12 @@ class SettingsViewModel(
             databaseExporter.exportPileDatabase().collect { exportResult ->
                 when (exportResult) {
                     is ExportResult.Error -> state.update {
-                        it.copy(
-                            message = StatusMessage.BackupError(exportResult.message)
-                        )
+                        it.copy(message = StatusMessage.BackupError(exportResult.message))
                     }
 
                     is ExportResult.Success -> state.update {
-                        it.copy(
-                            message = StatusMessage.BackupSuccess(exportResult.path)
-                        )
+                        val path = if (exportResult.showAction) exportResult.path else null
+                        it.copy(message = StatusMessage.BackupSuccess(path))
                     }
                 }
                 state.update { it.copy(loading = false) }
@@ -278,7 +275,7 @@ sealed interface StatusMessage {
     data object UserUpdateError : StatusMessage
     data object UserDeleted : StatusMessage
     data object UserDeletedError : StatusMessage
-    data class BackupSuccess(val path: String) : StatusMessage
+    data class BackupSuccess(val path: String?) : StatusMessage
     data class BackupError(val message: String) : StatusMessage
     data object ImportSuccess : StatusMessage
     data class ImportError(val message: String) : StatusMessage

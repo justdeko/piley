@@ -5,6 +5,7 @@ package com.dk.piley.model.backup
 import com.dk.piley.model.PILE_DATABASE_NAME
 import com.dk.piley.util.IosUiUtils
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.copyTo
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +34,15 @@ class DatabaseExporter : IDatabaseExporter {
     }
 
     override fun importPileDatabase(file: PlatformFile): Flow<ImportResult> {
-        TODO("Not yet implemented")
+        return flow {
+            try {
+                val dbPath = getDatabasePath()
+                file.copyTo(PlatformFile(dbPath))
+                emit(ImportResult.Success)
+            } catch (e: Exception) {
+                emit(ImportResult.Error(e.toString()))
+            }
+        }
     }
 
     override fun getDatabasePath(): String {

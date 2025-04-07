@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
@@ -48,6 +49,8 @@ import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.automatically_hide_keyboard_setting_description
 import piley.composeapp.generated.resources.automatically_hide_keyboard_setting_title
+import piley.composeapp.generated.resources.database_exported_message
+import piley.composeapp.generated.resources.database_imported_message
 import piley.composeapp.generated.resources.default_pile_mode_setting_description
 import piley.composeapp.generated.resources.default_pile_mode_setting_option_label
 import piley.composeapp.generated.resources.default_pile_mode_setting_title
@@ -57,6 +60,9 @@ import piley.composeapp.generated.resources.delete_user_setting_title
 import piley.composeapp.generated.resources.delete_user_success_info
 import piley.composeapp.generated.resources.dynamic_color_enabled_setting_description
 import piley.composeapp.generated.resources.dynamic_color_enabled_setting_title
+import piley.composeapp.generated.resources.export_setting_description
+import piley.composeapp.generated.resources.export_setting_title
+import piley.composeapp.generated.resources.import_setting_title
 import piley.composeapp.generated.resources.night_mode_enabled_setting_description
 import piley.composeapp.generated.resources.night_mode_enabled_setting_option_label
 import piley.composeapp.generated.resources.night_mode_enabled_setting_title
@@ -68,9 +74,11 @@ import piley.composeapp.generated.resources.reset_all_pile_modes_setting_descrip
 import piley.composeapp.generated.resources.reset_all_pile_modes_setting_title
 import piley.composeapp.generated.resources.settings_screen_title
 import piley.composeapp.generated.resources.settings_section_appearance_title
+import piley.composeapp.generated.resources.settings_section_data_title
 import piley.composeapp.generated.resources.settings_section_notifications_title
 import piley.composeapp.generated.resources.settings_section_piles_title
 import piley.composeapp.generated.resources.settings_section_user_title
+import piley.composeapp.generated.resources.share
 import piley.composeapp.generated.resources.show_recurring_tasks_setting_description
 import piley.composeapp.generated.resources.show_recurring_tasks_setting_title
 import piley.composeapp.generated.resources.skip_splash_screen_setting_description
@@ -104,6 +112,9 @@ fun SettingsScreen(
     }
 ) {
     val viewState by viewModel.state.collectAsState()
+    val exportSuccessfulMessage = stringResource(Res.string.database_exported_message)
+    val importSuccessfulMessage = stringResource(Res.string.database_imported_message)
+    val shareActionItem = stringResource(Res.string.share)
 
     // snackbar handler
     viewState.message?.let { message ->
@@ -116,8 +127,8 @@ fun SettingsScreen(
                 is StatusMessage.BackupError -> snackbarHostState.showSnackbar(message.message)
                 is StatusMessage.BackupSuccess -> {
                     val result = snackbarHostState.showSnackbar(
-                        message = "Database exported",
-                        actionLabel = if (message.path != null) "Share" else null
+                        message = exportSuccessfulMessage,
+                        actionLabel = if (message.path != null) shareActionItem else null
                     )
                     if (result == SnackbarResult.ActionPerformed) {
                         message.path?.let { viewModel.shareFile(it) }
@@ -125,7 +136,9 @@ fun SettingsScreen(
                 }
 
                 is StatusMessage.ImportError -> snackbarHostState.showSnackbar(message.message)
-                StatusMessage.ImportSuccess -> snackbarHostState.showSnackbar("Database imported")
+                StatusMessage.ImportSuccess -> snackbarHostState.showSnackbar(
+                    importSuccessfulMessage
+                )
             }
             // reset message
             viewModel.resetMessage()
@@ -346,19 +359,25 @@ internal fun SettingsScreen(
                         onClick = { deleteUserDialogOpen = true }
                     )
                     SettingsItem(
-                        title = "Export Database Backup",
-                        description = "Export your data as a backup file",
-                        onClick = onExportDatabase
-                    )
-                    SettingsItem(
-                        title = "Import Database",
-                        description = "Import your database from a file",
-                        onClick = { filePicker.launch() }
-                    )
-                    SettingsItem(
                         title = stringResource(Res.string.start_tutorial_setting_title),
                         description = stringResource(Res.string.start_tutorial_setting_description),
                         onClick = { onStartTutorial() }
+                    )
+                }
+                HorizontalDivider()
+                SettingsSection(
+                    title = stringResource(Res.string.settings_section_data_title),
+                    icon = Icons.Filled.Storage
+                ) {
+                    SettingsItem(
+                        title = stringResource(Res.string.export_setting_title),
+                        description = stringResource(Res.string.export_setting_description),
+                        onClick = onExportDatabase
+                    )
+                    SettingsItem(
+                        title = stringResource(Res.string.import_setting_title),
+                        description = stringResource(Res.string.export_setting_description),
+                        onClick = { filePicker.launch() }
                     )
                 }
                 Box(

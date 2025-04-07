@@ -182,4 +182,13 @@
     <string name="reminder_delay_action">Später</string>
     <string name="reminder_custom_delay_action">Später um…</string>
     <string name="recently_deleted_section_title">Kürzlich gelöscht oder abgeschlossen</string>
+    <!-- data settings section-->
+    <string name="settings_section_data_title">Daten</string>
+    <string name="export_setting_title">Datenbank exportieren</string>
+    <string name="export_setting_description">Exportiere die Datenbank in eine Datei</string>
+    <string name="import_setting_title">Datenbank importieren</string>
+    <string name="import_setting_description">Importiere die Datenbank aus einer Datei</string>
+    <string name="database_exported_message">Datenbank exportiert</string>
+    <string name="database_imported_message">Datenbank importiert</string>
+    <string name="share">Teilen</string>
 </resources>

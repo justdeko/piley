@@ -222,6 +222,10 @@ class SettingsViewModel(
         }
     }
 
+    /**
+     * Export database
+     *
+     */
     fun exportDatabase() {
         state.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
@@ -241,8 +245,18 @@ class SettingsViewModel(
         }
     }
 
+    /**
+     * Share file
+     *
+     * @param filePath path to the file to share
+     */
     fun shareFile(filePath: String) = databaseExporter.shareFile(filePath)
 
+    /**
+     * Import database
+     *
+     * @param file file to import
+     */
     fun importDatabase(file: PlatformFile) {
         state.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {

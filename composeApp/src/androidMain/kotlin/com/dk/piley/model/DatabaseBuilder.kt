@@ -12,7 +12,7 @@ fun getPileDatabaseBuilder(ctx: Context): RoomDatabase.Builder<PileDatabase> {
     return Room.databaseBuilder<PileDatabase>(
         context = appContext,
         name = dbFile.absolutePath
-    )
+    ).setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
 }
 
 fun getUserDatabaseBuilder(ctx: Context): RoomDatabase.Builder<UserDatabase> {

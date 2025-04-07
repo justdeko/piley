@@ -10,9 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -38,12 +40,17 @@ import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.Platform
 import com.dk.piley.util.appPlatform
 import com.dk.piley.util.navigateClearBackstack
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.automatically_hide_keyboard_setting_description
 import piley.composeapp.generated.resources.automatically_hide_keyboard_setting_title
+import piley.composeapp.generated.resources.database_exported_message
+import piley.composeapp.generated.resources.database_imported_message
 import piley.composeapp.generated.resources.default_pile_mode_setting_description
 import piley.composeapp.generated.resources.default_pile_mode_setting_option_label
 import piley.composeapp.generated.resources.default_pile_mode_setting_title
@@ -53,6 +60,9 @@ import piley.composeapp.generated.resources.delete_user_setting_title
 import piley.composeapp.generated.resources.delete_user_success_info
 import piley.composeapp.generated.resources.dynamic_color_enabled_setting_description
 import piley.composeapp.generated.resources.dynamic_color_enabled_setting_title
+import piley.composeapp.generated.resources.export_setting_description
+import piley.composeapp.generated.resources.export_setting_title
+import piley.composeapp.generated.resources.import_setting_title
 import piley.composeapp.generated.resources.night_mode_enabled_setting_description
 import piley.composeapp.generated.resources.night_mode_enabled_setting_option_label
 import piley.composeapp.generated.resources.night_mode_enabled_setting_title
@@ -64,9 +74,11 @@ import piley.composeapp.generated.resources.reset_all_pile_modes_setting_descrip
 import piley.composeapp.generated.resources.reset_all_pile_modes_setting_title
 import piley.composeapp.generated.resources.settings_screen_title
 import piley.composeapp.generated.resources.settings_section_appearance_title
+import piley.composeapp.generated.resources.settings_section_data_title
 import piley.composeapp.generated.resources.settings_section_notifications_title
 import piley.composeapp.generated.resources.settings_section_piles_title
 import piley.composeapp.generated.resources.settings_section_user_title
+import piley.composeapp.generated.resources.share
 import piley.composeapp.generated.resources.show_recurring_tasks_setting_description
 import piley.composeapp.generated.resources.show_recurring_tasks_setting_title
 import piley.composeapp.generated.resources.skip_splash_screen_setting_description
@@ -94,23 +106,40 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = viewModel {
         SettingsViewModel(
             userRepository = Piley.getModule().userRepository,
-            pileRepository = Piley.getModule().pileRepository
+            pileRepository = Piley.getModule().pileRepository,
+            databaseExporter = Piley.getModule().databaseExporter
         )
     }
 ) {
     val viewState by viewModel.state.collectAsState()
+    val exportSuccessfulMessage = stringResource(Res.string.database_exported_message)
+    val importSuccessfulMessage = stringResource(Res.string.database_imported_message)
+    val shareActionItem = stringResource(Res.string.share)
 
     // snackbar handler
     viewState.message?.let { message ->
         LaunchedEffect(message, snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                when (message) {
-                    StatusMessage.USER_UPDATE_SUCCESSFUL -> getString(Res.string.user_update_success_info)
-                    StatusMessage.USER_UPDATE_ERROR -> getString(Res.string.update_user_error_wrong_password)
-                    StatusMessage.USER_DELETED -> getString(Res.string.delete_user_success_info)
-                    StatusMessage.USER_DELETED_ERROR -> getString(Res.string.delete_user_error_wrong_password)
+            when (message) {
+                StatusMessage.UserUpdateSuccessful -> snackbarHostState.showSnackbar(getString(Res.string.user_update_success_info))
+                StatusMessage.UserUpdateError -> snackbarHostState.showSnackbar(getString(Res.string.update_user_error_wrong_password))
+                StatusMessage.UserDeleted -> snackbarHostState.showSnackbar(getString(Res.string.delete_user_success_info))
+                StatusMessage.UserDeletedError -> snackbarHostState.showSnackbar(getString(Res.string.delete_user_error_wrong_password))
+                is StatusMessage.BackupError -> snackbarHostState.showSnackbar(message.message)
+                is StatusMessage.BackupSuccess -> {
+                    val result = snackbarHostState.showSnackbar(
+                        message = exportSuccessfulMessage,
+                        actionLabel = if (message.path != null) shareActionItem else null
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        message.path?.let { viewModel.shareFile(it) }
+                    }
                 }
-            )
+
+                is StatusMessage.ImportError -> snackbarHostState.showSnackbar(message.message)
+                StatusMessage.ImportSuccess -> snackbarHostState.showSnackbar(
+                    importSuccessfulMessage
+                )
+            }
             // reset message
             viewModel.resetMessage()
         }
@@ -136,7 +165,9 @@ fun SettingsScreen(
         onDeleteUser = { viewModel.deleteUser() },
         onCloseSettings = { navController.popBackStack() },
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
-        onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) }
+        onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) },
+        onExportDatabase = { viewModel.exportDatabase() },
+        onImportDatabase = { viewModel.importDatabase(it) }
     )
 }
 
@@ -157,6 +188,8 @@ fun SettingsScreen(
  * @param onCloseSettings on close settings screen
  * @param onStartTutorial on restart tutorial
  * @param onShowRecurringTasks show recurring tasks by default
+ * @param onExportDatabase export database backup
+ * @param onImportDatabase import database from a file
  */
 @Composable
 internal fun SettingsScreen(
@@ -174,6 +207,8 @@ internal fun SettingsScreen(
     onCloseSettings: () -> Unit = {},
     onStartTutorial: () -> Unit = {},
     onShowRecurringTasks: (Boolean) -> Unit = {},
+    onExportDatabase: () -> Unit = {},
+    onImportDatabase: (PlatformFile) -> Unit = {}
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(Res.array.night_modes).toList()
@@ -208,6 +243,10 @@ internal fun SettingsScreen(
             )
         }
     }
+
+    val filePicker = rememberFilePickerLauncher(
+        type = FileKitType.File(listOf("db"))
+    ) { it?.let { onImportDatabase(it) } }
 
     Box(Modifier.fillMaxSize()) {
         Column(
@@ -323,6 +362,22 @@ internal fun SettingsScreen(
                         title = stringResource(Res.string.start_tutorial_setting_title),
                         description = stringResource(Res.string.start_tutorial_setting_description),
                         onClick = { onStartTutorial() }
+                    )
+                }
+                HorizontalDivider()
+                SettingsSection(
+                    title = stringResource(Res.string.settings_section_data_title),
+                    icon = Icons.Filled.Storage
+                ) {
+                    SettingsItem(
+                        title = stringResource(Res.string.export_setting_title),
+                        description = stringResource(Res.string.export_setting_description),
+                        onClick = onExportDatabase
+                    )
+                    SettingsItem(
+                        title = stringResource(Res.string.import_setting_title),
+                        description = stringResource(Res.string.export_setting_description),
+                        onClick = { filePicker.launch() }
                     )
                 }
                 Box(

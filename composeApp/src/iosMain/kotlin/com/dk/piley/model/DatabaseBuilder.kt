@@ -26,7 +26,7 @@ fun getPileDatabaseBuilder(): RoomDatabase.Builder<PileDatabase> {
     val dbFile = documentDirectory() + "/" + PILE_DATABASE_NAME
     return Room.databaseBuilder<PileDatabase>(
         name = dbFile
-    )
+    ).setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
 }
 
 fun getUserDatabaseBuilder(): RoomDatabase.Builder<UserDatabase> {

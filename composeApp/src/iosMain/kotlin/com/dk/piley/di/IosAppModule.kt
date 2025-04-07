@@ -2,6 +2,8 @@ package com.dk.piley.di
 
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
+import com.dk.piley.model.backup.DatabaseExporter
+import com.dk.piley.model.backup.IDatabaseExporter
 import com.dk.piley.model.getPileDatabase
 import com.dk.piley.model.getUserDatabase
 import com.dk.piley.reminder.INotificationManager
@@ -30,11 +32,13 @@ fun instantiateAppModule(): AppModuleImpl {
     val userDatabase: UserDatabase by lazy { getUserDatabase() }
     val reminderManager: IReminderManager by lazy { ReminderManager() }
     val notificationManager: INotificationManager by lazy { NotificationManager() }
+    val databaseExporter: IDatabaseExporter by lazy { DatabaseExporter() }
     return AppModuleImpl(
-        pileDatabase,
-        userDatabase,
-        reminderManager,
-        notificationManager,
-        preferencesDataStorePath
+        pileDatabase = pileDatabase,
+        userDatabase = userDatabase,
+        reminderManager = reminderManager,
+        notificationManager = notificationManager,
+        databaseExporter = databaseExporter,
+        dataStorePath = preferencesDataStorePath,
     )
 }

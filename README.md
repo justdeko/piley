@@ -61,11 +61,12 @@ pile, create new piles and also set reminders and recurring tasks. piley was bui
 
 ### Built With
 
-piley is a native Android app built with Jetpack Compose. The following libraries were used:
+piley is built with Jetpack Compose Multiplatform. Other following libraries were used:
 
 * [Room](https://developer.android.com/training/data-storage/room) for data storage
 * [Material3 UI Elements](https://developer.android.com/jetpack/androidx/releases/compose-material3)
   and Compose navigation
+* [FileKit](https://github.com/vinceglb/FileKit) for multiplatform file pickers
 * Various Jetpack Compose and AndroidX dependencies for specific functionality
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

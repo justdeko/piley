@@ -13,7 +13,7 @@ room = "2.7.0-rc03"
 compose-plugin = "1.8.0-beta01"
 androidx-lifecycle = "2.8.4"
 kotlinx-coroutines = "1.10.2"
-sqliteBundled = "2.5.0-rc03"
+sqliteBundled = "2.5.0"
 filekit = "0.10.0-beta01"
 
 [libraries]

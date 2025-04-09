@@ -12,6 +12,7 @@ import com.dk.piley.model.user.User
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.reminder.DelayRange
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.name
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.combine
@@ -258,6 +259,10 @@ class SettingsViewModel(
      * @param file file to import
      */
     fun importDatabase(file: PlatformFile) {
+        if (!file.name.endsWith(".db")) {
+            state.update { it.copy(message = StatusMessage.ImportError("Invalid file type")) }
+            return
+        }
         state.update { it.copy(loading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             databaseExporter.importPileDatabase(file).collect { importResult ->

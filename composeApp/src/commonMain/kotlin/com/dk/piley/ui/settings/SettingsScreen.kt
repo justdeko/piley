@@ -62,6 +62,7 @@ import piley.composeapp.generated.resources.dynamic_color_enabled_setting_descri
 import piley.composeapp.generated.resources.dynamic_color_enabled_setting_title
 import piley.composeapp.generated.resources.export_setting_description
 import piley.composeapp.generated.resources.export_setting_title
+import piley.composeapp.generated.resources.import_setting_description
 import piley.composeapp.generated.resources.import_setting_title
 import piley.composeapp.generated.resources.night_mode_enabled_setting_description
 import piley.composeapp.generated.resources.night_mode_enabled_setting_option_label
@@ -376,7 +377,7 @@ internal fun SettingsScreen(
                     )
                     SettingsItem(
                         title = stringResource(Res.string.import_setting_title),
-                        description = stringResource(Res.string.export_setting_description),
+                        description = stringResource(Res.string.import_setting_description),
                         onClick = { filePicker.launch() }
                     )
                 }

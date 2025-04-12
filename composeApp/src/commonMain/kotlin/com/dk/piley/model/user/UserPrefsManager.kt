@@ -20,6 +20,7 @@ class UserPrefsManager(
     private val hasSeenTutorialKey = booleanPreferencesKey("tutorial_shown")
     private val tasksDeletedKey = booleanPreferencesKey("tasksDeleted")
     private val skipSplashScreenKey = booleanPreferencesKey("skip_splash_screen")
+    private val pileOrderKey = stringPreferencesKey("pile_order")
 
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUserKey] = email
@@ -37,6 +38,10 @@ class UserPrefsManager(
         prefs[skipSplashScreenKey] = skip
     }
 
+    suspend fun setPileOrder(order: List<Long>) = userPrefs.edit { prefs ->
+        prefs[pileOrderKey] = order.joinToString(",")
+    }
+
     fun getUserPrefsEmail(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[signedInUserKey] ?: "" }
 
@@ -48,4 +53,9 @@ class UserPrefsManager(
 
     fun getSkipSplashScreen(): Flow<Boolean> =
         userPrefs.data.map { prefs -> prefs[skipSplashScreenKey] ?: false }
+
+    fun getPileOrder(): Flow<List<Long>> =
+        userPrefs.data.map { prefs ->
+            prefs[pileOrderKey]?.split(",")?.mapNotNull { it.toLongOrNull() } ?: emptyList()
+        }
 }

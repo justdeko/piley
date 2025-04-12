@@ -67,6 +67,7 @@ piley is built with Jetpack Compose Multiplatform. Other following libraries wer
 * [Material3 UI Elements](https://developer.android.com/jetpack/androidx/releases/compose-material3)
   and Compose navigation
 * [FileKit](https://github.com/vinceglb/FileKit) for multiplatform file pickers
+* [Reorderable](https://github.com/Calvin-LL/Reorderable) for drag and drop reordering of piles
 * Various Jetpack Compose and AndroidX dependencies for specific functionality
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

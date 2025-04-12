@@ -31,6 +31,9 @@ class UserRepository(
     fun getSkipSplashScreen(): Boolean =
         runBlocking { userPrefsManager.getSkipSplashScreen().firstOrNull() ?: false }
 
+    suspend fun getPileOrder(): List<Long> =
+        userPrefsManager.getPileOrder().firstOrNull() ?: emptyList()
+
     fun getSkipSplashScreenFlow(): Flow<Boolean> = userPrefsManager.getSkipSplashScreen()
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -63,5 +66,9 @@ class UserRepository(
 
     suspend fun setSkipSplashScreen(skip: Boolean = false) {
         userPrefsManager.setSkipSplashScreen(skip)
+    }
+
+    suspend fun setPileOrder(order: List<Long>) {
+        userPrefsManager.setPileOrder(order)
     }
 }

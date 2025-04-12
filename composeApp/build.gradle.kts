@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.material3.window.size)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
+            implementation(libs.reorderable)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

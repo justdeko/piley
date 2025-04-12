@@ -30,7 +30,8 @@ class PilesViewModel(
                 signedInUserFlow.combine(pileRepository.getPilesWithTasks()) { user, piles ->
                     state.value.copy(
                         piles = piles,
-                        selectedPileId = user.selectedPileId
+                        selectedPileId = user.selectedPileId,
+                        pileOrder = userRepository.getPileOrder()
                     )
                 }
             )
@@ -56,20 +57,6 @@ class PilesViewModel(
     }
 
     /**
-     * Delete pile
-     *
-     * @param pile pile entity
-     */
-    fun deletePile(pile: Pile) {
-        viewModelScope.launch {
-            signedInUserFlow.take(1).collect {
-                userRepository.insertUser(it.copy(selectedPileId = it.defaultPileId))
-                pileRepository.deletePile(pile)
-            }
-        }
-    }
-
-    /**
      * Set default selected pile
      *
      * @param id pile id
@@ -84,9 +71,24 @@ class PilesViewModel(
             }
         }
     }
+
+    /**
+     * Reorder piles
+     *
+     * @param pileOrder list of pile ids in new order
+     */
+    fun reorderPiles(pileOrder: List<Long>) {
+        state.update {
+            it.copy(pileOrder = pileOrder)
+        }
+        viewModelScope.launch {
+            userRepository.setPileOrder(pileOrder)
+        }
+    }
 }
 
 data class PilesViewState(
     val piles: List<PileWithTasks> = emptyList(),
+    val pileOrder: List<Long> = emptyList(),
     val selectedPileId: Long = 1
 )

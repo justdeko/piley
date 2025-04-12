@@ -21,7 +21,7 @@ interface PileDao {
     fun getPilesWithTasks(): Flow<List<PileWithTasks>>
 
     @Query("SELECT * FROM Pile WHERE pileId=:pileId")
-    fun getPileById(pileId: Long): Flow<PileWithTasks>
+    fun getPileById(pileId: Long): Flow<PileWithTasks?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPile(pile: Pile): Long

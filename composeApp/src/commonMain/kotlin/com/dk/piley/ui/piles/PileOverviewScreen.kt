@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -32,13 +33,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.model.pile.Pile
 import com.dk.piley.ui.nav.Screen
-import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.util.isTabletWide
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.add_pile_button
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyStaggeredGridState
 
 /**
  * Pile overview screen
@@ -72,14 +73,11 @@ fun PileOverviewScreen(
         viewState = viewState,
         pileTransitionStates = pileTransitionStates,
         onCreatePile = { viewModel.createPile(it) },
-        onDeletePile = { viewModel.deletePile(it) },
         onSelectPile = { viewModel.setSelectedPile(it) },
         onPileClick = { pileId ->
             navController.navigate("${Screen.Pile.route}?${Screen.Pile.argument}=$pileId")
         },
-        onPileLongClick = { pileId ->
-            navController.navigate(pileScreen.root + "/" + pileId)
-        }
+        onReorderPiles = { viewModel.reorderPiles(it) }
     )
 }
 
@@ -90,10 +88,8 @@ fun PileOverviewScreen(
  * @param viewState piles view state
  * @param pileTransitionStates pile animation transition states
  * @param onCreatePile on create new pile
- * @param onDeletePile on delete pile
  * @param onSelectPile on select pile as default
  * @param onPileClick on click pile with id
- * @param onPileLongClick on double click pile with id
  */
 @Composable
 fun PileOverviewScreen(
@@ -101,24 +97,34 @@ fun PileOverviewScreen(
     viewState: PilesViewState,
     pileTransitionStates: List<MutableTransitionState<Boolean>>,
     onCreatePile: (String) -> Unit = {},
-    onDeletePile: (Pile) -> Unit = {},
     onSelectPile: (Long) -> Unit = {},
     onPileClick: (Long) -> Unit = {},
-    onPileLongClick: (Long) -> Unit = {}
+    onReorderPiles: (List<Long>) -> Unit = {}
 ) {
+    var piles by remember { mutableStateOf(viewState.piles) }
+    LaunchedEffect(viewState.piles.size) {
+        piles = viewState.piles.sortedBy {
+            val pileOrder = viewState.pileOrder
+            val indexInOrder = pileOrder.indexOf(it.pile.pileId)
+            // attempt to sort by pile order, if not found, use pile id
+            // add pile order size to pile id to ensure new piles are at the end
+            if (indexInOrder == -1) it.pile.pileId.toInt() + pileOrder.size else indexInOrder
+        }
+    }
     val gridState = rememberLazyStaggeredGridState()
+    val reorderableLazyStaggeredGridState =
+        rememberReorderableLazyStaggeredGridState(gridState) { from, to ->
+            piles = piles.toMutableList().apply {
+                add(to.index, removeAt(from.index))
+            }.also { pileList ->
+                onReorderPiles(pileList.map { it.pile.pileId })
+            }
+        }
     val isTabletWide = isTabletWide()
     var createPileDialogOpen by rememberSaveable { (mutableStateOf(false)) }
     val expandedFab by remember {
         derivedStateOf {
             gridState.firstVisibleItemScrollOffset <= 0
-        }
-    }
-
-    // delete pile only after animation is finished
-    pileTransitionStates.forEachIndexed { index, transition ->
-        if (!transition.targetState && !transition.currentState) {
-            onDeletePile(viewState.piles[index].pile)
         }
     }
 
@@ -147,19 +153,23 @@ fun PileOverviewScreen(
                 columns = StaggeredGridCells.Adaptive(if (isTabletWide) 200.dp else 150.dp),
             ) {
                 itemsIndexed(
-                    viewState.piles,
+                    piles,
                     key = { _, pileWithTasks -> pileWithTasks.pile.pileId }
                 ) { index, pileWithTasks ->
-                    PileCard(
-                        modifier = Modifier.animateItem(),
-                        expandedMode = isTabletWide,
-                        pileWithTasks = pileWithTasks,
-                        onSelectPile = onSelectPile,
-                        selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
-                        onClick = { onPileClick(pileWithTasks.pile.pileId) },
-                        onLongClick = { onPileLongClick(pileWithTasks.pile.pileId) },
-                        transitionState = pileTransitionStates[index]
-                    )
+                    ReorderableItem(
+                        reorderableLazyStaggeredGridState,
+                        key = pileWithTasks.pile.pileId
+                    ) { _ ->
+                        PileCard(
+                            modifier = Modifier.draggableHandle(),
+                            expandedMode = isTabletWide,
+                            pileWithTasks = pileWithTasks,
+                            onSelectPile = onSelectPile,
+                            selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
+                            onClick = { onPileClick(pileWithTasks.pile.pileId) },
+                            transitionState = pileTransitionStates[index]
+                        )
+                    }
                 }
             }
         }

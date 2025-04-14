@@ -121,3 +121,19 @@ fun getTasksCompletedInPastDays(
             < it.completionTimes.last()
             )
 }
+
+/**
+ * Sort [PileWithTasks] list by the order of the pile ids in the given list
+ * If the pile id is not found in the list, it will be sorted by the pile id
+ *
+ * @param pileOrder list of pile ids to use as the order
+ * @return sorted list of piles with tasks
+ */
+fun List<PileWithTasks>.sortedWithOrder(
+    pileOrder: List<Long>,
+): List<PileWithTasks> = sortedBy {
+    val indexInOrder = pileOrder.indexOf(it.pile.pileId)
+    // attempt to sort by pile order, if not found, use pile id
+    // add pile order size to pile id to ensure new piles are at the end
+    if (indexInOrder == -1) it.pile.pileId.toInt() + pileOrder.size else indexInOrder
+}

@@ -5,7 +5,6 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,11 +25,13 @@ import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
@@ -60,7 +61,6 @@ import piley.composeapp.generated.resources.upcoming_tasks_section_title
  * @param onClick on card click
  * @param transitionState card animation transition state
  */
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PileCard(
     modifier: Modifier = Modifier,
@@ -69,7 +69,13 @@ fun PileCard(
     selected: Boolean = false,
     onSelectPile: (Long) -> Unit = {},
     onClick: () -> Unit = {},
-    transitionState: MutableTransitionState<Boolean> = MutableTransitionState(true)
+    transitionState: MutableTransitionState<Boolean> = LocalInspectionMode.current.run {
+        remember {
+            MutableTransitionState(this).apply {
+                targetState = true
+            }
+        }
+    }
 ) {
     val density = LocalDensity.current
     val dim = LocalDim.current

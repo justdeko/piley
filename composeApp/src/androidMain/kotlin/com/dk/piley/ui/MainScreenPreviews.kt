@@ -15,7 +15,6 @@ import com.dk.piley.ui.task.TaskDetailScreen
 import com.dk.piley.ui.task.TaskDetailViewState
 import com.dk.piley.ui.theme.PileyTheme
 import com.dk.piley.util.bigPreviewPile
-import com.dk.piley.util.getPreviewTransitionStates
 import com.dk.piley.util.previewPileWithTasksList
 import com.dk.piley.util.previewUpcomingTasksList
 
@@ -34,7 +33,6 @@ private fun PileScreenPreview() {
             PileScreen(
                 viewState = state,
                 shownTasks = pileWithTasks.tasks.subList(0, 7),
-                taskTransitionStates = pileWithTasks.tasks.getPreviewTransitionStates()
             )
         }
     }
@@ -46,10 +44,7 @@ private fun PileOverviewScreenPreview() {
     PileyTheme {
         Surface {
             val state = PilesViewState(piles = previewPileWithTasksList)
-            PileOverviewScreen(
-                viewState = state,
-                pileTransitionStates = previewPileWithTasksList.getPreviewTransitionStates()
-            )
+            PileOverviewScreen(viewState = state)
         }
     }
 }

@@ -14,6 +14,7 @@ import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.nav.Screen
+import com.dk.piley.util.sortedWithOrder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -53,55 +54,61 @@ class PileViewModel(
             userRepository.getSignedInUserNotNullFlow().flatMapLatest { user ->
                 // set recurring tasks to shown if user property changes
                 setShowRecurring(user.showRecurringTasks)
-                pileRepository.getPilesWithTasks().flatMapLatest { pilesWithTasks ->
-                    selectedPileIndex.map { index ->
-                        val idTitleList = pilesWithTasks.map {
-                            Pair(
-                                it.pile.pileId,
-                                it.pile.name
-                            )
-                        }
-                        // initial default pile selection
-                        if (!differsFromSelected) {
-                            // set initial selected pile if navigated with pile ID
-                            val navigationSelectedPileId =
-                                savedStateHandle.get<Long>(Screen.Pile.argument)
-                            navigationSelectedPileId?.let { pileId ->
-                                // if pile id navigation argument passed, navigate to that pile
-                                if (pileId != -1L) {
-                                    // calculate index of selected pile
-                                    val pileIndex = idTitleList.indexOfFirst { it.first == pileId }
-                                    onPileChanged(pileIndex, selectedPileIndex.value == pileIndex)
-                                } else {
-                                    val pileIndex =
-                                        idTitleList.indexOfFirst { it.first == user.selectedPileId }
-                                    if (pileIndex != -1) {
-                                        onPileChanged(pileIndex, false)
+                pileRepository.getPilesWithTasks()
+                    .map { it.sortedWithOrder(userRepository.getPileOrder()) }
+                    .flatMapLatest { pilesWithTasks ->
+                        selectedPileIndex.map { index ->
+                            val idTitleList = pilesWithTasks.map {
+                                Pair(
+                                    it.pile.pileId,
+                                    it.pile.name
+                                )
+                            }
+                            // initial default pile selection
+                            if (!differsFromSelected) {
+                                // set initial selected pile if navigated with pile ID
+                                val navigationSelectedPileId =
+                                    savedStateHandle.get<Long>(Screen.Pile.argument)
+                                navigationSelectedPileId?.let { pileId ->
+                                    // if pile id navigation argument passed, navigate to that pile
+                                    if (pileId != -1L) {
+                                        // calculate index of selected pile
+                                        val pileIndex =
+                                            idTitleList.indexOfFirst { it.first == pileId }
+                                        onPileChanged(
+                                            pileIndex,
+                                            selectedPileIndex.value == pileIndex
+                                        )
+                                    } else {
+                                        val pileIndex =
+                                            idTitleList.indexOfFirst { it.first == user.selectedPileId }
+                                        if (pileIndex != -1) {
+                                            onPileChanged(pileIndex, false)
+                                        }
                                     }
                                 }
                             }
+                            // set index if needed
+                            val selectedPileId =
+                                idTitleList.getOrNull(index)?.first ?: user.selectedPileId
+                            // start mapping pile to view state
+                            pilesWithTasks
+                                .find { it.pile.pileId == selectedPileId }
+                                ?.let { pileWithTasks ->
+                                    state.value.copy(
+                                        pileWithTasks = pileWithTasks,
+                                        // only show non-completed tasks and non-deleted recurring tasks
+                                        tasks = pileWithTasks.tasks.filter { task ->
+                                            (task.status == TaskStatus.DEFAULT)
+                                                    || (task.isRecurring && task.status != TaskStatus.DELETED)
+                                        },
+                                        autoHideEnabled = user.autoHideKeyboard,
+                                        pileIdTitleList = idTitleList,
+                                        noTasksYet = pileWithTasks.tasks.isEmpty(),
+                                    )
+                                }
                         }
-                        // set index if needed
-                        val selectedPileId =
-                            idTitleList.getOrNull(index)?.first ?: user.selectedPileId
-                        // start mapping pile to view state
-                        pilesWithTasks
-                            .find { it.pile.pileId == selectedPileId }
-                            ?.let { pileWithTasks ->
-                                state.value.copy(
-                                    pileWithTasks = pileWithTasks,
-                                    // only show non-completed tasks and non-deleted recurring tasks
-                                    tasks = pileWithTasks.tasks.filter { task ->
-                                        (task.status == TaskStatus.DEFAULT)
-                                                || (task.isRecurring && task.status != TaskStatus.DELETED)
-                                    },
-                                    autoHideEnabled = user.autoHideKeyboard,
-                                    pileIdTitleList = idTitleList,
-                                    noTasksYet = pileWithTasks.tasks.isEmpty(),
-                                )
-                            }
                     }
-                }
             }.collect { viewState ->
                 if (viewState != null) {
                     state.value = viewState

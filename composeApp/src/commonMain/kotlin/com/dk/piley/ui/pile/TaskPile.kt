@@ -1,6 +1,5 @@
 package com.dk.piley.ui.pile
 
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +41,6 @@ import piley.composeapp.generated.resources.delete_recurring_dialog_title
  * @param modifier generic modifier
  * @param tasks task list
  * @param pileMode pile mode of the pile
- * @param taskTransitionStates task animation transition states
  * @param onDelete on task delete
  * @param onDone on task done
  * @param onTaskClick on task click
@@ -52,7 +50,6 @@ fun TaskPile(
     modifier: Modifier = Modifier,
     tasks: List<Task> = emptyList(),
     pileMode: PileMode = PileMode.FREE,
-    taskTransitionStates: List<MutableTransitionState<Boolean>>,
     onDelete: (task: Task) -> Unit = {},
     onDone: (task: Task) -> Unit = {},
     onTaskClick: (task: Task) -> Unit = {}
@@ -140,7 +137,6 @@ fun TaskPile(
                     )
                     .padding(vertical = dim.mini),
                 dismissState = dismissState,
-                transitionState = taskTransitionStates[index],
                 task = task,
                 onClick = onTaskClick
             )

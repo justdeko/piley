@@ -120,16 +120,6 @@ fun InitialSlideIn(
 }
 
 /**
- * Generate list of preview transition states
- *
- * @param T list of generic entities to get the preview transition states for
- * @param initial initial value to set for each transition state
- * @return a list of transition states of type [T] for with the specified initial value
- */
-fun <T> List<T>.getPreviewTransitionStates(initial: Boolean = true) =
-    List(this.size) { MutableTransitionState(initial) }
-
-/**
  * Rounded outline modifier
  *
  */

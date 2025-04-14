@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dk.piley.model.task.Task
@@ -56,7 +57,13 @@ fun PileTask(
     modifier: Modifier,
     dismissState: SwipeToDismissBoxState,
     task: Task,
-    transitionState: MutableTransitionState<Boolean>,
+    transitionState: MutableTransitionState<Boolean> = LocalInspectionMode.current.run {
+        remember {
+            MutableTransitionState(this).apply {
+                targetState = true
+            }
+        }
+    },
     onClick: (task: Task) -> Unit = {}
 ) {
     val density = LocalDensity.current

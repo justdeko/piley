@@ -1,7 +1,6 @@
 package com.dk.piley.ui.piles
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
@@ -9,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.itemsIndexed
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -35,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.util.isTabletWide
+import com.dk.piley.util.sortedWithOrder
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.add_pile_button
@@ -60,18 +60,9 @@ fun PileOverviewScreen(
     }
 ) {
     val viewState by viewModel.state.collectAsState()
-    // animation transition states for pile visibility
-    val pileTransitionStates = viewState.piles.map {
-        remember {
-            MutableTransitionState(false).apply {
-                targetState = true
-            }
-        }
-    }
     PileOverviewScreen(
         modifier = modifier,
         viewState = viewState,
-        pileTransitionStates = pileTransitionStates,
         onCreatePile = { viewModel.createPile(it) },
         onSelectPile = { viewModel.setSelectedPile(it) },
         onPileClick = { pileId ->
@@ -86,7 +77,6 @@ fun PileOverviewScreen(
  *
  * @param modifier generic modifier
  * @param viewState piles view state
- * @param pileTransitionStates pile animation transition states
  * @param onCreatePile on create new pile
  * @param onSelectPile on select pile as default
  * @param onPileClick on click pile with id
@@ -95,7 +85,6 @@ fun PileOverviewScreen(
 fun PileOverviewScreen(
     modifier: Modifier = Modifier,
     viewState: PilesViewState,
-    pileTransitionStates: List<MutableTransitionState<Boolean>>,
     onCreatePile: (String) -> Unit = {},
     onSelectPile: (Long) -> Unit = {},
     onPileClick: (Long) -> Unit = {},
@@ -103,13 +92,7 @@ fun PileOverviewScreen(
 ) {
     var piles by remember { mutableStateOf(viewState.piles) }
     LaunchedEffect(viewState.piles.size) {
-        piles = viewState.piles.sortedBy {
-            val pileOrder = viewState.pileOrder
-            val indexInOrder = pileOrder.indexOf(it.pile.pileId)
-            // attempt to sort by pile order, if not found, use pile id
-            // add pile order size to pile id to ensure new piles are at the end
-            if (indexInOrder == -1) it.pile.pileId.toInt() + pileOrder.size else indexInOrder
-        }
+        piles = viewState.piles.sortedWithOrder(viewState.pileOrder)
     }
     val gridState = rememberLazyStaggeredGridState()
     val reorderableLazyStaggeredGridState =
@@ -152,10 +135,10 @@ fun PileOverviewScreen(
                 state = gridState,
                 columns = StaggeredGridCells.Adaptive(if (isTabletWide) 200.dp else 150.dp),
             ) {
-                itemsIndexed(
+                items(
                     piles,
-                    key = { _, pileWithTasks -> pileWithTasks.pile.pileId }
-                ) { index, pileWithTasks ->
+                    key = { pileWithTasks -> pileWithTasks.pile.pileId }
+                ) { pileWithTasks ->
                     ReorderableItem(
                         reorderableLazyStaggeredGridState,
                         key = pileWithTasks.pile.pileId
@@ -167,7 +150,6 @@ fun PileOverviewScreen(
                             onSelectPile = onSelectPile,
                             selected = viewState.selectedPileId == pileWithTasks.pile.pileId,
                             onClick = { onPileClick(pileWithTasks.pile.pileId) },
-                            transitionState = pileTransitionStates[index]
                         )
                     }
                 }

@@ -5,7 +5,6 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutLinearInEasing
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -106,13 +105,6 @@ fun PileScreen(
     } else {
         viewState.tasks?.filter { !it.isRecurring }
     } ?: emptyList()
-    val taskTransitionStates = shownTasks.map {
-        remember {
-            MutableTransitionState(false).apply {
-                targetState = true
-            }
-        }
-    }
 
     // snackbar handler
     viewState.messageWithAction?.let { message ->
@@ -135,7 +127,6 @@ fun PileScreen(
         modifier = modifier,
         shownTasks = shownTasks,
         viewState = viewState,
-        taskTransitionStates = taskTransitionStates,
         selectedPileIndex = selectedPileViewState,
         onDone = { viewModel.done(it) },
         onDelete = {
@@ -165,7 +156,6 @@ fun PileScreen(
  * @param modifier generic modifier
  * @param viewState pile screen view state
  * @param shownTasks the task list that will be shown inside the pile
- * @param taskTransitionStates animation transition states for pile tasks
  * @param selectedPileIndex index of currently selected pile
  * @param onTitlePageChanged action on pile title change (selection of different pile)
  * @param onDone on task done
@@ -181,7 +171,6 @@ fun PileScreen(
     modifier: Modifier = Modifier,
     viewState: PileViewState,
     shownTasks: List<Task> = emptyList(),
-    taskTransitionStates: List<MutableTransitionState<Boolean>>,
     selectedPileIndex: Int = 0,
     onTitlePageChanged: (Int) -> Unit = {},
     onDone: (Task) -> Unit = {},
@@ -248,7 +237,6 @@ fun PileScreen(
                             .offset(pileOffset.value.dp, 0.dp),
                         tasks = shownTasks,
                         pileMode = viewState.pileWithTasks.pile.pileMode,
-                        taskTransitionStates = taskTransitionStates,
                         onDone = {
                             coroutineScope.launch {
                                 // if task is recurring, display completion message and next due date

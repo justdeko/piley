@@ -16,6 +16,7 @@ kotlinx-coroutines = "1.10.2"
 sqliteBundled = "2.5.0"
 filekit = "0.10.0-beta01"
 reorderable = "2.4.3"
+ktor = "3.1.2"
 
 
 [libraries]
@@ -36,6 +37,10 @@ androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", 
 filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.ref = "filekit" }
 filekit-dialogs-compose = { group = "io.github.vinceglb", name = "filekit-dialogs-compose", version.ref = "filekit" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-network = { module = "io.ktor:ktor-network", version.ref = "ktor" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

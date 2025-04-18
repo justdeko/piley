@@ -204,7 +204,11 @@ fun PileScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PileTitlePager(
-            modifier = Modifier.fillMaxWidth().padding(start = LocalDim.current.medium, end = LocalDim.current.medium, top = LocalDim.current.medium),
+            modifier = Modifier.fillMaxWidth().padding(
+                start = LocalDim.current.medium,
+                end = LocalDim.current.medium,
+                top = LocalDim.current.medium
+            ),
             pileTitleList = viewState.pileIdTitleList.map { it.second },
             onPageChanged = onTitlePageChanged,
             selectedPageIndex = selectedPileIndex,
@@ -314,6 +318,9 @@ fun PileScreen(
                                         }
                                         taskTextValue = TextFieldValue()
                                     }
+                                } else if (taskTextValue.text.isEmpty()) {
+                                    focusManager.clearFocus()
+                                    defaultKeyboardAction(ImeAction.Done)
                                 } else {
                                     onSetMessage(MessageWithAction(getString(Res.string.task_empty_not_allowed_hint)))
                                 }

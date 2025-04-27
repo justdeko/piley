@@ -1,0 +1,65 @@
+package com.dk.piley.model.sync
+
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.pointed
+import kotlinx.cinterop.reinterpret
+import platform.Foundation.NSNetServiceBrowser
+import platform.Foundation.NSNetServiceBrowserDelegateProtocol
+import platform.Foundation.NSNetServiceDelegateProtocol
+import platform.darwin.NSObject
+
+class SyncManager : ISyncManager {
+    private var netService: platform.Foundation.NSNetService? = null
+    private var serviceBrowser: NSNetServiceBrowser? = null
+
+    @OptIn(ExperimentalForeignApi::class)
+    override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int) -> Unit) {
+        serviceBrowser = NSNetServiceBrowser()
+        serviceBrowser!!.delegate =
+            object : NSObject(), NSNetServiceBrowserDelegateProtocol {
+                override fun netServiceBrowser(
+                    browser: NSNetServiceBrowser,
+                    didFindService: platform.Foundation.NSNetService,
+                    moreComing: Boolean
+                ) {
+                    didFindService.delegate =
+                        object : NSObject(), NSNetServiceDelegateProtocol {
+                            override fun netServiceDidResolveAddress(sender: platform.Foundation.NSNetService) {
+                                sender.addresses?.firstOrNull()?.let {
+                                    val data = it as platform.Foundation.NSData
+                                    val socketAddressPointer =
+                                        data.bytes?.reinterpret<platform.posix.sockaddr_in>()
+                                    val ipBytes =
+                                        socketAddressPointer?.pointed?.sin_addr?.s_addr ?: return
+                                    val ip = ipBytes.toLong() and 0xFF or
+                                            ((ipBytes.toLong() shr 8) and 0xFF) shl 8 or
+                                            ((ipBytes.toLong() shr 16) and 0xFF) shl 16 or
+                                            ((ipBytes.toLong() shr 24) and 0xFF) shl 24
+                                    val port = sender.port.toInt()
+                                    onDeviceFound(ip.toString(), port)
+                                }
+                            }
+                        }
+                    didFindService.resolveWithTimeout(5.0)
+                }
+            }
+        serviceBrowser?.searchForServicesOfType(serviceType, inDomain = "local.")
+    }
+
+    override suspend fun stopDiscovery() {
+        serviceBrowser?.stop()
+    }
+
+    override suspend fun advertiseService(port: Int) {
+        netService = platform.Foundation.NSNetService("local.", serviceType, serviceName, port)
+        netService?.scheduleInRunLoop(
+            platform.Foundation.NSRunLoop.currentRunLoop,
+            platform.Foundation.NSDefaultRunLoopMode
+        )
+        netService?.publish()
+    }
+
+    override suspend fun stopAdvertising() {
+        netService?.stop()
+    }
+}

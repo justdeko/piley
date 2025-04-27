@@ -11,6 +11,7 @@ import com.dk.piley.model.navigation.ShortcutEventRepository
 import com.dk.piley.model.notification.NotificationRepository
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.sync.ISyncManager
 import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.user.UserDao
@@ -40,6 +41,7 @@ interface AppModule {
     val navigationEventRepository: NavigationEventRepository
     val shortcutEventRepository: ShortcutEventRepository
     val databaseExporter: IDatabaseExporter
+    val syncManager: ISyncManager
 }
 
 class AppModuleImpl(
@@ -48,6 +50,7 @@ class AppModuleImpl(
     override val reminderManager: IReminderManager,
     override val notificationManager: INotificationManager,
     override val databaseExporter: IDatabaseExporter,
+    override val syncManager: ISyncManager,
     dataStorePath: String,
 ) : AppModule {
 

@@ -258,7 +258,7 @@ internal fun SettingsScreen(
                 textValue = stringResource(Res.string.settings_screen_title),
                 justTitle = true,
                 onButtonClick = onCloseSettings,
-                contentDescription = "close the task detail"
+                contentDescription = "close settings"
             )
             Column(
                 modifier = Modifier

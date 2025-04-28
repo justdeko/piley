@@ -6,12 +6,14 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Square
 import androidx.compose.material.icons.filled.Start
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Square
 import androidx.compose.material.icons.outlined.Start
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.ViewAgenda
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NamedNavArgument
@@ -25,6 +27,7 @@ import piley.composeapp.generated.resources.piles
 import piley.composeapp.generated.resources.profile
 import piley.composeapp.generated.resources.settings
 import piley.composeapp.generated.resources.splash_screen
+import piley.composeapp.generated.resources.sync_screen
 
 /**
  * Represents a screen of the app in terms of destination
@@ -63,6 +66,10 @@ sealed class Screen(
 
     data object Intro : Screen(
         "intro", Res.string.introduction_screen, Pair(Icons.Outlined.Start, Icons.Filled.Start),
+    )
+
+    data object Sync : Screen(
+        "sync", Res.string.sync_screen, Pair(Icons.Outlined.Sync, Icons.Filled.Sync)
     )
 }
 

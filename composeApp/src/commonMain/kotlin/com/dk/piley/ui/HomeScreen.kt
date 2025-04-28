@@ -42,6 +42,7 @@ import com.dk.piley.ui.piles.PileOverviewScreen
 import com.dk.piley.ui.profile.ProfileScreen
 import com.dk.piley.ui.settings.SettingsScreen
 import com.dk.piley.ui.splash.SplashScreen
+import com.dk.piley.ui.sync.SyncScreen
 import com.dk.piley.ui.task.TaskDetailScreen
 
 
@@ -155,6 +156,13 @@ fun HomeScreen(
                 }
                 composable(Screen.Settings.route) {
                     SettingsScreen(
+                        modifier = contentPadding,
+                        navController = navController,
+                        snackbarHostState = snackbarHostState
+                    )
+                }
+                composable(Screen.Sync.route) {
+                    SyncScreen(
                         modifier = contentPadding,
                         navController = navController,
                         snackbarHostState = snackbarHostState

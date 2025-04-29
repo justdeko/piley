@@ -5,7 +5,7 @@ import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
 import javax.jmdns.ServiceListener
 
-class SyncManager: ISyncManager {
+class SyncManager : ISyncManager {
     private var jmdns: JmDNS? = null
     private var listener: ServiceListener? = null
 
@@ -28,17 +28,22 @@ class SyncManager: ISyncManager {
             }
         }
 
-        jmdns?.addServiceListener(serviceType, listener)
+        jmdns?.addServiceListener(syncServiceType, listener)
     }
 
     override suspend fun stopDiscovery() {
-        listener?.let { jmdns?.removeServiceListener(serviceType, it) }
+        listener?.let { jmdns?.removeServiceListener(syncServiceType, it) }
         jmdns?.close()
     }
 
     override suspend fun advertiseService(port: Int) {
         jmdns = JmDNS.create(InetAddress.getLocalHost())
-        val serviceInfo = javax.jmdns.ServiceInfo.create(serviceType, serviceName, port, "piley sync service")
+        val serviceInfo = javax.jmdns.ServiceInfo.create(
+            /* type = */ syncServiceType,
+            /* name = */ syncServiceName,
+            /* port = */ port,
+            /* text = */ "piley sync service"
+        )
         jmdns?.registerService(serviceInfo)
     }
 

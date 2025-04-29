@@ -31,17 +31,19 @@ suspend fun startServer(
             val remoteTimestamp = input.readLong()
             output.writeLong(lastEdited)
 
-            if (remoteTimestamp > lastEdited) {
-                println("Remote device is newer, expecting file...")
+            println("(startServer) Local timestamp: $lastEdited, Remote timestamp: $remoteTimestamp")
+
+            if (remoteTimestamp < lastEdited) {
+                println("Local device is newer, expecting file...")
                 val fileSize = input.readLong()
                 val buffer = ByteArray(fileSize.toInt())
                 input.readFully(buffer, 0, buffer.size)
                 onReceive(buffer)
+                socket.close()
+                println("File received, closing socket.")
             } else {
-                println("Local device is newer, no file transfer needed.")
+                println("Remote device is newer, no file transfer needed.")
             }
-
-            socket.close()
         }
     }
 }
@@ -60,12 +62,15 @@ suspend fun handshakeAndMaybeSync(
     output.writeLong(localTimestamp)
     val remoteTimestamp = input.readLong()
 
-    if (localTimestamp > remoteTimestamp) {
-        println("Local device is newer, sending file...")
+    println("(handshake) Local timestamp: $localTimestamp, Remote timestamp: $remoteTimestamp")
+
+    if (localTimestamp < remoteTimestamp) {
+        println("Remote device is newer, sending file...")
         output.writeLong(localData.size.toLong())
         output.writeFully(localData)
+        socket.close()
+        println("File sent, closing socket.")
     } else {
-        println("Remote device is newer, no file sent.")
+        println("Local device is newer, no file sent, expecting file...")
     }
-    socket.close()
 }

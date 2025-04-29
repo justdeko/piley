@@ -16,7 +16,7 @@ class SyncManager(private val context: Context) : ISyncManager {
         discoveryListener = object : NsdManager.DiscoveryListener {
             override fun onDiscoveryStarted(serviceType: String) {}
             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-                if (serviceInfo.serviceType == serviceType && serviceInfo.serviceName != serviceName) {
+                if (serviceInfo.serviceType == syncServiceType && serviceInfo.serviceName != syncServiceName) {
                     nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
                         override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
                             val host = resolvedInfo.host?.hostAddress
@@ -37,7 +37,7 @@ class SyncManager(private val context: Context) : ISyncManager {
             override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {}
         }
 
-        nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
+        nsdManager.discoverServices(syncServiceType, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
     }
 
     override suspend fun stopDiscovery() {
@@ -45,9 +45,10 @@ class SyncManager(private val context: Context) : ISyncManager {
     }
 
     override suspend fun advertiseService(port: Int) {
+        nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
         val serviceInfo = NsdServiceInfo().apply {
-            serviceName = serviceName
-            serviceType = serviceType
+            serviceName = syncServiceName
+            serviceType = syncServiceType
             setPort(port)
         }
 

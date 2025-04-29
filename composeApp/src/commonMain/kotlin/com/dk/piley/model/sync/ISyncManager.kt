@@ -7,5 +7,5 @@ interface ISyncManager {
     suspend fun stopAdvertising()
 }
 
-const val serviceType = "_piley._tcp."
-const val serviceName = "Piley"
+const val syncServiceType = "_piley._tcp."
+const val syncServiceName = "Piley"

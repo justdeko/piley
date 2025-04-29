@@ -1,7 +1,6 @@
 package com.dk.piley.ui.sync
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,32 +56,33 @@ internal fun SyncScreen(
         )
         TwoPaneScreen(
             mainContent = {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column (modifier = Modifier.fillMaxWidth()) {
                     Text(text = "State: ${viewState.syncState}")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Button(
+                            onClick = { onStartSync() },
+                            enabled = viewState.syncState != SyncState.Syncing
+                        ) {
+                            Text(text = "Start Sync")
+                        }
+                        Button(
+                            onClick = { onStopSync() },
+                            enabled =
+                                viewState.syncState == SyncState.Syncing
+                                        || viewState.syncState == SyncState.Advertising
+                                        || viewState.syncState == SyncState.Discovering
+                        ) {
+                            Text(text = "Stop Sync")
+                        }
+                    }
                 }
             },
             detailContent = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Button(
-                        onClick = { onStartSync() },
-                        enabled = viewState.syncState != SyncState.Syncing
-                    ) {
-                        Text(text = "Start Sync")
-                    }
-                    Button(
-                        onClick = { onStopSync() },
-                        enabled =
-                            viewState.syncState == SyncState.Syncing
-                                    || viewState.syncState == SyncState.Advertising
-                                    || viewState.syncState == SyncState.Discovering
-                    ) {
-                        Text(text = "Stop Sync")
-                    }
-                }
+
             }
         )
     }

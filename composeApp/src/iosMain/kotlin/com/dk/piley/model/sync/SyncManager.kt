@@ -43,7 +43,7 @@ class SyncManager : ISyncManager {
                     didFindService.resolveWithTimeout(5.0)
                 }
             }
-        serviceBrowser?.searchForServicesOfType(serviceType, inDomain = "local.")
+        serviceBrowser?.searchForServicesOfType(syncServiceType, inDomain = "local.")
     }
 
     override suspend fun stopDiscovery() {
@@ -51,7 +51,12 @@ class SyncManager : ISyncManager {
     }
 
     override suspend fun advertiseService(port: Int) {
-        netService = platform.Foundation.NSNetService("local.", serviceType, serviceName, port)
+        netService = platform.Foundation.NSNetService(
+            domain = "local.",
+            type = syncServiceType,
+            name = syncServiceName,
+            port = port
+        )
         netService?.scheduleInRunLoop(
             platform.Foundation.NSRunLoop.currentRunLoop,
             platform.Foundation.NSDefaultRunLoopMode

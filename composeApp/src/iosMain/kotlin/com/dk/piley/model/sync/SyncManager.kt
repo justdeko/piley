@@ -1,5 +1,9 @@
 package com.dk.piley.model.sync
 
+import com.dk.piley.util.appPlatform
+import io.github.vinceglb.filekit.utils.toByteArray
+import io.github.vinceglb.filekit.utils.toNSData
+import io.ktor.utils.io.core.toByteArray
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.pointed
 import kotlinx.cinterop.reinterpret
@@ -13,7 +17,7 @@ class SyncManager : ISyncManager {
     private var serviceBrowser: NSNetServiceBrowser? = null
 
     @OptIn(ExperimentalForeignApi::class)
-    override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int) -> Unit) {
+    override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit) {
         serviceBrowser = NSNetServiceBrowser()
         serviceBrowser!!.delegate =
             object : NSObject(), NSNetServiceBrowserDelegateProtocol {
@@ -36,7 +40,15 @@ class SyncManager : ISyncManager {
                                             ((ipBytes.toLong() shr 16) and 0xFF) shl 16 or
                                             ((ipBytes.toLong() shr 24) and 0xFF) shl 24
                                     val port = sender.port.toInt()
-                                    onDeviceFound(ip.toString(), port)
+                                    val recordData = sender.TXTRecordData()
+                                    val recordString = recordData?.toByteArray()?.decodeToString()
+                                    val name = sender.name
+                                    val timeStamp =
+                                        recordString?.substringAfter("$timeStampAttribute=")
+                                            ?.toLongOrNull() ?: 0L
+                                    if (!name.contains(appPlatform.toString())) {
+                                        onDeviceFound(ip.toString(), port, timeStamp)
+                                    }
                                 }
                             }
                         }
@@ -50,13 +62,16 @@ class SyncManager : ISyncManager {
         serviceBrowser?.stop()
     }
 
-    override suspend fun advertiseService(port: Int) {
+    override suspend fun advertiseService(port: Int, timeStamp: Long) {
         netService = platform.Foundation.NSNetService(
             domain = "local.",
             type = syncServiceType,
-            name = syncServiceName,
+            name = syncServiceName + appPlatform,
             port = port
         )
+        val txtRecord = "$timeStampAttribute=$timeStamp"
+        val txtData = txtRecord.toByteArray().toNSData()
+        netService?.setTXTRecordData(txtData)
         netService?.scheduleInRunLoop(
             platform.Foundation.NSRunLoop.currentRunLoop,
             platform.Foundation.NSDefaultRunLoopMode

@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 
 suspend fun startServer(
     port: Int,
-    lastEdited: Long,
     onReceive: suspend (ByteArray) -> Unit
 ) {
     val selector = SelectorManager(Dispatchers.IO)
@@ -26,51 +25,22 @@ suspend fun startServer(
         val socket = serverSocket.accept()
         CoroutineScope(Dispatchers.IO).launch {
             val input = socket.openReadChannel()
-            val output = socket.openWriteChannel(autoFlush = true)
-
-            val remoteTimestamp = input.readLong()
-            output.writeLong(lastEdited)
-
-            println("(startServer) Local timestamp: $lastEdited, Remote timestamp: $remoteTimestamp")
-
-            if (remoteTimestamp < lastEdited) {
-                println("Local device is newer, expecting file...")
-                val fileSize = input.readLong()
-                val buffer = ByteArray(fileSize.toInt())
-                input.readFully(buffer, 0, buffer.size)
-                onReceive(buffer)
-                socket.close()
-                println("File received, closing socket.")
-            } else {
-                println("Remote device is newer, no file transfer needed.")
-            }
+            val fileSize = input.readLong()
+            val buffer = ByteArray(fileSize.toInt())
+            input.readFully(buffer, 0, buffer.size)
+            onReceive(buffer)
+            socket.close()
+            println("File received, closing socket.")
         }
     }
 }
 
-suspend fun handshakeAndMaybeSync(
-    ip: String,
-    port: Int,
-    localTimestamp: Long,
-    localData: ByteArray
-) {
+suspend fun sendData(ip: String, port: Int, data: ByteArray) {
     val selector = SelectorManager(Dispatchers.IO)
     val socket = aSocket(selector).tcp().connect(ip, port)
-    val input = socket.openReadChannel()
     val output = socket.openWriteChannel(autoFlush = true)
 
-    output.writeLong(localTimestamp)
-    val remoteTimestamp = input.readLong()
-
-    println("(handshake) Local timestamp: $localTimestamp, Remote timestamp: $remoteTimestamp")
-
-    if (localTimestamp < remoteTimestamp) {
-        println("Remote device is newer, sending file...")
-        output.writeLong(localData.size.toLong())
-        output.writeFully(localData)
-        socket.close()
-        println("File sent, closing socket.")
-    } else {
-        println("Local device is newer, no file sent, expecting file...")
-    }
+    output.writeLong(data.size.toLong())
+    output.writeFully(data)
+    socket.close()
 }

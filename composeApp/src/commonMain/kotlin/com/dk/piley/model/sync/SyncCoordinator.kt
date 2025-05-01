@@ -3,11 +3,13 @@ package com.dk.piley.model.sync
 import com.dk.piley.util.appPlatform
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SyncCoordinator(
     private val syncManager: ISyncManager
@@ -16,8 +18,8 @@ class SyncCoordinator(
     private val _syncState = MutableStateFlow(SyncState.Idle)
     val syncStateFlow: StateFlow<SyncState> = _syncState
 
-    private lateinit var server: Job
     private lateinit var client: Job
+    private lateinit var server: Job
 
     private companion object {
         const val PORT = 55122
@@ -26,50 +28,53 @@ class SyncCoordinator(
     fun startSync(
         lastEditedTimeStamp: Long,
     ) {
-        _syncState.value = SyncState.Advertising
-        server = scope.launch {
-            syncManager.advertiseService(PORT)
-            startServer(
-                port = PORT,
-                lastEdited = lastEditedTimeStamp,
-                onReceive = { receivedBytes ->
-                    println("Received mock file: ${receivedBytes.decodeToString()}")
-                    _syncState.value = SyncState.Synced
-                    client.cancel()
-                }
-            )
-        }
+        println("Starting sync process with timestamp $lastEditedTimeStamp")
+
         _syncState.value = SyncState.Discovering
-        // TODO: send from desktop to mobile not working, timestamp identical (maybe connecting to itself?)
-        // maybe use handshake + advertise service?
+
+        server = scope.launch {
+            startServer(PORT) { data ->
+                println("Received data: ${data.decodeToString()}")
+                stopSync()
+            }
+        }
+
         client = scope.launch {
-            println("Starting client...")
-            syncManager.startDiscovery { ip, port ->
-                println("Found device at $ip:$port")
+            syncManager.advertiseService(PORT, lastEditedTimeStamp)
+            _syncState.value = SyncState.Advertising
+            syncManager.startDiscovery { ip, port, remoteTimestamp ->
+                println("Found device at $ip:$port (timestamp=$remoteTimestamp)")
                 scope.launch {
                     try {
                         _syncState.value = SyncState.Syncing
-                        val mockData = "Hello from device $appPlatform!".encodeToByteArray()
-                        handshakeAndMaybeSync(ip, port, lastEditedTimeStamp, mockData)
-                        _syncState.value = SyncState.Synced
+                        if (lastEditedTimeStamp > remoteTimestamp) {
+                            val data = "Hello from device $appPlatform!".encodeToByteArray()
+                            sendData(ip, port, data)
+                            println("Data sent to $ip")
+                            _syncState.value = SyncState.Synced
+                        } else {
+                            println("Remote device is newer → waiting for incoming data")
+                        }
                     } catch (e: Exception) {
                         e.printStackTrace()
+                        syncManager.stopDiscovery()
+                        syncManager.stopAdvertising()
                         _syncState.value = SyncState.Error
                     }
-                    server.cancel()
                 }
             }
         }
-        server.start()
-        client.start()
     }
 
+
     suspend fun stopSync() {
-        syncManager.stopDiscovery()
-        syncManager.stopAdvertising()
-        server.cancel()
-        client.cancel()
-        _syncState.value = SyncState.Idle
+        withContext(Dispatchers.IO) {
+            syncManager.stopDiscovery()
+            syncManager.stopAdvertising()
+            client.cancel()
+            server.cancel()
+            _syncState.value = SyncState.Idle
+        }
     }
 }
 

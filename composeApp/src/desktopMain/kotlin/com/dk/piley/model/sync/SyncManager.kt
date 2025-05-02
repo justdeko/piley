@@ -1,6 +1,8 @@
 package com.dk.piley.model.sync
 
 import com.dk.piley.util.appPlatform
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.net.InetAddress
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
@@ -13,7 +15,7 @@ class SyncManager : ISyncManager {
 
     override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit) {
         println("Starting discovery...")
-        jmdns = JmDNS.create(InetAddress.getLocalHost())
+        instantiateJmDNS()
 
         listener = object : ServiceListener {
             override fun serviceAdded(event: ServiceEvent) {
@@ -45,12 +47,15 @@ class SyncManager : ISyncManager {
 
     override suspend fun stopDiscovery() {
         listener?.let { jmdns?.removeServiceListener(syncServiceType, it) }
-        jmdns?.close()
+        withContext(Dispatchers.IO) {
+            jmdns?.close()
+            jmdns = null
+        }
     }
 
-    override suspend fun advertiseService(port: Int, timestamp: Long) {
-        jmdns = JmDNS.create(InetAddress.getLocalHost())
-        val txtRecord = mapOf(timeStampAttribute to timestamp.toString())
+    override suspend fun advertiseService(port: Int, timeStamp: Long) {
+        instantiateJmDNS()
+        val txtRecord = mapOf(timeStampAttribute to timeStamp.toString())
         val serviceInfo = javax.jmdns.ServiceInfo.create(
             /* type = */ syncServiceType,
             /* name = */ syncServiceName + appPlatform,
@@ -59,12 +64,23 @@ class SyncManager : ISyncManager {
             /* priority = */ 0,
             /* props = */ txtRecord
         )
-        jmdns?.registerService(serviceInfo)
+        withContext(Dispatchers.IO) {
+            jmdns?.registerService(serviceInfo)
+        }
     }
 
     override suspend fun stopAdvertising() {
-        jmdns?.unregisterAllServices()
-        jmdns?.close()
+        withContext(Dispatchers.IO) {
+            jmdns?.unregisterAllServices()
+            jmdns?.close()
+            jmdns = null
+        }
+    }
+
+    private fun instantiateJmDNS() {
+        if (jmdns == null) {
+            jmdns = JmDNS.create(InetAddress.getLocalHost())
+        }
     }
 }
 

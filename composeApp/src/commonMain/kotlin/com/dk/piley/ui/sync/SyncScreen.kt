@@ -65,7 +65,9 @@ internal fun SyncScreen(
                     ) {
                         Button(
                             onClick = { onStartSync() },
-                            enabled = viewState.syncState != SyncState.Syncing
+                            enabled = viewState.syncState == SyncState.Idle
+                                    || viewState.syncState == SyncState.Synced
+                                    || viewState.syncState == SyncState.Error
                         ) {
                             Text(text = "Start Sync")
                         }

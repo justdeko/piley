@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 class SyncCoordinator(
     private val syncManager: ISyncManager
 ) {
-    private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val _syncState = MutableStateFlow(SyncState.Idle)
     val syncStateFlow: StateFlow<SyncState> = _syncState
 
@@ -57,8 +57,7 @@ class SyncCoordinator(
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        syncManager.stopDiscovery()
-                        syncManager.stopAdvertising()
+                        stopSync()
                         _syncState.value = SyncState.Error
                     }
                 }

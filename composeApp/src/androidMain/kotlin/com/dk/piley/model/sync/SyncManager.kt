@@ -17,8 +17,8 @@ class SyncManager(private val context: Context) : ISyncManager {
         discoveryListener = object : NsdManager.DiscoveryListener {
             override fun onDiscoveryStarted(serviceType: String) {}
             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-                if (serviceInfo.serviceType == syncServiceType &&
-                    serviceInfo.serviceName.startsWith(syncServiceName)
+                if (serviceInfo.serviceName.startsWith(syncServiceName)
+                    && !serviceInfo.serviceName.contains(appPlatform.toString())
                 ) {
                     nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
                         override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
@@ -43,7 +43,11 @@ class SyncManager(private val context: Context) : ISyncManager {
             override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {}
         }
 
-        nsdManager.discoverServices(syncServiceType, NsdManager.PROTOCOL_DNS_SD, discoveryListener)
+        nsdManager.discoverServices(
+            /* serviceType = */ androidSyncServiceType,
+            /* protocolType = */ NsdManager.PROTOCOL_DNS_SD,
+            /* listener = */ discoveryListener
+        )
     }
 
     override suspend fun stopDiscovery() {
@@ -54,7 +58,7 @@ class SyncManager(private val context: Context) : ISyncManager {
         nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
         val serviceInfo = NsdServiceInfo().apply {
             serviceName = syncServiceName + appPlatform
-            serviceType = syncServiceType.removeSuffix("local.") // TODO biggest issue right now
+            serviceType = androidSyncServiceType
             setAttribute(timeStampAttribute, timeStamp.toString())
             setPort(port)
         }

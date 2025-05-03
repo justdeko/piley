@@ -27,7 +27,12 @@ fun SyncScreen(
     modifier: Modifier = Modifier,
     navController: NavController = rememberNavController(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
-    viewModel: SyncViewModel = viewModel { SyncViewModel(syncCoordinator = Piley.getModule().syncCoordinator) }
+    viewModel: SyncViewModel = viewModel {
+        SyncViewModel(
+            syncCoordinator = Piley.getModule().syncCoordinator,
+            databaseExporter = Piley.getModule().databaseExporter,
+        )
+    }
 ) {
     val viewState by viewModel.state.collectAsState()
     SyncScreen(
@@ -56,7 +61,7 @@ internal fun SyncScreen(
         )
         TwoPaneScreen(
             mainContent = {
-                Column (modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.fillMaxWidth()) {
                     Text(text = "State: ${viewState.syncState}")
                     Row(
                         modifier = Modifier.fillMaxWidth(),

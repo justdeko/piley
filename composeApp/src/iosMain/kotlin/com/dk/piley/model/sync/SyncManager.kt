@@ -16,7 +16,6 @@ import platform.Foundation.NSNetService
 import platform.Foundation.NSNetServiceBrowser
 import platform.Foundation.NSNetServiceBrowserDelegateProtocol
 import platform.Foundation.NSNetServiceDelegateProtocol
-import platform.Foundation.NSNetServiceNoAutoRename
 import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
@@ -39,12 +38,18 @@ class SyncManager : ISyncManager {
     private var serviceDelegate: ServiceDelegate? = null
     private var browserDelegate: BrowserDelegate? = null
 
+    // Store references to resolve delegates to prevent premature garbage collection
+    private val resolveDelegates = mutableListOf<ServiceResolveDelegate>()
+
     override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit) {
         withContext(Dispatchers.Main) {
+            // Clear any previous delegates
+            resolveDelegates.clear()
+
             browserDelegate = BrowserDelegate(onDeviceFound)
             netServiceBrowser = NSNetServiceBrowser().apply {
                 setDelegate(browserDelegate)
-                searchForServicesOfType(syncServiceType, "local.")
+                searchForServicesOfType(mobileSyncServiceType, "local.")
             }
         }
     }
@@ -55,6 +60,7 @@ class SyncManager : ISyncManager {
             netServiceBrowser?.setDelegate(null)
             netServiceBrowser = null
             browserDelegate = null
+            resolveDelegates.clear()
         }
     }
 
@@ -76,13 +82,13 @@ class SyncManager : ISyncManager {
             serviceDelegate = ServiceDelegate()
             netService = NSNetService(
                 domain = "local.",
-                type = syncServiceType,
+                type = mobileSyncServiceType,
                 name = serviceName,
                 port = port
             ).apply {
                 setDelegate(serviceDelegate)
                 setTXTRecordData(txtRecordData)
-                publishWithOptions(NSNetServiceNoAutoRename)
+                publish()
             }
         }
     }
@@ -105,11 +111,14 @@ class SyncManager : ISyncManager {
             didFindService: NSNetService,
             moreComing: Boolean
         ) {
+            println("Found service: ${didFindService.name} of type ${didFindService.type}")
+
             if (didFindService.name.startsWith(syncServiceName) &&
                 !didFindService.name.contains(appPlatform.toString())
             ) {
                 // Resolve this service to get its details
                 val resolveDelegate = ServiceResolveDelegate(onDeviceFound)
+                resolveDelegates.add(resolveDelegate) // Store reference to prevent GC
                 didFindService.setDelegate(resolveDelegate)
                 didFindService.resolveWithTimeout(5.0)
             }
@@ -136,68 +145,87 @@ class SyncManager : ISyncManager {
         override fun netServiceDidResolveAddress(sender: NSNetService) {
             // Get IP address
             val addresses = sender.addresses
-            if (addresses == null || addresses.isEmpty()) return
+            if (addresses == null || addresses.isEmpty()) {
+                println("No addresses found for service ${sender.name}")
+                return
+            }
 
-            // Extract the first IP address
-            val ipAddress = extractIPAddress(addresses.first() as NSData)
+            // Try to extract IP address from each address until we succeed
+            var ipAddress: String? = null
+            for (addressData in addresses) {
+                ipAddress = extractIPAddress(addressData as NSData)
+                if (ipAddress != null) break
+            }
+
             if (ipAddress == null) {
-                println("Failed to extract IP address")
+                println("Failed to extract IP address for service ${sender.name}")
                 return
             }
 
             // Get port
             val port = sender.port.toInt()
+            if (port <= 0) {
+                println("Invalid port number: $port")
+                return
+            }
 
             // Get timestamp from TXT record
-            val txtRecordData = sender.TXTRecordData() ?: return
+            val txtRecordData = sender.TXTRecordData()
+            if (txtRecordData == null) {
+                println("No TXT record data for service ${sender.name}")
+                // Still call callback but with default timestamp
+                onDeviceFound(ipAddress, port, 0L)
+                return
+            }
+
             val txtDict = NSNetService.dictionaryFromTXTRecordData(txtRecordData)
 
             val timestampData = txtDict[timeStampAttribute] as? NSData
             val timeStamp = if (timestampData != null) {
-                NSString.create(timestampData, NSUTF8StringEncoding).toString().toLongOrNull() ?: 0L
+                val timestampStr = NSString.create(timestampData, NSUTF8StringEncoding).toString()
+                timestampStr.toLongOrNull() ?: 0L
             } else {
                 0L
             }
 
+            println("Successfully resolved service: $ipAddress:$port (timestamp: $timeStamp)")
+
             // Call the callback
             onDeviceFound(ipAddress, port, timeStamp)
+
+            // Clean up this delegate
+            sender.setDelegate(null)
+            resolveDelegates.remove(this)
         }
 
         override fun netService(sender: NSNetService, didNotResolve: Map<Any?, *>) {
             println("Service did not resolve: $didNotResolve")
+            // Clean up this delegate
+            sender.setDelegate(null)
+            resolveDelegates.remove(this)
         }
 
         @OptIn(ExperimentalForeignApi::class)
         private fun extractIPAddress(addressData: NSData): String? {
-            // This is a simplified approach - socket address parsing
-            // For demonstration, we'll convert socket address to a string
-
-            // In a real implementation, you'd need to inspect the socket address structure
-            // and extract the IP address properly
-
-            // First 2 bytes are address family, we need to check if IPv4 or IPv6
             memScoped {
                 val sockaddrPtr = addressData.bytes?.reinterpret<sockaddr>()
                 if (sockaddrPtr != null) {
                     val family = sockaddrPtr.pointed.sa_family.toInt()
 
-                    // Check family (AF_INET = 2 for IPv4, AF_INET6 = 30 for IPv6)
                     return when (family) {
-                        2 -> { // AF_INET (IPv4)
+                        AF_INET -> { // IPv4
                             val sockaddrInPtr = sockaddrPtr.reinterpret<sockaddr_in>()
                             val addr = sockaddrInPtr.pointed.sin_addr
 
-                            // Convert address to string
                             val buffer = allocArray<ByteVar>(INET_ADDRSTRLEN)
                             inet_ntop(AF_INET, addr.ptr, buffer, INET_ADDRSTRLEN.toUInt())
                             buffer.toKString()
                         }
 
-                        30 -> { // AF_INET6 (IPv6)
+                        AF_INET6 -> { // IPv6
                             val sockaddrIn6Ptr = sockaddrPtr.reinterpret<sockaddr_in6>()
                             val addr6 = sockaddrIn6Ptr.pointed.sin6_addr
 
-                            // Convert address to string
                             val buffer = allocArray<ByteVar>(INET6_ADDRSTRLEN)
                             inet_ntop(AF_INET6, addr6.ptr, buffer, INET6_ADDRSTRLEN.toUInt())
                             buffer.toKString()
@@ -213,11 +241,17 @@ class SyncManager : ISyncManager {
 
     private inner class ServiceDelegate : NSObject(), NSNetServiceDelegateProtocol {
         override fun netServiceDidPublish(sender: NSNetService) {
-            println("Service published: ${sender.name}")
+            println("Service published successfully: ${sender.name} on port ${sender.port}")
         }
 
         override fun netService(sender: NSNetService, didNotPublish: Map<Any?, *>) {
             println("Service did not publish: $didNotPublish")
+            // You might want to try again with a different approach
+            // For example, if using NSNetServiceNoAutoRename failed, try publishing with auto-rename
+            if (sender == netService) {
+                println("Attempting to publish with auto-rename...")
+                sender.publish()
+            }
         }
 
         override fun netServiceDidStop(sender: NSNetService) {

@@ -8,6 +8,6 @@ interface ISyncManager {
 }
 
 const val syncServiceType = "_piley._tcp.local."
-const val androidSyncServiceType = "_piley._tcp"
+const val mobileSyncServiceType = "_piley._tcp"
 const val syncServiceName = "Piley_"
 const val timeStampAttribute = "timestamp"

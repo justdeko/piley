@@ -52,6 +52,7 @@ class SyncCoordinator(
                             sendData(ip, port, data)
                             println("Data sent to $ip")
                             _syncState.value = SyncState.Synced
+                            stopSync()
                         } else {
                             println("Remote device is newer → waiting for incoming data")
                         }

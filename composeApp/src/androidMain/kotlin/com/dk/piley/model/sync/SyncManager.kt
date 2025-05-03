@@ -44,7 +44,7 @@ class SyncManager(private val context: Context) : ISyncManager {
         }
 
         nsdManager.discoverServices(
-            /* serviceType = */ androidSyncServiceType,
+            /* serviceType = */ mobileSyncServiceType,
             /* protocolType = */ NsdManager.PROTOCOL_DNS_SD,
             /* listener = */ discoveryListener
         )
@@ -58,7 +58,7 @@ class SyncManager(private val context: Context) : ISyncManager {
         nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
         val serviceInfo = NsdServiceInfo().apply {
             serviceName = syncServiceName + appPlatform
-            serviceType = androidSyncServiceType
+            serviceType = mobileSyncServiceType
             setAttribute(timeStampAttribute, timeStamp.toString())
             setPort(port)
         }

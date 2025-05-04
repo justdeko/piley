@@ -7,6 +7,7 @@ import com.dk.piley.model.backup.IDatabaseExporter
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.sync.SyncCoordinator
 import com.dk.piley.model.sync.SyncState
+import com.dk.piley.model.sync.model.SyncDevice
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
@@ -57,8 +58,18 @@ class SyncViewModel(
             syncCoordinator.stopSync()
         }
     }
+
+    fun performUpload(index: Int) {
+
+    }
+
+    fun performDownload(index: Int) {
+
+    }
 }
 
 data class SyncViewState(
     val syncState: SyncState = SyncState.Idle,
+    val loading: Boolean = false,
+    val syncDevices: List<SyncDevice> = emptyList(),
 )

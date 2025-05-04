@@ -1,5 +1,6 @@
 package com.dk.piley.model.sync
 
+import com.dk.piley.model.user.UserPrefsManager
 import io.ktor.network.selector.SelectorManager
 import io.ktor.network.sockets.ServerSocket
 import io.ktor.network.sockets.aSocket
@@ -16,13 +17,15 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.cancellation.CancellationException
 
 class SyncCoordinator(
-    private val syncManager: ISyncManager
+    private val syncManager: ISyncManager,
+    private val userPrefsManager: UserPrefsManager,
 ) {
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
@@ -36,6 +39,9 @@ class SyncCoordinator(
     private companion object {
         const val PORT = 55122
     }
+
+    // TODO: handle starting server and discovery separately
+    // TODO: handle sending data to multiple devices and receiving data from multiple devices
 
     fun startSync(
         lastEditedTimeStamp: Long,
@@ -55,7 +61,24 @@ class SyncCoordinator(
         }
 
         scope.launch {
+            var storedServices = userPrefsManager.getStoredServices().firstOrNull()?.keys ?: emptySet()
             try {
+                // attempt to send without advertising
+                if (storedServices.isNotEmpty()) {
+                    for (service in storedServices) {
+                        try {
+                            val (hostName, port) = service.split(":")
+                            println("Attempting to send data to $hostName:$port")
+                            sendData(hostName, port.toInt(), dataToSend)
+                            println("Data sent to $hostName:$port")
+                            _syncState.value = SyncState.Synced
+                            return@launch
+                        } catch (e: Exception) {
+                            println("Error sending data to $service: ${e.message}")
+                        }
+                    }
+                }
+
                 syncManager.advertiseService(PORT, lastEditedTimeStamp)
                 _syncState.value = SyncState.Advertising
 

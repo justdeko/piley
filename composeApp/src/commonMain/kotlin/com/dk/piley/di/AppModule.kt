@@ -92,7 +92,12 @@ class AppModuleImpl(
     override val notificationRepository: NotificationRepository by lazy { NotificationRepository() }
     override val navigationEventRepository: NavigationEventRepository by lazy { NavigationEventRepository() }
     override val shortcutEventRepository: ShortcutEventRepository by lazy { ShortcutEventRepository() }
-    override val syncCoordinator: SyncCoordinator by lazy { SyncCoordinator(syncManager) }
+    override val syncCoordinator: SyncCoordinator by lazy {
+        SyncCoordinator(
+            syncManager,
+            userPrefsManager
+        )
+    }
 }
 
 internal const val USER_PREFERENCES_PATH = "user_preferences.preferences_pb"

@@ -1,11 +1,23 @@
 package com.dk.piley.ui.sync
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Android
+import androidx.compose.material.icons.filled.Computer
+import androidx.compose.material.icons.filled.PhoneIphone
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.Publish
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,9 +30,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.dk.piley.Piley
-import com.dk.piley.model.sync.SyncState
+import com.dk.piley.model.sync.model.SyncDevice
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TitleTopAppBar
-import com.dk.piley.ui.common.TwoPaneScreen
+import com.dk.piley.util.IndefiniteProgressBar
+import com.dk.piley.util.MediumSpacer
+import com.dk.piley.util.Platform
+import com.dk.piley.util.TinySpacer
 
 @Composable
 fun SyncScreen(
@@ -42,7 +58,9 @@ fun SyncScreen(
         viewState = viewState,
         onCloseSync = { navController.popBackStack() },
         onStartSync = { viewModel.startSync() },
-        onStopSync = { viewModel.stopSync() }
+        onStopSync = { viewModel.stopSync() },
+        onPerformUpload = { viewModel.performUpload(it) },
+        onPerformDownload = { viewModel.performDownload(it) }
     )
 }
 
@@ -53,46 +71,91 @@ internal fun SyncScreen(
     onCloseSync: () -> Unit,
     onStartSync: () -> Unit = {},
     onStopSync: () -> Unit = {},
+    onPerformUpload: (Int) -> Unit = {},
+    onPerformDownload: (Int) -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxSize()) {
+        IndefiniteProgressBar(visible = viewState.loading)
         TitleTopAppBar(
             textValue = "Sync",
             justTitle = true,
             onButtonClick = onCloseSync,
             contentDescription = "close sync screen"
         )
-        TwoPaneScreen(
-            mainContent = {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "State: ${viewState.syncState}")
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Button(
-                            onClick = { onStartSync() },
-                            enabled = viewState.syncState == SyncState.Idle
-                                    || viewState.syncState == SyncState.Synced
-                                    || viewState.syncState == SyncState.Error
-                        ) {
-                            Text(text = "Start Sync")
-                        }
-                        Button(
-                            onClick = { onStopSync() },
-                            enabled =
-                                viewState.syncState == SyncState.Syncing
-                                        || viewState.syncState == SyncState.Advertising
-                                        || viewState.syncState == SyncState.Discovering
-                        ) {
-                            Text(text = "Stop Sync")
-                        }
+        LazyColumn(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            viewState.syncDevices.forEachIndexed { index, syncDevice ->
+                item(key = syncDevice) {
+                    SyncItem(
+                        syncDevice = syncDevice,
+                        onFetch = { onPerformDownload(index) },
+                        onSend = { onPerformUpload(index) },
+                        enabled = !viewState.loading
+                    )
+                    if (index != viewState.syncDevices.lastIndex) {
+                        HorizontalDivider()
                     }
                 }
-            },
-            detailContent = {
+            }
+        }
+    }
+}
 
+@Composable
+private fun SyncItem(
+    syncDevice: SyncDevice,
+    onFetch: () -> Unit,
+    onSend: () -> Unit,
+    enabled: Boolean = true,
+) {
+    val dim = LocalDim.current
+    val platformIcon = when (syncDevice.platform) {
+        Platform.ANDROID -> Icons.Default.Android
+        Platform.IOS -> Icons.Default.PhoneIphone // TODO use iOS icon
+        Platform.DESKTOP -> Icons.Default.Computer
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = Modifier.size(dim.veryLarge),
+            imageVector = platformIcon,
+            contentDescription = "platform icon",
+            tint = MaterialTheme.colorScheme.tertiary
+        )
+        MediumSpacer()
+        Text(
+            modifier = Modifier.weight(1f),
+            text = syncDevice.name,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.labelLarge
+        )
+        IconButton(
+            enabled = enabled,
+            onClick = { onSend() },
+            content = {
+                Icon(
+                    modifier = Modifier.size(dim.veryLarge),
+                    imageVector = Icons.Outlined.Publish,
+                    contentDescription = "Send",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        )
+        TinySpacer()
+        IconButton(
+            enabled = enabled,
+            onClick = { onFetch() },
+            content = {
+                Icon(
+                    modifier = Modifier.size(dim.veryLarge),
+                    imageVector = Icons.Outlined.Download,
+                    contentDescription = "Fetch",
+                    tint = MaterialTheme.colorScheme.secondary
+                )
             }
         )
     }
 }
+
+// TODO: add button to discover devices

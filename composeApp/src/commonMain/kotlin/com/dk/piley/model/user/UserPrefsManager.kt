@@ -21,6 +21,7 @@ class UserPrefsManager(
     private val tasksDeletedKey = booleanPreferencesKey("tasksDeleted")
     private val skipSplashScreenKey = booleanPreferencesKey("skip_splash_screen")
     private val pileOrderKey = stringPreferencesKey("pile_order")
+    private val storedServicesKey = stringPreferencesKey("stored_services")
 
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUserKey] = email
@@ -42,6 +43,10 @@ class UserPrefsManager(
         prefs[pileOrderKey] = order.joinToString(",")
     }
 
+    suspend fun setStoredServices(services: Map<String, String>) = userPrefs.edit { prefs ->
+        prefs[storedServicesKey] = services.toString()
+    }
+
     fun getUserPrefsEmail(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[signedInUserKey] ?: "" }
 
@@ -57,5 +62,17 @@ class UserPrefsManager(
     fun getPileOrder(): Flow<List<Long>> =
         userPrefs.data.map { prefs ->
             prefs[pileOrderKey]?.split(",")?.mapNotNull { it.toLongOrNull() } ?: emptyList()
+        }
+
+    fun getStoredServices(): Flow<Map<String, String>> =
+        userPrefs.data.map { prefs ->
+            prefs[storedServicesKey]?.let { mapString ->
+                mapString.substring(1, mapString.lastIndex)
+                    .split(", ")
+                    .associate {
+                        val (key, value) = it.split("=")
+                        key to value
+                    }
+            } ?: emptyMap()
         }
 }

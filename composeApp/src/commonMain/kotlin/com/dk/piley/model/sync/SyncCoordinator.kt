@@ -59,14 +59,14 @@ class SyncCoordinator(
                 syncManager.advertiseService(PORT, lastEditedTimeStamp)
                 _syncState.value = SyncState.Advertising
 
-                syncManager.startDiscovery { ip, port, remoteTimestamp ->
-                    println("Found device at $ip:$port (timestamp=$remoteTimestamp)")
+                syncManager.startDiscovery { hostName, port, remoteTimestamp ->
+                    println("Found device at $hostName:$port (timestamp=$remoteTimestamp)")
                     scope.launch {
                         try {
                             _syncState.value = SyncState.Syncing
                             if (lastEditedTimeStamp > remoteTimestamp) {
-                                sendData(ip, port, dataToSend)
-                                println("Data sent to $ip")
+                                sendData(hostName, port, dataToSend)
+                                println("Data sent to $hostName")
                                 _syncState.value = SyncState.Synced
                             } else {
                                 println("Remote device is newer → waiting for incoming data")
@@ -134,15 +134,15 @@ class SyncCoordinator(
         }
     }
 
-    private suspend fun sendData(ip: String, port: Int, data: ByteArray) {
+    private suspend fun sendData(hostName: String, port: Int, data: ByteArray) {
         val selector = SelectorManager(Dispatchers.IO)
         try {
-            val socket = aSocket(selector).tcp().connect(ip, port)
+            val socket = aSocket(selector).tcp().connect(hostName, port)
             val output = socket.openWriteChannel(autoFlush = true)
 
             output.writeLong(data.size.toLong())
             output.writeFully(data)
-            println("Sent ${data.size} bytes to $ip:$port")
+            println("Sent ${data.size} bytes to $hostName:$port")
 
             socket.close()
         } catch (e: Exception) {

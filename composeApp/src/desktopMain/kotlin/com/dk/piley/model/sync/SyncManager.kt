@@ -26,14 +26,14 @@ class SyncManager : ISyncManager {
             override fun serviceRemoved(event: ServiceEvent) {}
 
             override fun serviceResolved(event: ServiceEvent) {
-                val id = "${event.info.inetAddresses.firstOrNull()?.hostAddress}:${event.info.port}"
+                val address = event.info.server
+                val port = event.info.port
+                val id = "$address:$port"
                 if (seenServices.add(id)) {
                     println("New service discovered: $id")
                 } else {
                     return
                 }
-                val address = event.info.inetAddresses.firstOrNull()?.hostAddress
-                val port = event.info.port
                 val timestamp = event.info.getPropertyString(timeStampAttribute)?.toLongOrNull()
                 val serviceName = event.info.name
                 if (address != null && !serviceName.contains(appPlatform.toString())) {

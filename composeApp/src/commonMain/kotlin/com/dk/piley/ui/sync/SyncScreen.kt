@@ -31,6 +31,8 @@ fun SyncScreen(
         SyncViewModel(
             syncCoordinator = Piley.getModule().syncCoordinator,
             databaseExporter = Piley.getModule().databaseExporter,
+            pileRepository = Piley.getModule().pileRepository,
+            pileDatabase = Piley.getModule().pileDatabase,
         )
     }
 ) {

@@ -12,7 +12,7 @@ import java.io.File
 class DatabaseExporter : IDatabaseExporter {
     override fun exportPileDatabase(): Flow<ExportResult> = flow {
         try {
-            val dbFile = File(System.getProperty("java.io.tmpdir"), PILE_DATABASE_NAME)
+            val dbFile = File(getDatabasePath())
             val fileDialog = FileDialog(null as Frame?, "Save Database File", FileDialog.SAVE)
             fileDialog.file = "$PILE_DATABASE_NAME.db"
             fileDialog.isVisible = true
@@ -47,10 +47,8 @@ class DatabaseExporter : IDatabaseExporter {
         }
     }
 
-    override fun getDatabasePath(): String {
-        val userHome = System.getProperty("user.home")
-        return "$userHome/.piley/$PILE_DATABASE_NAME.db"
-    }
+    override fun getDatabasePath(): String =
+        File(System.getProperty("java.io.tmpdir"), PILE_DATABASE_NAME).absolutePath
 
     override fun shareFile(filePath: String) {
         // not used

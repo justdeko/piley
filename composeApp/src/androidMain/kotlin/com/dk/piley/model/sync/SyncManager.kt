@@ -23,11 +23,11 @@ class SyncManager(private val context: Context) : ISyncManager {
                     nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
                         override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
                             println("Service resolved: ${resolvedInfo.serviceName}")
-                            val host = resolvedInfo.host?.hostAddress
+                            val host = resolvedInfo.host.hostName
                             val port = resolvedInfo.port
                             val timestamp = resolvedInfo.attributes[timeStampAttribute]
                             val timeStamp = timestamp?.let { String(it) }?.toLongOrNull() ?: 0L
-                            if (host != null && !resolvedInfo.serviceName.contains(appPlatform.toString())) {
+                            if (!resolvedInfo.serviceName.contains(appPlatform.toString())) {
                                 onDeviceFound(host, port, timeStamp)
                             }
                         }

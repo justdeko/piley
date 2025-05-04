@@ -1,14 +1,6 @@
 package com.dk.piley.model.sync
 
 import com.dk.piley.util.appPlatform
-import kotlinx.cinterop.ByteVar
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.allocArray
-import kotlinx.cinterop.memScoped
-import kotlinx.cinterop.pointed
-import kotlinx.cinterop.ptr
-import kotlinx.cinterop.reinterpret
-import kotlinx.cinterop.toKString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import platform.Foundation.NSData
@@ -20,19 +12,10 @@ import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
 import platform.darwin.NSObject
-import platform.darwin.inet_ntop
-import platform.posix.AF_INET
-import platform.posix.AF_INET6
-import platform.posix.INET6_ADDRSTRLEN
-import platform.posix.INET_ADDRSTRLEN
-import platform.posix.sockaddr
-import platform.posix.sockaddr_in
-import platform.posix.sockaddr_in6
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
 
-@OptIn(ExperimentalForeignApi::class)
 class SyncManager : ISyncManager {
     private var netServiceBrowser: NSNetServiceBrowser? = null
     private var netService: NSNetService? = null
@@ -137,20 +120,9 @@ class SyncManager : ISyncManager {
     ) : NSObject(), NSNetServiceDelegateProtocol {
 
         override fun netServiceDidResolveAddress(sender: NSNetService) {
-            val addresses = sender.addresses
-            if (addresses == null || addresses.isEmpty()) {
-                println("No addresses found for service ${sender.name}")
-                return
-            }
-
-            var ipAddress: String? = null
-            for (addressData in addresses) {
-                ipAddress = extractIPAddress(addressData as NSData)
-                if (ipAddress != null) break
-            }
-
-            if (ipAddress == null) {
-                println("Failed to extract IP address for service ${sender.name}")
+            val hostName = sender.hostName
+            if (hostName == null) {
+                println("Failed to resolve host name for service ${sender.name}")
                 return
             }
 
@@ -163,7 +135,7 @@ class SyncManager : ISyncManager {
             val txtRecordData = sender.TXTRecordData()
             if (txtRecordData == null) {
                 println("No TXT record data for service ${sender.name}")
-                onDeviceFound(ipAddress, port, 0L)
+                onDeviceFound(hostName, port, 0L)
                 return
             }
 
@@ -176,8 +148,8 @@ class SyncManager : ISyncManager {
                 0L
             }
 
-            println("Successfully resolved service: $ipAddress:$port (timestamp: $timeStamp)")
-            onDeviceFound(ipAddress, port, timeStamp)
+            println("Successfully resolved service: $hostName:$port (timestamp: $timeStamp)")
+            onDeviceFound(hostName, port, timeStamp)
             sender.setDelegate(null)
             resolveDelegates.remove(this)
         }
@@ -186,38 +158,6 @@ class SyncManager : ISyncManager {
             println("Service did not resolve: $didNotResolve")
             sender.setDelegate(null)
             resolveDelegates.remove(this)
-        }
-
-        private fun extractIPAddress(addressData: NSData): String? {
-            memScoped {
-                val sockaddrPtr = addressData.bytes?.reinterpret<sockaddr>()
-                if (sockaddrPtr != null) {
-                    val family = sockaddrPtr.pointed.sa_family.toInt()
-
-                    return when (family) {
-                        AF_INET -> { // IPv4
-                            val sockaddrInPtr = sockaddrPtr.reinterpret<sockaddr_in>()
-                            val addr = sockaddrInPtr.pointed.sin_addr
-
-                            val buffer = allocArray<ByteVar>(INET_ADDRSTRLEN)
-                            inet_ntop(AF_INET, addr.ptr, buffer, INET_ADDRSTRLEN.toUInt())
-                            buffer.toKString()
-                        }
-
-                        AF_INET6 -> { // IPv6
-                            val sockaddrIn6Ptr = sockaddrPtr.reinterpret<sockaddr_in6>()
-                            val addr6 = sockaddrIn6Ptr.pointed.sin6_addr
-
-                            val buffer = allocArray<ByteVar>(INET6_ADDRSTRLEN)
-                            inet_ntop(AF_INET6, addr6.ptr, buffer, INET6_ADDRSTRLEN.toUInt())
-                            buffer.toKString()
-                        }
-
-                        else -> null
-                    }
-                }
-                return null
-            }
         }
     }
 

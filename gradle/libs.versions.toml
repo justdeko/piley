@@ -1,5 +1,5 @@
 [versions]
-adaptive = "1.0.1"
+adaptive = "1.1.0"
 agp = "8.10.0"
 datastorePreferences = "1.1.4"
 kotlin = "2.1.20"

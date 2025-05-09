@@ -1,11 +1,13 @@
 package com.dk.piley.model.sync
 
+import com.dk.piley.model.sync.model.SyncDevice
 import com.dk.piley.util.appPlatform
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.InetAddress
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
+import javax.jmdns.ServiceInfo
 import javax.jmdns.ServiceListener
 
 class SyncManager : ISyncManager {
@@ -13,7 +15,7 @@ class SyncManager : ISyncManager {
     private var listener: ServiceListener? = null
     val seenServices = mutableSetOf<String>()
 
-    override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit) {
+    override suspend fun startDiscovery(onDeviceFound: (syncDevice: SyncDevice) -> Unit) {
         println("Starting discovery...")
         instantiateJmDNS()
 
@@ -37,7 +39,13 @@ class SyncManager : ISyncManager {
                 val timestamp = event.info.getPropertyString(timeStampAttribute)?.toLongOrNull()
                 val serviceName = event.info.name
                 if (address != null && !serviceName.contains(appPlatform.toString())) {
-                    onDeviceFound(address, port, timestamp ?: 0L)
+                    val syncDevice = SyncDevice(
+                        name = serviceName,
+                        hostName = address,
+                        port = port,
+                        lastModifiedTimestamp = timestamp ?: 0L
+                    )
+                    onDeviceFound(syncDevice)
                 }
             }
         }
@@ -56,7 +64,7 @@ class SyncManager : ISyncManager {
     override suspend fun advertiseService(port: Int, timeStamp: Long) {
         instantiateJmDNS()
         val txtRecord = mapOf(timeStampAttribute to timeStamp.toString())
-        val serviceInfo = javax.jmdns.ServiceInfo.create(
+        val serviceInfo = ServiceInfo.create(
             /* type = */ syncServiceType,
             /* name = */ syncServiceName + appPlatform,
             /* port = */ port,

@@ -3,6 +3,7 @@ package com.dk.piley.model.sync
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
+import com.dk.piley.model.sync.model.SyncDevice
 import com.dk.piley.util.appPlatform
 
 class SyncManager(private val context: Context) : ISyncManager {
@@ -11,7 +12,7 @@ class SyncManager(private val context: Context) : ISyncManager {
     private var discoveryListener: NsdManager.DiscoveryListener? = null
 
 
-    override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit) {
+    override suspend fun startDiscovery(onDeviceFound: (SyncDevice) -> Unit) {
         nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
 
         discoveryListener = object : NsdManager.DiscoveryListener {
@@ -22,13 +23,22 @@ class SyncManager(private val context: Context) : ISyncManager {
                 ) {
                     nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
                         override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
-                            println("Service resolved: ${resolvedInfo.serviceName}")
+                            val name = resolvedInfo.serviceName
+                            println("Service resolved: $name}")
                             val host = resolvedInfo.host.hostName
                             val port = resolvedInfo.port
-                            val timestamp = resolvedInfo.attributes[timeStampAttribute]
-                            val timeStamp = timestamp?.let { String(it) }?.toLongOrNull() ?: 0L
+                            val timeStamp =
+                                resolvedInfo.attributes[timeStampAttribute]?.let { String(it) }
+                                    ?.toLongOrNull() ?: 0L
                             if (!resolvedInfo.serviceName.contains(appPlatform.toString())) {
-                                onDeviceFound(host, port, timeStamp)
+                                onDeviceFound(
+                                    SyncDevice(
+                                        name = name,
+                                        hostName = host,
+                                        port = port,
+                                        lastModifiedTimestamp = timeStamp
+                                    )
+                                )
                             }
                         }
 

@@ -5,6 +5,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.dk.piley.model.sync.model.SyncDevice
+import com.dk.piley.model.sync.model.toJsonString
+import com.dk.piley.model.sync.model.toSyncDeviceList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -43,8 +46,8 @@ class UserPrefsManager(
         prefs[pileOrderKey] = order.joinToString(",")
     }
 
-    suspend fun setStoredServices(services: Map<String, String>) = userPrefs.edit { prefs ->
-        prefs[storedServicesKey] = services.toString()
+    suspend fun setStoredServices(services: List<SyncDevice>) = userPrefs.edit { prefs ->
+        prefs[storedServicesKey] = services.toJsonString()
     }
 
     fun getUserPrefsEmail(): Flow<String> =
@@ -64,15 +67,7 @@ class UserPrefsManager(
             prefs[pileOrderKey]?.split(",")?.mapNotNull { it.toLongOrNull() } ?: emptyList()
         }
 
-    fun getStoredServices(): Flow<Map<String, String>> =
-        userPrefs.data.map { prefs ->
-            prefs[storedServicesKey]?.let { mapString ->
-                mapString.substring(1, mapString.lastIndex)
-                    .split(", ")
-                    .associate {
-                        val (key, value) = it.split("=")
-                        key to value
-                    }
-            } ?: emptyMap()
-        }
+    fun getStoredServices(): Flow<List<SyncDevice>> = userPrefs.data.map { prefs ->
+        prefs[storedServicesKey]?.let { toSyncDeviceList(it) } ?: emptyList()
+    }
 }

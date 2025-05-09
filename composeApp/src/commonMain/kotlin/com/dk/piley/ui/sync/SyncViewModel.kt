@@ -15,6 +15,7 @@ import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -30,6 +31,9 @@ class SyncViewModel(
                 syncCoordinator.syncStateFlow
                     .map { SyncViewState(syncState = it) }
             )
+            syncCoordinator.startServer {
+
+            }
         }
     }
 
@@ -59,17 +63,22 @@ class SyncViewModel(
         }
     }
 
-    fun performUpload(index: Int) {
+    fun startSync(index: Int) {
 
     }
 
-    fun performDownload(index: Int) {
+    fun stopSync(index: Int) {
 
+    }
+
+    fun startDiscovery() {
+        state.update { it.copy(discoveryRunning = true) }
     }
 }
 
 data class SyncViewState(
     val syncState: SyncState = SyncState.Idle,
+    val discoveryRunning: Boolean = false,
     val loading: Boolean = false,
     val syncDevices: List<SyncDevice> = emptyList(),
 )

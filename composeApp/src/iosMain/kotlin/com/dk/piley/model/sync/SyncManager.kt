@@ -1,5 +1,6 @@
 package com.dk.piley.model.sync
 
+import com.dk.piley.model.sync.model.SyncDevice
 import com.dk.piley.util.appPlatform
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,7 +25,7 @@ class SyncManager : ISyncManager {
 
     private val resolveDelegates = mutableListOf<ServiceResolveDelegate>()
 
-    override suspend fun startDiscovery(onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit) {
+    override suspend fun startDiscovery(onDeviceFound: (SyncDevice) -> Unit) {
         withContext(Dispatchers.Main) {
             resolveDelegates.clear()
 
@@ -82,7 +83,7 @@ class SyncManager : ISyncManager {
     }
 
     private inner class BrowserDelegate(
-        private val onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit
+        private val onDeviceFound: (SyncDevice) -> Unit
     ) : NSObject(), NSNetServiceBrowserDelegateProtocol {
 
         override fun netServiceBrowser(
@@ -116,7 +117,7 @@ class SyncManager : ISyncManager {
     }
 
     private inner class ServiceResolveDelegate(
-        private val onDeviceFound: (ip: String, port: Int, timeStamp: Long) -> Unit
+        private val onDeviceFound: (SyncDevice) -> Unit
     ) : NSObject(), NSNetServiceDelegateProtocol {
 
         override fun netServiceDidResolveAddress(sender: NSNetService) {
@@ -133,9 +134,14 @@ class SyncManager : ISyncManager {
             }
 
             val txtRecordData = sender.TXTRecordData()
+            val syncDevice = SyncDevice(
+                name = sender.name,
+                hostName = hostName,
+                port = port,
+            )
             if (txtRecordData == null) {
                 println("No TXT record data for service ${sender.name}")
-                onDeviceFound(hostName, port, 0L)
+                onDeviceFound(syncDevice)
                 return
             }
 
@@ -149,7 +155,7 @@ class SyncManager : ISyncManager {
             }
 
             println("Successfully resolved service: $hostName:$port (timestamp: $timeStamp)")
-            onDeviceFound(hostName, port, timeStamp)
+            onDeviceFound(syncDevice.copy(lastModifiedTimestamp = timeStamp))
             sender.setDelegate(null)
             resolveDelegates.remove(this)
         }

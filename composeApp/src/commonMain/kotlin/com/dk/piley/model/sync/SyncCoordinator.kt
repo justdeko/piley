@@ -1,5 +1,6 @@
 package com.dk.piley.model.sync
 
+import com.dk.piley.model.sync.model.SyncDevice
 import com.dk.piley.model.user.UserPrefsManager
 import io.ktor.network.selector.SelectorManager
 import io.ktor.network.sockets.ServerSocket
@@ -40,8 +41,23 @@ class SyncCoordinator(
         const val PORT = 55122
     }
 
-    // TODO: handle starting server and discovery separately
-    // TODO: handle sending data to multiple devices and receiving data from multiple devices
+    fun startDiscovery(
+        onDeviceFound: (SyncDevice) -> Unit
+    ) {
+        scope.launch {
+            try {
+                syncManager.startDiscovery { syncDevice ->
+                    println("Found device at ${syncDevice.hostName}:${syncDevice.port} (timestamp=${syncDevice.lastModifiedTimestamp})")
+                    onDeviceFound(syncDevice)
+                    // TODO multiple discoveries, mabe flow
+                }
+                _syncState.value = SyncState.Discovering
+            } catch (e: Exception) {
+                println("Discovery error: ${e.message}")
+                _syncState.value = SyncState.Error
+            }
+        }
+    }
 
     fun startSync(
         lastEditedTimeStamp: Long,
@@ -61,15 +77,15 @@ class SyncCoordinator(
         }
 
         scope.launch {
-            var storedServices = userPrefsManager.getStoredServices().firstOrNull()?.keys ?: emptySet()
+            val storedServices = userPrefsManager.getStoredServices().firstOrNull() ?: emptyList()
             try {
                 // attempt to send without advertising
                 if (storedServices.isNotEmpty()) {
                     for (service in storedServices) {
                         try {
-                            val (hostName, port) = service.split(":")
+                            val (_, _, hostName, port, _) = service
                             println("Attempting to send data to $hostName:$port")
-                            sendData(hostName, port.toInt(), dataToSend)
+                            sendData(hostName, port, dataToSend)
                             println("Data sent to $hostName:$port")
                             _syncState.value = SyncState.Synced
                             return@launch
@@ -82,12 +98,12 @@ class SyncCoordinator(
                 syncManager.advertiseService(PORT, lastEditedTimeStamp)
                 _syncState.value = SyncState.Advertising
 
-                syncManager.startDiscovery { hostName, port, remoteTimestamp ->
-                    println("Found device at $hostName:$port (timestamp=$remoteTimestamp)")
+                syncManager.startDiscovery { (_, _, hostName, port, lastModified) ->
+                    println("Found device at $hostName:$port (timestamp=$lastModified)")
                     scope.launch {
                         try {
                             _syncState.value = SyncState.Syncing
-                            if (lastEditedTimeStamp > remoteTimestamp) {
+                            if (lastEditedTimeStamp > lastModified) {
                                 sendData(hostName, port, dataToSend)
                                 println("Data sent to $hostName")
                                 _syncState.value = SyncState.Synced
@@ -111,8 +127,8 @@ class SyncCoordinator(
         }
     }
 
-    private suspend fun startServer(
-        port: Int,
+    suspend fun startServer(
+        port: Int = PORT,
         onReceive: suspend (ByteArray) -> Unit
     ) {
         selector = SelectorManager(Dispatchers.IO)
@@ -157,7 +173,7 @@ class SyncCoordinator(
         }
     }
 
-    private suspend fun sendData(hostName: String, port: Int, data: ByteArray) {
+    suspend fun sendData(hostName: String, port: Int, data: ByteArray) {
         val selector = SelectorManager(Dispatchers.IO)
         try {
             val socket = aSocket(selector).tcp().connect(hostName, port)

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -14,6 +13,8 @@ import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.PhoneIphone
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Publish
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -37,6 +39,7 @@ import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.Platform
 import com.dk.piley.util.TinySpacer
+import com.dk.piley.util.defaultPadding
 
 @Composable
 fun SyncScreen(
@@ -57,10 +60,9 @@ fun SyncScreen(
         modifier = modifier,
         viewState = viewState,
         onCloseSync = { navController.popBackStack() },
-        onStartSync = { viewModel.startSync() },
-        onStopSync = { viewModel.stopSync() },
-        onPerformUpload = { viewModel.performUpload(it) },
-        onPerformDownload = { viewModel.performDownload(it) }
+        onStartSync = { viewModel.startSync(it) },
+        onStopSync = { viewModel.stopSync(it) },
+        onStartDiscovery = { viewModel.startDiscovery() },
     )
 }
 
@@ -69,12 +71,11 @@ internal fun SyncScreen(
     modifier: Modifier = Modifier,
     viewState: SyncViewState,
     onCloseSync: () -> Unit,
-    onStartSync: () -> Unit = {},
-    onStopSync: () -> Unit = {},
-    onPerformUpload: (Int) -> Unit = {},
-    onPerformDownload: (Int) -> Unit = {},
+    onStartDiscovery: () -> Unit = {},
+    onStartSync: (Int) -> Unit = {},
+    onStopSync: (Int) -> Unit = {},
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize().defaultPadding()) {
         IndefiniteProgressBar(visible = viewState.loading)
         TitleTopAppBar(
             textValue = "Sync",
@@ -82,20 +83,39 @@ internal fun SyncScreen(
             onButtonClick = onCloseSync,
             contentDescription = "close sync screen"
         )
-        LazyColumn(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            viewState.syncDevices.forEachIndexed { index, syncDevice ->
-                item(key = syncDevice) {
+        Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+            if (viewState.syncDevices.isNotEmpty()) {
+                viewState.syncDevices.forEachIndexed { index, syncDevice ->
                     SyncItem(
                         syncDevice = syncDevice,
-                        onFetch = { onPerformDownload(index) },
-                        onSend = { onPerformUpload(index) },
+                        onFetch = { onStopSync(index) },
+                        onSend = { onStartSync(index) },
                         enabled = !viewState.loading
                     )
                     if (index != viewState.syncDevices.lastIndex) {
                         HorizontalDivider()
                     }
                 }
+            } else {
+                Text(
+                    modifier = Modifier.fillMaxSize(),
+                    text = "No devices found",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center
+                )
             }
+        }
+        Button(
+            onClick = onStartDiscovery,
+            enabled = !viewState.discoveryRunning,
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.primaryContainer
+            )
+        ) {
+            Text(text = "Discover Devices")
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.dk.piley.ui.sync
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,10 +12,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.PhoneIphone
-import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Publish
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +39,6 @@ import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.Platform
-import com.dk.piley.util.TinySpacer
 import com.dk.piley.util.defaultPadding
 
 @Composable
@@ -59,10 +59,12 @@ fun SyncScreen(
     SyncScreen(
         modifier = modifier,
         viewState = viewState,
-        onCloseSync = { navController.popBackStack() },
-        onStartSync = { viewModel.startSync(it) },
-        onStopSync = { viewModel.stopSync(it) },
-        onStartDiscovery = { viewModel.startDiscovery() },
+        onCloseSync = {
+            viewModel.stopSync()
+            navController.popBackStack()
+        },
+        onStartUpload = { viewModel.uploadData(it) },
+        onStartReceiving = { viewModel.toggleReceiving() }
     )
 }
 
@@ -71,9 +73,8 @@ internal fun SyncScreen(
     modifier: Modifier = Modifier,
     viewState: SyncViewState,
     onCloseSync: () -> Unit,
-    onStartDiscovery: () -> Unit = {},
-    onStartSync: (Int) -> Unit = {},
-    onStopSync: (Int) -> Unit = {},
+    onStartUpload: (Int) -> Unit = {},
+    onStartReceiving: () -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxSize().defaultPadding()) {
         IndefiniteProgressBar(visible = viewState.loading)
@@ -83,23 +84,29 @@ internal fun SyncScreen(
             onButtonClick = onCloseSync,
             contentDescription = "close sync screen"
         )
-        Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
-            if (viewState.syncDevices.isNotEmpty()) {
+        if (viewState.syncDevices.isNotEmpty()) {
+            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
                 viewState.syncDevices.forEachIndexed { index, syncDevice ->
                     SyncItem(
                         syncDevice = syncDevice,
-                        onFetch = { onStopSync(index) },
-                        onSend = { onStartSync(index) },
+                        onSend = { onStartUpload(index) },
                         enabled = !viewState.loading
                     )
                     if (index != viewState.syncDevices.lastIndex) {
                         HorizontalDivider()
                     }
                 }
-            } else {
+            }
+        } else {
+            Column(
+                Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator()
+                MediumSpacer()
                 Text(
-                    modifier = Modifier.fillMaxSize(),
-                    text = "No devices found",
+                    text = "Discovering devices...",
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
@@ -107,15 +114,14 @@ internal fun SyncScreen(
             }
         }
         Button(
-            onClick = onStartDiscovery,
-            enabled = !viewState.discoveryRunning,
+            onClick = onStartReceiving,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.primaryContainer
             )
         ) {
-            Text(text = "Discover Devices")
+            Text(text = if (viewState.receiving) "Stop Receiving" else "Receive Data")
         }
     }
 }
@@ -123,7 +129,6 @@ internal fun SyncScreen(
 @Composable
 private fun SyncItem(
     syncDevice: SyncDevice,
-    onFetch: () -> Unit,
     onSend: () -> Unit,
     enabled: Boolean = true,
 ) {
@@ -162,20 +167,5 @@ private fun SyncItem(
                 )
             }
         )
-        TinySpacer()
-        IconButton(
-            enabled = enabled,
-            onClick = { onFetch() },
-            content = {
-                Icon(
-                    modifier = Modifier.size(dim.veryLarge),
-                    imageVector = Icons.Outlined.Download,
-                    contentDescription = "Fetch",
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-            }
-        )
     }
 }
-
-// TODO: add button to discover devices

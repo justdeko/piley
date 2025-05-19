@@ -16,8 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -31,9 +29,6 @@ class SyncCoordinator(
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-    private val _syncState = MutableStateFlow(SyncState.Idle)
-    val syncStateFlow: StateFlow<SyncState> = _syncState
-
     private var selector: SelectorManager? = null
     private var serverSocket: ServerSocket? = null
 
@@ -41,90 +36,37 @@ class SyncCoordinator(
         const val PORT = 55122
     }
 
-    fun startDiscovery(
-        onDeviceFound: (SyncDevice) -> Unit
-    ) {
+    fun startDiscovery(onDeviceFound: (SyncDevice) -> Unit) {
         scope.launch {
             try {
                 syncManager.startDiscovery { syncDevice ->
                     println("Found device at ${syncDevice.hostName}:${syncDevice.port} (timestamp=${syncDevice.lastModifiedTimestamp})")
                     onDeviceFound(syncDevice)
-                    // TODO multiple discoveries, mabe flow
                 }
-                _syncState.value = SyncState.Discovering
             } catch (e: Exception) {
                 println("Discovery error: ${e.message}")
-                _syncState.value = SyncState.Error
             }
         }
     }
 
-    fun startSync(
-        lastEditedTimeStamp: Long,
-        dataToSend: ByteArray,
-        onFileReceived: (ByteArray) -> Unit
-    ) {
-        println("Starting sync process with timestamp $lastEditedTimeStamp")
-        _syncState.value = SyncState.Discovering
-
+    fun startAdvertising(lastEditedTimeStamp: Long) {
         scope.launch {
-            startServer(PORT) { data ->
-                println("Received data: ${data.size} bytes")
-                onFileReceived(data)
-                _syncState.value = SyncState.Synced
-                stopSync()
-            }
-        }
-
-        scope.launch {
-            val storedServices = userPrefsManager.getStoredServices().firstOrNull() ?: emptyList()
             try {
-                // attempt to send without advertising
-                if (storedServices.isNotEmpty()) {
-                    for (service in storedServices) {
-                        try {
-                            val (_, _, hostName, port, _) = service
-                            println("Attempting to send data to $hostName:$port")
-                            sendData(hostName, port, dataToSend)
-                            println("Data sent to $hostName:$port")
-                            _syncState.value = SyncState.Synced
-                            return@launch
-                        } catch (e: Exception) {
-                            println("Error sending data to $service: ${e.message}")
-                        }
-                    }
-                }
-
                 syncManager.advertiseService(PORT, lastEditedTimeStamp)
-                _syncState.value = SyncState.Advertising
-
-                syncManager.startDiscovery { (_, _, hostName, port, lastModified) ->
-                    println("Found device at $hostName:$port (timestamp=$lastModified)")
-                    scope.launch {
-                        try {
-                            _syncState.value = SyncState.Syncing
-                            if (lastEditedTimeStamp > lastModified) {
-                                sendData(hostName, port, dataToSend)
-                                println("Data sent to $hostName")
-                                _syncState.value = SyncState.Synced
-                            } else {
-                                println("Remote device is newer → waiting for incoming data")
-                            }
-                        } catch (e: Exception) {
-                            println("Error during client send: ${e.message}")
-                            e.printStackTrace()
-                            _syncState.value = SyncState.Error
-                        } finally {
-                            scope.launch { stopSync() }
-                        }
-                    }
-                }
             } catch (e: Exception) {
-                println("Discovery error: ${e.message}")
-                _syncState.value = SyncState.Error
-                stopSync()
+                println("Advertising error: ${e.message}")
             }
         }
+    }
+
+    suspend fun getStoredServices(): List<SyncDevice> {
+        return userPrefsManager.getStoredServices().firstOrNull() ?: emptyList()
+    }
+
+    suspend fun saveServices(
+        services: List<SyncDevice>
+    ) {
+        userPrefsManager.setStoredServices(services)
     }
 
     suspend fun startServer(
@@ -173,7 +115,11 @@ class SyncCoordinator(
         }
     }
 
-    suspend fun sendData(hostName: String, port: Int, data: ByteArray) {
+    suspend fun sendData(
+        hostName: String,
+        data: ByteArray,
+        port: Int = PORT,
+    ) {
         val selector = SelectorManager(Dispatchers.IO)
         try {
             val socket = aSocket(selector).tcp().connect(hostName, port)
@@ -200,16 +146,12 @@ class SyncCoordinator(
             runCatching { serverSocket?.close() }
             runCatching { selector?.close() }
             job.cancelChildren()
-            _syncState.value = SyncState.Idle
         }
     }
-}
 
-enum class SyncState {
-    Idle,
-    Advertising,
-    Discovering,
-    Syncing,
-    Synced,
-    Error
+    fun stopServer() {
+        println("Stopping server...")
+        runCatching { serverSocket?.close() }
+        runCatching { selector?.close() }
+    }
 }

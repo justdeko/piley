@@ -85,6 +85,7 @@ class SyncCoordinator(
                         val input = socket.openReadChannel()
                         val fileSize = input.readLong()
                         val buffer = ByteArray(fileSize.toInt())
+                        println("Receiving $fileSize bytes from ${socket.remoteAddress}")
                         input.readFully(buffer, 0, buffer.size)
                         onReceive(buffer)
                     } catch (e: Exception) {

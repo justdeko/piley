@@ -10,6 +10,7 @@ import com.dk.piley.model.sync.model.SyncDevice
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.absolutePath
+import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
@@ -40,12 +41,19 @@ class SyncViewModel(
             state.update { it.copy(receiving = receiving) }
             if (receiving) {
                 syncCoordinator.startServer { data ->
-                    val file = PlatformFile(FileKit.filesDir, "temp.db")
-                    file.write(data)
-                    pileRepository.mergeDatabases(
-                        pileDatabase = pileDatabase,
-                        secondaryDbPath = file.absolutePath()
-                    )
+                    try {
+                        val file = PlatformFile(FileKit.filesDir, "temp.db")
+                        file.write(data)
+                        pileRepository.mergeDatabases(
+                            pileDatabase = pileDatabase,
+                            secondaryDbPath = file.absolutePath()
+                        )
+                        file.delete()
+                    } catch (e: Exception) {
+                        state.update { it.copy() }
+                    }
+                    state.update { it.copy(receiving = false) }
+                    syncCoordinator.stopServer()
                 }
             } else syncCoordinator.stopServer()
         }
@@ -75,16 +83,23 @@ class SyncViewModel(
             viewModelScope.launch {
                 state.update { currentState ->
                     val syncDevices = currentState.syncDevices.toMutableSet()
+                    syncDevices.removeAll { it.name == syncDevice.name }
                     syncDevices.add(syncDevice)
                     currentState.copy(syncDevices = syncDevices.toList())
                 }
             }
         }
     }
+
+    fun setMessage(messageType: Message?) = state.update {
+        it.copy(message = messageType)
+    }
 }
 
 data class SyncViewState(
     val receiving: Boolean = false,
-    val loading: Boolean = false,
     val syncDevices: List<SyncDevice> = emptyList(),
+    val message: Message? = null,
 )
+
+enum class Message { Success, Error }

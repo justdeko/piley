@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -56,6 +57,19 @@ fun SyncScreen(
     }
 ) {
     val viewState by viewModel.state.collectAsState()
+
+    viewState.message?.let { message ->
+        val messageString = when (message) {
+            Message.Error -> "Error when syncing"
+            Message.Success -> "Sync successful" // TODO replace with string resource
+        }
+        LaunchedEffect(message, snackbarHostState) {
+            snackbarHostState.showSnackbar(messageString)
+            // reset message
+            viewModel.setMessage(null)
+        }
+    }
+
     SyncScreen(
         modifier = modifier,
         viewState = viewState,
@@ -77,7 +91,7 @@ internal fun SyncScreen(
     onStartReceiving: () -> Unit = {},
 ) {
     Column(modifier = modifier.fillMaxSize().defaultPadding()) {
-        IndefiniteProgressBar(visible = viewState.loading)
+        IndefiniteProgressBar(visible = viewState.receiving)
         TitleTopAppBar(
             textValue = "Sync",
             justTitle = true,
@@ -90,7 +104,6 @@ internal fun SyncScreen(
                     SyncItem(
                         syncDevice = syncDevice,
                         onSend = { onStartUpload(index) },
-                        enabled = !viewState.loading
                     )
                     if (index != viewState.syncDevices.lastIndex) {
                         HorizontalDivider()

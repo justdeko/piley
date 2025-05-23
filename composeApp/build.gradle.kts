@@ -66,6 +66,7 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.network)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.compose.ui.backhandler)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

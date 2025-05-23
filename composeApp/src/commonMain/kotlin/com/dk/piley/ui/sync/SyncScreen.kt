@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Computer
@@ -28,7 +27,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -41,6 +42,16 @@ import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.Platform
 import com.dk.piley.util.defaultPadding
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.discovering_devices
+import piley.composeapp.generated.resources.message_send_error
+import piley.composeapp.generated.resources.message_send_success
+import piley.composeapp.generated.resources.message_sync_error
+import piley.composeapp.generated.resources.message_sync_success
+import piley.composeapp.generated.resources.receive_data
+import piley.composeapp.generated.resources.stop_receiving
+import piley.composeapp.generated.resources.sync_screen
 
 @Composable
 fun SyncScreen(
@@ -60,8 +71,10 @@ fun SyncScreen(
 
     viewState.message?.let { message ->
         val messageString = when (message) {
-            Message.Error -> "Error when syncing"
-            Message.Success -> "Sync successful" // TODO replace with string resource
+            Message.ErrorReceiving -> stringResource(Res.string.message_sync_error)
+            Message.ErrorSending -> stringResource(Res.string.message_send_error)
+            Message.SuccessReceiving -> stringResource(Res.string.message_sync_success)
+            Message.SuccessSending -> stringResource(Res.string.message_send_success)
         }
         LaunchedEffect(message, snackbarHostState) {
             snackbarHostState.showSnackbar(messageString)
@@ -82,6 +95,7 @@ fun SyncScreen(
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun SyncScreen(
     modifier: Modifier = Modifier,
@@ -90,36 +104,41 @@ internal fun SyncScreen(
     onStartUpload: (Int) -> Unit = {},
     onStartReceiving: () -> Unit = {},
 ) {
+    BackHandler { onCloseSync() }
+
     Column(modifier = modifier.fillMaxSize().defaultPadding()) {
         IndefiniteProgressBar(visible = viewState.receiving)
         TitleTopAppBar(
-            textValue = "Sync",
+            textValue = stringResource(Res.string.sync_screen),
             justTitle = true,
             onButtonClick = onCloseSync,
             contentDescription = "close sync screen"
         )
         if (viewState.syncDevices.isNotEmpty()) {
-            Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+            LazyColumn(Modifier.weight(1f)) {
                 viewState.syncDevices.forEachIndexed { index, syncDevice ->
-                    SyncItem(
-                        syncDevice = syncDevice,
-                        onSend = { onStartUpload(index) },
-                    )
-                    if (index != viewState.syncDevices.lastIndex) {
-                        HorizontalDivider()
+                    item {
+                        SyncItem(
+                            modifier = Modifier.animateItem(),
+                            syncDevice = syncDevice,
+                            onSend = { onStartUpload(index) },
+                        )
+                        if (index != viewState.syncDevices.lastIndex) {
+                            HorizontalDivider()
+                        }
                     }
                 }
             }
         } else {
             Column(
-                Modifier.fillMaxSize(),
+                Modifier.fillMaxWidth().weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
                 CircularProgressIndicator()
                 MediumSpacer()
                 Text(
-                    text = "Discovering devices...",
+                    text = stringResource(Res.string.discovering_devices),
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.titleMedium,
                     textAlign = TextAlign.Center
@@ -134,13 +153,18 @@ internal fun SyncScreen(
                 contentColor = MaterialTheme.colorScheme.primaryContainer
             )
         ) {
-            Text(text = if (viewState.receiving) "Stop Receiving" else "Receive Data")
+            Text(
+                text = stringResource(
+                    if (viewState.receiving) Res.string.stop_receiving else Res.string.receive_data
+                )
+            )
         }
     }
 }
 
 @Composable
 private fun SyncItem(
+    modifier: Modifier = Modifier,
     syncDevice: SyncDevice,
     onSend: () -> Unit,
     enabled: Boolean = true,
@@ -148,11 +172,11 @@ private fun SyncItem(
     val dim = LocalDim.current
     val platformIcon = when (syncDevice.platform) {
         Platform.ANDROID -> Icons.Default.Android
-        Platform.IOS -> Icons.Default.PhoneIphone // TODO use iOS icon
+        Platform.IOS -> Icons.Default.PhoneIphone
         Platform.DESKTOP -> Icons.Default.Computer
     }
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

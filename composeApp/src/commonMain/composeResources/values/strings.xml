@@ -9,7 +9,7 @@
     <string name="splash_screen" translatable="false">Splash Screen</string>
     <string name="introduction_screen" translatable="false">Introduction Screen</string>
     <string name="daily_pile_name">Daily</string>
-    <string name="sync_screen" translatable="false">Sync Screen</string>
+    <string name="sync_screen">Sync</string>
 
     <!--notifications-->
     <string name="cancel_delay_button">Don't Delay</string>
@@ -245,4 +245,13 @@
     <string name="end_page_title">Almost there</string>
     <string name="end_page_description">That's it! Click on the button to start using the app, and have fun with piley!</string>
     <string name="first_user_name_hint">e.g. John Doe</string>
+
+    <!-- sync screen -->
+    <string name="discovering_devices">Discovering devices...</string>
+    <string name="receive_data">Receive data</string>
+    <string name="stop_receiving">Stop Receiving</string>
+    <string name="message_sync_error">Error while syncing</string>
+    <string name="message_sync_success">Sync successful</string>
+    <string name="message_send_error">Error while sending data</string>
+    <string name="message_send_success">Data sent successfully</string>
 </resources>

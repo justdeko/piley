@@ -67,94 +67,15 @@ interface PileDao {
 
     suspend fun mergeDatabases(db: PileDatabase, secondaryDbPath: String) {
         db.useWriterConnection { connection ->
-            // Attach secondary database as db2
             connection.execSQL("ATTACH DATABASE '$secondaryDbPath' AS db2")
 
-            // --- Merge Tasks ---
-
-            // 1. Insert tasks from db2 that don't exist in main (based on title + pileId)
-            connection.execSQL(
-                """
-            INSERT INTO task (
-                title, pileId, description, createdAt, modifiedAt, completionTimes, reminder, 
-                isRecurring, recurringTimeRange, recurringFrequency, nowAsReminderTime, status, 
-                averageCompletionTimeInHours
-            )
-            SELECT 
-                t2.title, t2.pileId, t2.description, t2.createdAt, t2.modifiedAt, t2.completionTimes, 
-                t2.reminder, t2.isRecurring, t2.recurringTimeRange, t2.recurringFrequency, 
-                t2.nowAsReminderTime, t2.status, t2.averageCompletionTimeInHours
-            FROM db2.task t2
-            WHERE NOT EXISTS (
-                SELECT 1 FROM task t1 
-                WHERE t1.title = t2.title AND t1.pileId = t2.pileId
-            )
-            """
-            )
-
-            // 2. Update existing tasks in main if db2 has a newer version (by title + pileId)
-            connection.execSQL(
-                """
-            UPDATE task
-            SET 
-                description = (
-                    SELECT t2.description FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                modifiedAt = (
-                    SELECT t2.modifiedAt FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                completionTimes = (
-                    SELECT t2.completionTimes FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                reminder = (
-                    SELECT t2.reminder FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                isRecurring = (
-                    SELECT t2.isRecurring FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                recurringTimeRange = (
-                    SELECT t2.recurringTimeRange FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                recurringFrequency = (
-                    SELECT t2.recurringFrequency FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                nowAsReminderTime = (
-                    SELECT t2.nowAsReminderTime FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                status = (
-                    SELECT t2.status FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                ),
-                averageCompletionTimeInHours = (
-                    SELECT t2.averageCompletionTimeInHours FROM db2.task t2
-                    WHERE t2.title = task.title AND t2.pileId = task.pileId
-                )
-            WHERE EXISTS (
-                SELECT 1 FROM db2.task t2
-                WHERE t2.title = task.title AND t2.pileId = task.pileId
-                AND t2.modifiedAt > task.modifiedAt
-            )
-            """
-            )
-
             // --- Merge Piles ---
-
-            // 3. Insert new piles from db2 where name doesn't exist in main
+            // Insert new piles from db2 where name doesn't exist in main
             connection.execSQL(
                 """
-            INSERT INTO pile (
-                name, description, pileMode, pileLimit, createdAt, modifiedAt, color
-            )
+            INSERT INTO pile (name, description, pileMode, pileLimit, createdAt, modifiedAt, color)
             SELECT 
-                p2.name, p2.description, p2.pileMode, p2.pileLimit, 
+                p2.name, p2.description, p2.pileMode, p2.pileLimit,
                 p2.createdAt, p2.modifiedAt, p2.color
             FROM db2.pile p2
             WHERE NOT EXISTS (
@@ -163,39 +84,142 @@ interface PileDao {
             """
             )
 
-            // 4. Update existing piles if db2 version is newer (by name)
+            // Merge piles with same name or where pileId == 1
             connection.execSQL(
                 """
             UPDATE pile
             SET 
                 description = (
                     SELECT p2.description FROM db2.pile p2
-                    WHERE p2.name = pile.name
+                    WHERE (p2.name = pile.name OR (pile.pileId = 1 AND p2.pileId = 1))
+                    AND p2.modifiedAt > pile.modifiedAt
                 ),
                 pileMode = (
                     SELECT p2.pileMode FROM db2.pile p2
-                    WHERE p2.name = pile.name
+                    WHERE (p2.name = pile.name OR (pile.pileId = 1 AND p2.pileId = 1))
+                    AND p2.modifiedAt > pile.modifiedAt
                 ),
                 pileLimit = (
                     SELECT p2.pileLimit FROM db2.pile p2
-                    WHERE p2.name = pile.name
+                    WHERE (p2.name = pile.name OR (pile.pileId = 1 AND p2.pileId = 1))
+                    AND p2.modifiedAt > pile.modifiedAt
                 ),
                 modifiedAt = (
                     SELECT p2.modifiedAt FROM db2.pile p2
-                    WHERE p2.name = pile.name
+                    WHERE (p2.name = pile.name OR (pile.pileId = 1 AND p2.pileId = 1))
+                    AND p2.modifiedAt > pile.modifiedAt
                 ),
                 color = (
                     SELECT p2.color FROM db2.pile p2
-                    WHERE p2.name = pile.name
+                    WHERE (p2.name = pile.name OR (pile.pileId = 1 AND p2.pileId = 1))
+                    AND p2.modifiedAt > pile.modifiedAt
                 )
             WHERE EXISTS (
                 SELECT 1 FROM db2.pile p2
-                WHERE p2.name = pile.name AND p2.modifiedAt > pile.modifiedAt
+                WHERE (p2.name = pile.name OR (pile.pileId = 1 AND p2.pileId = 1))
+                AND p2.modifiedAt > pile.modifiedAt
             )
             """
             )
 
-            // Detach secondary database
+            // --- Merge Tasks ---
+            // Insert tasks from db2 that don't exist in main (by title + pile name)
+            connection.execSQL(
+                """
+            INSERT INTO task (
+                title, pileId, description, createdAt, modifiedAt, completionTimes, reminder,
+                isRecurring, recurringTimeRange, recurringFrequency, nowAsReminderTime, status,
+                averageCompletionTimeInHours
+            )
+            SELECT 
+                t2.title,
+                (SELECT p1.pileId FROM pile p1 WHERE p1.name = p2.name),
+                t2.description, t2.createdAt, t2.modifiedAt, t2.completionTimes,
+                t2.reminder, t2.isRecurring, t2.recurringTimeRange, t2.recurringFrequency,
+                t2.nowAsReminderTime, t2.status, t2.averageCompletionTimeInHours
+            FROM db2.task t2
+            JOIN db2.pile p2 ON t2.pileId = p2.pileId
+            WHERE NOT EXISTS (
+                SELECT 1 FROM task t1
+                JOIN pile p1 ON t1.pileId = p1.pileId
+                WHERE t1.title = t2.title AND p1.name = p2.name
+            )
+            """
+            )
+
+            // Update tasks if db2 version is newer (match by title + pile name)
+            connection.execSQL(
+                """
+            UPDATE task
+            SET 
+                description = (
+                    SELECT t2.description FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                modifiedAt = (
+                    SELECT t2.modifiedAt FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                completionTimes = (
+                    SELECT t2.completionTimes FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                reminder = (
+                    SELECT t2.reminder FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                isRecurring = (
+                    SELECT t2.isRecurring FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                recurringTimeRange = (
+                    SELECT t2.recurringTimeRange FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                recurringFrequency = (
+                    SELECT t2.recurringFrequency FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                nowAsReminderTime = (
+                    SELECT t2.nowAsReminderTime FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                status = (
+                    SELECT t2.status FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                ),
+                averageCompletionTimeInHours = (
+                    SELECT t2.averageCompletionTimeInHours FROM db2.task t2
+                    JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                    JOIN pile p1 ON p1.name = p2.name
+                    WHERE t2.title = task.title AND p1.pileId = task.pileId
+                )
+            WHERE EXISTS (
+                SELECT 1 FROM db2.task t2
+                JOIN db2.pile p2 ON t2.pileId = p2.pileId
+                JOIN pile p1 ON p1.name = p2.name
+                WHERE t2.title = task.title AND p1.pileId = task.pileId AND t2.modifiedAt > task.modifiedAt
+            )
+            """
+            )
             connection.execSQL("DETACH DATABASE db2")
         }
     }

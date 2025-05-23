@@ -49,8 +49,10 @@ class SyncViewModel(
                             secondaryDbPath = file.absolutePath()
                         )
                         file.delete()
+                        state.update { it.copy(message = Message.SuccessReceiving) }
                     } catch (e: Exception) {
-                        state.update { it.copy() }
+                        println("Error while receiving data: ${e.message}")
+                        state.update { it.copy(message = Message.ErrorReceiving) }
                     }
                     state.update { it.copy(receiving = false) }
                     syncCoordinator.stopServer()
@@ -63,10 +65,16 @@ class SyncViewModel(
         viewModelScope.launch {
             val syncDevice = state.value.syncDevices[index]
             val dataToSend = databaseExporter.getDatabaseFile().readBytes()
-            syncCoordinator.sendData(
-                hostName = syncDevice.hostName,
-                data = dataToSend
-            )
+            try {
+                syncCoordinator.sendData(
+                    hostName = syncDevice.hostName,
+                    data = dataToSend
+                )
+                state.update { it.copy(message = Message.SuccessSending) }
+            } catch (e: Exception) {
+                println("Error while sending data: ${e.message}")
+                state.update { it.copy(message = Message.ErrorSending) }
+            }
         }
     }
 
@@ -102,4 +110,4 @@ data class SyncViewState(
     val message: Message? = null,
 )
 
-enum class Message { Success, Error }
+enum class Message { SuccessReceiving, SuccessSending, ErrorReceiving, ErrorSending }

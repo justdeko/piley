@@ -87,8 +87,8 @@ android {
         applicationId = "com.dk.piley"
         minSdk = 26
         targetSdk = 35
-        versionCode = 19
-        versionName = "0.8.5"
+        versionCode = 20
+        versionName = "0.9.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -135,7 +135,7 @@ compose.desktop {
                 "-Dapple.awt.application.appearance=system"
             )
             packageName = "piley"
-            packageVersion = "1.8.5"
+            packageVersion = "1.9.0"
             // copyright with copyright symbol
             copyright = "© 2025 Denis Koljada. All rights reserved."
             // fixes datastore unsafe issue: https://github.com/JetBrains/compose-multiplatform/issues/2686

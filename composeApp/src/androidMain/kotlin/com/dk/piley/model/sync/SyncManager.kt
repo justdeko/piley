@@ -36,7 +36,7 @@ class SyncManager(private val context: Context) : ISyncManager {
                                         name = name,
                                         hostName = host,
                                         port = port,
-                                        lastModifiedTimestamp = timeStamp
+                                        lastSynced = timeStamp
                                     )
                                 )
                             }

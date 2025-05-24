@@ -155,7 +155,7 @@ class SyncManager : ISyncManager {
             }
 
             println("Successfully resolved service: $hostName:$port (timestamp: $timeStamp)")
-            onDeviceFound(syncDevice.copy(lastModifiedTimestamp = timeStamp))
+            onDeviceFound(syncDevice.copy(lastSynced = timeStamp))
             sender.setDelegate(null)
             resolveDelegates.remove(this)
         }

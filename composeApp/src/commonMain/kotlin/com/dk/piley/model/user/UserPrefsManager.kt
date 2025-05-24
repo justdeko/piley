@@ -25,6 +25,7 @@ class UserPrefsManager(
     private val skipSplashScreenKey = booleanPreferencesKey("skip_splash_screen")
     private val pileOrderKey = stringPreferencesKey("pile_order")
     private val storedServicesKey = stringPreferencesKey("stored_services")
+    private val lastSyncedKey = stringPreferencesKey("last_synced")
 
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUserKey] = email
@@ -50,6 +51,10 @@ class UserPrefsManager(
         prefs[storedServicesKey] = services.toJsonString()
     }
 
+    suspend fun setLastSynced(timestamp: Long) = userPrefs.edit { prefs ->
+        prefs[lastSyncedKey] = timestamp.toString()
+    }
+
     fun getUserPrefsEmail(): Flow<String> =
         userPrefs.data.map { prefs -> prefs[signedInUserKey] ?: "" }
 
@@ -69,5 +74,9 @@ class UserPrefsManager(
 
     fun getStoredServices(): Flow<List<SyncDevice>> = userPrefs.data.map { prefs ->
         prefs[storedServicesKey]?.let { toSyncDeviceList(it) } ?: emptyList()
+    }
+
+    fun getLastSynced(): Flow<Long> = userPrefs.data.map { prefs ->
+        prefs[lastSyncedKey]?.toLongOrNull() ?: 0L
     }
 }

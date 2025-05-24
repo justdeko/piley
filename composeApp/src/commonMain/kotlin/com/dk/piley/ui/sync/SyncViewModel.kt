@@ -16,7 +16,6 @@ import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 
 
 class SyncViewModel(
@@ -49,6 +48,7 @@ class SyncViewModel(
                             secondaryDbPath = file.absolutePath()
                         )
                         file.delete()
+                        syncCoordinator.setLastSynced()
                         state.update { it.copy(message = Message.SuccessReceiving) }
                     } catch (e: Exception) {
                         println("Error while receiving data: ${e.message}")
@@ -86,12 +86,12 @@ class SyncViewModel(
     }
 
     private fun startDiscoveryAndAdvertising() {
-        syncCoordinator.startAdvertising(Clock.System.now().toEpochMilliseconds())
+        syncCoordinator.startAdvertising()
         syncCoordinator.startDiscovery { syncDevice ->
             viewModelScope.launch {
                 state.update { currentState ->
                     val syncDevices = currentState.syncDevices.toMutableSet()
-                    syncDevices.removeAll { it.name == syncDevice.name }
+                    syncDevices.removeAll { it.hostName == syncDevice.hostName }
                     syncDevices.add(syncDevice)
                     currentState.copy(syncDevices = syncDevices.toList())
                 }

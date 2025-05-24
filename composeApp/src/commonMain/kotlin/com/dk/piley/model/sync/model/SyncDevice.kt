@@ -10,8 +10,13 @@ data class SyncDevice(
     val platform: Platform = Platform.fromValue(name.split("_").last()),
     val hostName: String,
     val port: Int,
-    val lastModifiedTimestamp: Long = 0L,
+    val lastSynced: Long = 0L,
 )
 
 fun List<SyncDevice>.toJsonString(): String = Json.encodeToString(this)
-fun toSyncDeviceList(jsonString: String): List<SyncDevice> = Json.decodeFromString(jsonString)
+fun toSyncDeviceList(jsonString: String): List<SyncDevice> = try {
+    Json.decodeFromString(jsonString)
+} catch (e: Exception) {
+    println("Error decoding SyncDevice list: ${e.message}")
+    emptyList()
+}

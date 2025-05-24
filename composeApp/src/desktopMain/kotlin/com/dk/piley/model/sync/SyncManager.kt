@@ -43,7 +43,7 @@ class SyncManager : ISyncManager {
                         name = serviceName,
                         hostName = address,
                         port = port,
-                        lastModifiedTimestamp = timestamp ?: 0L
+                        lastSynced = timestamp ?: 0L
                     )
                     onDeviceFound(syncDevice)
                 }

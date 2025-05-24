@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Clock
 import kotlin.coroutines.cancellation.CancellationException
 
 class SyncCoordinator(
@@ -40,7 +41,7 @@ class SyncCoordinator(
         scope.launch {
             try {
                 syncManager.startDiscovery { syncDevice ->
-                    println("Found device at ${syncDevice.hostName}:${syncDevice.port} (timestamp=${syncDevice.lastModifiedTimestamp})")
+                    println("Found device at ${syncDevice.hostName}:${syncDevice.port} (lastSynced=${syncDevice.lastSynced})")
                     onDeviceFound(syncDevice)
                 }
             } catch (e: Exception) {
@@ -49,10 +50,11 @@ class SyncCoordinator(
         }
     }
 
-    fun startAdvertising(lastEditedTimeStamp: Long) {
+    fun startAdvertising() {
         scope.launch {
             try {
-                syncManager.advertiseService(PORT, lastEditedTimeStamp)
+                val lastSynced = userPrefsManager.getLastSynced().firstOrNull() ?: 0L
+                syncManager.advertiseService(PORT, lastSynced)
             } catch (e: Exception) {
                 println("Advertising error: ${e.message}")
             }
@@ -136,6 +138,12 @@ class SyncCoordinator(
             throw e
         } finally {
             selector.close()
+        }
+    }
+
+    fun setLastSynced() {
+        scope.launch {
+            userPrefsManager.setLastSynced(Clock.System.now().toEpochMilliseconds())
         }
     }
 

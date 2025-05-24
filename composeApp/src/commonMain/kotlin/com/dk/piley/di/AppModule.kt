@@ -11,6 +11,8 @@ import com.dk.piley.model.navigation.ShortcutEventRepository
 import com.dk.piley.model.notification.NotificationRepository
 import com.dk.piley.model.pile.PileDao
 import com.dk.piley.model.pile.PileRepository
+import com.dk.piley.model.sync.ISyncManager
+import com.dk.piley.model.sync.SyncCoordinator
 import com.dk.piley.model.task.TaskDao
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.user.UserDao
@@ -40,6 +42,8 @@ interface AppModule {
     val navigationEventRepository: NavigationEventRepository
     val shortcutEventRepository: ShortcutEventRepository
     val databaseExporter: IDatabaseExporter
+    val syncManager: ISyncManager
+    val syncCoordinator: SyncCoordinator
 }
 
 class AppModuleImpl(
@@ -48,6 +52,7 @@ class AppModuleImpl(
     override val reminderManager: IReminderManager,
     override val notificationManager: INotificationManager,
     override val databaseExporter: IDatabaseExporter,
+    override val syncManager: ISyncManager,
     dataStorePath: String,
 ) : AppModule {
 
@@ -87,6 +92,12 @@ class AppModuleImpl(
     override val notificationRepository: NotificationRepository by lazy { NotificationRepository() }
     override val navigationEventRepository: NavigationEventRepository by lazy { NavigationEventRepository() }
     override val shortcutEventRepository: ShortcutEventRepository by lazy { ShortcutEventRepository() }
+    override val syncCoordinator: SyncCoordinator by lazy {
+        SyncCoordinator(
+            syncManager,
+            userPrefsManager
+        )
+    }
 }
 
 internal const val USER_PREFERENCES_PATH = "user_preferences.preferences_pb"

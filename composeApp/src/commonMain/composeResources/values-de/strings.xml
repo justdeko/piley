@@ -191,4 +191,13 @@
     <string name="database_exported_message">Datenbank exportiert</string>
     <string name="database_imported_message">Datenbank importiert</string>
     <string name="share">Teilen</string>
+    <!-- sync screen -->
+    <string name="sync_screen">Synchronisieren</string>
+    <string name="discovering_devices">Suche nach Geräten...</string>
+    <string name="receive_data">Daten empfangen</string>
+    <string name="stop_receiving">Empfangen stoppen</string>
+    <string name="message_sync_error">Fehler beim Synchronisieren</string>
+    <string name="message_sync_success">Synchronisierung erfolgreich</string>
+    <string name="message_send_error">Fehler beim Senden</string>
+    <string name="message_send_success">Erfolgreich gesendet</string>
 </resources>

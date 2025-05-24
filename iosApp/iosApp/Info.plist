@@ -56,5 +56,11 @@
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+    <string>This app uses the local network to discover and connect to nearby devices.</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_piley._tcp</string>
+    </array>
 </dict>
 </plist>

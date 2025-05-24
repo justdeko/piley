@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -75,6 +76,7 @@ fun ProfileScreen(
         viewState = viewState,
         initialTransitionStateValue = false,
         onClickSettings = { navController.navigate(Screen.Settings.route) },
+        onClickSync = { navController.navigate(Screen.Sync.route) },
         onUpcomingTaskClick = {
             navController.navigate(taskScreen.root + "/" + it)
         }
@@ -88,6 +90,7 @@ fun ProfileScreen(
  * @param viewState profile view state
  * @param initialTransitionStateValue initial screen content animation transition value
  * @param onClickSettings on click settings
+ * @param onClickSync on click sync
  * @param onUpcomingTaskClick on click upcoming task
  */
 @Composable
@@ -96,6 +99,7 @@ fun ProfileScreen(
     viewState: ProfileViewState,
     initialTransitionStateValue: Boolean = true,
     onClickSettings: () -> Unit = {},
+    onClickSync: () -> Unit = {},
     onUpcomingTaskClick: (Long) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
@@ -132,6 +136,13 @@ fun ProfileScreen(
                                 Icons.Filled.Settings,
                                 tint = MaterialTheme.colorScheme.secondary,
                                 contentDescription = "go to settings"
+                            )
+                        }
+                        IconButton(onClick = onClickSync) {
+                            Icon(
+                                Icons.Filled.Sync,
+                                tint = MaterialTheme.colorScheme.secondary,
+                                contentDescription = "go to sync"
                             )
                         }
                     }

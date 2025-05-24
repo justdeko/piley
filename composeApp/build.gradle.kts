@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -38,6 +39,7 @@ kotlin {
             implementation(libs.material)
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -61,10 +63,18 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
             implementation(libs.reorderable)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.network)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.compose.ui.backhandler)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.jmdns)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

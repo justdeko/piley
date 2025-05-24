@@ -1,5 +1,6 @@
 package com.dk.piley.model.pile
 
+import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.user.PileMode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -47,4 +48,11 @@ class PileRepository(private val pileDao: PileDao) {
      *
      */
     suspend fun deleteDeletedTasks() = pileDao.deleteDeletedTasks()
+
+    suspend fun mergeDatabases(
+        pileDatabase: PileDatabase,
+        secondaryDbPath: String
+    ) {
+        pileDao.mergeDatabases(pileDatabase, secondaryDbPath)
+    }
 }

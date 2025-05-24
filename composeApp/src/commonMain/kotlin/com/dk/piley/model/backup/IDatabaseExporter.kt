@@ -32,6 +32,13 @@ interface IDatabaseExporter {
      * @param filePath path of the file to share
      */
     fun shareFile(filePath: String)
+
+    /**
+     * Get the path of the database
+     *
+     * @return path of the database
+     */
+    fun getDatabaseFile() = PlatformFile(getDatabasePath())
 }
 
 sealed interface ImportResult {

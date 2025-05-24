@@ -118,26 +118,26 @@ class SyncCoordinator(
         }
     }
 
-    suspend fun sendData(
+    fun sendData(
         hostName: String,
         data: ByteArray,
         port: Int = PORT,
     ) {
-        val selector = SelectorManager(Dispatchers.IO)
-        try {
-            val socket = aSocket(selector).tcp().connect(hostName, port)
-            val output = socket.openWriteChannel(autoFlush = true)
+        scope.launch {
+            val selector = SelectorManager(Dispatchers.IO)
+            try {
+                val socket = aSocket(selector).tcp().connect(hostName, port)
+                val output = socket.openWriteChannel(autoFlush = true)
 
-            output.writeLong(data.size.toLong())
-            output.writeFully(data)
-            println("Sent ${data.size} bytes to $hostName:$port")
-
-            socket.close()
-        } catch (e: Exception) {
-            println("sendData error: ${e.message}")
-            throw e
-        } finally {
-            selector.close()
+                output.writeLong(data.size.toLong())
+                output.writeFully(data)
+                println("Sent ${data.size} bytes to $hostName:$port")
+                socket.close()
+            } catch (e: Exception) {
+                throw e
+            } finally {
+                selector.close()
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Computer
 import androidx.compose.material.icons.filled.PhoneIphone
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Publish
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -41,6 +42,7 @@ import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.Platform
+import com.dk.piley.util.TinySpacer
 import com.dk.piley.util.defaultPadding
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -91,6 +93,7 @@ fun SyncScreen(
             navController.popBackStack()
         },
         onStartUpload = { viewModel.uploadData(it) },
+        onRemove = { viewModel.removeDevice(it) },
         onStartReceiving = { viewModel.toggleReceiving() }
     )
 }
@@ -102,6 +105,7 @@ internal fun SyncScreen(
     viewState: SyncViewState,
     onCloseSync: () -> Unit,
     onStartUpload: (Int) -> Unit = {},
+    onRemove: (Int) -> Unit = {},
     onStartReceiving: () -> Unit = {},
 ) {
     BackHandler { onCloseSync() }
@@ -122,6 +126,7 @@ internal fun SyncScreen(
                             modifier = Modifier.animateItem(),
                             syncDevice = syncDevice,
                             onSend = { onStartUpload(index) },
+                            onRemove = { onRemove(index) }
                         )
                         if (index != viewState.syncDevices.lastIndex) {
                             HorizontalDivider()
@@ -167,6 +172,7 @@ private fun SyncItem(
     modifier: Modifier = Modifier,
     syncDevice: SyncDevice,
     onSend: () -> Unit,
+    onRemove: () -> Unit,
     enabled: Boolean = true,
 ) {
     val dim = LocalDim.current
@@ -186,21 +192,40 @@ private fun SyncItem(
             tint = MaterialTheme.colorScheme.tertiary
         )
         MediumSpacer()
-        Text(
-            modifier = Modifier.weight(1f),
-            text = syncDevice.name,
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.labelLarge
-        )
+        Column(Modifier.weight(1f)) {
+            Text(
+                text = syncDevice.name,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleMedium
+            )
+            TinySpacer()
+            Text(
+                text = syncDevice.hostName,
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.labelSmall
+            )
+        }
         IconButton(
             enabled = enabled,
-            onClick = { onSend() },
+            onClick = onSend,
             content = {
                 Icon(
                     modifier = Modifier.size(dim.veryLarge),
                     imageVector = Icons.Outlined.Publish,
                     contentDescription = "Send",
                     tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        )
+        IconButton(
+            enabled = enabled,
+            onClick = onRemove,
+            content = {
+                Icon(
+                    modifier = Modifier.size(dim.veryLarge),
+                    imageVector = Icons.Outlined.Close,
+                    contentDescription = "remove device",
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
         )

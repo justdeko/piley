@@ -14,6 +14,8 @@ import io.github.vinceglb.filekit.delete
 import io.github.vinceglb.filekit.filesDir
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -35,7 +37,7 @@ class SyncViewModel(
     }
 
     fun toggleReceiving() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val receiving = !state.value.receiving
             state.update { it.copy(receiving = receiving) }
             if (receiving) {
@@ -51,7 +53,7 @@ class SyncViewModel(
                         syncCoordinator.setLastSynced()
                         state.update { it.copy(message = Message.SuccessReceiving) }
                     } catch (e: Exception) {
-                        println("Error while receiving data: ${e.message}")
+                        println("Error while receiving data: $e")
                         state.update { it.copy(message = Message.ErrorReceiving) }
                     }
                     state.update { it.copy(receiving = false) }
@@ -62,7 +64,7 @@ class SyncViewModel(
     }
 
     fun uploadData(index: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val syncDevice = state.value.syncDevices[index]
             val dataToSend = databaseExporter.getDatabaseFile().readBytes()
             try {
@@ -72,7 +74,7 @@ class SyncViewModel(
                 )
                 state.update { it.copy(message = Message.SuccessSending) }
             } catch (e: Exception) {
-                println("Error while sending data: ${e.message}")
+                println("Error while sending data: $e")
                 state.update { it.copy(message = Message.ErrorSending) }
             }
         }
@@ -101,6 +103,16 @@ class SyncViewModel(
 
     fun setMessage(messageType: Message?) = state.update {
         it.copy(message = messageType)
+    }
+
+    fun removeDevice(index: Int) {
+        viewModelScope.launch {
+            state.update { currentState ->
+                val newList = currentState.syncDevices.filterIndexed { i, _ -> i != index }
+                syncCoordinator.saveServices(newList)
+                currentState.copy(syncDevices = newList)
+            }
+        }
     }
 }
 

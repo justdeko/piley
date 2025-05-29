@@ -66,7 +66,7 @@ class ProfileViewModel(
         // launch in io thread to prevent view blocking
         withContext(Dispatchers.IO) {
             // delete all deleted tasks
-            pileRepository.deleteDeletedTasks()
+            pileRepository.deleteDeletedTasks() // TODO adapt this to last n tasks per pile (to conform to undo button)
             // set preference to true
             userRepository.setTasksDeleted(true)
         }

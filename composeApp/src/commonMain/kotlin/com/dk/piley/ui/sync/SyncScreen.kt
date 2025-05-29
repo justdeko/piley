@@ -42,7 +42,6 @@ import com.dk.piley.ui.common.TitleTopAppBar
 import com.dk.piley.util.IndefiniteProgressBar
 import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.Platform
-import com.dk.piley.util.TinySpacer
 import com.dk.piley.util.defaultPadding
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
@@ -192,19 +191,12 @@ private fun SyncItem(
             tint = MaterialTheme.colorScheme.tertiary
         )
         MediumSpacer()
-        Column(Modifier.weight(1f)) {
-            Text(
-                text = syncDevice.name,
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.titleMedium
-            )
-            TinySpacer()
-            Text(
-                text = syncDevice.hostName,
-                color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.labelSmall
-            )
-        }
+        Text(
+            modifier = Modifier.weight(1f),
+            text = syncDevice.hostName,
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.titleMedium
+        )
         IconButton(
             enabled = enabled,
             onClick = onSend,

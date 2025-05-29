@@ -12,7 +12,7 @@ class SyncManager(private val context: Context) : ISyncManager {
     private var discoveryListener: NsdManager.DiscoveryListener? = null
 
 
-    override suspend fun startDiscovery(onDeviceFound: (SyncDevice) -> Unit) {
+    override suspend fun startDiscovery(serviceId: String, onDeviceFound: (SyncDevice) -> Unit) {
         nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
 
         discoveryListener = object : NsdManager.DiscoveryListener {
@@ -30,7 +30,7 @@ class SyncManager(private val context: Context) : ISyncManager {
                             val timeStamp =
                                 resolvedInfo.attributes[timeStampAttribute]?.let { String(it) }
                                     ?.toLongOrNull() ?: 0L
-                            if (!resolvedInfo.serviceName.contains(appPlatform.toString())) {
+                            if (!resolvedInfo.serviceName.contains(serviceId)) {
                                 onDeviceFound(
                                     SyncDevice(
                                         name = name,
@@ -64,10 +64,10 @@ class SyncManager(private val context: Context) : ISyncManager {
         discoveryListener?.let { nsdManager.stopServiceDiscovery(it) }
     }
 
-    override suspend fun advertiseService(port: Int, timeStamp: Long) {
+    override suspend fun advertiseService(port: Int, timeStamp: Long, serviceId: String) {
         nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
         val serviceInfo = NsdServiceInfo().apply {
-            serviceName = syncServiceName + appPlatform
+            serviceName = syncServiceName + serviceId + "_" + appPlatform
             serviceType = mobileSyncServiceType
             setAttribute(timeStampAttribute, timeStamp.toString())
             setPort(port)

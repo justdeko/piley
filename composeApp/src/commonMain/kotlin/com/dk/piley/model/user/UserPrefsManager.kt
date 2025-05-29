@@ -9,7 +9,10 @@ import com.dk.piley.model.sync.model.SyncDevice
 import com.dk.piley.model.sync.model.toJsonString
 import com.dk.piley.model.sync.model.toSyncDeviceList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Manages user preferences file
@@ -26,6 +29,7 @@ class UserPrefsManager(
     private val pileOrderKey = stringPreferencesKey("pile_order")
     private val storedServicesKey = stringPreferencesKey("stored_services")
     private val lastSyncedKey = stringPreferencesKey("last_synced")
+    private val mdnsServiceIdKey = stringPreferencesKey("mdns_service_id")
 
     suspend fun setSignedInUser(email: String) = userPrefs.edit { prefs ->
         prefs[signedInUserKey] = email
@@ -78,5 +82,22 @@ class UserPrefsManager(
 
     fun getLastSynced(): Flow<Long> = userPrefs.data.map { prefs ->
         prefs[lastSyncedKey]?.toLongOrNull() ?: 0L
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    suspend fun getMdnsServiceId(): String {
+        val existingId = userPrefs.data.map { prefs ->
+            prefs[mdnsServiceIdKey]
+        }.firstOrNull()
+        return if (existingId != null) {
+            existingId
+        } else {
+            val newId = Uuid.random().toHexString()
+            // Store the new ID in preferences
+            userPrefs.edit { prefs ->
+                prefs[mdnsServiceIdKey] = newId
+            }
+            newId
+        }
     }
 }

@@ -40,7 +40,7 @@ class SyncCoordinator(
     fun startDiscovery(onDeviceFound: (SyncDevice) -> Unit) {
         scope.launch {
             try {
-                syncManager.startDiscovery { syncDevice ->
+                syncManager.startDiscovery(userPrefsManager.getMdnsServiceId()) { syncDevice ->
                     println("Found device at ${syncDevice.hostName}:${syncDevice.port} (lastSynced=${syncDevice.lastSynced})")
                     onDeviceFound(syncDevice)
                 }
@@ -54,7 +54,7 @@ class SyncCoordinator(
         scope.launch {
             try {
                 val lastSynced = userPrefsManager.getLastSynced().firstOrNull() ?: 0L
-                syncManager.advertiseService(PORT, lastSynced)
+                syncManager.advertiseService(PORT, lastSynced, userPrefsManager.getMdnsServiceId())
             } catch (e: Exception) {
                 println("Advertising error: ${e.message}")
             }

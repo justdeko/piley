@@ -25,11 +25,11 @@ class SyncManager : ISyncManager {
 
     private val resolveDelegates = mutableListOf<ServiceResolveDelegate>()
 
-    override suspend fun startDiscovery(onDeviceFound: (SyncDevice) -> Unit) {
+    override suspend fun startDiscovery(serviceId: String, onDeviceFound: (SyncDevice) -> Unit) {
         withContext(Dispatchers.Main) {
             resolveDelegates.clear()
 
-            browserDelegate = BrowserDelegate(onDeviceFound)
+            browserDelegate = BrowserDelegate(serviceId, onDeviceFound)
             netServiceBrowser = NSNetServiceBrowser().apply {
                 setDelegate(browserDelegate)
                 searchForServicesOfType(mobileSyncServiceType, "local.")
@@ -47,9 +47,9 @@ class SyncManager : ISyncManager {
         }
     }
 
-    override suspend fun advertiseService(port: Int, timeStamp: Long) {
+    override suspend fun advertiseService(port: Int, timeStamp: Long, serviceId: String) {
         withContext(Dispatchers.Main) {
-            val serviceName = syncServiceName + appPlatform
+            val serviceName = syncServiceName + serviceId + "_" + appPlatform
 
             val txtRecordDict = mutableMapOf<String, String>()
             txtRecordDict[timeStampAttribute] = timeStamp.toString()
@@ -83,6 +83,7 @@ class SyncManager : ISyncManager {
     }
 
     private inner class BrowserDelegate(
+        private val serviceId: String,
         private val onDeviceFound: (SyncDevice) -> Unit
     ) : NSObject(), NSNetServiceBrowserDelegateProtocol {
 
@@ -94,7 +95,7 @@ class SyncManager : ISyncManager {
             println("Found service: ${didFindService.name} of type ${didFindService.type}")
 
             if (didFindService.name.startsWith(syncServiceName) &&
-                !didFindService.name.contains(appPlatform.toString())
+                !didFindService.name.contains(serviceId)
             ) {
                 val resolveDelegate = ServiceResolveDelegate(onDeviceFound)
                 resolveDelegates.add(resolveDelegate)

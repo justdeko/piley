@@ -15,7 +15,7 @@ class SyncManager : ISyncManager {
     private var listener: ServiceListener? = null
     val seenServices = mutableSetOf<String>()
 
-    override suspend fun startDiscovery(onDeviceFound: (syncDevice: SyncDevice) -> Unit) {
+    override suspend fun startDiscovery(serviceId: String, onDeviceFound: (syncDevice: SyncDevice) -> Unit) {
         println("Starting discovery...")
         instantiateJmDNS()
 
@@ -38,7 +38,7 @@ class SyncManager : ISyncManager {
                 }
                 val timestamp = event.info.getPropertyString(timeStampAttribute)?.toLongOrNull()
                 val serviceName = event.info.name
-                if (address != null && !serviceName.contains(appPlatform.toString())) {
+                if (address != null && !serviceName.contains(serviceId)) {
                     val syncDevice = SyncDevice(
                         name = serviceName,
                         hostName = address,
@@ -61,12 +61,12 @@ class SyncManager : ISyncManager {
         }
     }
 
-    override suspend fun advertiseService(port: Int, timeStamp: Long) {
+    override suspend fun advertiseService(port: Int, timeStamp: Long, serviceId: String) {
         instantiateJmDNS()
         val txtRecord = mapOf(timeStampAttribute to timeStamp.toString())
         val serviceInfo = ServiceInfo.create(
             /* type = */ syncServiceType,
-            /* name = */ syncServiceName + appPlatform,
+            /* name = */ syncServiceName + serviceId + "_" + appPlatform,
             /* port = */ port,
             /* weight = */ 0,
             /* priority = */ 0,

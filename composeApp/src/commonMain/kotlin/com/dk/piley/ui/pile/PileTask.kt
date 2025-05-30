@@ -7,7 +7,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,6 +51,7 @@ import com.dk.piley.util.MediumSpacer
  * @param task task entity
  * @param transitionState animation transition state of task card
  * @param onClick on task click
+ * @param onLongPress on task long press
  */
 @Composable
 fun PileTask(
@@ -64,16 +65,18 @@ fun PileTask(
             }
         }
     },
-    onClick: (task: Task) -> Unit = {}
+    onClick: (task: Task) -> Unit = {},
+    onLongPress: (task: Task) -> Unit = {},
 ) {
     val density = LocalDensity.current
     val dim = LocalDim.current
 
     Box(
-        modifier = modifier.clickable(
+        modifier = modifier.combinedClickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
-            onClick = { onClick(task) }
+            onClick = { onClick(task) },
+            onLongClick = { onLongPress(task) },
         )
     ) {
         AnimatedVisibility(

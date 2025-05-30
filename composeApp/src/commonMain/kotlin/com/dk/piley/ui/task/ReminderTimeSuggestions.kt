@@ -1,7 +1,6 @@
 package com.dk.piley.ui.task
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ElevatedSuggestionChip
@@ -17,7 +16,6 @@ import kotlinx.datetime.LocalDateTime
  * @param modifier generic modifier
  * @param onSelectTimeSuggestion on time suggestion item selected
  */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ReminderTimeSuggestions(
     modifier: Modifier = Modifier,

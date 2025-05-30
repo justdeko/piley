@@ -15,6 +15,7 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.util.sortedWithOrder
+import com.dk.piley.util.toInstantWithOffset
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
 
 /**
  * Pile view model
@@ -240,6 +242,24 @@ class PileViewModel(
      */
     fun setShowRecurring(shown: Boolean) {
         state.update { it.copy(showRecurring = shown) }
+    }
+
+    /**
+     * Set task reminder given a time and task
+     *
+     * @param time the time to set the reminder for
+     * @param task the task to set the reminder for
+     */
+    fun setTaskReminder(time: LocalDateTime, task: Task) {
+        viewModelScope.launch {
+            taskRepository.insertTaskWithStatus(
+                task.copy(
+                    reminder = time.toInstantWithOffset(),
+                    status = TaskStatus.DEFAULT,
+                    modifiedAt = Clock.System.now()
+                )
+            )
+        }
     }
 }
 

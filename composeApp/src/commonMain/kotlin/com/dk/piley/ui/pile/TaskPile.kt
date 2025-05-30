@@ -44,6 +44,7 @@ import piley.composeapp.generated.resources.delete_recurring_dialog_title
  * @param onDelete on task delete
  * @param onDone on task done
  * @param onTaskClick on task click
+ * @param onTaskLongPress on task long press
  */
 @Composable
 fun TaskPile(
@@ -52,7 +53,8 @@ fun TaskPile(
     pileMode: PileMode = PileMode.FREE,
     onDelete: (task: Task) -> Unit = {},
     onDone: (task: Task) -> Unit = {},
-    onTaskClick: (task: Task) -> Unit = {}
+    onTaskClick: (task: Task) -> Unit = {},
+    onTaskLongPress: (task: Task) -> Unit = {},
 ) {
     val haptic = LocalHapticFeedback.current
     val dim = LocalDim.current
@@ -138,7 +140,8 @@ fun TaskPile(
                     .padding(vertical = dim.mini),
                 dismissState = dismissState,
                 task = task,
-                onClick = onTaskClick
+                onClick = onTaskClick,
+                onLongPress = onTaskLongPress,
             )
         }
     }

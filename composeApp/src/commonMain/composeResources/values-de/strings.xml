@@ -80,6 +80,7 @@
     <string name="reminder_frequency_label">Häufigkeit</string>
     <string name="no_notification_permission_reminder_warning">Dieser Reminder wird nicht angezeigt, weil du keine Berechtigung für Benachrichtigungen gegeben hast.</string>
     <string name="set_reminder_button">Reminder setzen</string>
+    <string name="reminder_set_message">Reminder gesetzt</string>
     <string name="update_reminder_button">Aktualisieren</string>
     <string name="delete_reminder_button">Löschen</string>
     <string name="reminder_time_range_label">Zeitraum</string>

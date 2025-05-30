@@ -10,6 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,13 +21,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTimeFilled
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -61,14 +63,17 @@ import com.dk.piley.ui.common.TwoPaneScreen
 import com.dk.piley.ui.nav.pileScreen
 import com.dk.piley.ui.nav.taskScreen
 import com.dk.piley.ui.piles.toColor
+import com.dk.piley.ui.task.ReminderTimeSuggestions
 import com.dk.piley.util.dateTimeString
 import com.dk.piley.util.titleCharacterLimit
 import com.dk.piley.util.toLocalDateTime
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import org.jetbrains.compose.resources.getString
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.pile_full_warning
 import piley.composeapp.generated.resources.recurring_task_completed_info
+import piley.composeapp.generated.resources.reminder_set_message
 import piley.composeapp.generated.resources.task_deleted_message
 import piley.composeapp.generated.resources.task_empty_not_allowed_hint
 import piley.composeapp.generated.resources.undo_task_deleted
@@ -136,7 +141,6 @@ fun PileScreen(
                     MessageWithAction(
                         message = getString(Res.string.task_deleted_message),
                         actionText = getString(Res.string.undo_task_deleted),
-                        duration = SnackbarDuration.Short
                     ) { viewModel.undoDelete(it) }
                 )
             }
@@ -146,7 +150,13 @@ fun PileScreen(
         onTitlePageChanged = { page -> viewModel.onPileChanged(page) },
         onSetMessage = { viewModel.setMessage(it) },
         onToggleRecurring = { viewModel.setShowRecurring(it) },
-        onClickTitle = { navController.navigate(pileScreen.root + "/" + viewState.pileWithTasks.pile.pileId) }
+        onClickTitle = { navController.navigate(pileScreen.root + "/" + viewState.pileWithTasks.pile.pileId) },
+        onSetTaskReminder = { time, task ->
+            viewModel.setTaskReminder(time, task)
+            coroutineScope.launch {
+                viewModel.setMessage(MessageWithAction(message = getString(Res.string.reminder_set_message)))
+            }
+        }
     )
 }
 
@@ -165,6 +175,7 @@ fun PileScreen(
  * @param onSetMessage on set user message
  * @param onToggleRecurring on toggle show recurring tasks
  * @param onClickTitle on pile title click
+ * @param onSetTaskReminder on set task reminder through the reminder time suggestions
  */
 @Composable
 fun PileScreen(
@@ -180,11 +191,13 @@ fun PileScreen(
     onSetMessage: (MessageWithAction) -> Unit = {},
     onToggleRecurring: (Boolean) -> Unit = {},
     onClickTitle: () -> Unit = {},
+    onSetTaskReminder: (LocalDateTime, Task) -> Unit = { _, _ -> },
 ) {
     val dim = LocalDim.current
     val haptic = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
     val pileOffset = remember { Animatable(0f) }
+    var remindersForTask by remember { mutableStateOf<Task?>(null) }
 
     val focusManager = LocalFocusManager.current
     var taskTextValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -198,6 +211,7 @@ fun PileScreen(
             .pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     focusManager.clearFocus()
+                    remindersForTask = null // clear reminders when tapping outside
                 })
             },
         verticalArrangement = Arrangement.Bottom,
@@ -259,7 +273,12 @@ fun PileScreen(
                             }
                         },
                         onDelete = onDelete,
-                        onTaskClick = onClick
+                        onTaskClick = onClick,
+                        onTaskLongPress = {
+                            if (it.reminder == null) {
+                                remindersForTask = it
+                            }
+                        }
                     )
                     Column(Modifier.fillMaxSize()) {
                         AnimatedVisibility(
@@ -271,6 +290,17 @@ fun PileScreen(
                                 Modifier.fillMaxSize(),
                                 viewState.noTasksYet
                             )
+                        }
+                    }
+                }
+                AnimatedVisibility(remindersForTask != null) {
+                    Row(
+                        Modifier.padding(horizontal = dim.large)
+                            .horizontalScroll(rememberScrollState())
+                    ) {
+                        ReminderTimeSuggestions {
+                            remindersForTask?.let { task -> onSetTaskReminder(it, task) }
+                            remindersForTask = null
                         }
                     }
                 }
@@ -286,7 +316,12 @@ fun PileScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AddTaskField(
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).onFocusChanged {
+                            // clear reminders when focused
+                            if (it.isFocused) {
+                                remindersForTask = null
+                            }
+                        },
                         value = taskTextValue,
                         onChange = {
                             if (it.text.length <= titleCharacterLimit) {

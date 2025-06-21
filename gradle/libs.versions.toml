@@ -1,5 +1,5 @@
 [versions]
-adaptive = "1.1.1"
+adaptive = "1.1.2"
 agp = "8.10.1"
 datastorePreferences = "1.1.7"
 jmdns = "3.6.1"

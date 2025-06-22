@@ -15,6 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.dk.piley.util.getActivityOrNull
+import org.jetbrains.compose.resources.stringResource
+import piley.composeapp.generated.resources.Res
+import piley.composeapp.generated.resources.notification_permission_dialog_confirm_button
+import piley.composeapp.generated.resources.notification_permission_dialog_description
+import piley.composeapp.generated.resources.notification_permission_dialog_title
 
 /**
  * Notification permission handler that requests the permission and shows a dialog if denied
@@ -70,8 +75,11 @@ private fun NotificationPermissionHandlerInternal(
             }
         }
     if (!permissionGranted && launch) {
-        RequestNotificationPermissionDialog(
+        RequestPermissionDialog(
             rationaleOpen,
+            title = stringResource(Res.string.notification_permission_dialog_title),
+            description = stringResource(Res.string.notification_permission_dialog_description),
+            confirmText = stringResource(Res.string.notification_permission_dialog_confirm_button),
             onDismiss = { rationaleOpen = false },
             onLaunchPermissionRequest = { launcher.launch(Manifest.permission.POST_NOTIFICATIONS) }
         )

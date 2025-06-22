@@ -149,7 +149,6 @@ fun TaskDetailScreen(
     var completeRecurringDialogOpen by remember { mutableStateOf(false) }
     var confirmDeleteDialogOpen by remember { mutableStateOf(false) }
     var notificationPermissionGranted by remember { mutableStateOf(false) }
-    var calendarPermissionGranted by remember { mutableStateOf(false) }
 
     NotificationPermissionHandler(sheetState.hasExpandedState) {
         notificationPermissionGranted = it
@@ -217,7 +216,8 @@ fun TaskDetailScreen(
             recurringTimeRange = viewState.task.recurringTimeRange,
             onDismiss = { showBottomSheet = false },
             useNowAsReminderDate = viewState.task.nowAsReminderTime,
-            notificationPermissionGranted = notificationPermissionGranted
+            notificationPermissionGranted = notificationPermissionGranted,
+            syncWithCalendar = viewState.task.syncWithCalendar
         )
     }
 

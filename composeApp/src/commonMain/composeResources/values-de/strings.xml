@@ -95,6 +95,11 @@
     <string name="notification_permission_dialog_description">Diese App benötigt die Berechtigung für Benachrichtigungen, um dir Reminder zu deinen Tasks zu zeigen.</string>
     <string name="notification_permission_dialog_confirm_button">Berechtigung geben</string>
     <string name="reminder_repeat_frequency_value">Wiederholt sich alle %1$s</string>
+    <!-- calendar permission dialog -->
+    <string name="calendar_permission_dialog_title">Erlaubnis für Kalender erforderlich</string>
+    <string name="calendar_permission_dialog_description">Diese App benötigt die Berechtigung, um deine Tasks in deinem Kalender anzuzeigen.</string>
+    <string name="calendar_permission_dialog_confirm_button">Berechtigung geben</string>
+    <string name="sync_with_calendar_label">Mit Kalender synchronisieren</string>
 
     <!--preferences and enums-->
     <string-array name="night_modes">

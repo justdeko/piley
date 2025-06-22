@@ -124,7 +124,8 @@ class TaskDetailViewModel(
                     isRecurring = reminderState.recurring,
                     recurringFrequency = reminderState.recurringFrequency,
                     recurringTimeRange = reminderState.recurringTimeRange,
-                    nowAsReminderTime = reminderState.nowAsReminderTime
+                    nowAsReminderTime = reminderState.nowAsReminderTime,
+                    syncWithCalendar = reminderState.syncWithCalendar
                 )
             )
             // dismiss existing alarms and notification for this task
@@ -135,7 +136,9 @@ class TaskDetailViewModel(
                 task = state.value.task,
                 actionTitles = taskRepository.getReminderActionTitles()
             )
-            calendarSyncManager.addReminder(state.value.task)
+            if (reminderState.syncWithCalendar) {
+                calendarSyncManager.addReminder(state.value.task)
+            }
         }
     }
 

@@ -72,6 +72,7 @@ fun TaskDetailScreen(
             userRepository = Piley.getModule().userRepository,
             reminderManager = Piley.getModule().reminderManager,
             notificationManager = Piley.getModule().notificationManager,
+            calendarSyncManager = Piley.getModule().taskCalendarSyncManager,
             savedStateHandle = createSavedStateHandle()
         )
     },
@@ -148,6 +149,7 @@ fun TaskDetailScreen(
     var completeRecurringDialogOpen by remember { mutableStateOf(false) }
     var confirmDeleteDialogOpen by remember { mutableStateOf(false) }
     var notificationPermissionGranted by remember { mutableStateOf(false) }
+    var calendarPermissionGranted by remember { mutableStateOf(false) }
 
     NotificationPermissionHandler(sheetState.hasExpandedState) {
         notificationPermissionGranted = it

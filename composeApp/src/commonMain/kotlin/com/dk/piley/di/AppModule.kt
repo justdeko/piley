@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
 import com.dk.piley.model.backup.IDatabaseExporter
+import com.dk.piley.model.calendar.TaskCalendarSyncManager
 import com.dk.piley.model.navigation.NavigationEventRepository
 import com.dk.piley.model.navigation.ShortcutEventRepository
 import com.dk.piley.model.notification.NotificationRepository
@@ -44,6 +45,7 @@ interface AppModule {
     val databaseExporter: IDatabaseExporter
     val syncManager: ISyncManager
     val syncCoordinator: SyncCoordinator
+    val taskCalendarSyncManager: TaskCalendarSyncManager
 }
 
 class AppModuleImpl(
@@ -53,6 +55,7 @@ class AppModuleImpl(
     override val notificationManager: INotificationManager,
     override val databaseExporter: IDatabaseExporter,
     override val syncManager: ISyncManager,
+    override val taskCalendarSyncManager: TaskCalendarSyncManager,
     dataStorePath: String,
 ) : AppModule {
 

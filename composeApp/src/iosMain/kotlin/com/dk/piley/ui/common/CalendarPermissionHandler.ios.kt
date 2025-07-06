@@ -24,13 +24,18 @@ actual fun CalendarPermissionHandler(
                 eventStore.requestFullAccessToRemindersWithCompletion { granted, error ->
                     error?.let { println("Error granting permission: $error") }
                     setPermissionGranted(granted)
+                    println("Permission granted: $granted")
                 }
             } else {
                 setPermissionGranted(false)
             }
         }
 
-        EKAuthorizationStatusRestricted, EKAuthorizationStatusDenied -> setPermissionGranted(false)
+        EKAuthorizationStatusRestricted, EKAuthorizationStatusDenied -> {
+            setPermissionGranted(false)
+            println("Permission denied or restricted")
+        }
+
         else -> setPermissionGranted(false)
     }
 }

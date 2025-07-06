@@ -199,7 +199,7 @@
     <string name="calendar_permission_dialog_title">Calendar permission needed</string>
     <string name="calendar_permission_dialog_description">This app needs this permission to show you reminders about your tasks in your calendar.</string>
     <string name="calendar_permission_dialog_confirm_button">Grant Permission</string>
-    <string name="sync_with_calendar_label">Sync with calendar</string>
+    <string name="sync_with_calendar_label">Create calendar reminder</string>
     <!--preferences and enums-->
     <string-array name="night_modes">
         <item>System</item>

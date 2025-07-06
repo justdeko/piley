@@ -31,9 +31,8 @@ internal const val PILE_DATABASE_NAME = "piley-db"
             to = 6,
             spec = FiveToSixMigrationSpec::class
         ),
-        AutoMigration(6, 7)
     ],
-    version = 7,
+    version = 6,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

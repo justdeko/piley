@@ -99,7 +99,7 @@
     <string name="calendar_permission_dialog_title">Erlaubnis für Kalender erforderlich</string>
     <string name="calendar_permission_dialog_description">Diese App benötigt die Berechtigung, um deine Tasks in deinem Kalender anzuzeigen.</string>
     <string name="calendar_permission_dialog_confirm_button">Berechtigung geben</string>
-    <string name="sync_with_calendar_label">Mit Kalender synchronisieren</string>
+    <string name="sync_with_calendar_label">Kalenderereignis erstellen</string>
 
     <!--preferences and enums-->
     <string-array name="night_modes">

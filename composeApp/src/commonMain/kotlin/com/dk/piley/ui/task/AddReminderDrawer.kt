@@ -22,6 +22,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -73,7 +74,6 @@ import piley.composeapp.generated.resources.update_reminder_button
  * @param onDeleteReminder on delete reminder
  * @param onDismiss on dismiss drawer
  * @param notificationPermissionGranted whether the notification permission was granted
- * @param syncWithCalendar whether to sync with calendar
  */
 @Composable
 fun AddReminderDrawer(
@@ -88,7 +88,6 @@ fun AddReminderDrawer(
     onDeleteReminder: () -> Unit = {},
     onDismiss: () -> Unit = {},
     notificationPermissionGranted: Boolean = false,
-    syncWithCalendar: Boolean = false
 ) {
     ModalBottomSheet(
         sheetState = sheetState,
@@ -109,7 +108,6 @@ fun AddReminderDrawer(
             recurringFrequency = recurringFrequency,
             useNowAsReminderTime = useNowAsReminderDate,
             notificationPermissionGranted = notificationPermissionGranted,
-            syncWithCalendar = syncWithCalendar
         )
     }
 }
@@ -125,7 +123,6 @@ fun AddReminderContent(
     recurringFrequency: Int = 1,
     useNowAsReminderTime: Boolean = false,
     notificationPermissionGranted: Boolean = false,
-    syncWithCalendar: Boolean = false
 ) {
     val dim = LocalDim.current
     var localDate: LocalDate? by remember { mutableStateOf(null) }
@@ -136,12 +133,19 @@ fun AddReminderContent(
     var datePickerVisible by remember { mutableStateOf(false) }
     var timePickerVisible by remember { mutableStateOf(false) }
     var nowAsReminderTime by remember { mutableStateOf(useNowAsReminderTime) }
-    var syncCalendar by remember { mutableStateOf(syncWithCalendar) }
-    var calendarSyncSet by remember { mutableStateOf(false) }
+    var createCalendarReminder by remember { mutableStateOf(false) }
+    var calendarPermissionGranted by remember { mutableStateOf(false) }
 
-    CalendarPermissionHandler(calendarSyncSet) {
-        syncCalendar = it
-        calendarSyncSet = false
+
+    CalendarPermissionHandler(createCalendarReminder) {
+        createCalendarReminder = it
+    }
+
+    LaunchedEffect(calendarPermissionGranted) {
+        if (!calendarPermissionGranted) {
+            // Reset calendar reminder if permission is not granted
+            createCalendarReminder = false
+        }
     }
 
     if (datePickerVisible) {
@@ -224,6 +228,7 @@ fun AddReminderContent(
             description = stringResource(Res.string.reminder_recurring_label),
             checked = recurring
         ) { recurring = it }
+
         AnimatedVisibility(recurring) {
             RecurringReminderSection(
                 modifier = Modifier.padding(horizontal = dim.large),
@@ -235,6 +240,7 @@ fun AddReminderContent(
                 onUseNowAsReminderTimeChange = { nowAsReminderTime = it }
             )
         }
+
         AnimatedVisibility(!notificationPermissionGranted) {
             Row(
                 Modifier
@@ -249,16 +255,15 @@ fun AddReminderContent(
                 )
             }
         }
+
         TextWithCheckbox(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = dim.large),
-            description = stringResource( Res.string.sync_with_calendar_label),
-            checked = syncCalendar
-        ) {
-            calendarSyncSet = true
-            syncCalendar = it
-        }
+            description = stringResource(Res.string.sync_with_calendar_label),
+            checked = createCalendarReminder
+        ) { createCalendarReminder = it }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -282,7 +287,7 @@ fun AddReminderContent(
                                         recurringTimeRange = timeRange,
                                         recurringFrequency = frequency,
                                         nowAsReminderTime = nowAsReminderTime,
-                                        syncWithCalendar = syncCalendar
+                                        syncWithCalendar = createCalendarReminder
                                     )
                                 )
                             }
@@ -299,7 +304,7 @@ fun AddReminderContent(
                                 recurringTimeRange = timeRange,
                                 recurringFrequency = frequency,
                                 nowAsReminderTime = nowAsReminderTime,
-                                syncWithCalendar = syncCalendar
+                                syncWithCalendar = createCalendarReminder
                             )
                         )
                     }

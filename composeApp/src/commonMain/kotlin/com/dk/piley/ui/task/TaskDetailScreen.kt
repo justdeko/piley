@@ -217,7 +217,6 @@ fun TaskDetailScreen(
             onDismiss = { showBottomSheet = false },
             useNowAsReminderDate = viewState.task.nowAsReminderTime,
             notificationPermissionGranted = notificationPermissionGranted,
-            syncWithCalendar = viewState.task.syncWithCalendar
         )
     }
 

@@ -52,6 +52,4 @@ data class Task(
     val status: TaskStatus = TaskStatus.DEFAULT,
     @ColumnInfo(defaultValue = "0")
     val averageCompletionTimeInHours: Long = 0,
-    @ColumnInfo(defaultValue = "0")
-    val syncWithCalendar: Boolean = false
 )

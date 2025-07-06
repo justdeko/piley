@@ -124,7 +124,6 @@ class TaskDetailViewModel(
                 recurringFrequency = reminderState.recurringFrequency,
                 recurringTimeRange = reminderState.recurringTimeRange,
                 nowAsReminderTime = reminderState.nowAsReminderTime,
-                syncWithCalendar = reminderState.syncWithCalendar
             )
             repository.insertTask(task)
             // dismiss existing alarms and notification for this task

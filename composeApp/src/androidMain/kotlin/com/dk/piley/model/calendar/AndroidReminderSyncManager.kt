@@ -39,12 +39,6 @@ class AndroidReminderSyncManager(private val context: Context) : TaskCalendarSyn
         cr.insert(Reminders.CONTENT_URI, reminderValues)
     }
 
-    override suspend fun removeReminder(task: Task) {
-        val selection = "${CalendarContract.Events.DESCRIPTION} LIKE ?"
-        val args = arrayOf("%taskId:${task.id}%")
-        cr.delete(CalendarContract.Events.CONTENT_URI, selection, args)
-    }
-
     private fun getPrimaryCalendarId(): Long? {
         val projection =
             arrayOf(CalendarContract.Calendars._ID, CalendarContract.Calendars.IS_PRIMARY)

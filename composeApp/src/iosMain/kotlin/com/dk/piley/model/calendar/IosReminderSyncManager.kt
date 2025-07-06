@@ -4,6 +4,7 @@ import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.EventKit.EKAlarm
+import platform.EventKit.EKAuthorizationStatusAuthorized
 import platform.EventKit.EKEntityType
 import platform.EventKit.EKEventStore
 import platform.EventKit.EKRecurrenceFrequency
@@ -17,18 +18,13 @@ import platform.Foundation.NSCalendarUnitMonth
 import platform.Foundation.NSCalendarUnitYear
 import platform.Foundation.NSDate
 import platform.Foundation.dateWithTimeIntervalSince1970
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @OptIn(ExperimentalForeignApi::class)
 class IosReminderSyncManager : TaskCalendarSyncManager {
     private val store = EKEventStore()
 
-    private suspend fun ensureAccess(): Boolean = suspendCoroutine { cont ->
-        store.requestAccessToEntityType(EKEntityType.EKEntityTypeReminder) { granted, _ ->
-            cont.resume(granted)
-        }
-    }
+    private fun ensureAccess(): Boolean =
+        EKEventStore.Companion.authorizationStatusForEntityType(EKEntityType.EKEntityTypeReminder) == EKAuthorizationStatusAuthorized
 
     override suspend fun addReminder(task: Task) {
         if (!ensureAccess() || task.reminder == null) return
@@ -44,7 +40,7 @@ class IosReminderSyncManager : TaskCalendarSyncManager {
         )
 
         reminder.dueDateComponents = dateComponents
-        reminder.notes = "taskId:${task.id}"
+        reminder.notes = task.description
 
         val alarm = EKAlarm.alarmWithAbsoluteDate(
             NSDate.dateWithTimeIntervalSince1970(task.reminder.toEpochMilliseconds() / 1000.0)
@@ -68,26 +64,4 @@ class IosReminderSyncManager : TaskCalendarSyncManager {
 
         store.saveReminder(reminder, commit = true, error = null)
     }
-
-    override suspend fun removeReminder(task: Task) {
-        if (!ensureAccess()) return
-
-        val predicate = store.predicateForRemindersInCalendars(null)
-
-        val matching = suspendCoroutine { cont ->
-            store.fetchRemindersMatchingPredicate(predicate) { remindersAny ->
-                val reminders = remindersAny?.filterIsInstance<EKReminder>() ?: emptyList()
-                val filtered = reminders.filter { reminder ->
-                    reminder.notes?.contains("taskId:${task.id}") == true
-                }
-                cont.resume(filtered)
-            }
-        }
-
-        matching.forEach { reminder ->
-            store.removeReminder(reminder, commit = true, error = null)
-        }
-    }
-
-
 }

@@ -5,7 +5,6 @@ import com.dk.piley.model.task.Task
 
 interface TaskCalendarSyncManager {
     suspend fun addReminder(task: Task)
-    suspend fun removeReminder(task: Task)
 
     fun Task.generateRRule(): String {
         val freq = when (recurringTimeRange) {

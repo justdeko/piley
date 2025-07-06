@@ -118,26 +118,25 @@ class TaskDetailViewModel(
             it.copy(reminderDateTimeText = reminderState.reminder.dateTimeString())
         }
         viewModelScope.launch {
-            repository.insertTask(
-                state.value.task.copy(
-                    reminder = reminderState.reminder.toInstantWithOffset(),
-                    isRecurring = reminderState.recurring,
-                    recurringFrequency = reminderState.recurringFrequency,
-                    recurringTimeRange = reminderState.recurringTimeRange,
-                    nowAsReminderTime = reminderState.nowAsReminderTime,
-                    syncWithCalendar = reminderState.syncWithCalendar
-                )
+            val task = state.value.task.copy(
+                reminder = reminderState.reminder.toInstantWithOffset(),
+                isRecurring = reminderState.recurring,
+                recurringFrequency = reminderState.recurringFrequency,
+                recurringTimeRange = reminderState.recurringTimeRange,
+                nowAsReminderTime = reminderState.nowAsReminderTime,
+                syncWithCalendar = reminderState.syncWithCalendar
             )
+            repository.insertTask(task)
             // dismiss existing alarms and notification for this task
             dismissAlarmAndNotification()
             // start new reminder
             reminderManager.startReminder(
                 reminderTime = reminderState.reminder.toInstantWithOffset(),
-                task = state.value.task,
+                task = task,
                 actionTitles = taskRepository.getReminderActionTitles()
             )
             if (reminderState.syncWithCalendar) {
-                calendarSyncManager.addReminder(state.value.task)
+                calendarSyncManager.addReminder(task)
             }
         }
     }

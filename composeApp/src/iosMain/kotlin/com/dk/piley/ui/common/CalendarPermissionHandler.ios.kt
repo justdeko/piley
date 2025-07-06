@@ -14,19 +14,22 @@ actual fun CalendarPermissionHandler(
     setPermissionGranted: (Boolean) -> Unit
 ) {
     val eventStore = EKEventStore()
-    val status = eventStore.authorizationStatusForEntityType(EKEntityType.EKEntityTypeEvent)
+    val status =
+        EKEventStore.Companion.authorizationStatusForEntityType(EKEntityType.EKEntityTypeReminder)
 
     when (status) {
         EKAuthorizationStatusAuthorized -> setPermissionGranted(true)
         EKAuthorizationStatusNotDetermined -> {
             if (launch) {
-                eventStore.requestAccessToEntityType(EKEntityType.EKEntityTypeEvent) { granted, _ ->
+                eventStore.requestFullAccessToRemindersWithCompletion { granted, error ->
+                    error?.let { println("Error granting permission: $error") }
                     setPermissionGranted(granted)
                 }
             } else {
                 setPermissionGranted(false)
             }
         }
+
         EKAuthorizationStatusRestricted, EKAuthorizationStatusDenied -> setPermissionGranted(false)
         else -> setPermissionGranted(false)
     }

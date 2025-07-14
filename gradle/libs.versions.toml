@@ -18,7 +18,7 @@ kotlinx-coroutines = "1.10.2"
 sqliteBundled = "2.5.2"
 filekit = "0.10.0-beta04"
 reorderable = "2.5.1"
-ktor = "3.2.1"
+ktor = "3.2.2"
 
 
 [libraries]

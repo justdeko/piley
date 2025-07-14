@@ -138,13 +138,14 @@ fun AddReminderContent(
 
 
     CalendarPermissionHandler(createCalendarReminder) {
-        createCalendarReminder = it
+        calendarPermissionGranted = it
     }
 
-    LaunchedEffect(calendarPermissionGranted) {
+    LaunchedEffect(createCalendarReminder) {
         if (!calendarPermissionGranted) {
             // Reset calendar reminder if permission is not granted
             createCalendarReminder = false
+            // TODO maybe show a snackbar or dialog to inform the user
         }
     }
 
@@ -256,6 +257,7 @@ fun AddReminderContent(
             }
         }
 
+        // TODO: only show or enable when reminder values are set
         TextWithCheckbox(
             modifier = Modifier
                 .fillMaxWidth()

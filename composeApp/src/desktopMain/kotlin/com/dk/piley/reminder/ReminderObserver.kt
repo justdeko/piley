@@ -4,7 +4,7 @@ import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.util.toLocalDateTimeMinutes
 import kotlinx.coroutines.flow.first
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 class ReminderObserver(
     private val notificationManager: INotificationManager,

@@ -1,10 +1,10 @@
 [versions]
 adaptive = "1.1.2"
-agp = "8.11.0"
+agp = "8.11.1"
 datastorePreferences = "1.1.7"
 jmdns = "3.6.1"
 kotlin = "2.2.0"
-kotlinxDatetime = "0.6.2"
+kotlinxDatetime = "0.7.1-0.6.x-compat"
 activityCompose = "1.10.1"
 kotlinxSerializationJson = "1.9.0"
 material = "1.12.0"
@@ -13,12 +13,13 @@ ksp = "2.2.0-2.0.2"
 navigationCompose = "2.8.0-alpha13"
 room = "2.7.2"
 compose-plugin = "1.8.2"
-androidx-lifecycle = "2.9.1"
+# 2.9.1 breaks desktop, check before updating
+androidx-lifecycle = "2.8.4"
 kotlinx-coroutines = "1.10.2"
 sqliteBundled = "2.5.2"
 filekit = "0.10.0-beta04"
 reorderable = "2.5.1"
-ktor = "3.2.1"
+ktor = "3.2.2"
 
 
 [libraries]

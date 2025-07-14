@@ -37,7 +37,6 @@ import com.dk.piley.util.MediumSpacer
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.navigateClearBackstack
 import com.dk.piley.util.toLocalDateTime
-import kotlinx.datetime.Clock
 import org.jetbrains.compose.resources.stringResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.clear_statistics_dialog_confirm
@@ -47,6 +46,7 @@ import piley.composeapp.generated.resources.delete_pile_button_text
 import piley.composeapp.generated.resources.delete_pile_dialog_confirm_button
 import piley.composeapp.generated.resources.delete_pile_dialog_description
 import piley.composeapp.generated.resources.delete_pile_dialog_title
+import kotlin.time.Clock
 
 /**
  * Pile detail screen

@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.core.app.AlarmManagerCompat
 import com.dk.piley.model.task.Task
 import com.dk.piley.receiver.ReminderAlarmReceiver
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 /**
  * Reminder manager that handles task reminders

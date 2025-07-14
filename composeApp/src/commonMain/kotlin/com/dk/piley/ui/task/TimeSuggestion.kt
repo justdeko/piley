@@ -3,7 +3,6 @@ package com.dk.piley.ui.task
 import androidx.compose.runtime.Composable
 import com.dk.piley.util.timeString
 import com.dk.piley.util.toLocalDateTime
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -15,6 +14,7 @@ import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.time_of_day
 import piley.composeapp.generated.resources.time_suggestion
 import piley.composeapp.generated.resources.tomorrow_prefix
+import kotlin.time.Clock
 
 /**
  * Time suggestion enum representing the suggested reminder value,

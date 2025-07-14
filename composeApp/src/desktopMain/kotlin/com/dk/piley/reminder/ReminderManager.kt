@@ -1,7 +1,7 @@
 package com.dk.piley.reminder
 
 import com.dk.piley.model.task.Task
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 class ReminderManager : IReminderManager {
     override suspend fun startReminder(

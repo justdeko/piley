@@ -3,7 +3,7 @@ package com.dk.piley.model
 import androidx.room.TypeConverter
 import com.dk.piley.model.pile.PileColor
 import com.dk.piley.model.pile.hexToPileColor
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 /**
  * Converters to convert complex entity types to primitive ones

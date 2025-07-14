@@ -1,7 +1,6 @@
 package com.dk.piley.util
 
 import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -11,6 +10,7 @@ import kotlinx.datetime.format.char
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Instant
 
 /**
  * Convert Instant to local date time using a specific timezone
@@ -33,7 +33,7 @@ fun Instant.toLocalDateTimeMinutes(timeZone: TimeZone = TimeZone.currentSystemDe
     return LocalDateTime(
         localDateTime.year,
         localDateTime.month,
-        localDateTime.dayOfMonth,
+        localDateTime.day,
         localDateTime.hour,
         localDateTime.minute
     )
@@ -61,7 +61,7 @@ fun LocalDateTime.dateTimeString(): String {
         chars(":")
         minute()
         chars(" ")
-        dayOfMonth()
+        day()
         chars(".")
         monthNumber()
         chars(".")
@@ -96,7 +96,7 @@ fun LocalTime.timeString(): String {
  */
 // TODO consider locale
 fun LocalDate.dateString(): String {
-    return this.format(LocalDate.Format { dayOfMonth();char('.');monthNumber();char('.');year() })
+    return this.format(LocalDate.Format { day();char('.');monthNumber();char('.');year() })
 }
 
 /**

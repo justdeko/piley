@@ -22,7 +22,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +52,7 @@ import piley.composeapp.generated.resources.add_reminder_title
 import piley.composeapp.generated.resources.date_selection_placeholder
 import piley.composeapp.generated.resources.delete_reminder_button
 import piley.composeapp.generated.resources.edit_reminder_title
+import piley.composeapp.generated.resources.no_calendar_permission_warning
 import piley.composeapp.generated.resources.no_notification_permission_reminder_warning
 import piley.composeapp.generated.resources.reminder_recurring_label
 import piley.composeapp.generated.resources.set_reminder_button
@@ -134,19 +134,12 @@ fun AddReminderContent(
     var timePickerVisible by remember { mutableStateOf(false) }
     var nowAsReminderTime by remember { mutableStateOf(useNowAsReminderTime) }
     var createCalendarReminder by remember { mutableStateOf(false) }
-    var calendarPermissionGranted by remember { mutableStateOf(false) }
+    var showCalendarPermissionDeniedMessage by remember { mutableStateOf(false) }
 
 
     CalendarPermissionHandler(createCalendarReminder) {
-        calendarPermissionGranted = it
-    }
-
-    LaunchedEffect(createCalendarReminder) {
-        if (!calendarPermissionGranted) {
-            // Reset calendar reminder if permission is not granted
-            createCalendarReminder = false
-            // TODO maybe show a snackbar or dialog to inform the user
-        }
+        createCalendarReminder = it
+        showCalendarPermissionDeniedMessage = !it
     }
 
     if (datePickerVisible) {
@@ -257,14 +250,26 @@ fun AddReminderContent(
             }
         }
 
-        // TODO: only show or enable when reminder values are set
-        TextWithCheckbox(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = dim.large),
-            description = stringResource(Res.string.sync_with_calendar_label),
-            checked = createCalendarReminder
-        ) { createCalendarReminder = it }
+        AnimatedVisibility(localTime != null && localDate != null || initialDateTime != null) {
+            TextWithCheckbox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dim.large),
+                description = stringResource(Res.string.sync_with_calendar_label),
+                checked = createCalendarReminder
+            ) { createCalendarReminder = it }
+
+            AnimatedVisibility(showCalendarPermissionDeniedMessage) {
+                Text(
+                    stringResource(Res.string.no_calendar_permission_warning),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dim.large, vertical = dim.small)
+                )
+            }
+        }
 
         Row(
             modifier = Modifier

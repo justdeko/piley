@@ -79,6 +79,7 @@
     <string name="reminder_recurring_label">Wiederholt sich</string>
     <string name="reminder_frequency_label">Häufigkeit</string>
     <string name="no_notification_permission_reminder_warning">Dieser Reminder wird nicht angezeigt, weil du keine Berechtigung für Benachrichtigungen gegeben hast.</string>
+    <string name="no_calendar_permission_warning">Du kannst diesen Reminder nicht zum Kalender hinzufügen, weil du keine Berechtigung dafür gegeben hast.</string>
     <string name="set_reminder_button">Reminder setzen</string>
     <string name="reminder_set_message">Reminder gesetzt</string>
     <string name="update_reminder_button">Aktualisieren</string>

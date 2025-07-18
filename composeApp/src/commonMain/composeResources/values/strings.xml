@@ -165,6 +165,7 @@
     <string name="reminder_recurring_label">Recurring</string>
     <string name="reminder_frequency_label">Frequency</string>
     <string name="no_notification_permission_reminder_warning">This reminder won't show up because you haven't enabled notifications.</string>
+    <string name="no_calendar_permission_warning">You can't add this reminder to your calendar because you haven't granted the permission.</string>
     <string name="set_reminder_button">Set Reminder</string>
     <string name="update_reminder_button">Update</string>
     <string name="delete_reminder_button">Delete</string>

@@ -34,9 +34,7 @@ actual fun CalendarPermissionHandler(
                     ContextCompat.checkSelfPermission(
                         context,
                         Manifest.permission.WRITE_CALENDAR
-                    ) == PackageManager.PERMISSION_GRANTED).also {
-                setPermissionGranted(it)
-            }
+                    ) == PackageManager.PERMISSION_GRANTED)
         )
     }
     var rationaleOpen by remember { mutableStateOf(false) }

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html dir="auto" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>piley</title>
+
+    <meta name="description" content="Small To-Do app that uses piles to manage tasks"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" href="assets/favicon.png"/>
+
+    <!-- Open Graph properties -->
+    <meta property="og:url" content="https://justdeko.github.io/piley/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="piley">
+    <meta property="og:description" content="Small To-Do app that uses piles to manage tasks">
+    <meta property="og:image" content="https://justdeko.github.io/piley/assets/og-image.png">
+
+    <!-- Twitter properties -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="justdeko.github.io">
+    <meta property="twitter:url" content="https://justdeko.github.io/piley/">
+    <meta name="twitter:title" content="piley">
+    <meta name="twitter:description" content="Small To-Do app that uses piles to manage tasks">
+    <meta name="twitter:image" content="https://justdeko.github.io/piley/assets/og-image.png">
+
+    <link rel="stylesheet" href="assets/tobi.css"/>
+    <link rel="stylesheet" href="assets/style.css"/>
+
+</head>
+<body>
+<main>
+    <header class="app__header container">
+        <div class="app__logo-wrapper"><img class="app__logo" src="content/image/app-icon.png"
+                                            alt="piley"></div>
+        <div class="app__infos">
+            <h1 class="app__name">piley</h1>
+            <p class="app__description">To-Do app for Android that uses piles to manage your
+                tasks.</p>
+            <div class="app__buttons app__buttons--desktop">
+                <a href="https://play.google.com/store/apps/details?id=com.dk.piley"
+                   class="app__button-play" target="_blank"
+                   title="Get on Google Play">
+                    <img src="assets/google-play-badge.png" alt="Get on Google Play">
+                </a>
+                <a href="https://github.com/justdeko/piley"
+                   class="app__button-play" target="_blank"
+                   title="Get on Github">
+                    <img src="assets/github-badge.png" alt="Get on Github">
+                </a>
+            </div>
+        </div>
+    </header>
+    <div class="app__buttons app__buttons--mobile container">
+        <a href="https://play.google.com/store/apps/details?id=com.dk.piley"
+           class="app__button-play" target="_blank"
+           title="Get on Google Play">
+            <img src="assets/google-play-badge.png" alt="Get on Google Play">
+        </a>
+        <a href="https://github.com/justdeko/piley"
+           class="app__button-play" target="_blank"
+           title="Get on Github">
+            <img src="assets/github-badge.png" alt="Get on Github">
+        </a>
+    </div>
+    <section class="app__screenshots app__section">
+        <div class="container">
+            <h2 class="app__section-title">Screenshots</h2>
+        </div>
+        <div class="app__screenshots-wrapper container-desktop">
+            <div class="app__screenshots-list">
+                <a href="content/image/screenshot-pile.png" class="lightbox">
+                    <img src="content/image/screenshot-pile.png" class="app__screenshot"
+                         alt=""/>
+                </a>
+                <a href="content/image/screenshot-pile-overview.png" class="lightbox">
+                    <img src="content/image/screenshot-pile-overview.png" class="app__screenshot"
+                         alt=""/>
+                </a>
+                <a href="content/image/screenshot-recurring-tasks.png" class="lightbox">
+                    <img src="content/image/screenshot-recurring-tasks.png" class="app__screenshot"
+                         alt=""/>
+                </a>
+                <a href="content/image/screenshot-profile.png" class="lightbox">
+                    <img src="content/image/screenshot-profile.png" class="app__screenshot"
+                         alt=""/>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="app__fulldescription app__section container">
+        <h2 class="app__section-title">Small overview</h2>
+        <div class="app__fulldescription-content">
+            <p>What you can currently do with piley:</p>
+            <ul>
+                <li>Create tasks in a pile and stack them up</li>
+                <li>Create reminders for tasks and get notifications</li>
+                <li>Create new piles to organize your tasks</li>
+                <li>See statistics about piles and tasks</li>
+            </ul>
+
+        </div>
+    </section>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="footer__container">
+            <p class="footer__love">
+                <script>document.write((new Date()).getFullYear());</script>
+            <noscript>2023</noscript>
+            &mdash;
+            App by <a href="https://github.com/justdeko" style="color:#1565C0" target="_blank">justdeko</a>
+            &mdash; Template by <a href="https://www.sandoche.com" target="_blank">Sandoche</a>
+            </p>
+            <ul class="footer__links">
+                <li class="footer__link">
+                    <a href="https://github.com/justdeko/piley" target="_blank">GitHub</a>
+                </li>
+                <li class="footer__link">
+                    <a href="privacy.html">Privacy</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<script type="text/javascript" src="assets/tobi.min.js"></script>
+<script>
+			window.onload = function () {
+				var tobi = new Tobi();
+			};
+</script>
+
+</body>
+</html>

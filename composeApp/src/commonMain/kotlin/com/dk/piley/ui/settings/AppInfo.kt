@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,10 +52,10 @@ fun AppInfo(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center
         )
-        IconButton(onClick = { uriHandler.openUri("https://github.com/justdeko/piley/issues") }) {
+        IconButton(onClick = { uriHandler.openUri("https://denisk.dev/piley/") }) {
             Icon(
-                Icons.Filled.BugReport,
-                "report a bug",
+                Icons.Filled.Info,
+                "website link",
                 tint = MaterialTheme.colorScheme.tertiary
             )
         }

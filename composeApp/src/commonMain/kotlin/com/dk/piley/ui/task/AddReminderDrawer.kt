@@ -40,6 +40,8 @@ import com.dk.piley.ui.common.ReminderTimePicker
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
+import com.dk.piley.util.Platform
+import com.dk.piley.util.appPlatform
 import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.timeString
@@ -250,7 +252,7 @@ fun AddReminderContent(
             }
         }
 
-        AnimatedVisibility(localTime != null && localDate != null || initialDateTime != null) {
+        AnimatedVisibility(appPlatform != Platform.DESKTOP && (localTime != null && localDate != null || initialDateTime != null)) {
             TextWithCheckbox(
                 modifier = Modifier
                     .fillMaxWidth()

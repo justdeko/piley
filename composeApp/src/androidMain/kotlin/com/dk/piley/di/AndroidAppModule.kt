@@ -5,6 +5,8 @@ import com.dk.piley.model.PileDatabase
 import com.dk.piley.model.UserDatabase
 import com.dk.piley.model.backup.DatabaseExporter
 import com.dk.piley.model.backup.IDatabaseExporter
+import com.dk.piley.model.calendar.AndroidReminderSyncManager
+import com.dk.piley.model.calendar.TaskCalendarSyncManager
 import com.dk.piley.model.getPileDatabase
 import com.dk.piley.model.getUserDatabase
 import com.dk.piley.model.sync.ISyncManager
@@ -23,6 +25,7 @@ fun instantiateAppModule(context: Context): AppModuleImpl {
     val notificationManager: INotificationManager by lazy { NotificationManager(context) }
     val databaseExporter: IDatabaseExporter by lazy { DatabaseExporter(context) }
     val syncManager: ISyncManager by lazy { SyncManager(context) }
+    val taskCalendarSyncManager: TaskCalendarSyncManager = AndroidReminderSyncManager(context)
     return AppModuleImpl(
         pileDatabase = pileDatabase,
         userDatabase = userDatabase,
@@ -30,6 +33,7 @@ fun instantiateAppModule(context: Context): AppModuleImpl {
         notificationManager = notificationManager,
         databaseExporter = databaseExporter,
         dataStorePath = preferencesDataStorePath,
-        syncManager = syncManager
+        syncManager = syncManager,
+        taskCalendarSyncManager = taskCalendarSyncManager,
     )
 }

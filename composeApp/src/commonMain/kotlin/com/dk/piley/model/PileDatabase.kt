@@ -22,27 +22,15 @@ internal const val PILE_DATABASE_NAME = "piley-db"
 @Database(
     entities = [Pile::class, Task::class],
     autoMigrations = [
-        AutoMigration(
-            from = 1,
-            to = 2
-        ),
-        AutoMigration(
-            from = 2,
-            to = 3
-        ),
-        AutoMigration(
-            from = 3,
-            to = 4
-        ),
-        AutoMigration(
-            from = 4,
-            to = 5
-        ),
+        AutoMigration(1, 2),
+        AutoMigration(2, 3),
+        AutoMigration(3, 4),
+        AutoMigration(4, 5),
         AutoMigration(
             from = 5,
             to = 6,
             spec = FiveToSixMigrationSpec::class
-        )
+        ),
     ],
     version = 6,
     exportSchema = true

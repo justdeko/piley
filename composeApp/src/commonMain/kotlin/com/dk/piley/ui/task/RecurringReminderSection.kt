@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +18,6 @@ import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.toRecurringTimeRange
 import com.dk.piley.model.task.toText
 import com.dk.piley.ui.common.DropDown
-import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
@@ -92,9 +90,7 @@ fun RecurringReminderSection(
         )
         MediumSpacer()
         TextWithCheckbox(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = LocalDim.current.medium),
+            modifier = Modifier.fillMaxWidth(),
             description = stringResource(Res.string.reminder_use_now_description),
             checked = useNowAsReminderTime,
             onChecked = onUseNowAsReminderTimeChange

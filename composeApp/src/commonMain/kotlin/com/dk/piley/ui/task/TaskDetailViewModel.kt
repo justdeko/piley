@@ -3,6 +3,7 @@ package com.dk.piley.ui.task
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dk.piley.common.StatefulViewModel
+import com.dk.piley.model.calendar.TaskCalendarSyncManager
 import com.dk.piley.model.pile.PileRepository
 import com.dk.piley.model.task.RecurringTimeRange
 import com.dk.piley.model.task.Task
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
  * @property repository task repository entity
  * @property reminderManager user reminder manager entity
  * @property notificationManager user notification manager entity
+ * @property calendarSyncManager task calendar sync manager entity
  *
  * @param savedStateHandle saved state handle to receive task id passed through navigation
  */
@@ -38,6 +40,7 @@ class TaskDetailViewModel(
     private val userRepository: UserRepository,
     private val reminderManager: IReminderManager,
     private val notificationManager: INotificationManager,
+    private val calendarSyncManager: TaskCalendarSyncManager,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<TaskDetailViewState>(TaskDetailViewState()) {
 
@@ -115,23 +118,25 @@ class TaskDetailViewModel(
             it.copy(reminderDateTimeText = reminderState.reminder.dateTimeString())
         }
         viewModelScope.launch {
-            repository.insertTask(
-                state.value.task.copy(
-                    reminder = reminderState.reminder.toInstantWithOffset(),
-                    isRecurring = reminderState.recurring,
-                    recurringFrequency = reminderState.recurringFrequency,
-                    recurringTimeRange = reminderState.recurringTimeRange,
-                    nowAsReminderTime = reminderState.nowAsReminderTime
-                )
+            val task = state.value.task.copy(
+                reminder = reminderState.reminder.toInstantWithOffset(),
+                isRecurring = reminderState.recurring,
+                recurringFrequency = reminderState.recurringFrequency,
+                recurringTimeRange = reminderState.recurringTimeRange,
+                nowAsReminderTime = reminderState.nowAsReminderTime,
             )
+            repository.insertTask(task)
             // dismiss existing alarms and notification for this task
             dismissAlarmAndNotification()
             // start new reminder
             reminderManager.startReminder(
                 reminderTime = reminderState.reminder.toInstantWithOffset(),
-                task = state.value.task,
+                task = task,
                 actionTitles = taskRepository.getReminderActionTitles()
             )
+            if (reminderState.syncWithCalendar) {
+                calendarSyncManager.addReminder(task)
+            }
         }
     }
 

@@ -72,6 +72,7 @@ fun TaskDetailScreen(
             userRepository = Piley.getModule().userRepository,
             reminderManager = Piley.getModule().reminderManager,
             notificationManager = Piley.getModule().notificationManager,
+            calendarSyncManager = Piley.getModule().taskCalendarSyncManager,
             savedStateHandle = createSavedStateHandle()
         )
     },
@@ -215,7 +216,7 @@ fun TaskDetailScreen(
             recurringTimeRange = viewState.task.recurringTimeRange,
             onDismiss = { showBottomSheet = false },
             useNowAsReminderDate = viewState.task.nowAsReminderTime,
-            notificationPermissionGranted = notificationPermissionGranted
+            notificationPermissionGranted = notificationPermissionGranted,
         )
     }
 

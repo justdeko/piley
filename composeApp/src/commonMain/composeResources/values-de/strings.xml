@@ -79,6 +79,7 @@
     <string name="reminder_recurring_label">Wiederholt sich</string>
     <string name="reminder_frequency_label">Häufigkeit</string>
     <string name="no_notification_permission_reminder_warning">Dieser Reminder wird nicht angezeigt, weil du keine Berechtigung für Benachrichtigungen gegeben hast.</string>
+    <string name="no_calendar_permission_warning">Du kannst diesen Reminder nicht zum Kalender hinzufügen, weil du keine Berechtigung dafür gegeben hast.</string>
     <string name="set_reminder_button">Reminder setzen</string>
     <string name="reminder_set_message">Reminder gesetzt</string>
     <string name="update_reminder_button">Aktualisieren</string>
@@ -95,6 +96,11 @@
     <string name="notification_permission_dialog_description">Diese App benötigt die Berechtigung für Benachrichtigungen, um dir Reminder zu deinen Tasks zu zeigen.</string>
     <string name="notification_permission_dialog_confirm_button">Berechtigung geben</string>
     <string name="reminder_repeat_frequency_value">Wiederholt sich alle %1$s</string>
+    <!-- calendar permission dialog -->
+    <string name="calendar_permission_dialog_title">Erlaubnis für Kalender erforderlich</string>
+    <string name="calendar_permission_dialog_description">Diese App benötigt die Berechtigung, um deine Tasks in deinem Kalender anzuzeigen.</string>
+    <string name="calendar_permission_dialog_confirm_button">Berechtigung geben</string>
+    <string name="sync_with_calendar_label">Kalenderereignis erstellen</string>
 
     <!--preferences and enums-->
     <string-array name="night_modes">

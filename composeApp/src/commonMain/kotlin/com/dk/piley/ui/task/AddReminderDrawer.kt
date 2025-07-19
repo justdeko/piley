@@ -33,12 +33,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import com.dk.piley.model.task.RecurringTimeRange
+import com.dk.piley.ui.common.CalendarPermissionHandler
 import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.common.ReminderDatePicker
 import com.dk.piley.ui.common.ReminderTimePicker
 import com.dk.piley.ui.common.TextWithCheckbox
 import com.dk.piley.util.BigSpacer
 import com.dk.piley.util.MediumSpacer
+import com.dk.piley.util.Platform
+import com.dk.piley.util.appPlatform
 import com.dk.piley.util.dateString
 import com.dk.piley.util.defaultPadding
 import com.dk.piley.util.timeString
@@ -51,9 +54,11 @@ import piley.composeapp.generated.resources.add_reminder_title
 import piley.composeapp.generated.resources.date_selection_placeholder
 import piley.composeapp.generated.resources.delete_reminder_button
 import piley.composeapp.generated.resources.edit_reminder_title
+import piley.composeapp.generated.resources.no_calendar_permission_warning
 import piley.composeapp.generated.resources.no_notification_permission_reminder_warning
 import piley.composeapp.generated.resources.reminder_recurring_label
 import piley.composeapp.generated.resources.set_reminder_button
+import piley.composeapp.generated.resources.sync_with_calendar_label
 import piley.composeapp.generated.resources.time_selection_placeholder
 import piley.composeapp.generated.resources.update_reminder_button
 
@@ -119,7 +124,7 @@ fun AddReminderContent(
     recurringTimeRange: RecurringTimeRange = RecurringTimeRange.DAILY,
     recurringFrequency: Int = 1,
     useNowAsReminderTime: Boolean = false,
-    notificationPermissionGranted: Boolean = false
+    notificationPermissionGranted: Boolean = false,
 ) {
     val dim = LocalDim.current
     var localDate: LocalDate? by remember { mutableStateOf(null) }
@@ -130,6 +135,14 @@ fun AddReminderContent(
     var datePickerVisible by remember { mutableStateOf(false) }
     var timePickerVisible by remember { mutableStateOf(false) }
     var nowAsReminderTime by remember { mutableStateOf(useNowAsReminderTime) }
+    var createCalendarReminder by remember { mutableStateOf(false) }
+    var showCalendarPermissionDeniedMessage by remember { mutableStateOf(false) }
+
+
+    CalendarPermissionHandler(createCalendarReminder) {
+        createCalendarReminder = it
+        showCalendarPermissionDeniedMessage = !it
+    }
 
     if (datePickerVisible) {
         ReminderDatePicker(
@@ -211,8 +224,10 @@ fun AddReminderContent(
             description = stringResource(Res.string.reminder_recurring_label),
             checked = recurring
         ) { recurring = it }
+
         AnimatedVisibility(recurring) {
             RecurringReminderSection(
+                modifier = Modifier.padding(horizontal = dim.large),
                 selectedTimeRange = timeRange,
                 selectedFrequency = frequency,
                 onSelectTimeRange = { timeRange = it },
@@ -221,6 +236,7 @@ fun AddReminderContent(
                 onUseNowAsReminderTimeChange = { nowAsReminderTime = it }
             )
         }
+
         AnimatedVisibility(!notificationPermissionGranted) {
             Row(
                 Modifier
@@ -235,6 +251,28 @@ fun AddReminderContent(
                 )
             }
         }
+
+        AnimatedVisibility(appPlatform != Platform.DESKTOP && (localTime != null && localDate != null || initialDateTime != null)) {
+            TextWithCheckbox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dim.large),
+                description = stringResource(Res.string.sync_with_calendar_label),
+                checked = createCalendarReminder
+            ) { createCalendarReminder = it }
+
+            AnimatedVisibility(showCalendarPermissionDeniedMessage) {
+                Text(
+                    stringResource(Res.string.no_calendar_permission_warning),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = dim.large, vertical = dim.small)
+                )
+            }
+        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -257,7 +295,8 @@ fun AddReminderContent(
                                         recurring = recurring,
                                         recurringTimeRange = timeRange,
                                         recurringFrequency = frequency,
-                                        nowAsReminderTime = nowAsReminderTime
+                                        nowAsReminderTime = nowAsReminderTime,
+                                        syncWithCalendar = createCalendarReminder
                                     )
                                 )
                             }
@@ -273,7 +312,8 @@ fun AddReminderContent(
                                 recurring = recurring,
                                 recurringTimeRange = timeRange,
                                 recurringFrequency = frequency,
-                                nowAsReminderTime = nowAsReminderTime
+                                nowAsReminderTime = nowAsReminderTime,
+                                syncWithCalendar = createCalendarReminder
                             )
                         )
                     }
@@ -346,4 +386,5 @@ data class ReminderState(
     val recurringTimeRange: RecurringTimeRange,
     val nowAsReminderTime: Boolean,
     val recurringFrequency: Int,
+    val syncWithCalendar: Boolean = false
 )

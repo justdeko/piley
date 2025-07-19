@@ -58,6 +58,8 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
     <string>This app uses the local network to discover and connect to nearby devices.</string>
+    <key>NSRemindersFullAccessUsageDescription</key>
+    <string>This app needs access to Reminders to add task reminders to your calendar.</string>
     <key>NSBonjourServices</key>
     <array>
         <string>_piley._tcp</string>

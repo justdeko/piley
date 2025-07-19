@@ -253,23 +253,27 @@ fun AddReminderContent(
         }
 
         AnimatedVisibility(appPlatform != Platform.DESKTOP && (localTime != null && localDate != null || initialDateTime != null)) {
-            TextWithCheckbox(
+            Column(
                 modifier = Modifier
+                    .padding(horizontal = dim.large)
                     .fillMaxWidth()
-                    .padding(horizontal = dim.large),
-                description = stringResource(Res.string.sync_with_calendar_label),
-                checked = createCalendarReminder
-            ) { createCalendarReminder = it }
+            ) {
+                TextWithCheckbox(
+                    modifier = Modifier.fillMaxWidth(),
+                    description = stringResource(Res.string.sync_with_calendar_label),
+                    checked = createCalendarReminder
+                ) { createCalendarReminder = it }
 
-            AnimatedVisibility(showCalendarPermissionDeniedMessage) {
-                Text(
-                    stringResource(Res.string.no_calendar_permission_warning),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = dim.large, vertical = dim.small)
-                )
+                AnimatedVisibility(showCalendarPermissionDeniedMessage) {
+                    Text(
+                        stringResource(Res.string.no_calendar_permission_warning),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = dim.small)
+                    )
+                }
             }
         }
 

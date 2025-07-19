@@ -22,7 +22,7 @@ class AndroidReminderSyncManager(private val context: Context) : TaskCalendarSyn
             put(CalendarContract.Events.CALENDAR_ID, calendarId)
             put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
             put(CalendarContract.Events.HAS_ALARM, 1)
-            put(CalendarContract.Events.DESCRIPTION, "taskId:${task.id}")
+            put(CalendarContract.Events.DESCRIPTION, task.description)
             if (task.isRecurring) {
                 put(CalendarContract.Events.RRULE, task.generateRRule())
             }

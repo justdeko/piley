@@ -13,6 +13,7 @@ import com.dk.piley.model.task.Task
 import com.dk.piley.model.task.TaskRepository
 import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
+import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.ui.nav.Screen
 import com.dk.piley.util.sortedWithOrder
 import com.dk.piley.util.toInstantWithOffset
@@ -39,6 +40,7 @@ class PileViewModel(
     private val pileRepository: PileRepository,
     private val userRepository: UserRepository,
     private val shortcutEventRepository: ShortcutEventRepository,
+    private val reminderManager: IReminderManager,
     savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<PileViewState>(PileViewState()) {
 
@@ -258,6 +260,12 @@ class PileViewModel(
                     status = TaskStatus.DEFAULT,
                     modifiedAt = Clock.System.now()
                 )
+            )
+            // start new reminder
+            reminderManager.startReminder(
+                reminderTime = time.toInstantWithOffset(),
+                task = task,
+                actionTitles = taskRepository.getReminderActionTitles()
             )
         }
     }

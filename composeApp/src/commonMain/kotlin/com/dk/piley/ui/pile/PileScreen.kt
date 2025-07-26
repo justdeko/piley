@@ -9,6 +9,7 @@ import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -97,6 +99,7 @@ fun PileScreen(
             pileRepository = Piley.getModule().pileRepository,
             userRepository = Piley.getModule().userRepository,
             shortcutEventRepository = Piley.getModule().shortcutEventRepository,
+            reminderManager = Piley.getModule().reminderManager,
             savedStateHandle = createSavedStateHandle()
         )
     }
@@ -205,6 +208,7 @@ fun PileScreen(
             TextFieldValue("")
         )
     }
+    var dragValue by remember { mutableFloatStateOf(0f) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -213,6 +217,28 @@ fun PileScreen(
                     focusManager.clearFocus()
                     remindersForTask = null // clear reminders when tapping outside
                 })
+            }.pointerInput(selectedPileIndex) {
+                detectHorizontalDragGestures(
+                    onDragEnd = {
+                        when {
+                            // swipe left to right
+                            dragValue > 0
+                                    && viewState.pileIdTitleList.size > 1
+                                    && selectedPileIndex > 0 -> {
+                                onTitlePageChanged(selectedPileIndex - 1)
+                            }
+                            // swipe right to left
+                            dragValue < 0
+                                    && viewState.pileIdTitleList.size > 1
+                                    && selectedPileIndex < viewState.pileIdTitleList.lastIndex -> {
+                                onTitlePageChanged(selectedPileIndex + 1)
+                            }
+                        }
+                    },
+                    onHorizontalDrag = { _, dragAmount ->
+                        dragValue = dragAmount
+                    }
+                )
             },
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally

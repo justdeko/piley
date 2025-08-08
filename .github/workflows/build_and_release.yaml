@@ -60,11 +60,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download apk
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: piley
       - name: Download dmg
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: piley-desktop
       - name: Rename APK

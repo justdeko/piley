@@ -138,12 +138,14 @@ fun ProfileScreen(
                                 contentDescription = "go to settings"
                             )
                         }
-                        IconButton(onClick = onClickSync) {
-                            Icon(
-                                Icons.Filled.Sync,
-                                tint = MaterialTheme.colorScheme.secondary,
-                                contentDescription = "go to sync"
-                            )
+                        if (viewState.showSyncScreen) {
+                            IconButton(onClick = onClickSync) {
+                                Icon(
+                                    Icons.Filled.Sync,
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    contentDescription = "go to sync"
+                                )
+                            }
                         }
                     }
                 }

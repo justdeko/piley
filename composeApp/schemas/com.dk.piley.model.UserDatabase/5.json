@@ -1,0 +1,101 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "3b8f3b95e7b403c22150df46fa1cfec4",
+    "entities": [
+      {
+        "tableName": "User",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`email` TEXT NOT NULL, `name` TEXT NOT NULL, `selectedPileId` INTEGER NOT NULL, `defaultPileId` INTEGER NOT NULL, `nightMode` TEXT NOT NULL, `dynamicColorOn` INTEGER NOT NULL, `pileMode` TEXT NOT NULL, `autoHideKeyboard` INTEGER NOT NULL, `showRecurringTasks` INTEGER NOT NULL DEFAULT 0, `defaultReminderDelayRange` TEXT NOT NULL DEFAULT 'Minute', `defaultReminderDelayIndex` INTEGER NOT NULL DEFAULT 0, `showSyncScreen` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`email`))",
+        "fields": [
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectedPileId",
+            "columnName": "selectedPileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "defaultPileId",
+            "columnName": "defaultPileId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nightMode",
+            "columnName": "nightMode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dynamicColorOn",
+            "columnName": "dynamicColorOn",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pileMode",
+            "columnName": "pileMode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "autoHideKeyboard",
+            "columnName": "autoHideKeyboard",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "showRecurringTasks",
+            "columnName": "showRecurringTasks",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "defaultReminderDelayRange",
+            "columnName": "defaultReminderDelayRange",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'Minute'"
+          },
+          {
+            "fieldPath": "defaultReminderDelayIndex",
+            "columnName": "defaultReminderDelayIndex",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "showSyncScreen",
+            "columnName": "showSyncScreen",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "email"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3b8f3b95e7b403c22150df46fa1cfec4')"
+    ]
+  }
+}

@@ -34,8 +34,12 @@ const val USER_DATABASE_NAME = "piley-db-users"
             to = 4,
             spec = ThreeToFourMigrationSpec::class
         ),
+        AutoMigration(
+            from = 4,
+            to = 5
+        )
     ],
-    version = 4,
+    version = 5,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

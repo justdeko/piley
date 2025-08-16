@@ -60,6 +60,8 @@ import piley.composeapp.generated.resources.delete_user_setting_title
 import piley.composeapp.generated.resources.delete_user_success_info
 import piley.composeapp.generated.resources.dynamic_color_enabled_setting_description
 import piley.composeapp.generated.resources.dynamic_color_enabled_setting_title
+import piley.composeapp.generated.resources.enable_sync_screen_setting_description
+import piley.composeapp.generated.resources.enable_sync_screen_setting_title
 import piley.composeapp.generated.resources.export_setting_description
 import piley.composeapp.generated.resources.export_setting_title
 import piley.composeapp.generated.resources.import_setting_description
@@ -168,7 +170,8 @@ fun SettingsScreen(
         onStartTutorial = { navController.navigateClearBackstack(Screen.Intro.route) },
         onShowRecurringTasks = { shown -> viewModel.setShowRecurringTasks(shown) },
         onExportDatabase = { viewModel.exportDatabase() },
-        onImportDatabase = { viewModel.importDatabase(it) }
+        onImportDatabase = { viewModel.importDatabase(it) },
+        onShowSyncScreen = { viewModel.setShowSyncScreen(it) }
     )
 }
 
@@ -209,7 +212,8 @@ internal fun SettingsScreen(
     onStartTutorial: () -> Unit = {},
     onShowRecurringTasks: (Boolean) -> Unit = {},
     onExportDatabase: () -> Unit = {},
-    onImportDatabase: (PlatformFile) -> Unit = {}
+    onImportDatabase: (PlatformFile) -> Unit = {},
+    onShowSyncScreen: (Boolean) -> Unit = {}
 ) {
     val dim = LocalDim.current
     val nightModeValues = stringArrayResource(Res.array.night_modes).toList()
@@ -379,6 +383,12 @@ internal fun SettingsScreen(
                         title = stringResource(Res.string.import_setting_title),
                         description = stringResource(Res.string.import_setting_description),
                         onClick = { filePicker.launch() }
+                    )
+                    SwitchSettingsItem(
+                        title = stringResource(Res.string.enable_sync_screen_setting_title),
+                        description = stringResource(Res.string.enable_sync_screen_setting_description),
+                        value = viewState.user.showSyncScreen,
+                        onValueChange = onShowSyncScreen
                     )
                 }
                 Box(

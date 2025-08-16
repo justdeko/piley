@@ -53,6 +53,7 @@ class ProfileViewModel(
                     biggestPileName = getBiggestPileName(pilesWithTasks),
                     tasksCompletedPastDays = completedTasksForWeekValues.sum(),
                     completedTaskFrequencies = completedTasksForWeekValues,
+                    showSyncScreen = user.showSyncScreen
                 )
             }.collect { state.value = it }
         }
@@ -91,4 +92,5 @@ data class ProfileViewState(
     val completedTaskFrequencies: List<Int> = emptyList(),
     val biggestPileName: String? = "None",
     val message: String? = null,
+    val showSyncScreen: Boolean = false,
 )

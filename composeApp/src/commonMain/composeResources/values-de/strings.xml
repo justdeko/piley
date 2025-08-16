@@ -198,6 +198,8 @@
     <string name="database_exported_message">Datenbank exportiert</string>
     <string name="database_imported_message">Datenbank importiert</string>
     <string name="share">Teilen</string>
+    <string name="enable_sync_screen_setting_title">(Experimentell) Geräte-Sync aktivieren</string>
+    <string name="enable_sync_screen_setting_description">Diese Einstellung aktiviert den Sync-Button in deinem Profil, um deine Piles und Tasks zwischen mehreren Geräten zu synchronisieren. Dieses Feature ist noch experimentell.</string>
     <!-- sync screen -->
     <string name="sync_screen">Synchronisieren</string>
     <string name="discovering_devices">Suche nach Geräten...</string>

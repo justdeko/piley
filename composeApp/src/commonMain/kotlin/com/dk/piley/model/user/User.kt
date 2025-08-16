@@ -19,6 +19,7 @@ import com.dk.piley.reminder.DelayRange
  * @property showRecurringTasks whether to show recurring tasks by default
  * @property defaultReminderDelayRange the default delay range (minutes, hours, etc.)
  * @property defaultReminderDelayIndex the default delay index for the given range
+ * @property showSyncScreen whether the sync screen should be shown by default
  */
 @Entity
 data class User(
@@ -38,4 +39,6 @@ data class User(
     val defaultReminderDelayRange: DelayRange = DelayRange.Minute,
     @ColumnInfo(defaultValue = "0")
     val defaultReminderDelayIndex: Int = 0,
+    @ColumnInfo(defaultValue = "0")
+    val showSyncScreen: Boolean = false,
 )

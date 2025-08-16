@@ -156,6 +156,8 @@
     <string name="database_exported_message">Database exported</string>
     <string name="database_imported_message">Database imported</string>
     <string name="share">Share</string>
+    <string name="enable_sync_screen_setting_title">(Experimental) Enable device sync</string>
+    <string name="enable_sync_screen_setting_description">This enables the sync button in your profile screen to sync your piles and tasks across devices. This feature is experimental.</string>
 
     <!-- add reminder sheet -->
     <string name="edit_reminder_title">Edit reminder</string>

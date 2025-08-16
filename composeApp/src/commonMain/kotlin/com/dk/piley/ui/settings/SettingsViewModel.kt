@@ -279,6 +279,12 @@ class SettingsViewModel(
             }
         }
     }
+
+    fun setShowSyncScreen(enabled: Boolean) {
+        viewModelScope.launch {
+            userRepository.insertUser(state.value.user.copy(showSyncScreen = enabled))
+        }
+    }
 }
 
 data class SettingsViewState(

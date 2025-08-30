@@ -134,7 +134,7 @@
     <string name="welcome_page_title">Hallöchen</string>
     <string name="welcome_page_description">Willkommen bei piley! Diese App erlaubt dir, einmalige und wiederkehrende Tasks zu verwalten, indem sie in Piles (Stapeln) angezeigt werden.</string>
     <string name="pile_page_title">Pile</string>
-    <string name="pile_page_description">Ein Pile ist wie der Name's sagt - ein Stapel deiner Aufgaben. Klicke auf den Button unten, um einen neuen Task zu erstellen, oder wische Tasks zur Seite, um sie abzuschließen.</string>
+    <string name="pile_page_description">Ein Pile ist wie der Name es sagt - ein Stapel deiner Aufgaben. Klicke auf das Feld unten, um einen neuen Task zu erstellen, oder wische Tasks zur Seite, um sie abzuschließen.</string>
     <string name="piles_page_title">Piles</string>
     <string name="pile_details_page_title">Pile-Details</string>
     <string name="pile_details_page_description">Nachdem du auf einen Pile lange gedrückt hast, siehst du interessante Statistiken und kannst die Farbe oder den Titel ändern.</string>

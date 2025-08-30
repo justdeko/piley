@@ -1,6 +1,6 @@
 [versions]
 adaptive = "1.1.2"
-agp = "8.12.1"
+agp = "8.12.2"
 datastorePreferences = "1.1.7"
 jmdns = "3.6.1"
 kotlin = "2.2.10"

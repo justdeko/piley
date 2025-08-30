@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -29,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.dk.piley.Piley
+import com.dk.piley.ui.common.LocalDim
 import com.dk.piley.ui.intro.IntroScreen
 import com.dk.piley.ui.nav.DEEPLINK_ROOT
 import com.dk.piley.ui.nav.NavigationBar
@@ -71,6 +75,7 @@ fun HomeScreen(
     val navController = rememberNavController()
     var navigationBarShown by rememberSaveable { (mutableStateOf(false)) }
     val snackbarHostState = remember { SnackbarHostState() }
+    val dim = LocalDim.current
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -105,7 +110,16 @@ fun HomeScreen(
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
-                modifier = Modifier.imePadding(),
+                modifier = Modifier.navigationBarsPadding().imePadding(),
+                snackbar = { data ->
+                    Snackbar(
+                        snackbarData = data,
+                        shape = RoundedCornerShape(dim.large),
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        actionColor = MaterialTheme.colorScheme.primary
+                    )
+                }
             )
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0)

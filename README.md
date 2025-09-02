@@ -16,7 +16,14 @@
     ·
     <a href="https://github.com/justdeko/piley/issues">suggest feature</a>
   </p>
-<a href='https://play.google.com/store/apps/details?id=com.dk.piley'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="250"/></a>
+  
+<table border="0" cellpadding="0" cellspacing="0">
+<tr>
+<td><a href='https://play.google.com/store/apps/details?id=com.dk.piley'><img alt='Get it on Google Play' src='docs/assets/google-play-badge.png' width="218"/></a></td>
+<td><a href='https://apps.apple.com/us/app/piley/id6742054302'><img alt='Get on App Store' src='docs/assets/ios.svg' width="175"/></a></td>
+</tr>
+</table>
+
 <p align="center">
     <a href="https://testflight.apple.com/join/zVQVUXFb">iOS Testflight Beta</a>
     ·
@@ -32,12 +39,13 @@
     <li>
       <a href="#about-piley">About piley</a>
       <ul>
-        <li><a href="#tools-used">Tools used</a></li>
+        <li><a href="#built-with">Built with</a></li>
       </ul>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
     </li>
+    <li><a href="#planned-features">Planned Features</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
   </ol>
@@ -57,8 +65,6 @@ pile, create new piles and also set reminders and recurring tasks. piley was bui
   </p>
 </div>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ### Built With
 
 piley is built with Jetpack Compose Multiplatform. Other following libraries were used:
@@ -70,19 +76,18 @@ piley is built with Jetpack Compose Multiplatform. Other following libraries wer
 * [Reorderable](https://github.com/Calvin-LL/Reorderable) for drag and drop reordering of piles
 * Various Jetpack Compose and AndroidX dependencies for specific functionality
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Getting Started
 
 ### Android
 
-To start using piley on Android, you can just get the newest apk from the
-**[Releases](https://github.com/justdeko/piley/releases)** section, or download it from [Google
-Play](https://play.google.com/store/apps/details?id=com.dk.piley).
+To start using piley on Android, you can just download it from [Google
+Play](https://play.google.com/store/apps/details?id=com.dk.piley), or get the newest debug apk from the
+**[Releases](https://github.com/justdeko/piley/releases)** section.
 
 ### iOS
 
-piley is currently in open testing beta for iOS, [you can sign up here](https://testflight.apple.com/join/zVQVUXFb).
+piley is available for iOS and iPadOS, [you can download it here](https://apps.apple.com/us/app/piley/id6742054302).
+There is also an open testing beta, [you can sign up here](https://testflight.apple.com/join/zVQVUXFb).
 
 ### Desktop
 
@@ -93,8 +98,6 @@ piley for desktop is currently only available for Mac as an unsigned `.dmg` file
 To view planned features and track the general progress, visit
 the [project board](https://github.com/users/justdeko/projects/1).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 ## Contributing
 
 piley is FOSS and was developed for free. You are welcome to contribute and support, here are a few
@@ -103,8 +106,6 @@ ways:
 * [Report a bug or suggest a new feature](https://github.com/justdeko/piley/issues)
 * Translate the app into your language and open a new PR for it
 * Extend the app
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## License
 

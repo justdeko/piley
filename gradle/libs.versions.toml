@@ -11,7 +11,7 @@ material = "1.13.0"
 material3WindowSizeClass = "1.8.2"
 ksp = "2.2.10-2.0.2"
 navigationCompose = "2.8.0-alpha13"
-room = "2.7.2"
+room = "2.8.0"
 compose-plugin = "1.9.0"
 # 2.9.x breaks desktop, check before updating
 androidx-lifecycle = "2.8.4"

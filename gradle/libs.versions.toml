@@ -14,7 +14,7 @@ navigationCompose = "2.9.0"
 room = "2.8.2"
 compose-plugin = "1.9.0"
 # 2.9.x breaks desktop, check before updating
-androidx-lifecycle = "2.8.4"
+androidx-lifecycle = "2.9.4"
 kotlinx-coroutines = "1.10.2"
 sqliteBundled = "2.6.1"
 filekit = "0.11.0"

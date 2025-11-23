@@ -16,7 +16,7 @@ compose-plugin = "1.9.3"
 # 2.9.x breaks desktop, check before updating
 androidx-lifecycle = "2.9.6"
 kotlinx-coroutines = "1.10.2"
-sqliteBundled = "2.6.1"
+sqliteBundled = "2.6.2"
 filekit = "0.12.0"
 reorderable = "3.0.0"
 ktor = "3.3.2"

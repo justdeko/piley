@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.multiplatform.library)
     alias(libs.plugins.jetbrains.compose)
     alias(libs.plugins.compose)
     alias(libs.plugins.ksp)
@@ -17,9 +17,16 @@ kotlin {
             "-opt-in=kotlin.time.ExperimentalTime"
         )
     }
-    androidTarget {
+    androidLibrary {
+        namespace = "com.dk.piley"
+        compileSdk = 36
+        minSdk = 26
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
+        }
+        @Suppress("UnstableApiUsage")
+        androidResources {
+            enable = true
         }
     }
 
@@ -82,50 +89,8 @@ kotlin {
     }
 }
 
-android {
-    namespace = "com.dk.piley"
-    compileSdk = 36
-
-    defaultConfig {
-        applicationId = "com.dk.piley"
-        minSdk = 26
-        targetSdk = 36
-        versionCode = 24
-        versionName = "0.9.3"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    buildFeatures {
-        buildConfig = true
-        compose = true
-    }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-}
-
 dependencies {
     ksp(libs.androidx.room.compiler)
-    debugImplementation(compose.uiTooling)
 }
 
 compose.desktop {

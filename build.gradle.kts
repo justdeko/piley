@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.multiplatform.library) apply false
     alias(libs.plugins.jetbrains.compose) apply false
     alias(libs.plugins.compose)
     alias(libs.plugins.kotlinMultiplatform) apply false

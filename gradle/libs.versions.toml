@@ -12,7 +12,7 @@ material3WindowSizeClass = "1.9.0"
 ksp = "2.3.5"
 navigationCompose = "2.9.1"
 room = "2.8.4"
-compose-plugin = "1.10.0"
+compose-plugin = "1.10.1"
 # 2.9.x breaks desktop, check before updating
 androidx-lifecycle = "2.9.6"
 kotlinx-coroutines = "1.10.2"

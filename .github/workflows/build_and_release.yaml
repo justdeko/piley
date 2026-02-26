@@ -25,7 +25,7 @@ jobs:
         run: ./gradlew :composeApp:assembleDebug -x test --stacktrace
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: piley
           path: composeApp/build/outputs/apk/debug/composeApp-debug.apk
@@ -49,7 +49,7 @@ jobs:
         run: ./gradlew packageDmg
 
       - name: Upload Desktop dmg
-        uses: actions/upload-artifact@v6.0.0
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: piley-desktop
           path: composeApp/build/compose/binaries/main/dmg/*.dmg
@@ -60,11 +60,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download apk
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: piley
       - name: Download dmg
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: piley-desktop
       - name: Rename APK

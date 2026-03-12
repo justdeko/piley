@@ -1,7 +1,7 @@
 [versions]
 adaptive = "1.2.0"
 agp = "9.1.0"
-datastorePreferences = "1.2.0"
+datastorePreferences = "1.2.1"
 jmdns = "3.6.3"
 kotlin = "2.3.10"
 kotlinxDatetime = "0.7.1-0.6.x-compat"

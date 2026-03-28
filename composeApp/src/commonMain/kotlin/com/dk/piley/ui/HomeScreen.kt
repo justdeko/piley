@@ -1,5 +1,7 @@
 package com.dk.piley.ui
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.displayCutout
@@ -135,7 +137,14 @@ fun HomeScreen(
                 Modifier.windowInsetsPadding(WindowInsets.systemBars)
                     .windowInsetsPadding(WindowInsets.displayCutout)
                     .consumeWindowInsets(padding)
-            NavHost(navController, startDestination = startDestination) {
+            NavHost(
+                navController = navController,
+                startDestination = startDestination,
+                enterTransition = { fadeIn() },
+                exitTransition = { fadeOut() },
+                popEnterTransition = { fadeIn() },
+                popExitTransition = { fadeOut() }
+            ) {
                 composable(Screen.Splash.route) {
                     SplashScreen(navController = navController)
                 }

@@ -1,6 +1,5 @@
 package com.dk.piley.ui.common
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.Layout
+import kotlin.math.roundToInt
 
 /**
  * Expandable content
@@ -67,9 +70,31 @@ fun ExpandableContent(
                     }
                 )
             }
-            AnimatedVisibility(visible = expanded) {
+            ExpandableBox(expanded = expanded) {
                 expandedContent()
             }
+        }
+    }
+}
+
+@Composable
+private fun ExpandableBox(
+    expanded: Boolean,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    val expandProgress by animateFloatAsState(
+        targetValue = if (expanded) 1f else 0f,
+        label = "expand"
+    )
+    Layout(
+        content = content,
+        modifier = modifier.clip(RectangleShape)
+    ) { measurables, constraints ->
+        val placeable = measurables.first().measure(constraints)
+        val height = (placeable.height * expandProgress).roundToInt()
+        layout(placeable.width, height) {
+            placeable.placeRelative(0, 0)
         }
     }
 }

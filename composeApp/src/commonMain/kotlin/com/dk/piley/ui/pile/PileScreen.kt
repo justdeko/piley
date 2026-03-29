@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTimeFilled
@@ -31,6 +33,8 @@ import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -159,7 +163,8 @@ fun PileScreen(
             coroutineScope.launch {
                 viewModel.setMessage(MessageWithAction(message = getString(Res.string.reminder_set_message)))
             }
-        }
+        },
+        onInputTextChanged = { viewModel.onInputTextChanged(it) }
     )
 }
 
@@ -195,6 +200,7 @@ fun PileScreen(
     onToggleRecurring: (Boolean) -> Unit = {},
     onClickTitle: () -> Unit = {},
     onSetTaskReminder: (LocalDateTime, Task) -> Unit = { _, _ -> },
+    onInputTextChanged: (String) -> Unit = {},
 ) {
     val dim = LocalDim.current
     val haptic = LocalHapticFeedback.current
@@ -209,6 +215,31 @@ fun PileScreen(
         )
     }
     var dragValue by remember { mutableFloatStateOf(0f) }
+    val addTask: suspend (String) -> Unit = { text ->
+        if (text.isNotBlank()) {
+            // if pile limit is not 0 (infinite) and task count above pile limit, don't add
+            if (
+                viewState.pileWithTasks.pile.pileLimit > 0
+                && (viewState.tasks?.size ?: 0) >= viewState.pileWithTasks.pile.pileLimit
+            ) {
+                onSetMessage(MessageWithAction(getString(Res.string.pile_full_warning)))
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                coroutineScope.launch {
+                    pileOffset.animateTo(
+                        targetValue = 0f,
+                        animationSpec = shakeAnimationSpec,
+                    )
+                }
+            } else {
+                onAdd(text.trim())
+                if (viewState.autoHideEnabled) {
+                    focusManager.clearFocus()
+                }
+                taskTextValue = TextFieldValue()
+                onInputTextChanged("")
+            }
+        }
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -330,6 +361,17 @@ fun PileScreen(
                         }
                     }
                 }
+                AnimatedVisibility(viewState.autocompleteSuggestions.isNotEmpty()) {
+                    LazyRow(Modifier.padding(horizontal = dim.large)) {
+                        items(viewState.autocompleteSuggestions, key = { it }) { suggestion ->
+                            SuggestionChip(
+                                modifier = Modifier.animateItem().padding(end = dim.medium),
+                                onClick = { coroutineScope.launch { addTask(suggestion) } },
+                                label = { Text(suggestion) }
+                            )
+                        }
+                    }
+                }
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -352,38 +394,25 @@ fun PileScreen(
                         onChange = {
                             if (it.text.length <= titleCharacterLimit) {
                                 taskTextValue = it
+                                onInputTextChanged(it.text)
                             }
                         },
                         onDone = {
                             coroutineScope.launch {
-                                if (taskTextValue.text.isNotBlank()) {
-                                    // if pile limit is not 0 (infinite) and task count above pile limit, don't add
-                                    if (
-                                        viewState.pileWithTasks.pile.pileLimit > 0
-                                        && (viewState.tasks?.size
-                                            ?: 0) >= viewState.pileWithTasks.pile.pileLimit
-                                    ) {
-                                        onSetMessage(MessageWithAction(getString(Res.string.pile_full_warning)))
-                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                        coroutineScope.launch {
-                                            pileOffset.animateTo(
-                                                targetValue = 0f,
-                                                animationSpec = shakeAnimationSpec,
-                                            )
-                                        }
-                                    } else {
-                                        onAdd(taskTextValue.text.trim())
+                                when {
+                                    taskTextValue.text.isNotBlank() -> {
+                                        addTask(taskTextValue.text)
                                         if (viewState.autoHideEnabled) {
-                                            focusManager.clearFocus()
                                             defaultKeyboardAction(ImeAction.Done)
                                         }
-                                        taskTextValue = TextFieldValue()
                                     }
-                                } else if (taskTextValue.text.isEmpty()) {
-                                    focusManager.clearFocus()
-                                    defaultKeyboardAction(ImeAction.Done)
-                                } else {
-                                    onSetMessage(MessageWithAction(getString(Res.string.task_empty_not_allowed_hint)))
+
+                                    taskTextValue.text.isEmpty() -> {
+                                        focusManager.clearFocus()
+                                        defaultKeyboardAction(ImeAction.Done)
+                                    }
+
+                                    else -> onSetMessage(MessageWithAction(getString(Res.string.task_empty_not_allowed_hint)))
                                 }
                             }
                         }

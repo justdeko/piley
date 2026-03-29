@@ -15,6 +15,7 @@ import com.dk.piley.model.task.TaskStatus
 import com.dk.piley.model.user.UserRepository
 import com.dk.piley.reminder.IReminderManager
 import com.dk.piley.ui.nav.Screen
+import com.dk.piley.util.Trie
 import com.dk.piley.util.sortedWithOrder
 import com.dk.piley.util.toInstantWithOffset
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -45,6 +46,7 @@ class PileViewModel(
 ) : StatefulViewModel<PileViewState>(PileViewState()) {
 
     private var taskToUndo: Task? = null
+    private val trie = Trie()
 
     private val _selectedPileIndex = MutableStateFlow(-1)
     val selectedPileIndex: StateFlow<Int>
@@ -99,6 +101,15 @@ class PileViewModel(
                             pilesWithTasks
                                 .find { it.pile.pileId == selectedPileId }
                                 ?.let { pileWithTasks ->
+                                    trie.clear()
+                                    pileWithTasks.tasks
+                                        .filter { it.status == TaskStatus.DONE }
+                                        .forEach {
+                                            trie.insert(
+                                                title = it.title,
+                                                lastCompletion = it.completionTimes.lastOrNull()
+                                            )
+                                        }
                                     state.value.copy(
                                         pileWithTasks = pileWithTasks,
                                         // only show non-completed tasks and non-deleted recurring tasks
@@ -109,6 +120,7 @@ class PileViewModel(
                                         autoHideEnabled = user.autoHideKeyboard,
                                         pileIdTitleList = idTitleList,
                                         noTasksYet = pileWithTasks.tasks.isEmpty(),
+                                        autocompleteSuggestions = emptyList(),
                                     )
                                 }
                         }
@@ -247,6 +259,18 @@ class PileViewModel(
     }
 
     /**
+     * On input text changed callback
+     * - update autocomplete suggestions
+     *
+     * @param text the current input text
+     * @param minLength the minimum length to trigger suggestions
+     */
+    fun onInputTextChanged(text: String, minLength: Int = 3) {
+        val suggestions = if (text.length >= minLength) trie.search(text) else emptyList()
+        state.update { it.copy(autocompleteSuggestions = suggestions) }
+    }
+
+    /**
      * Set task reminder given a time and task
      *
      * @param time the time to set the reminder for
@@ -278,7 +302,8 @@ data class PileViewState(
     val pileIdTitleList: List<Pair<Long, String>> = emptyList(),
     val noTasksYet: Boolean = false,
     val messageWithAction: MessageWithAction? = null,
-    val showRecurring: Boolean = false
+    val showRecurring: Boolean = false,
+    val autocompleteSuggestions: List<String> = emptyList(),
 )
 
 data class MessageWithAction(

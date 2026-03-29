@@ -22,13 +22,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        run: ./gradlew :composeApp:assembleDebug -x test --stacktrace
+        run: ./gradlew :androidApp:assembleDebug -x test --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v7.0.0
         with:
           name: piley
-          path: composeApp/build/outputs/apk/debug/composeApp-debug.apk
+          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
 
   build_desktop:
     name: Build Desktop
@@ -68,7 +68,7 @@ jobs:
         with:
           name: piley-desktop
       - name: Rename APK
-        run: mv composeApp-debug.apk piley-${{ github.ref_name }}-debug.apk
+        run: mv androidApp-debug.apk piley-${{ github.ref_name }}-debug.apk
       - name: Rename DMG
         run: mv *.dmg piley-${{ github.ref_name }}.dmg
       - name: Create Release

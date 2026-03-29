@@ -17,6 +17,7 @@ local.properties
 /keystore
 /app/release
 /composeApp/release
+/androidApp/release
 *.keystore
 *.keystore.asc
 **/.build

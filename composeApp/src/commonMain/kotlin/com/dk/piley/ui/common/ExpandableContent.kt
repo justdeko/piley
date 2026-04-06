@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import kotlin.math.roundToInt
 
@@ -88,7 +89,21 @@ private fun ExpandableBox(
         label = "expand"
     )
     Layout(
-        content = content,
+        content = {
+            Box(
+                modifier = Modifier.pointerInput(expanded) {
+                    if (!expanded) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                awaitPointerEvent().changes.forEach { it.consume() }
+                            }
+                        }
+                    }
+                }
+            ) {
+                content()
+            }
+        },
         modifier = modifier.clip(RectangleShape)
     ) { measurables, constraints ->
         val placeable = measurables.first().measure(constraints)

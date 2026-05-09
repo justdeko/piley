@@ -144,7 +144,7 @@ fun PileOverviewScreen(
                         key = pileWithTasks.pile.pileId
                     ) { _ ->
                         PileCard(
-                            modifier = Modifier.draggableHandle(),
+                            modifier = Modifier.longPressDraggableHandle(),
                             expandedMode = isTabletWide,
                             pileWithTasks = pileWithTasks,
                             onSelectPile = onSelectPile,

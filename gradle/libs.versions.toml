@@ -17,7 +17,7 @@ compose-plugin = "1.11.1"
 androidx-lifecycle = "2.10.0"
 kotlinx-coroutines = "1.11.0"
 sqliteBundled = "2.6.2"
-filekit = "0.14.1"
+filekit = "0.14.2"
 reorderable = "3.1.0"
 ktor = "3.5.0"
 

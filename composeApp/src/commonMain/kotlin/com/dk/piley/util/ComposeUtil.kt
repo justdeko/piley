@@ -25,10 +25,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import com.dk.piley.ui.common.LocalDim
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.cancel
 import piley.composeapp.generated.resources.ok
@@ -165,15 +164,11 @@ fun TinySpacer() {
     Spacer(modifier = Modifier.size(LocalDim.current.small))
 }
 
-
-class BooleanProvider : PreviewParameterProvider<Boolean> {
-    override val values: Sequence<Boolean> = sequenceOf(false, true)
-}
-
 @Composable
 expect fun getScreenHeight(): Dp
 
 expect val defaultNavBarPadding: Dp
 
 @Composable
-fun isTabletWide(): Boolean = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED
+fun isTabletWide(): Boolean = currentWindowAdaptiveInfo().windowSizeClass
+    .isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)

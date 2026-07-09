@@ -3,6 +3,7 @@ package com.dk.piley.model.sync
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
+import android.os.Build
 import com.dk.piley.model.sync.model.SyncDevice
 import com.dk.piley.util.appPlatform
 
@@ -21,29 +22,7 @@ class SyncManager(private val context: Context) : ISyncManager {
                 if (serviceInfo.serviceName.startsWith(syncServiceName)
                     && !serviceInfo.serviceName.contains(appPlatform.toString())
                 ) {
-                    nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
-                        override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
-                            val name = resolvedInfo.serviceName
-                            println("Service resolved: $name}")
-                            val host = resolvedInfo.host.hostName
-                            val port = resolvedInfo.port
-                            val timeStamp =
-                                resolvedInfo.attributes[timeStampAttribute]?.let { String(it) }
-                                    ?.toLongOrNull() ?: 0L
-                            if (!resolvedInfo.serviceName.contains(serviceId)) {
-                                onDeviceFound(
-                                    SyncDevice(
-                                        name = name,
-                                        hostName = host,
-                                        port = port,
-                                        lastSynced = timeStamp
-                                    )
-                                )
-                            }
-                        }
-
-                        override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {}
-                    })
+                    resolveService(serviceInfo, serviceId, onDeviceFound)
                 }
             }
 
@@ -85,5 +64,65 @@ class SyncManager(private val context: Context) : ISyncManager {
 
     override suspend fun stopAdvertising() {
         registrationListener?.let { nsdManager.unregisterService(it) }
+    }
+
+    /**
+     * Resolve a discovered service to obtain its host and port, then report it once.
+     * Uses [NsdManager.registerServiceInfoCallback] on API 34+ and falls back to the
+     * deprecated [NsdManager.resolveService] on older devices.
+     */
+    private fun resolveService(
+        serviceInfo: NsdServiceInfo,
+        serviceId: String,
+        onDeviceFound: (SyncDevice) -> Unit,
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            nsdManager.registerServiceInfoCallback(
+                serviceInfo,
+                context.mainExecutor,
+                object : NsdManager.ServiceInfoCallback {
+                    override fun onServiceInfoCallbackRegistrationFailed(errorCode: Int) {}
+                    override fun onServiceUpdated(updatedInfo: NsdServiceInfo) {
+                        val hostName = updatedInfo.hostAddresses.firstOrNull()?.hostName ?: return
+                        reportDevice(updatedInfo, hostName, serviceId, onDeviceFound)
+                        // resolve once, then stop listening for further updates
+                        nsdManager.unregisterServiceInfoCallback(this)
+                    }
+
+                    override fun onServiceLost() {}
+                    override fun onServiceInfoCallbackUnregistered() {}
+                }
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
+                override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
+                    @Suppress("DEPRECATION")
+                    val hostName = resolvedInfo.host?.hostName ?: return
+                    reportDevice(resolvedInfo, hostName, serviceId, onDeviceFound)
+                }
+
+                override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {}
+            })
+        }
+    }
+
+    private fun reportDevice(
+        info: NsdServiceInfo,
+        hostName: String,
+        serviceId: String,
+        onDeviceFound: (SyncDevice) -> Unit,
+    ) {
+        val timeStamp = info.attributes[timeStampAttribute]?.let { String(it) }?.toLongOrNull() ?: 0L
+        if (!info.serviceName.contains(serviceId)) {
+            onDeviceFound(
+                SyncDevice(
+                    name = info.serviceName,
+                    hostName = hostName,
+                    port = info.port,
+                    lastSynced = timeStamp
+                )
+            )
+        }
     }
 }

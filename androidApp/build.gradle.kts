@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.dk.piley.app"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.dk.piley"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 25
         versionName = "0.9.4"
 
@@ -24,6 +24,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

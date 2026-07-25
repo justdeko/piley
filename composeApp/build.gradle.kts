@@ -103,7 +103,7 @@ compose.desktop {
                 "-Dapple.awt.application.appearance=system"
             )
             packageName = "piley"
-            packageVersion = "1.9.4"
+            packageVersion = "1.9.5"
             // copyright with copyright symbol
             copyright = "© 2026 Denis Koljada. All rights reserved."
             // fixes datastore unsafe issue: https://github.com/JetBrains/compose-multiplatform/issues/2686

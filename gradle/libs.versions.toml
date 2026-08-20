@@ -17,7 +17,7 @@ compose-plugin = "1.11.1"
 androidx-lifecycle = "2.11.0"
 kotlinx-coroutines = "1.11.0"
 sqliteBundled = "2.7.0"
-filekit = "0.14.2"
+filekit = "0.15.0"
 reorderable = "3.1.0"
 ktor = "3.5.2"
 # separately versioned from the core compose plugin (aligned with androidx material3), must be updated manually

@@ -19,7 +19,7 @@ kotlinx-coroutines = "1.11.0"
 sqliteBundled = "2.7.0"
 filekit = "0.16.0"
 reorderable = "3.1.0"
-ktor = "3.5.2"
+ktor = "3.6.0"
 # separately versioned from the core compose plugin (aligned with androidx material3), must be updated manually
 materialIconsExtended = "1.7.3"
 composeMaterial3 = "1.9.0"

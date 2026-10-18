@@ -20,7 +20,7 @@ kotlin {
     android {
         namespace = "com.dk.piley"
         compileSdk = 37
-        minSdk = 26
+        minSdk = 31
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }

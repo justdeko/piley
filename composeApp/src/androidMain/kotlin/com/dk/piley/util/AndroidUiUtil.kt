@@ -3,7 +3,6 @@ package com.dk.piley.util
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.os.Build
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -24,7 +23,7 @@ fun Context.getActivityOrNull(): Activity? {
 
 @Composable
 fun getDynamicColorScheme(themeViewState: ThemeViewState, nightModeEnabled: Boolean): ColorScheme {
-    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && themeViewState.dynamicColorEnabled
+    val dynamicColor = themeViewState.dynamicColorEnabled
     val colors = if (!nightModeEnabled) {
         if (dynamicColor) {
             dynamicLightColorScheme(LocalContext.current)

@@ -10,9 +10,9 @@ android {
 
     defaultConfig {
         applicationId = "com.dk.piley"
-        minSdk = 26
+        minSdk = 31
         targetSdk = 37
-        versionCode = 26
+        versionCode = 27
         versionName = "0.9.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

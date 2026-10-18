@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.minutes
 
 actual class Piley {
     actual companion object {
@@ -27,7 +28,7 @@ actual class Piley {
             while (true) {
                 println("Checking for reminders")
                 reminderObserver.checkCurrentReminders()
-                delay(1000 * 60)
+                delay(1.minutes)
             }
         }
     }

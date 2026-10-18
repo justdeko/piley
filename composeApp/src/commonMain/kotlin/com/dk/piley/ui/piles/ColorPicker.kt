@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import com.dk.piley.model.pile.PileColor
 import com.dk.piley.ui.common.LocalDim
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ColorPicker(
     modifier: Modifier = Modifier,

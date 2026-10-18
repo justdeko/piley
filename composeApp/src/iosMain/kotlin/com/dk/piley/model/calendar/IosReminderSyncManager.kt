@@ -24,7 +24,7 @@ class IosReminderSyncManager : TaskCalendarSyncManager {
     private val store = EKEventStore()
 
     private fun ensureAccess(): Boolean =
-        EKEventStore.Companion.authorizationStatusForEntityType(EKEntityType.EKEntityTypeReminder) == EKAuthorizationStatusAuthorized
+        EKEventStore.authorizationStatusForEntityType(EKEntityType.EKEntityTypeReminder) == EKAuthorizationStatusAuthorized
 
     override suspend fun addReminder(task: Task) {
         if (!ensureAccess() || task.reminder == null) return

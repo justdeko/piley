@@ -15,7 +15,7 @@ actual fun CalendarPermissionHandler(
 ) {
     val eventStore = EKEventStore()
     val status =
-        EKEventStore.Companion.authorizationStatusForEntityType(EKEntityType.EKEntityTypeReminder)
+        EKEventStore.authorizationStatusForEntityType(EKEntityType.EKEntityTypeReminder)
 
     if (launch) {
         when (status) {

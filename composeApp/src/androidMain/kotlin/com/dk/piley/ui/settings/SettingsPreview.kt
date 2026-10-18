@@ -76,7 +76,7 @@ fun SwitchSettingsItemPreview() {
 @Preview
 @Composable
 fun DropdownSettingsItemPreview() {
-    val options = PileMode.values().toList().map { it.name }
+    val options = PileMode.entries.map { it.name }
     var selectedOption by rememberSaveable { mutableStateOf(PileMode.FREE.name) }
     PileyTheme(useDarkTheme = true) {
         DropdownSettingsItem(

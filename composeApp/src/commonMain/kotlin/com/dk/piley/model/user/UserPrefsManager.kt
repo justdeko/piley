@@ -11,7 +11,6 @@ import com.dk.piley.model.sync.model.toSyncDeviceList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 /**
@@ -84,7 +83,6 @@ class UserPrefsManager(
         prefs[lastSyncedKey]?.toLongOrNull() ?: 0L
     }
 
-    @OptIn(ExperimentalUuidApi::class)
     suspend fun getMdnsServiceId(): String {
         val existingId = userPrefs.data.map { prefs ->
             prefs[mdnsServiceIdKey]

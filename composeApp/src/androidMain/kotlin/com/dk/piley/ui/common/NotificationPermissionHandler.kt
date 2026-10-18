@@ -63,14 +63,10 @@ private fun NotificationPermissionHandlerInternal(
             setPermissionGranted(granted)
             if (!granted) {
                 rationaleOpen = context.getActivityOrNull()?.let {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        ActivityCompat.shouldShowRequestPermissionRationale(
-                            it,
-                            Manifest.permission.POST_NOTIFICATIONS
-                        )
-                    } else {
-                        false
-                    }
+                    ActivityCompat.shouldShowRequestPermissionRationale(
+                        it,
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
                 } ?: false
             }
         }

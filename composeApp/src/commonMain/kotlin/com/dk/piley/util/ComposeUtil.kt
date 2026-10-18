@@ -16,7 +16,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfoV2
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -170,5 +170,5 @@ expect fun getScreenHeight(): Dp
 expect val defaultNavBarPadding: Dp
 
 @Composable
-fun isTabletWide(): Boolean = currentWindowAdaptiveInfo().windowSizeClass
+fun isTabletWide(): Boolean = currentWindowAdaptiveInfoV2().windowSizeClass
     .isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)

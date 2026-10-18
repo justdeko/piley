@@ -13,9 +13,6 @@ import platform.Foundation.NSString
 import platform.Foundation.NSUTF8StringEncoding
 import platform.Foundation.create
 import platform.darwin.NSObject
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
 
 class SyncManager : ISyncManager {
     private var netServiceBrowser: NSNetServiceBrowser? = null
@@ -168,7 +165,7 @@ class SyncManager : ISyncManager {
         }
     }
 
-    private inner class ServiceDelegate : NSObject(), NSNetServiceDelegateProtocol {
+    private class ServiceDelegate : NSObject(), NSNetServiceDelegateProtocol {
         override fun netServiceDidPublish(sender: NSNetService) {
             println("Service published successfully: ${sender.name} on port ${sender.port}")
         }

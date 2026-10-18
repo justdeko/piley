@@ -76,7 +76,7 @@ val DarkColors = darkColorScheme(
  * Main piley theme
  *
  * @param useDarkTheme whether dark theme is enabled. uses system setting if not specified
- * @param dynamicColorEnabled whether dynamic theming/coloring is enabled
+ * @param customColors custom color scheme to use
  * @param content theme content
  */
 @Composable

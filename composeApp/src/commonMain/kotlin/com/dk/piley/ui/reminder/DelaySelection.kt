@@ -2,7 +2,6 @@ package com.dk.piley.ui.reminder
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.FilterChip
@@ -23,7 +22,6 @@ import org.jetbrains.compose.resources.stringArrayResource
 import piley.composeapp.generated.resources.Res
 import piley.composeapp.generated.resources.delay_by
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DelaySelection(
     modifier: Modifier = Modifier,

@@ -97,7 +97,6 @@ fun getUpcomingTasks(pilesWithTasks: List<PileWithTasks>): List<Pair<String, Tas
  * Get the name of the pile with the most uncompleted tasks
  *
  * @param pilesWithTasks list of piles with tasks to find the biggest pile in
- * @param context generic context to get string resources
  * @return name of the biggest pile or "None" if no pile found or list is empty
  */
 fun getBiggestPileName(pilesWithTasks: List<PileWithTasks>): String? =

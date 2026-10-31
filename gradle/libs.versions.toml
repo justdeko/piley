@@ -2,7 +2,7 @@
 adaptive = "1.3.0"
 agp = "9.4.1"
 datastorePreferences = "1.2.1"
-jmdns = "3.6.4"
+jmdns = "3.6.5"
 kotlin = "2.4.21"
 kotlinxDatetime = "0.8.0-0.6.x-compat"
 activityCompose = "1.13.0"
